@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Ignore local data and runtime artifacts
+data/*
+!data/samples/
+infra/factchecker-stack/faiss-indices/
+infra/factchecker-stack/opensearch-data/
+infra/factchecker-stack/neo4j-data/
+infra/factchecker-stack/pg-data/
+.env
+*.log
