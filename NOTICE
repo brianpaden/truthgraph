@@ -1,0 +1,15 @@
+TruthGraph
+Copyright 2025 The TruthGraph Contributors
+https://github.com/TruthGraph
+
+This product includes software developed by contributors to the TruthGraph
+project under the Apache License, Version 2.0.
+
+Datasets and knowledge-graph content derived from external sources (e.g.,
+Wikipedia, Wikidata, FEVER, KILT) remain subject to their respective licenses.
+Unless otherwise stated, TruthGraph-specific datasets, schemas, and
+documentation are released under Creative Commons Attribution 4.0 International
+(CC BY 4.0).
+
+You may obtain a copy of the CC BY 4.0 license at:
+    https://creativecommons.org/licenses/by/4.0/
