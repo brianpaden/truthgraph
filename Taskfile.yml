@@ -1,0 +1,101 @@
+version: '3'
+
+# TruthGraph Task Runner
+# Requires: go-task (https://taskfile.dev)
+# Install: winget install Task.Task
+
+vars:
+  PYTHON: python
+  PYMARKDOWNLNT: pymarkdownlnt.exe
+  RUFF: ruff
+
+tasks:
+  # ============================================================================
+  # Linting Tasks
+  # ============================================================================
+
+  lint:
+    desc: Run all linters (pymarkdownlnt + ruff)
+    cmds:
+      - task: lint:markdown
+      - task: lint:python
+
+  lint:markdown:
+    desc: Lint Markdown files with pymarkdownlnt
+    cmds:
+      - '{{.PYMARKDOWNLNT}} -d md013,md036 scan -r .'
+    sources:
+      - '**/*.md'
+
+  lint:python:
+    desc: Lint Python code with ruff
+    cmds:
+      - '{{.RUFF}} check'
+    sources:
+      - '**/*.py'
+      - pyproject.toml
+
+  lint:fix:
+    desc: Auto-fix all linting issues (pymarkdownlnt + ruff)
+    cmds:
+      - task: lint:fix:markdown
+      - task: lint:fix:python
+
+  lint:fix:markdown:
+    desc: Auto-fix Markdown linting issues with pymarkdownlnt
+    cmds:
+      - '{{.PYMARKDOWNLNT}} -d md013,md036 fix -r .'
+    sources:
+      - '**/*.md'
+
+  lint:fix:python:
+    desc: Auto-fix Python linting issues with ruff
+    cmds:
+      - '{{.RUFF}} check --fix'
+      - '{{.RUFF}} format'
+    sources:
+      - '**/*.py'
+      - pyproject.toml
+
+  # ============================================================================
+  # Helper Tasks
+  # ============================================================================
+
+  check:
+    desc: Run all checks (lint + type check + tests)
+    cmds:
+      - task: lint
+      - echo "✓ All checks passed!"
+
+  format:
+    desc: Format all code (Python with ruff, Markdown with pymarkdownlnt fix)
+    cmds:
+      - task: lint:fix
+
+  clean:
+    desc: Clean up generated files and caches
+    cmds:
+      - rm -rf __pycache__
+      - rm -rf .pytest_cache
+      - rm -rf .ruff_cache
+      - rm -rf .mypy_cache
+      - rm -rf dist
+      - rm -rf build
+      - rm -rf *.egg-info
+      - echo "✓ Cleaned up caches and build artifacts"
+
+  help:
+    desc: Show available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  # ============================================================================
+  # Default Task
+  # ============================================================================
+
+  default:
+    desc: Show help (default task when running 'task' with no arguments)
+    cmds:
+      - task: help
+    silent: true
