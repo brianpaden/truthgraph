@@ -5,6 +5,7 @@
 TruthGraph v1 is a **local-first fact-checking system** designed for researchers, journalists, and analysts who need privacy-preserving, portable, and research-friendly tools for claim verification and evidence analysis.
 
 The system runs entirely on a user's workstation via **Docker Compose**, providing:
+
 - **Temporal awareness**: Track claims and evidence across time
 - **Compound reasoning**: Multi-hop inference with explainable reasoning chains
 - **Multimodal support**: Text, images, video, and documents
@@ -19,67 +20,104 @@ The architecture prioritizes **simplicity and portability** while maintaining a 
 
 ### Core Components
 
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                    Docker Compose Stack                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │  API Gateway │  │ Verification │  │   Corpus     │          │
+│  │  (FastAPI)   │  │   Service    │  │   Service    │          │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
+│         │                 │                  │                   │
+│         └─────────────────┴──────────────────┘                   │
+│                           │                                       │
+│                           ▼                                       │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │              Event Bus (Redis Streams)                      ││
+│  │              CloudEvents-compliant schemas                  ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                           │                                       │
+│  ┌──────────────┬─────────┴─────────┬──────────────┐           │
+│  │  PostgreSQL  │  Redis (Cache)    │   Worker     │           │
+│  │  + pgvector  │  + Queue          │   Service    │           │
+│  └──────────────┴───────────────────┴──────────────┘           │
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │  Storage Layer: FAISS, Embeddings (sentence-transformers)  ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                                                                   │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │             React Frontend (port 5173)                      ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Docker Compose Stack                  │
-├─────────────────────────────────────────────────────────┤
-│                                                           │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │   FastAPI    │  │  PostgreSQL  │  │    Redis     │  │
-│  │   Backend    │  │  + pgvector  │  │   (Queue)    │  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
-│         │                 │                  │           │
-│  ┌──────▼─────────────────▼──────────────────▼───────┐  │
-│  │          Embedding & Retrieval Layer              │  │
-│  │  (sentence-transformers, FAISS, pgvector)         │  │
-│  └───────────────────────────────────────────────────┘  │
-│                                                           │
-│  ┌─────────────────────────────────────────────────────┐│
-│  │             React Frontend (port 5173)              ││
-│  └─────────────────────────────────────────────────────┘│
-│                                                           │
-└─────────────────────────────────────────────────────────┘
-```
+
+**Key Architectural Decisions**:
+
+- **Service separation from day one**: Even in local deployment, services are isolated
+- **Event-driven architecture**: CloudEvents-compliant event schemas for future cloud migration
+- **Repository/Adapter pattern**: Abstract data access for easy backend swapping
 
 ### Technology Stack
 
-- **Backend**: Python 3.12+ (uv for dependency management), FastAPI
-- **Database**: PostgreSQL 16+ with pgvector extension
-- **Vector Store**: FAISS for local retrieval, pgvector for persistent storage
-- **Queue**: Redis for async task processing
+- **Backend**: Python 3.12+ (uv for dependency management), FastAPI (multiple services)
+- **Database**: PostgreSQL 16+ with pgvector extension (abstracted via Repository pattern)
+- **Vector Store**: FAISS for local retrieval (abstracted for cloud vector DB migration)
+- **Queue**: Redis Streams with CloudEvents schemas (cloud-agnostic event format)
 - **Embeddings**: sentence-transformers (all-MiniLM-L6-v2 or similar)
 - **Frontend**: React + TypeScript, Vite
-- **Infrastructure**: Docker Compose
+- **Infrastructure**: Docker Compose (Kubernetes manifests prepared but unused)
+- **Observability**: structlog (structured logging), OpenTelemetry (tracing), Prometheus (metrics)
 - **Development**: Taskfile (go-task), ruff, pymarkdownlnt, Sphinx
+
+**Cloud-Ready Stack Choices**: Technologies selected to support seamless migration to v2 cloud deployment with minimal refactoring (see [v2 Cloud Readiness Guide](../v2/v1_improvements_for_cloud_readiness.md))
 
 ---
 
 ## Key Design Principles
 
 ### 1. Privacy-First
+
 - **No external API calls required** for core functionality
 - All data (claims, evidence, embeddings, reasoning graphs) stored locally
 - Optional integrations (fact-check APIs, LLM services) are explicit opt-ins
 
 ### 2. Portability
+
 - Single `docker-compose up` to run the entire stack
 - Data volumes are easily backed up, migrated, or archived
 - Export capabilities for claims, evidence, and reasoning graphs
 
 ### 3. Research-Friendly
+
 - **Explainable reasoning**: Full provenance tracking and reasoning graph visualization
 - **Reproducible**: Pin model versions, export configurations
 - **Inspectable**: Direct database access, structured logs, reasoning chain exports
 
-### 4. Optional Scaling
+### 4. Cloud-Ready Architecture (New for v1)
+
+- **Design once, deploy anywhere**: Abstractions enable local or cloud deployment
+- **Service-oriented from start**: API Gateway, Verification, Corpus, Worker services
+- **Adapter pattern**: Swap PostgreSQL for RDS, FAISS for Pinecone via configuration
+- **Event-driven**: CloudEvents-compliant schemas work with Redis, SQS, or EventBridge
+- **Observability built-in**: OpenTelemetry tracing, structured logs, Prometheus metrics from Phase 1
+- **Multi-tenant ready**: Database schema includes `tenant_id` (always "default" in v1)
+
+### 5. Optional Scaling
+
 - Start local, scale to cloud when needed
 - Architecture supports migration to managed services (RDS, ElastiCache, S3)
 - Queue-based design enables horizontal scaling of workers
+- See [v2 Cloud Migration Tasks](../v2/cloud_migration_tasks.md) for cloud deployment path
 
-### 5. Developer Experience
+### 6. Developer Experience
+
 - Modern tooling (uv, ruff, Taskfile)
 - Comprehensive docs (Sphinx)
 - Clear separation of concerns (API, storage, retrieval, reasoning)
+- Contract testing between services for independent deployment
 
 ---
 
@@ -98,34 +136,83 @@ The architecture prioritizes **simplicity and portability** while maintaining a 
 | **Auth** | Single-user (no auth) | Multi-tenant with OAuth/SAML |
 | **Cost** | Hardware only | Pay-as-you-go infrastructure |
 
-**Decision Rationale**: Local deployment maximizes privacy, minimizes costs for individual users, and avoids vendor lock-in. Cloud architecture is explicitly deferred to post-v1 to maintain focus.
+**Decision Rationale**: Local deployment maximizes privacy, minimizes costs for individual users, and avoids vendor lock-in. However, v1 is architected with cloud migration in mind - abstractions and patterns enable v2 cloud deployment with 50-70% less refactoring effort.
+
+---
+
+## Cloud-Ready Architecture Improvements
+
+To ease the transition to v2 cloud deployment, v1 incorporates several "cloud-ready" patterns that work well locally but translate directly to cloud services:
+
+### Service Separation
+
+- **Pattern**: Multiple FastAPI services (API Gateway, Verification, Corpus, Worker) instead of monolith
+- **Local benefit**: Clear boundaries, easier testing
+- **Cloud benefit**: Services scale independently in Kubernetes, no microservice refactoring needed
+
+### Repository/Adapter Pattern
+
+- **Pattern**: Abstract all data access (PostgreSQL, FAISS, Redis) behind interfaces
+- **Local benefit**: Easy to mock for testing, swap implementations
+- **Cloud benefit**: Change `VECTOR_STORE=faiss` to `VECTOR_STORE=pinecone` in config - zero code changes
+
+### Event-Driven with CloudEvents
+
+- **Pattern**: All async work uses CloudEvents-compliant event schemas
+- **Local benefit**: Audit trail, replay capability, clear contracts
+- **Cloud benefit**: Same events work with Redis Streams (v1), SQS (v2), or EventBridge (v2)
+
+### Observability from Day One
+
+- **Pattern**: Structured logging (structlog), distributed tracing (OpenTelemetry), metrics (Prometheus) in Phase 1
+- **Local benefit**: Easier debugging, performance visibility
+- **Cloud benefit**: Logs/traces/metrics flow to CloudWatch/Datadog without instrumentation changes
+
+### Multi-Tenant Database Schema
+
+- **Pattern**: All tables include `tenant_id` column (always "default" in v1)
+- **Local benefit**: Can test multi-tenant logic locally
+- **Cloud benefit**: Zero schema changes needed for SaaS multi-tenancy in v2
+
+### Configuration Management
+
+- **Pattern**: Adapter-based secrets (env vars → Secrets Manager), feature flags
+- **Local benefit**: Environment-specific configs, easier testing
+- **Cloud benefit**: Same codebase runs locally or in AWS/Azure/GCP
+
+**ROI**: These patterns add ~20% upfront effort in v1 but reduce v2 migration effort by 50-70%. See [v1 Improvements for Cloud Readiness](../v2/v1_improvements_for_cloud_readiness.md) for detailed implementation guidance.
 
 ---
 
 ## Core Capabilities
 
 ### Claim Verification
+
 - Ingest claims from text, URLs, or documents
 - Extract entities, dates, and structured metadata
 - Store with provenance (source, timestamp, author)
 
 ### Evidence Retrieval
+
 - Semantic search over evidence corpus using embeddings
 - Keyword search with BM25 or PostgreSQL full-text search
 - Cross-reference external fact-check databases (optional)
 
 ### Reasoning Graphs
+
 - Multi-hop reasoning: chain evidence to support or refute claims
 - Explainable: visualize reasoning paths, confidence scores
 - Temporal reasoning: track claim mutations and evidence updates
 
 ### Multimodal Support
+
 - Text: articles, tweets, transcripts
 - Images: OCR, reverse image search, metadata extraction
 - Video: frame sampling, transcript extraction
 - Documents: PDF parsing, table extraction
 
 ### Provenance Tracking
+
 - Every claim, evidence, and reasoning step is attributed
 - Audit logs for all user actions
 - Export full reasoning chains for reproducibility
@@ -137,15 +224,21 @@ The architecture prioritizes **simplicity and portability** while maintaining a 
 The v1 implementation is divided into four phases:
 
 ### Phase 1: Local MVP
-**Goal**: Basic local deployment with claim ingestion and storage
+
+**Goal**: Basic local deployment with claim ingestion and storage + cloud-ready foundations
 **Document**: [phase_01_local_mvp.md](./phase_01_local_mvp.md)
 
-- Docker Compose setup (PostgreSQL, Redis, FastAPI, React)
+- Docker Compose setup (PostgreSQL, Redis, separated FastAPI services, React)
+- Service separation: API Gateway, Verification, Corpus, Worker
+- Repository pattern for database abstraction
+- CloudEvents-based event schemas
+- Observability: structlog, OpenTelemetry, Prometheus
+- Multi-tenant database schema (tenant_id = "default")
 - Basic claim CRUD API
 - Simple web UI for claim submission
-- Database schema for claims and evidence
 
 ### Phase 2: Core Features
+
 **Goal**: Evidence retrieval and basic reasoning
 **Document**: [phase_02_core_features.md](./phase_02_core_features.md)
 
@@ -156,6 +249,7 @@ The v1 implementation is divided into four phases:
 - Evidence storage and linking
 
 ### Phase 3: Enhanced Capabilities
+
 **Goal**: Multi-hop reasoning, temporal awareness, multimodal support
 **Document**: [phase_03_enhanced_capabilities.md](./phase_03_enhanced_capabilities.md)
 
@@ -166,6 +260,7 @@ The v1 implementation is divided into four phases:
 - Reasoning graph UI
 
 ### Phase 4: Production Features
+
 **Goal**: Polish, performance, documentation, and release readiness
 **Document**: [phase_04_production_features.md](./phase_04_production_features.md)
 
@@ -177,6 +272,7 @@ The v1 implementation is divided into four phases:
 - Monitoring and logging
 
 ### Technology Stack & Tooling
+
 **Document**: [tech_stack_and_tooling.md](./tech_stack_and_tooling.md)
 
 Detailed justifications for all technology choices, alternative evaluations, and future considerations.
@@ -206,6 +302,7 @@ task export --format json --output my_research.json
 ```
 
 **Key Experience Goals**:
+
 - No manual configuration required (sensible defaults)
 - Clear feedback during startup (progress logs)
 - Intuitive UI for non-technical users
@@ -214,9 +311,10 @@ task export --format json --output my_research.json
 
 ---
 
-## Success Criteria for v1
+## Success Criteria for v1 - MVP
 
 ### Functional Requirements
+
 - [ ] Successfully runs on Windows, macOS, and Linux via Docker Compose
 - [ ] Ingest and store claims with structured metadata
 - [ ] Generate embeddings and perform semantic search
@@ -227,6 +325,7 @@ task export --format json --output my_research.json
 - [ ] Handle 10,000+ claims and 100,000+ evidence items without performance degradation
 
 ### Non-Functional Requirements
+
 - [ ] **Startup time**: <60 seconds from `docker-compose up` to ready state
 - [ ] **Search latency**: <500ms for semantic search (p95)
 - [ ] **Reasoning latency**: <5s for 3-hop reasoning chains (p95)
@@ -236,6 +335,7 @@ task export --format json --output my_research.json
 - [ ] **Code quality**: 80%+ test coverage, ruff-compliant, type-checked
 
 ### User Experience
+
 - [ ] Users can submit a claim and see initial results within 10 seconds
 - [ ] Reasoning graphs are visually clear and interactive
 - [ ] Error messages are actionable (not stack traces)
@@ -243,6 +343,7 @@ task export --format json --output my_research.json
 - [ ] Data export is one-click and produces usable formats (JSON, CSV, Markdown)
 
 ### Community & Adoption
+
 - [ ] Published on GitHub with MIT or Apache 2.0 license
 - [ ] At least 3 external contributors submit PRs
 - [ ] Used by at least 10 external researchers/journalists
@@ -250,7 +351,7 @@ task export --format json --output my_research.json
 
 ---
 
-## Next Steps
+## Next Steps - MVP
 
 1. **Review this overview** with stakeholders and incorporate feedback
 2. **Read phase documents** in order (Phase 1 → Phase 2 → Phase 3 → Phase 4)
@@ -260,13 +361,20 @@ task export --format json --output my_research.json
 
 ---
 
-## Related Documentation
+## Related Documentation - MVP
+
+### V1 Implementation Guides
 
 - [Phase 1: Local MVP](./phase_01_local_mvp.md)
 - [Phase 2: Core Features](./phase_02_core_features.md)
 - [Phase 3: Enhanced Capabilities](./phase_03_enhanced_capabilities.md)
 - [Phase 4: Production Features](./phase_04_production_features.md)
 - [Technology Stack & Tooling](./tech_stack_and_tooling.md)
+
+### V2 Cloud Migration
+
+- [Cloud Migration Tasks](../v2/cloud_migration_tasks.md) - Component replacements and cloud architecture changes
+- [V1 Improvements for Cloud Readiness](../v2/v1_improvements_for_cloud_readiness.md) - Architectural patterns to implement in v1 for easier v2 migration
 
 ---
 
@@ -390,7 +498,8 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 
 ## Success Criteria for v1
 
-### Functional Requirements
+### Functional Requirements - Success Criteria for v1
+
 - [ ] Successfully runs on Windows, macOS, and Linux via Docker Compose
 - [ ] Ingest and store claims with structured metadata (source, timestamp, entities)
 - [ ] Generate embeddings and perform semantic search over evidence
@@ -402,7 +511,8 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 - [ ] Support claim mutation tracking (how claims evolve over time)
 - [ ] Provide confidence scores for reasoning chains with transparent calculation
 
-### Non-Functional Requirements
+### Non-Functional Requirements - Success Criteria for v1
+
 - [ ] **Startup time**: <60 seconds from `docker-compose up` to ready state
 - [ ] **Search latency**: <500ms for semantic search over 100K items (p95)
 - [ ] **Reasoning latency**: <5s for 3-hop reasoning chains (p95)
@@ -413,7 +523,8 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 - [ ] **Code quality**: 80%+ test coverage, ruff-compliant, type-checked (mypy strict)
 - [ ] **Security**: No hardcoded credentials, secure defaults, dependency scanning
 
-### User Experience
+### User Experience - Success Criteria for v1
+
 - [ ] Users can submit a claim and see initial results within 10 seconds
 - [ ] Reasoning graphs are visually clear and interactive (zoom, filter, export)
 - [ ] Error messages are actionable with suggested fixes (not stack traces)
@@ -424,6 +535,7 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 - [ ] Mobile-responsive UI for reviewing results on tablets
 
 ### Reliability & Maintainability
+
 - [ ] **Crash recovery**: System gracefully recovers from container restarts
 - [ ] **Data integrity**: Database migrations tested and reversible
 - [ ] **Logging**: Structured logs with clear severity levels and context
@@ -431,7 +543,17 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 - [ ] **Backup/restore**: Automated backup scripts with verification
 - [ ] **Upgrade path**: Clear migration guide from future v1.x versions
 
-### Community & Adoption
+### Cloud Readiness (Architecture Quality)
+
+- [ ] **Service isolation**: Can deploy API/Verification/Corpus/Worker services independently
+- [ ] **Adapter pattern**: Can swap FAISS for Pinecone via config (tested with emulator)
+- [ ] **Event schemas**: All async work uses CloudEvents-compliant schemas
+- [ ] **Observability**: Correlation IDs in all logs, distributed tracing works across services
+- [ ] **Multi-tenant schema**: Database includes tenant_id columns on all tables
+- [ ] **Contract tests**: Service-to-service API contracts validated in CI/CD
+
+### Community & Adoption - Success Criteria for v1
+
 - [ ] Published on GitHub with MIT or Apache 2.0 license
 - [ ] At least 3 external contributors submit PRs
 - [ ] Used by at least 10 external researchers/journalists with documented case studies
@@ -452,14 +574,21 @@ TruthGraph v1 establishes the foundation, but the vision extends further:
 
 ## Related Documentation
 
+### V1 Implementation Guides - Related Documentation
+
 - [Phase 1: Local MVP](./phase_01_local_mvp.md)
 - [Phase 2: Core Features](./phase_02_core_features.md)
 - [Phase 3: Enhanced Capabilities](./phase_03_enhanced_capabilities.md)
 - [Phase 4: Production Features](./phase_04_production_features.md)
 - [Technology Stack & Tooling](./tech_stack_and_tooling.md)
 
+### V2 Cloud Migration - Related Documentation
+
+- [Cloud Migration Tasks](../v2/cloud_migration_tasks.md) - Component replacements and cloud architecture changes
+- [V1 Improvements for Cloud Readiness](../v2/v1_improvements_for_cloud_readiness.md) - Architectural patterns to implement in v1 for easier v2 migration
+
 ---
 
-**Document Version**: 2.0
+**Document Version**: 3.0 (Cloud-Ready)
 **Last Updated**: 2025-10-22
 **Status**: Enhanced - Ready for Review

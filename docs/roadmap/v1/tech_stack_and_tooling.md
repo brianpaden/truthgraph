@@ -4,13 +4,18 @@
 
 TruthGraph is a local-first fact-checking system designed for developer experience, reproducibility, and offline operation. This document outlines the complete technology stack, tooling choices, and development workflow for the v1 implementation.
 
+**All technology choices prioritize cloud migration readiness** while maintaining excellent local development experience. Every tool selected has cloud-native equivalents or works seamlessly in cloud environments, ensuring a smooth transition path when scaling beyond local deployment.
+
 **Design Principles:**
+
 - Local-first: All components run on developer machines
+- Cloud-ready: Choose tools that work well locally AND in cloud
 - Reproducible: Deterministic builds with locked dependencies
-- Container-based: Docker Compose orchestrates all services
+- Container-based: Docker Compose orchestrates all services (containerization = cloud portability)
 - Developer-friendly: Fast iteration cycles with modern tooling
 - Type-safe: Static type checking where applicable
 - Testable: Comprehensive test coverage with pytest
+- Observable: Structured logging and metrics work with any backend (local or cloud)
 
 ---
 
@@ -27,16 +32,26 @@ TruthGraph is a local-first fact-checking system designed for developer experien
   - Compatible with pyproject.toml and requirements.txt
 
 **Why uv?**
+
 - Speed: Dramatically faster dependency resolution and installation
 - Reliability: Better dependency conflict resolution
 - Modern: First-class support for PEP 621 (pyproject.toml)
 - Simplicity: Single tool for virtual envs and packages
+
+**Cloud Migration Path:**
+
+- Works identically in Docker containers (local or cloud-hosted)
+- Fast dependency installation accelerates CI/CD pipelines in cloud build systems
+- Compatible with all cloud Python runtimes (AWS Lambda layers, Cloud Functions, etc.)
+- Reduces container build times by 10-100x, saving cloud build costs
+- Standard requirements.txt output works with any cloud platform
 
 ### API Framework: FastAPI
 
 **FastAPI** powers the REST API layer for claim analysis, corpus queries, and fact-checking workflows.
 
 **Key Features:**
+
 - Async/await support for high concurrency
 - Automatic OpenAPI documentation
 - Pydantic models for request/response validation
@@ -44,16 +59,27 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 - Dependency injection system
 
 **Endpoints (planned):**
+
 - `/api/v1/claims/analyze` - Submit claims for fact-checking
 - `/api/v1/corpus/search` - Query evidence corpus
 - `/api/v1/evidence/retrieve` - Fetch evidence for claims
 - `/api/v1/verdicts/` - Retrieve fact-check verdicts
+
+**Cloud Migration Path:**
+
+- Production-ready for cloud deployment out of the box
+- Supports AWS Lambda (via Mangum adapter), Google Cloud Run, Azure Functions
+- Horizontal scaling: Deploy multiple instances behind cloud load balancer (ALB, Cloud Load Balancing)
+- Works with managed container services: ECS, GKE, AKS, Cloud Run
+- Built-in async support handles high concurrency with minimal resources
+- OpenAPI spec enables automatic API Gateway configuration in AWS/Azure/GCP
 
 ### Frontend: React
 
 **React 18+** provides the web interface for claim submission, evidence browsing, and verdict visualization.
 
 **Stack:**
+
 - **Vite**: Fast development server and build tool
 - **TypeScript**: Type safety in frontend code
 - **React Query**: Server state management and caching
@@ -61,6 +87,7 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 - **shadcn/ui**: Component library (optional)
 
 **Features:**
+
 - Real-time claim analysis status
 - Evidence highlighting and provenance display
 - Interactive verdict explanations
@@ -71,6 +98,7 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 **Docker Compose** orchestrates all services for local development and deployment.
 
 **Services:**
+
 - `api`: FastAPI backend
 - `frontend`: React development server (dev) or nginx (prod)
 - `postgres`: PostgreSQL with pgvector
@@ -79,6 +107,7 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 - `opensearch`: (optional) Advanced search engine
 
 **Benefits:**
+
 - Consistent environments across machines
 - Easy service discovery via container networking
 - Volume persistence for databases and models
@@ -93,6 +122,7 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 **Primary relational database** for structured data and vector similarity search.
 
 **Schema (key tables):**
+
 - `claims`: User-submitted claims
 - `evidence_items`: Documents and snippets from corpus
 - `verdicts`: Fact-check results with confidence scores
@@ -100,61 +130,95 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 - `provenance`: Source tracking and metadata
 
 **pgvector Extension:**
+
 - Native vector similarity search in PostgreSQL
 - Supports inner product, L2 distance, cosine similarity
 - Index types: IVFFlat, HNSW
 - Integrates with SQL queries for hybrid retrieval
 
 **Why PostgreSQL?**
+
 - Mature, reliable, and well-understood
 - ACID guarantees for critical data
 - pgvector eliminates need for separate vector DB
 - Excellent tooling and ecosystem
+
+**Cloud Migration Path:**
+
+- Direct migration to managed services: AWS RDS, Google Cloud SQL, Azure Database for PostgreSQL, Amazon Aurora
+- Connection string change only - no code modifications required
+- pgvector extension supported on RDS, Cloud SQL, and Azure
+- Managed backups, high availability, and automatic failover in cloud
+- Read replicas for scaling (RDS Read Replicas, Cloud SQL replicas)
+- Can transition to Aurora PostgreSQL for advanced cloud-native features
 
 ### Redis
 
 **In-memory data store** for queuing, caching, and session management.
 
 **Use Cases:**
+
 - **Task queuing**: Background jobs for claim analysis
 - **Caching**: Frequently accessed corpus items
 - **Rate limiting**: API throttling
 - **Session storage**: User sessions (if auth added)
 
 **Libraries:**
+
 - `redis-py`: Python client
 - `rq` or `celery`: Task queue systems (TBD)
+
+**Cloud Migration Path:**
+
+- Direct migration to AWS ElastiCache, Azure Cache for Redis, Google Cloud Memorystore
+- Connection string change only - application code remains identical
+- Managed service handles clustering, replication, and failover
+- Can scale vertically (larger instances) or horizontally (Redis Cluster)
+- Alternative: Switch to cloud-native message queues (SQS, Pub/Sub, Service Bus) with minimal code changes
 
 ### FAISS (File-based Vector Indices)
 
 **Facebook AI Similarity Search** for high-performance vector retrieval.
 
 **Use Cases:**
+
 - Fast k-NN search across large corpus embeddings
 - Hybrid with PostgreSQL: FAISS for initial retrieval, pgvector for reranking
 - File-based indices stored in Docker volumes
 
 **Index Types:**
+
 - `IndexFlatIP`: Exact search (small datasets)
 - `IndexIVFFlat`: Inverted file index (medium datasets)
 - `IndexHNSW`: Hierarchical navigable small world (large datasets)
 
 **Integration:**
+
 - Build indices during corpus ingestion
 - Persist to disk: `/data/faiss_indices/`
 - Load on API startup for sub-millisecond queries
+
+**Cloud Migration Path:**
+
+- Indices stored in cloud object storage (S3, Cloud Storage, Blob Storage)
+- Transition to managed vector databases: Pinecone, Weaviate Cloud, Qdrant Cloud
+- Repository pattern enables interface swap with no business logic changes
+- Alternative: Use cloud-native solutions (Amazon OpenSearch with k-NN, Azure Cognitive Search)
+- FAISS indices work identically in containers on ECS, GKE, or AKS
 
 ### Parquet (Corpus Storage)
 
 **Apache Parquet** for columnar corpus data storage.
 
 **Benefits:**
+
 - Efficient compression (10-100x vs CSV)
 - Fast columnar reads for analytics
 - Schema evolution support
 - Interoperable with pandas, PyArrow, DuckDB
 
 **Corpus Schema:**
+
 ```python
 {
     "doc_id": str,
@@ -168,8 +232,17 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 ```
 
 **Storage Location:**
+
 - `/data/corpus/*.parquet`
 - Partitioned by source or date for faster queries
+
+**Cloud Migration Path:**
+
+- Direct migration to S3, Google Cloud Storage, Azure Blob Storage
+- Repository pattern: swap file system access for cloud SDK (boto3, google-cloud-storage)
+- No business logic changes - only storage adapter modification
+- S3 Select enables querying Parquet directly without downloading
+- Use AWS Glue, BigQuery, or Azure Synapse for serverless analytics on cloud-stored Parquet
 
 ---
 
@@ -180,41 +253,64 @@ TruthGraph is a local-first fact-checking system designed for developer experien
 **Core library** for loading and running transformer models.
 
 **Models Used:**
+
 - **DeBERTa-v3-base** (NLI): Natural language inference for claim-evidence entailment
 - **Contriever** (Embeddings): Dense retrieval embeddings
 - **T5 or BART** (optional): Abstractive summarization
 
 **Integration:**
+
 - Models cached in `/data/models/` Docker volume
 - Loaded on API startup or lazily on first request
 - Inference via PyTorch or ONNX Runtime
+
+**Cloud Migration Path:**
+
+- Models work identically in cloud containers (ECS, GKE, AKS, Cloud Run)
+- Deploy to managed ML services: AWS SageMaker, Azure ML, Google Vertex AI
+- Model files cached in S3/Cloud Storage for faster container startup
+- GPU instances available: EC2 P/G instances, Azure NC series, GCP A2 instances
+- Alternative: Switch to hosted embedding APIs (OpenAI, Cohere, Azure OpenAI) for zero infrastructure
+- ONNX models optimize for cloud inference with lower latency and cost
 
 ### sentence-transformers
 
 **Simplified interface** for sentence embeddings and semantic similarity.
 
 **Key Models:**
+
 - `sentence-transformers/contriever`: 768-dim embeddings
 - `sentence-transformers/all-MiniLM-L6-v2`: Lightweight alternative
 
 **Usage:**
+
 ```python
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('facebook/contriever')
 embeddings = model.encode(texts)
 ```
 
+**Cloud Migration Path:**
+
+- Works in any cloud container environment
+- Alternative: Hosted embedding APIs (OpenAI Embeddings, Cohere Embed, Azure OpenAI)
+- Adapter pattern enables switching providers without changing business logic
+- SageMaker/Vertex AI endpoints provide scalable inference
+- Batch processing via cloud functions (Lambda, Cloud Functions) for cost optimization
+
 ### spaCy
 
 **Industrial-strength NLP** for linguistic preprocessing.
 
 **Features Used:**
+
 - Tokenization and sentence segmentation
 - Named entity recognition (NER)
 - Dependency parsing (optional)
 - Pipeline: `en_core_web_sm` or `en_core_web_trf`
 
 **Use Cases:**
+
 - Extract entities from claims (people, organizations, dates)
 - Chunk documents into sentences for evidence retrieval
 - Linguistic feature extraction for provenance analysis
@@ -222,12 +318,14 @@ embeddings = model.encode(texts)
 ### Model Details
 
 **DeBERTa-v3 (NLI)**
+
 - Task: Natural language inference (entailment, neutral, contradiction)
 - Model: `microsoft/deberta-v3-base` fine-tuned on MNLI
 - Input: `[CLS] Claim [SEP] Evidence [SEP]`
 - Output: 3-class logits (entailment score used for verdict)
 
 **Contriever (Embeddings)**
+
 - Task: Dense passage retrieval
 - Model: `facebook/contriever` or `facebook/contriever-msmarco`
 - Embedding dim: 768
@@ -242,58 +340,91 @@ embeddings = model.encode(texts)
 **Graph database** for knowledge graph representation of claims, evidence, and entities.
 
 **Use Cases:**
+
 - Model relationships between claims (contradicts, supports)
 - Entity disambiguation and linking
 - Graph-based reasoning and explanation
 - Provenance chains
 
 **Integration:**
+
 - Docker service: `neo4j:5.x`
 - Python driver: `neo4j-driver`
 - Cypher queries for graph traversal
 
 **When to Enable:**
+
 - Advanced reasoning over claim networks
 - Multi-hop evidence chains
 - Knowledge graph export
+
+**Cloud Migration Path:**
+
+- Neo4j AuraDB: Fully managed Neo4j in the cloud
+- Amazon Neptune: AWS managed graph database (Gremlin/SPARQL)
+- Azure Cosmos DB: Graph API with global distribution
+- Connection string change only - Cypher queries remain identical
+- AuraDB provides auto-scaling, backups, and multi-region support
 
 ### OpenSearch (Advanced Search)
 
 **Full-text search engine** (Elasticsearch fork) for corpus queries.
 
 **Features:**
+
 - BM25 ranking for keyword search
 - Hybrid search: combine BM25 + vector similarity
 - Faceted search by source, date, entities
 - Real-time indexing
 
 **Integration:**
+
 - Docker service: `opensearchproject/opensearch:2.x`
 - Python client: `opensearch-py`
 - Indices: `corpus`, `claims`, `evidence`
 
 **When to Enable:**
+
 - Large corpus (>100k documents)
 - Complex query requirements
 - User-facing search interface
+
+**Cloud Migration Path:**
+
+- AWS OpenSearch Service: Fully managed with auto-scaling
+- Elastic Cloud: Official managed Elasticsearch/OpenSearch
+- Azure Cognitive Search: Alternative with built-in AI capabilities
+- Connection configuration change only - API calls remain identical
+- Managed service handles clustering, updates, and security patches
 
 ### Tesseract (OCR)
 
 **Optical character recognition** for extracting text from images and scanned PDFs.
 
 **Use Cases:**
+
 - Ingest scanned documents into corpus
 - Extract text from screenshots and memes
 - Preprocess image-based evidence
 
 **Integration:**
+
 - Docker service: Custom Tesseract container
 - Python wrapper: `pytesseract`
 - Preprocessing: `Pillow`, `pdf2image`
 
 **When to Enable:**
+
 - Corpus includes image-based sources
 - OCR required for evidence extraction
+
+**Cloud Migration Path:**
+
+- AWS Textract: Managed OCR with advanced table/form extraction
+- Google Cloud Vision API: Document text detection with ML enhancements
+- Azure Computer Vision: OCR with handwriting recognition
+- Adapter pattern enables switching from Tesseract to cloud APIs
+- Pay-per-use pricing more cost-effective than running dedicated OCR infrastructure
 
 ---
 
@@ -304,6 +435,7 @@ embeddings = model.encode(texts)
 **Modern task runner** replacing Makefiles with YAML-based task definitions.
 
 **Installation:**
+
 ```bash
 # Via package manager or direct download
 brew install go-task/tap/go-task  # macOS
@@ -519,6 +651,34 @@ tasks:
     cmds:
       - '{{.PYTHON}} -m scripts.download_models'
 
+  # Cloud Deployment
+  cloud:build:
+    desc: Build optimized Docker images for cloud deployment
+    cmds:
+      - docker build -f docker/api.Dockerfile --target production -t truthgraph-api:{{.VERSION}} .
+      - docker build -f docker/frontend.Dockerfile --target production -t truthgraph-frontend:{{.VERSION}} ./frontend
+
+  cloud:push:
+    desc: Push Docker images to cloud registry (ECR/GCR/ACR)
+    cmds:
+      - docker tag truthgraph-api:{{.VERSION}} {{.REGISTRY}}/truthgraph-api:{{.VERSION}}
+      - docker push {{.REGISTRY}}/truthgraph-api:{{.VERSION}}
+
+  cloud:deploy:dev:
+    desc: Deploy to development cloud environment
+    cmds:
+      - terraform -chdir=terraform/dev apply -auto-approve
+
+  cloud:deploy:prod:
+    desc: Deploy to production cloud environment (requires confirmation)
+    cmds:
+      - terraform -chdir=terraform/prod apply
+
+  cloud:logs:
+    desc: Fetch logs from cloud deployment
+    cmds:
+      - kubectl logs -l app=truthgraph-api --tail=100 -f
+
   # Utility
   logs:
     desc: Show logs from all services
@@ -544,6 +704,7 @@ tasks:
 ```
 
 **Usage:**
+
 ```bash
 task setup           # Initialize project
 task dev             # Start all services
@@ -557,12 +718,14 @@ task ci              # Run full CI pipeline locally
 **ruff**: Extremely fast Python linter (10-100x faster than Flake8).
 
 **Features:**
+
 - Replaces Flake8, isort, pyupgrade, and more
 - Configurable via `pyproject.toml`
 - Auto-fix for many rule violations
 - 500+ rules from popular linters
 
 **Configuration:**
+
 ```toml
 [tool.ruff]
 line-length = 100
@@ -573,6 +736,7 @@ ignore = ["E501"]  # Line too long
 **pymarkdownlnt**: Markdown linting for documentation consistency.
 
 **Rules:**
+
 - Heading styles and structure
 - Link validity
 - Code block formatting
@@ -583,12 +747,14 @@ ignore = ["E501"]  # Line too long
 **ruff format**: Fast Python code formatter (Black-compatible).
 
 **Features:**
+
 - 30x faster than Black
 - Near-identical output to Black
 - Integrated with ruff linter
 - No config needed (opinionated)
 
 **Usage:**
+
 ```bash
 ruff format .           # Format all files
 ruff format --check .   # Check without modifying
@@ -599,18 +765,21 @@ ruff format --check .   # Check without modifying
 **Sphinx**: Documentation generator for Python projects.
 
 **Formats:**
+
 - HTML for web hosting (GitHub Pages, Read the Docs)
 - PDF via LaTeX
 - Markdown rendering with MyST
 
 **Extensions:**
+
 - `sphinx.ext.autodoc`: Generate docs from docstrings
 - `sphinx.ext.napoleon`: Support Google/NumPy docstring styles
 - `sphinx-autodoc-typehints`: Type hint rendering
 - `myst-parser`: Markdown support
 
 **Structure:**
-```
+
+```text
 docs/
   source/
     conf.py
@@ -625,13 +794,15 @@ docs/
 **pytest**: Modern Python testing framework.
 
 **Features:**
+
 - Simple test discovery and execution
 - Fixtures for setup/teardown
 - Parametrized tests
 - Plugins: coverage, asyncio, docker
 
 **Structure:**
-```
+
+```text
 tests/
   unit/
     test_embeddings.py
@@ -643,21 +814,71 @@ tests/
 ```
 
 **Key Plugins:**
+
 - `pytest-cov`: Code coverage reporting
 - `pytest-asyncio`: Test async functions
 - `pytest-docker`: Spin up containers for tests
+
+### Cloud-Specific Development Tools
+
+**Infrastructure as Code:**
+
+- **Terraform**: Multi-cloud infrastructure provisioning (AWS, Azure, GCP)
+- **Pulumi**: Infrastructure as code using Python (alternative to Terraform)
+- **AWS CDK**: Cloud infrastructure using Python (AWS-specific)
+
+**Cloud CLI Tools:**
+
+- **aws-cli**: AWS command-line interface for resource management
+- **gcloud**: Google Cloud SDK for GCP operations
+- **az**: Azure CLI for Azure resource management
+
+**Container Orchestration:**
+
+- **kubectl**: Kubernetes command-line tool for cluster management
+- **helm**: Kubernetes package manager for chart deployment
+- **k9s**: Terminal UI for Kubernetes cluster management
+
+**Cloud Emulators (Local Testing):**
+
+- **LocalStack**: Mock AWS services locally (S3, DynamoDB, Lambda, etc.)
+- **Azurite**: Azure Storage emulator for local development
+- **GCP Emulators**: Cloud Pub/Sub, Firestore, Bigtable emulators
+
+**Security & Secrets:**
+
+- **AWS Secrets Manager**: Secure secrets storage (transitioning from .env)
+- **HashiCorp Vault**: Multi-cloud secrets management
+- **Azure Key Vault**: Azure-native secrets and certificate management
+- **Google Secret Manager**: GCP secrets management
+
+**Monitoring & Observability:**
+
+- **structlog**: Structured logging (essential for CloudWatch/Datadog parsing)
+- **OpenTelemetry**: Vendor-agnostic observability (traces, metrics, logs)
+- **Prometheus**: Metrics collection (local) → CloudWatch/Datadog (cloud)
+- **Grafana**: Metrics visualization (works with any backend)
+
+**Why These Tools?**
+
+- Work seamlessly in both local and cloud environments
+- Enable cloud emulation for local testing
+- Provide migration path from local to cloud services
+- Support multi-cloud strategies (avoid vendor lock-in)
 
 ### Type Checking: mypy
 
 **mypy**: Static type checker for Python.
 
 **Benefits:**
+
 - Catch type errors before runtime
 - Improve IDE autocomplete
 - Document function signatures
 - Gradual typing (opt-in)
 
 **Configuration:**
+
 ```toml
 [tool.mypy]
 python_version = "3.11"
@@ -671,13 +892,14 @@ ignore_missing_imports = true
 
 ### Recommended Directory Layout
 
-```
+```text
 truthgraph/
 ├── api/                      # FastAPI backend
 │   ├── main.py
 │   ├── routers/
 │   ├── models/               # Pydantic models
 │   ├── services/             # Business logic
+│   ├── adapters/             # Repository pattern for cloud migration
 │   └── dependencies.py
 ├── frontend/                 # React frontend
 │   ├── src/
@@ -696,6 +918,7 @@ truthgraph/
 ├── tests/
 │   ├── unit/
 │   ├── integration/
+│   ├── cloud/                # Cloud integration tests
 │   └── conftest.py
 ├── docs/
 │   ├── source/
@@ -703,8 +926,31 @@ truthgraph/
 ├── docker/
 │   ├── api.Dockerfile
 │   └── frontend.Dockerfile
+├── terraform/                # Infrastructure as Code
+│   ├── modules/              # Reusable Terraform modules
+│   ├── dev/                  # Development environment
+│   ├── staging/              # Staging environment
+│   └── prod/                 # Production environment
+├── kubernetes/               # Kubernetes manifests
+│   ├── base/                 # Base configurations
+│   ├── overlays/             # Environment-specific overlays
+│   │   ├── dev/
+│   │   ├── staging/
+│   │   └── prod/
+│   └── helm/                 # Helm charts
+├── scripts/                  # Deployment and utility scripts
+│   ├── deploy.sh
+│   ├── build-images.sh
+│   └── cloud-init.sh
+├── .github/                  # GitHub Actions workflows
+│   └── workflows/
+│       ├── ci.yml
+│       ├── cd-dev.yml
+│       └── cd-prod.yml
 ├── .env.example
+├── .env.cloud.example        # Cloud-specific env template
 ├── docker-compose.yml
+├── docker-compose.cloud.yml  # Cloud emulator setup
 ├── pyproject.toml
 ├── Taskfile.yml
 └── README.md
@@ -713,6 +959,7 @@ truthgraph/
 ### Docker Volume Mappings
 
 **Development:**
+
 ```yaml
 volumes:
   - ./api:/app/api              # Hot reload for API
@@ -723,6 +970,7 @@ volumes:
 ```
 
 **Production:**
+
 - Named volumes for databases
 - Read-only mounts for code
 - Separate volume for logs
@@ -730,6 +978,7 @@ volumes:
 ### Configuration Management
 
 **Environment Variables:**
+
 - `.env` file for local overrides (gitignored)
 - `.env.example` template committed to repo
 - Docker Compose reads `.env` automatically
@@ -925,12 +1174,14 @@ POSTGRES_DATA_DIR=${DATA_DIR}/postgres
 ### Setting Up Local Environment
 
 **Prerequisites:**
+
 - Docker Desktop (Windows/Mac) or Docker Engine (Linux)
 - uv (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - Task (`brew install go-task` or equivalent)
 - Git
 
 **Initial Setup:**
+
 ```bash
 # Clone repository
 git clone https://github.com/your-org/truthgraph.git
@@ -953,15 +1204,62 @@ task corpus:load
 ```
 
 **Development Loop:**
+
 1. Make code changes (hot reload enabled for API and frontend)
 2. Run tests: `task test`
 3. Check formatting: `task lint`
 4. Commit changes
 5. CI runs full test suite
 
+### Cloud Emulator Workflow
+
+**Local Cloud Service Testing:**
+
+TruthGraph supports testing against cloud service emulators locally to catch cloud-specific issues early.
+
+**Setup with LocalStack (AWS emulation):**
+
+```bash
+# docker-compose.cloud.yml
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"  # LocalStack gateway
+    environment:
+      - SERVICES=s3,dynamodb,sqs,secretsmanager
+      - DEBUG=1
+    volumes:
+      - localstack-data:/tmp/localstack
+
+# Start with cloud emulators
+docker compose -f docker-compose.yml -f docker-compose.cloud.yml up
+```
+
+**Testing Cloud Migrations:**
+
+```bash
+# Test S3 file storage adapter
+task test:cloud:storage
+
+# Test with cloud emulators enabled
+CLOUD_EMULATOR=true task test:integration
+
+# Deploy to cloud development environment
+task cloud:deploy:dev
+```
+
+**Benefits:**
+
+- Catch cloud-specific issues before deploying
+- Test cloud migrations without cloud costs
+- Validate infrastructure-as-code templates locally
+- CI/CD can test against emulators before real cloud deployment
+
 ### Running with Taskfile
 
 **Common Commands:**
+
 ```bash
 task dev              # Start all services
 task dev:api          # Start API only
@@ -984,6 +1282,7 @@ task reset            # Reset database and volumes
 
 **Custom Tasks:**
 Add project-specific tasks to `Taskfile.yml`:
+
 ```yaml
 corpus:load:
   desc: Load corpus from Parquet files
@@ -999,6 +1298,7 @@ embeddings:build:
 ### Testing Strategy
 
 **Levels:**
+
 1. **Unit Tests**: Test individual functions and classes
    - Fast, no external dependencies
    - Mock databases and ML models
@@ -1014,6 +1314,7 @@ embeddings:build:
    - Full stack running in Docker
 
 **Running Tests:**
+
 ```bash
 pytest                          # All tests
 pytest tests/unit               # Unit only
@@ -1024,17 +1325,20 @@ pytest --cov=api --cov-report=html  # Coverage report
 ### Documentation Generation
 
 **Build Docs:**
+
 ```bash
 task docs:build
 # Output: docs/build/html/index.html
 ```
 
 **Auto-rebuild on Changes:**
+
 ```bash
 sphinx-autobuild docs/source docs/build/html
 ```
 
 **Hosting:**
+
 - **Read the Docs**: Automatic builds from GitHub
 - **GitHub Pages**: Deploy from `gh-pages` branch
 - **Local**: `python -m http.server -d docs/build/html`
@@ -1046,6 +1350,7 @@ sphinx-autobuild docs/source docs/build/html
 ### Using uv for Python Packages
 
 **Why uv?**
+
 - Faster than pip (10-100x for large projects)
 - Better dependency resolution
 - Built-in virtual environment management
@@ -1054,6 +1359,7 @@ sphinx-autobuild docs/source docs/build/html
 **Workflow:**
 
 **1. Define dependencies in `pyproject.toml`:**
+
 ```toml
 [project]
 name = "truthgraph"
@@ -1084,6 +1390,7 @@ dev = [
 ```
 
 **2. Create virtual environment and install:**
+
 ```bash
 uv venv                 # Create .venv/
 uv pip install -e .     # Install project
@@ -1091,11 +1398,13 @@ uv pip install -e ".[dev]"  # Include dev dependencies
 ```
 
 **3. Generate lock file:**
+
 ```bash
 uv pip compile pyproject.toml -o requirements.txt
 ```
 
 **4. Install from lock file (CI/production):**
+
 ```bash
 uv pip sync requirements.txt
 ```
@@ -1103,6 +1412,7 @@ uv pip sync requirements.txt
 ### pyproject.toml Structure
 
 **Complete Example:**
+
 ```toml
 [project]
 name = "truthgraph"
@@ -1354,17 +1664,20 @@ show_missing = true
 ### Lock Files and Reproducibility
 
 **Benefits:**
+
 - **Deterministic builds**: Same dependencies across all environments
 - **Security**: Pin exact versions with known vulnerabilities
 - **Debugging**: Reproduce exact environment from bug reports
 
 **Best Practices:**
+
 1. Commit `requirements.txt` (lock file) to Git
 2. Regenerate lock file when updating dependencies
 3. Use lock file in Dockerfile for consistent container builds
 4. Document update process in CONTRIBUTING.md
 
 **Update Workflow:**
+
 ```bash
 # Update specific package
 uv pip install --upgrade fastapi
@@ -1380,6 +1693,174 @@ git add requirements.txt
 git commit -m "deps: update fastapi to 0.105.0"
 ```
 
+### Docker Image Optimization for Cloud
+
+**Multi-stage Builds:**
+
+Optimize Docker images for cloud deployment with multi-stage builds to reduce image size and improve security.
+
+**Optimized Dockerfile Example:**
+
+```dockerfile
+# docker/api.Dockerfile
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Install uv for fast dependency resolution
+RUN pip install uv
+
+# Copy dependency files
+COPY pyproject.toml requirements.txt ./
+
+# Install dependencies in isolated layer
+RUN uv pip install --system --no-cache -r requirements.txt
+
+# Stage 2: Production
+FROM python:3.11-slim as production
+
+# Security: Run as non-root user
+RUN useradd -m -u 1000 appuser
+
+WORKDIR /app
+
+# Copy only necessary files from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY --chown=appuser:appuser api/ ./api/
+COPY --chown=appuser:appuser ml/ ./ml/
+
+USER appuser
+
+# Health check for cloud load balancers
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+**Image Size Reduction:**
+
+- Multi-stage builds: 50-70% smaller images
+- Use slim/alpine base images
+- Remove build dependencies in production stage
+- Copy only runtime dependencies
+- Layer caching optimizes rebuild times
+
+**Cloud Benefits:**
+
+- Faster container startup (smaller image pull)
+- Lower storage costs (ECR, GCR, ACR)
+- Reduced attack surface (fewer packages)
+- Faster CI/CD pipelines
+
+### Vulnerability Scanning for Cloud Security
+
+**Container Security Scanning:**
+
+Scan Docker images for vulnerabilities before cloud deployment.
+
+**Trivy (recommended):**
+
+```bash
+# Install Trivy
+brew install trivy  # macOS
+# or download from https://github.com/aquasecurity/trivy
+
+# Scan local image
+trivy image truthgraph-api:latest
+
+# Scan and fail on HIGH/CRITICAL
+trivy image --severity HIGH,CRITICAL --exit-code 1 truthgraph-api:latest
+
+# Scan Dockerfile
+trivy config docker/api.Dockerfile
+```
+
+**Snyk:**
+
+```bash
+# Install Snyk CLI
+npm install -g snyk
+
+# Authenticate
+snyk auth
+
+# Scan Docker image
+snyk container test truthgraph-api:latest
+
+# Monitor image in Snyk dashboard
+snyk container monitor truthgraph-api:latest
+```
+
+**Integration with CI/CD:**
+
+```yaml
+# .github/workflows/ci.yml
+- name: Run Trivy vulnerability scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: truthgraph-api:${{ github.sha }}
+    format: 'sarif'
+    output: 'trivy-results.sarif'
+    severity: 'CRITICAL,HIGH'
+
+- name: Upload to GitHub Security
+  uses: github/codeql-action/upload-sarif@v2
+  with:
+    sarif_file: 'trivy-results.sarif'
+```
+
+**Cloud Registry Scanning:**
+
+- AWS ECR: Built-in scanning on push
+- GCR: Container Analysis API
+- ACR: Defender for Cloud integration
+- Docker Hub: Snyk integration
+
+### Artifact Registry Setup
+
+**Push images to cloud registries:**
+
+**AWS ECR:**
+
+```bash
+# Authenticate
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+
+# Create repository
+aws ecr create-repository --repository-name truthgraph-api
+
+# Tag and push
+docker tag truthgraph-api:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/truthgraph-api:latest
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/truthgraph-api:latest
+```
+
+**Google GCR:**
+
+```bash
+# Authenticate
+gcloud auth configure-docker
+
+# Tag and push
+docker tag truthgraph-api:latest gcr.io/<project-id>/truthgraph-api:latest
+docker push gcr.io/<project-id>/truthgraph-api:latest
+```
+
+**Azure ACR:**
+
+```bash
+# Authenticate
+az acr login --name <registry-name>
+
+# Tag and push
+docker tag truthgraph-api:latest <registry-name>.azurecr.io/truthgraph-api:latest
+docker push <registry-name>.azurecr.io/truthgraph-api:latest
+```
+
 ---
 
 ## Resource Requirements
@@ -1387,6 +1868,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 ### Minimum System Requirements
 
 **For Development:**
+
 - **CPU**: 4 cores (Intel i5/AMD Ryzen 5 or equivalent)
 - **RAM**: 16 GB
 - **Storage**: 50 GB free space (SSD recommended)
@@ -1394,6 +1876,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 - **Docker**: Docker Desktop 4.0+ or Docker Engine 20.10+
 
 **Breakdown:**
+
 - Base system: 4 GB
 - Docker services: 6 GB
   - PostgreSQL: 1 GB
@@ -1407,6 +1890,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 ### Recommended System Requirements
 
 **For Development:**
+
 - **CPU**: 8+ cores (Intel i7/AMD Ryzen 7 or equivalent)
 - **RAM**: 32 GB
 - **Storage**: 100 GB free space on SSD
@@ -1414,6 +1898,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 - **OS**: Same as minimum
 
 **Breakdown:**
+
 - Base system: 4 GB
 - Docker services: 8 GB
 - Multiple ML models loaded: 8 GB
@@ -1421,6 +1906,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 - Development tools and IDE: 4 GB
 
 **For Production (single node):**
+
 - **CPU**: 16+ cores
 - **RAM**: 64 GB
 - **Storage**: 500 GB SSD (NVMe recommended)
@@ -1430,6 +1916,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 ### Storage Requirements
 
 **By Component:**
+
 - **PostgreSQL database**: 5-20 GB (depends on corpus size and claim history)
 - **ML models cache**: 5-10 GB
   - DeBERTa-v3-base: ~1.5 GB
@@ -1447,6 +1934,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 - **Logs and temporary files**: 5-10 GB
 
 **Total Estimated:**
+
 - **Minimum setup**: 50 GB
 - **Recommended setup**: 100 GB
 - **Large corpus (1M+ docs)**: 200+ GB
@@ -1454,11 +1942,13 @@ git commit -m "deps: update fastapi to 0.105.0"
 ### Network Requirements
 
 **Development:**
+
 - **Bandwidth**: Standard broadband (10+ Mbps)
 - **Initial setup**: 5-10 GB download (Docker images, ML models)
 - **Ongoing**: Minimal (mainly for package updates)
 
 **Production:**
+
 - **Bandwidth**: 100+ Mbps recommended
 - **Latency**: <50ms for API responses
 - **Concurrent users**: Scale horizontally for >100 concurrent users
@@ -1466,11 +1956,13 @@ git commit -m "deps: update fastapi to 0.105.0"
 ### GPU Recommendations
 
 **Development (optional):**
+
 - Any NVIDIA GPU with CUDA support
 - Minimum 6 GB VRAM
 - Use for faster model inference and batch processing
 
 **Production:**
+
 - NVIDIA A100 (40-80 GB): Best for large-scale inference
 - NVIDIA A10 (24 GB): Good balance of cost and performance
 - NVIDIA T4 (16 GB): Budget-friendly option
@@ -1488,6 +1980,7 @@ git commit -m "deps: update fastapi to 0.105.0"
 **Symptom:** `docker compose up` fails with port conflicts or container errors.
 
 **Solutions:**
+
 ```bash
 # Check if ports are already in use
 netstat -an | grep "5432\|6379\|8000\|3000"
@@ -1510,6 +2003,7 @@ sudo systemctl restart docker  # Linux
 **Symptom:** `uv: command not found` or virtual environment creation fails.
 
 **Solutions:**
+
 ```bash
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -1529,6 +2023,7 @@ source .venv/bin/activate  # Linux/Mac
 **Symptom:** API fails to connect to PostgreSQL.
 
 **Solutions:**
+
 ```bash
 # Check if PostgreSQL container is running
 docker compose ps postgres
@@ -1553,6 +2048,7 @@ docker compose exec postgres psql -U truthgraph -d truthgraph
 **Symptom:** Transformers fails to download models from Hugging Face.
 
 **Solutions:**
+
 ```bash
 # Set longer timeout
 export HF_HUB_TIMEOUT=600
@@ -1573,6 +2069,7 @@ export TRANSFORMERS_OFFLINE=1
 **Symptom:** `RuntimeError: CUDA out of memory` or system freezes.
 
 **Solutions:**
+
 ```bash
 # Reduce batch size in .env
 EMBEDDING_BATCH_SIZE=8
@@ -1594,6 +2091,7 @@ export MKL_NUM_THREADS=4
 **Symptom:** `RuntimeError: faiss index training failed`.
 
 **Solutions:**
+
 ```bash
 # Use simpler index type
 FAISS_INDEX_TYPE=Flat
@@ -1612,6 +2110,7 @@ python -m ml.build_index --chunk-size 10000
 **Symptom:** API requests take >5 seconds.
 
 **Diagnostics:**
+
 ```bash
 # Check resource usage
 docker stats
@@ -1621,6 +2120,7 @@ time curl http://localhost:8000/api/v1/claims/analyze
 ```
 
 **Solutions:**
+
 - Enable Redis caching
 - Preload models on startup
 - Use FAISS indices instead of brute-force search
@@ -1632,6 +2132,7 @@ time curl http://localhost:8000/api/v1/claims/analyze
 **Symptom:** System runs out of memory or swaps heavily.
 
 **Solutions:**
+
 ```bash
 # Limit Docker memory
 docker compose down
@@ -1652,6 +2153,7 @@ EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 **Symptom:** Code changes don't reflect in running API.
 
 **Solutions:**
+
 ```bash
 # Verify volume mounts in docker-compose.yml
 docker compose config
@@ -1670,6 +2172,7 @@ sudo sysctl -p
 **Symptom:** `pytest` fails with "database does not exist".
 
 **Solutions:**
+
 ```bash
 # Create test database
 docker compose exec postgres createdb -U truthgraph truthgraph_test
@@ -1687,6 +2190,7 @@ pytest
 **11. Docker build fails with "no space left on device"**
 
 **Solutions:**
+
 ```bash
 # Clean up Docker resources
 docker system prune -af --volumes
@@ -1703,6 +2207,7 @@ docker system df
 **Symptom:** Container cannot write to mounted volumes.
 
 **Solutions (Linux):**
+
 ```bash
 # Fix volume permissions
 sudo chown -R $(id -u):$(id -g) data/
@@ -1723,12 +2228,14 @@ This section explains key technology decisions and why certain tools were chosen
 **Chosen: uv**
 
 **Alternatives considered:**
+
 - **pip + pip-tools**: Traditional standard, but slow dependency resolution
 - **Poetry**: Popular, feature-rich, but slower and larger dependency tree
 - **Pipenv**: Good developer experience but slower than uv
 - **conda**: Great for scientific packages but heavyweight and opinionated
 
 **Why uv?**
+
 - **Performance**: 10-100x faster than pip, crucial for CI/CD
 - **Simplicity**: Single tool for venvs and packages
 - **Compatibility**: Works with standard `pyproject.toml`, easy migration
@@ -1736,15 +2243,25 @@ This section explains key technology decisions and why certain tools were chosen
 - **Lock files**: Built-in support for reproducible builds
 
 **Trade-offs:**
+
 - Newer tool (less mature than pip/poetry)
 - Smaller ecosystem of plugins
 - Some edge cases with complex dependency trees
+
+**Cloud Migration Readiness:**
+
+- uv's speed (10-100x faster) dramatically reduces CI/CD build times in cloud
+- Faster Docker builds = lower cloud build costs (GitHub Actions minutes, AWS CodeBuild costs)
+- Works identically in cloud containers and serverless (Lambda layers, Cloud Functions)
+- Standard requirements.txt output compatible with all cloud platforms
+- Fast dependency resolution critical for auto-scaling scenarios
 
 ### Task Runner: Taskfile vs Make/Just/npm scripts
 
 **Chosen: Taskfile (go-task)**
 
 **Alternatives considered:**
+
 - **Make**: Universal, but arcane syntax and platform inconsistencies
 - **Just**: Modern Make alternative, good but less feature-rich
 - **npm scripts**: Simple but limited to Node.js ecosystem
@@ -1752,6 +2269,7 @@ This section explains key technology decisions and why certain tools were chosen
 - **Bash scripts**: Maximum flexibility but poor discoverability
 
 **Why Taskfile?**
+
 - **YAML syntax**: Easy to read and write, no tabs/spaces issues
 - **Cross-platform**: Works identically on Windows/Mac/Linux
 - **Variables and templating**: Clean task composition
@@ -1759,15 +2277,25 @@ This section explains key technology decisions and why certain tools were chosen
 - **Documentation**: Built-in task descriptions (`task --list`)
 
 **Trade-offs:**
+
 - Requires separate installation (not bundled with OS)
 - Less universal than Make
 - Smaller community than npm scripts
+
+**Cloud Migration Readiness:**
+
+- Easy to add cloud deployment tasks (terraform apply, kubectl deploy)
+- Cross-platform consistency ensures cloud CI/CD works identically
+- Task dependencies enable complex cloud deployment workflows
+- YAML format integrates well with cloud CI/CD systems (GitHub Actions, GitLab CI)
+- Can orchestrate multi-cloud deployments with single command
 
 ### API Framework: FastAPI vs Flask/Django/aiohttp
 
 **Chosen: FastAPI**
 
 **Alternatives considered:**
+
 - **Flask**: Mature, simple, but synchronous and manual validation
 - **Django + DRF**: Feature-complete but heavyweight for API-only
 - **aiohttp**: Fast async but low-level, requires more boilerplate
@@ -1775,6 +2303,7 @@ This section explains key technology decisions and why certain tools were chosen
 - **Starlette**: FastAPI's foundation, but FastAPI adds useful abstractions
 
 **Why FastAPI?**
+
 - **Performance**: Async/await support, comparable to Node.js/Go
 - **Developer experience**: Automatic OpenAPI docs, type hints, IDE support
 - **Validation**: Pydantic models prevent entire class of bugs
@@ -1782,15 +2311,26 @@ This section explains key technology decisions and why certain tools were chosen
 - **Ecosystem**: Growing rapidly, excellent community
 
 **Trade-offs:**
+
 - Newer than Flask (less battle-tested)
 - Learning curve for async programming
 - Fewer plugins than Django ecosystem
+
+**Cloud Migration Readiness:**
+
+- Production-ready for all major clouds (AWS, GCP, Azure)
+- Native async support = efficient resource usage in cloud (lower costs)
+- Works with serverless (Lambda via Mangum, Cloud Run, Azure Functions)
+- OpenAPI spec enables auto-generated API Gateway configurations
+- Container-friendly: fast startup, low memory footprint
+- Scales horizontally behind cloud load balancers (ALB, Cloud Load Balancing)
 
 ### Vector Database: pgvector vs Pinecone/Weaviate/Qdrant
 
 **Chosen: pgvector (PostgreSQL extension)**
 
 **Alternatives considered:**
+
 - **Pinecone**: Managed, scalable, but cloud-only (violates local-first)
 - **Weaviate**: Feature-rich, but separate service to manage
 - **Qdrant**: Fast, modern, but additional complexity
@@ -1799,6 +2339,7 @@ This section explains key technology decisions and why certain tools were chosen
 - **FAISS**: Chosen as complement for speed, but not a full database
 
 **Why pgvector?**
+
 - **Simplicity**: One database for relational and vector data
 - **Local-first**: No external dependencies or cloud services
 - **ACID guarantees**: Transactions, consistency, reliability
@@ -1807,23 +2348,35 @@ This section explains key technology decisions and why certain tools were chosen
 - **SQL integration**: Join vector similarity with relational queries
 
 **Trade-offs:**
+
 - Performance: Slower than specialized vector DBs at scale (>10M vectors)
 - Features: Less advanced filtering and metadata search
 - Scaling: Requires PostgreSQL scaling strategies
 
 **Note:** FAISS used alongside pgvector for speed-critical retrieval.
 
+**Cloud Migration Readiness:**
+
+- Direct lift-and-shift to RDS, Cloud SQL, Azure Database (connection string change only)
+- pgvector extension supported on all major cloud PostgreSQL services
+- Easy transition to Aurora PostgreSQL for cloud-native scaling
+- Can migrate to specialized vector DBs (Pinecone, Weaviate) if needed
+- Repository pattern isolates vector storage - swap implementation without business logic changes
+- Hybrid approach: pgvector for structured data + cloud vector DB for scale
+
 ### Linter: ruff vs Flake8/pylint/Black
 
 **Chosen: ruff (for both linting and formatting)**
 
 **Alternatives considered:**
+
 - **Flake8 + Black + isort**: Traditional stack, proven but slow
 - **pylint**: Comprehensive but very slow and opinionated
 - **Black**: Popular formatter but Python-based (slower)
 - **autopep8**: Conservative formatter but limited rules
 
 **Why ruff?**
+
 - **Speed**: Written in Rust, 10-100x faster than Python linters
 - **All-in-one**: Replaces Flake8, isort, pyupgrade, and others
 - **Compatibility**: Black-compatible formatting
@@ -1831,21 +2384,32 @@ This section explains key technology decisions and why certain tools were chosen
 - **Configuration**: Simple, works with pyproject.toml
 
 **Trade-offs:**
+
 - Newer tool (less mature than Black/Flake8)
 - Some advanced pylint checks not implemented
 - Occasional bugs in rapidly evolving codebase
+
+**Cloud Migration Readiness:**
+
+- Speed critical for cloud CI/CD pipelines (faster = cheaper)
+- Reduces GitHub Actions minutes, AWS CodeBuild costs
+- Single tool = simpler cloud build configurations
+- Fast pre-commit hooks improve developer velocity
+- Rust-based = consistent performance across all platforms (including cloud builders)
 
 ### Container Orchestration: Docker Compose vs Kubernetes/Nomad
 
 **Chosen: Docker Compose**
 
 **Alternatives considered:**
+
 - **Kubernetes**: Industry standard, but massive overkill for local-first
 - **Docker Swarm**: Simpler than K8s but declining ecosystem
 - **Nomad**: Good balance but additional tool to learn
 - **Podman**: Docker alternative, but less widespread adoption
 
 **Why Docker Compose?**
+
 - **Simplicity**: Single YAML file, easy to understand
 - **Local-first**: Perfect for developer machines
 - **Universal**: Works identically on all platforms
@@ -1853,15 +2417,26 @@ This section explains key technology decisions and why certain tools were chosen
 - **Transition**: Easy to migrate to K8s later if needed
 
 **Trade-offs:**
+
 - Not designed for production clustering
 - Limited scaling capabilities
 - No built-in service mesh or advanced networking
+
+**Cloud Migration Readiness:**
+
+- Docker containers = cloud portability (same containers run on ECS, GKE, AKS)
+- Easy transition: Docker Compose → Kubernetes (kompose tool automates conversion)
+- Multi-service orchestration concepts translate directly to cloud
+- Service definitions map to cloud equivalents (ECS tasks, Cloud Run services)
+- Local Docker Compose = production parity for development
+- Clear migration path: Docker Compose (local) → ECS/Cloud Run (simple cloud) → Kubernetes (complex cloud)
 
 ### Frontend: React vs Vue/Svelte/Angular
 
 **Chosen: React 18+**
 
 **Alternatives considered:**
+
 - **Vue 3**: Simpler, gentler learning curve
 - **Svelte**: Fastest, smallest bundles, compile-time framework
 - **Angular**: Enterprise-grade, but heavyweight and opinionated
@@ -1869,6 +2444,7 @@ This section explains key technology decisions and why certain tools were chosen
 - **Preact**: Tiny React alternative but smaller ecosystem
 
 **Why React?**
+
 - **Ecosystem**: Largest library of components and tools
 - **Talent pool**: Most developers know React
 - **Maturity**: Battle-tested in production at scale
@@ -1876,6 +2452,7 @@ This section explains key technology decisions and why certain tools were chosen
 - **Tooling**: Best dev tools, IDE support, documentation
 
 **Trade-offs:**
+
 - Bundle size larger than Svelte/Preact
 - Learning curve for hooks and modern patterns
 - Verbosity compared to Vue template syntax
@@ -1885,11 +2462,13 @@ This section explains key technology decisions and why certain tools were chosen
 **Chosen: PyTorch** (via Transformers)
 
 **Alternatives considered:**
+
 - **TensorFlow**: Mature, but more complex API
 - **JAX**: Fast, functional, but smaller ecosystem for NLP
 - **ONNX Runtime**: Fast inference but requires model conversion
 
 **Why PyTorch?**
+
 - **Hugging Face ecosystem**: Best support for transformers models
 - **Pythonic**: Intuitive, feels like NumPy
 - **Research to production**: Easy transition
@@ -1897,9 +2476,427 @@ This section explains key technology decisions and why certain tools were chosen
 - **Dynamic graphs**: Easier debugging than TensorFlow
 
 **Trade-offs:**
+
 - Slightly slower than TensorFlow for some workloads
 - Larger model files than optimized formats
 - Less deployment tooling than TensorFlow Serving
+
+---
+
+## Cloud Migration Tooling
+
+This section outlines the tools and practices for transitioning from local development to cloud deployment.
+
+### Infrastructure as Code (IaC)
+
+**Terraform (Recommended):**
+
+Multi-cloud infrastructure provisioning with declarative configuration.
+
+**Key Features:**
+
+- Multi-cloud support (AWS, Azure, GCP, and 100+ providers)
+- Declarative syntax (HCL) describes desired state
+- State management for tracking infrastructure
+- Plan/apply workflow prevents accidental changes
+- Module system for reusable components
+
+**Example Terraform Structure:**
+
+```hcl
+# terraform/modules/api/main.tf
+resource "aws_ecs_service" "api" {
+  name            = "truthgraph-api"
+  cluster         = var.ecs_cluster_id
+  task_definition = aws_ecs_task_definition.api.arn
+  desired_count   = var.api_replicas
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.api.arn
+    container_name   = "api"
+    container_port   = 8000
+  }
+}
+
+# terraform/dev/main.tf
+module "api" {
+  source         = "../modules/api"
+  environment    = "dev"
+  api_replicas   = 2
+  instance_type  = "t3.medium"
+}
+```
+
+**Pulumi (Python Alternative):**
+
+Infrastructure as code using Python instead of HCL.
+
+**Benefits:**
+
+- Use Python for infrastructure (same language as application)
+- IDE support, type checking, testing for infrastructure
+- Supports all major clouds
+- Great for Python-heavy teams
+
+**Example:**
+
+```python
+import pulumi
+import pulumi_aws as aws
+
+# Create ECS service
+api_service = aws.ecs.Service("truthgraph-api",
+    cluster=cluster.arn,
+    task_definition=task_definition.arn,
+    desired_count=2,
+    load_balancers=[{
+        "targetGroupArn": target_group.arn,
+        "containerName": "api",
+        "containerPort": 8000,
+    }]
+)
+```
+
+### Container Orchestration
+
+**Kubernetes:**
+
+Industry-standard container orchestration for cloud deployments.
+
+**Managed Kubernetes Services:**
+
+- Amazon EKS (Elastic Kubernetes Service)
+- Google GKE (Google Kubernetes Engine)
+- Azure AKS (Azure Kubernetes Service)
+
+**Key Concepts:**
+
+- **Pods**: Smallest deployable units (containers)
+- **Deployments**: Declarative updates for pods
+- **Services**: Networking and load balancing
+- **ConfigMaps/Secrets**: Configuration management
+- **Ingress**: HTTP routing to services
+
+**Example Kubernetes Manifest:**
+
+```yaml
+# kubernetes/base/api-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truthgraph-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: truthgraph-api
+  template:
+    metadata:
+      labels:
+        app: truthgraph-api
+    spec:
+      containers:
+      - name: api
+        image: <registry>/truthgraph-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: truthgraph-secrets
+              key: database-url
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+```
+
+**Helm:**
+
+Kubernetes package manager for templating and versioning deployments.
+
+**Benefits:**
+
+- Template Kubernetes manifests with values
+- Version and rollback deployments
+- Share charts across environments
+- Dependency management for complex apps
+
+**Example Helm Chart:**
+
+```yaml
+# helm/truthgraph/values.yaml
+api:
+  image:
+    repository: truthgraph-api
+    tag: "1.0.0"
+  replicas: 3
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+
+database:
+  host: "postgres.default.svc.cluster.local"
+  port: 5432
+
+# Deploy with Helm
+helm install truthgraph ./helm/truthgraph -f values-prod.yaml
+```
+
+**Simpler Alternatives (Before Kubernetes):**
+
+- **AWS ECS/Fargate**: Container orchestration without managing K8s
+- **Google Cloud Run**: Serverless containers (zero to N scaling)
+- **Azure Container Instances**: Simple container deployment
+- **Docker Swarm**: Lightweight alternative to Kubernetes
+
+### Service Mesh (Advanced)
+
+**Istio / Linkerd:**
+
+Service mesh for cloud microservices communication, security, and observability.
+
+**Features:**
+
+- Service-to-service encryption (mTLS)
+- Traffic management (canary deployments, A/B testing)
+- Circuit breaking and retries
+- Distributed tracing
+- Metrics collection
+
+**When to Use:**
+
+- Multiple microservices (>5 services)
+- Need for advanced traffic routing
+- Security requirements (zero-trust networking)
+- Complex observability needs
+
+**Not needed for v1**, but architecture supports future adoption.
+
+### Secrets Management
+
+**Transition from .env to Cloud Secrets:**
+
+**AWS Secrets Manager:**
+
+```python
+import boto3
+
+client = boto3.client('secretsmanager')
+secret = client.get_secret_value(SecretId='truthgraph/database-url')
+database_url = secret['SecretString']
+```
+
+**HashiCorp Vault:**
+
+```python
+import hvac
+
+client = hvac.Client(url='https://vault.example.com')
+client.auth.approle.login(role_id=role_id, secret_id=secret_id)
+secret = client.secrets.kv.v2.read_secret_version(path='truthgraph/db')
+database_url = secret['data']['data']['url']
+```
+
+**Google Secret Manager:**
+
+```python
+from google.cloud import secretmanager
+
+client = secretmanager.SecretManagerServiceClient()
+name = "projects/PROJECT_ID/secrets/database-url/versions/latest"
+response = client.access_secret_version(request={"name": name})
+database_url = response.payload.data.decode('UTF-8')
+```
+
+**Migration Strategy:**
+
+1. Start with .env for local development
+2. Add secrets adapter layer in code
+3. Transition to cloud secrets manager in cloud environments
+4. Keep .env.example for documentation
+
+### Monitoring & Observability in Cloud
+
+**Structured Logging (structlog):**
+
+Essential for cloud log aggregation and analysis.
+
+**Why structlog?**
+
+- JSON-formatted logs parse easily in CloudWatch, Datadog, etc.
+- Contextual information (request IDs, user IDs) in every log
+- Searchable and filterable in cloud logging systems
+
+**Example:**
+
+```python
+import structlog
+
+logger = structlog.get_logger()
+logger.info("claim_analyzed",
+    claim_id="123",
+    verdict="true",
+    confidence=0.87,
+    processing_time_ms=234)
+
+# CloudWatch/Datadog can filter: verdict="true" AND confidence>0.8
+```
+
+**OpenTelemetry:**
+
+Vendor-agnostic observability framework for traces, metrics, and logs.
+
+**Benefits:**
+
+- Works with any backend (Jaeger, Zipkin, CloudWatch, Datadog, New Relic)
+- Avoid vendor lock-in
+- Standard instrumentation across languages
+- Automatic instrumentation for popular frameworks
+
+**Example:**
+
+```python
+from opentelemetry import trace
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
+tracer = trace.get_tracer(__name__)
+
+# Automatic FastAPI instrumentation
+FastAPIInstrumentor.instrument_app(app)
+
+# Manual spans for custom operations
+with tracer.start_as_current_span("analyze_claim"):
+    result = analyze_claim(claim_text)
+```
+
+**Cloud Monitoring Backends:**
+
+- **AWS**: CloudWatch Logs, X-Ray (tracing), CloudWatch Metrics
+- **GCP**: Cloud Logging, Cloud Trace, Cloud Monitoring
+- **Azure**: Application Insights, Azure Monitor
+- **Multi-cloud**: Datadog, New Relic, Grafana Cloud
+
+### Cloud Deployment Patterns
+
+**Progressive Migration Strategy:**
+
+1. **Phase 1: Lift and Shift**
+   - Deploy containers to ECS/Cloud Run/AKS
+   - Use managed PostgreSQL (RDS/Cloud SQL)
+   - Use managed Redis (ElastiCache)
+   - Minimal code changes (connection strings only)
+
+2. **Phase 2: Cloud Optimization**
+   - Add auto-scaling policies
+   - Implement cloud-native monitoring
+   - Use CDN for frontend (CloudFront/Cloud CDN)
+   - Optimize costs with reserved instances/commitments
+
+3. **Phase 3: Cloud-Native**
+   - Serverless functions for specific workloads
+   - Managed ML services (SageMaker/Vertex AI)
+   - Cloud vector databases (Pinecone/Weaviate)
+   - Multi-region deployment
+
+**Environment Strategy:**
+
+- **Development**: Cloud emulators (LocalStack) or small cloud instances
+- **Staging**: Cloud deployment matching production architecture
+- **Production**: Scaled cloud deployment with HA and DR
+
+---
+
+## Cloud-Ready Checklist
+
+Ensure your TruthGraph deployment is ready for cloud migration:
+
+### Architecture & Design
+
+- [ ] Repository pattern implemented for all data access (database, file storage, vector search)
+- [ ] Adapter pattern used for external services (embedding APIs, OCR, etc.)
+- [ ] Configuration externalized (12-factor app principles)
+- [ ] Stateless API design (no local state, session stored in Redis)
+- [ ] Health check endpoints implemented (`/health`, `/ready`)
+
+### Containerization
+
+- [ ] Multi-stage Dockerfiles for optimized images
+- [ ] Images run as non-root user
+- [ ] Health checks defined in Dockerfile
+- [ ] Environment variables for all configuration
+- [ ] Docker images under 500MB (excluding ML models)
+
+### Observability
+
+- [ ] Structured logging (JSON format) implemented
+- [ ] OpenTelemetry instrumentation added
+- [ ] Metrics exposed (Prometheus format or CloudWatch-compatible)
+- [ ] Distributed tracing configured
+- [ ] Log levels configurable via environment
+
+### Security
+
+- [ ] Secrets externalized (not in code or images)
+- [ ] Container vulnerability scanning configured (Trivy/Snyk)
+- [ ] Dependencies up-to-date with security patches
+- [ ] API authentication/authorization implemented
+- [ ] HTTPS/TLS configured for production
+
+### Database & Storage
+
+- [ ] Database migrations automated (Alembic)
+- [ ] Connection pooling configured
+- [ ] File storage uses abstraction (local files or S3)
+- [ ] Database backups automated
+- [ ] Connection strings configurable per environment
+
+### CI/CD
+
+- [ ] Automated testing in CI pipeline
+- [ ] Docker images built and scanned in CI
+- [ ] Infrastructure as Code templates prepared (Terraform/Pulumi)
+- [ ] Deployment automation configured
+- [ ] Rollback procedures documented
+
+### Performance & Scaling
+
+- [ ] Horizontal scaling tested (run multiple API replicas)
+- [ ] Caching strategy implemented (Redis)
+- [ ] Database query performance optimized
+- [ ] API response times under SLA
+- [ ] Resource limits defined (CPU, memory)
+
+### Cost Optimization
+
+- [ ] Right-sized instance types selected
+- [ ] Auto-scaling policies configured
+- [ ] Spot instances/preemptible VMs considered
+- [ ] Reserved instances evaluated for steady workloads
+- [ ] Cloud cost monitoring configured
+
+### Disaster Recovery
+
+- [ ] Backup strategy documented and tested
+- [ ] Recovery Time Objective (RTO) defined
+- [ ] Recovery Point Objective (RPO) defined
+- [ ] Multi-region deployment plan (if required)
+- [ ] Runbooks for common failure scenarios
+
+### Documentation
+
+- [ ] Cloud deployment guide written
+- [ ] Architecture diagrams updated for cloud
+- [ ] Incident response procedures documented
+- [ ] Cost estimation documented
+- [ ] Migration plan reviewed and approved
+
+**Cloud-ready doesn't compromise local development experience - it enhances it.** All these practices improve code quality, observability, and reliability whether running locally or in the cloud.
 
 ---
 
@@ -2233,6 +3230,7 @@ repos:
 ```
 
 **Installation:**
+
 ```bash
 # Install pre-commit
 uv pip install pre-commit
@@ -2294,6 +3292,7 @@ services:
 - **Node.js**: 18+ LTS (20+ recommended for frontend)
 
 **Tool Versions (locked in pyproject.toml):**
+
 - **FastAPI**: 0.104.0 - 0.110.0
 - **Transformers**: 4.35.0 - 5.0.0
 - **PyTorch**: 2.1.0 - 3.0.0
@@ -2301,6 +3300,7 @@ services:
 - **pytest**: 7.4.0 - 8.0.0
 
 **Why version locking matters:**
+
 - Reproducible builds across environments
 - Prevents breaking changes from automatic updates
 - Security: Can track and patch specific versions
@@ -2311,9 +3311,39 @@ services:
 ## Summary
 
 TruthGraph's tech stack prioritizes:
+
 - **Speed**: uv, ruff, FastAPI, FAISS
 - **Reliability**: PostgreSQL, Docker, type checking
 - **Simplicity**: Taskfile, pyproject.toml, minimal config
 - **Reproducibility**: Lock files, containers, versioned models
+- **Cloud-Ready**: Every tool selected works locally AND in cloud
+- **Migration Path**: Clear transition from local → cloud with minimal refactoring
 
-This foundation supports rapid iteration while maintaining production-grade quality and local-first operation.
+This foundation supports rapid iteration while maintaining production-grade quality and local-first operation, with a seamless path to cloud deployment when needed.
+
+### Cloud Migration Benefits
+
+All technology choices enable smooth cloud migration:
+
+**Infrastructure:**
+
+- Docker containers → ECS, GKE, AKS, Cloud Run
+- PostgreSQL → RDS, Cloud SQL, Aurora
+- Redis → ElastiCache, Azure Cache, Memorystore
+- FAISS → Pinecone, Weaviate, managed vector DBs
+
+**Development:**
+
+- uv → faster cloud CI/CD builds (lower costs)
+- FastAPI → production-ready for cloud deployment
+- Repository pattern → swap implementations without business logic changes
+- Structured logging → works with CloudWatch, Datadog, any backend
+
+**Operations:**
+
+- Terraform/Pulumi → multi-cloud infrastructure as code
+- OpenTelemetry → vendor-agnostic observability
+- Kubernetes → industry-standard cloud orchestration
+- Security scanning → integrated with cloud registries
+
+**The philosophy: Build cloud-ready from day one, but don't compromise local development experience.** Local development remains fast, simple, and productive while ensuring the application can scale to cloud when the time comes.

@@ -1,13 +1,14 @@
 # Phase 1: Local MVP
 
 **Timeline:** Months 1-2
-**Goal:** Working fact-checker running locally via Docker
+**Goal:** Working fact-checker running locally via Docker with cloud-ready architecture
 
 ## Overview and Goals
 
-Phase 1 establishes the foundation of TruthGraph as a local-first fact-checking system. The focus is on creating a fully functional MVP that runs entirely on a single machine using Docker Compose, with no external dependencies beyond pre-trained models.
+Phase 1 establishes the foundation of TruthGraph as a local-first fact-checking system with cloud-ready architectural patterns. The focus is on creating a fully functional MVP that runs entirely on a single machine using Docker Compose, while incorporating design patterns that enable seamless cloud migration in Phase 2 (v2).
 
 > **Key Documentation References**:
+>
 > - **Technology Stack Details**: [tech_stack_and_tooling.md](tech_stack_and_tooling.md)
 > - **Testing Approach**: See [Testing Strategy](#testing-strategy) section below
 > - **Setup Instructions**: See [Quick Start Commands](#quick-start-commands) section below
@@ -20,6 +21,7 @@ Phase 1 establishes the foundation of TruthGraph as a local-first fact-checking 
 3. **Simplified Architecture**: Redis Streams instead of Kafka, PostgreSQL instead of distributed databases
 4. **Local-First Design**: No cloud dependencies, all data and models stored locally
 5. **Developer Experience**: Easy setup with `docker-compose up`, clear logs, simple debugging
+6. **Cloud-Ready Patterns**: Architecture designed to reduce v2 cloud migration effort by 50-70%
 
 ### Success Criteria
 
@@ -35,6 +37,15 @@ Phase 1 establishes the foundation of TruthGraph as a local-first fact-checking 
 > **Reference**: See [tech_stack_and_tooling.md](tech_stack_and_tooling.md) for detailed rationale on technology choices.
 
 ### Service Architecture
+
+Phase 1 uses a **microservices architecture** with separated services, enabling independent scaling and testing. This separation provides immediate benefits for local development and positions the system for seamless cloud migration.
+
+**Service Separation Benefits**:
+
+- **Local Development**: Test individual services in isolation
+- **Resource Optimization**: Scale CPU-intensive ML workers independently
+- **Cloud Migration**: Services map directly to cloud functions/containers (API Gateway → API Gateway, Worker → Lambda/ECS)
+- **Maintainability**: Clear service boundaries and responsibilities
 
 ```yaml
 version: '3.8'
@@ -76,11 +87,27 @@ services:
     networks:
       - truthgraph-net
 
-  api:
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: truthgraph-prometheus
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./volumes/prometheus:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - truthgraph-net
+
+  # API Gateway Service
+  api-gateway:
     build:
       context: .
-      dockerfile: docker/api.Dockerfile
-    container_name: truthgraph-api
+      dockerfile: docker/api-gateway.Dockerfile
+    container_name: truthgraph-api-gateway
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
@@ -89,12 +116,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
-      - NLI_MODEL=microsoft/deberta-v3-base
       - LOG_LEVEL=INFO
+      - OTEL_SERVICE_NAME=api-gateway
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prometheus:9090
     volumes:
-      - ./api:/app/api
-      - ./volumes/models:/root/.cache/huggingface
+      - ./services/api_gateway:/app/api_gateway
     ports:
       - "8000:8000"
     depends_on:
@@ -110,11 +136,41 @@ services:
     networks:
       - truthgraph-net
 
-  worker:
+  # Verification Service
+  verification-service:
     build:
       context: .
-      dockerfile: docker/worker.Dockerfile
-    container_name: truthgraph-worker
+      dockerfile: docker/verification-service.Dockerfile
+    container_name: truthgraph-verification-service
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=truthgraph
+      - POSTGRES_USER=truthgraph
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NLI_MODEL=microsoft/deberta-v3-base
+      - LOG_LEVEL=INFO
+      - OTEL_SERVICE_NAME=verification-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prometheus:9090
+    volumes:
+      - ./services/verification:/app/verification
+      - ./volumes/models:/root/.cache/huggingface
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - truthgraph-net
+
+  # Corpus/Retrieval Service
+  corpus-service:
+    build:
+      context: .
+      dockerfile: docker/corpus-service.Dockerfile
+    container_name: truthgraph-corpus-service
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
@@ -124,12 +180,40 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
-      - NLI_MODEL=microsoft/deberta-v3-base
       - LOG_LEVEL=INFO
+      - OTEL_SERVICE_NAME=corpus-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prometheus:9090
     volumes:
-      - ./ml:/app/ml
+      - ./services/corpus:/app/corpus
       - ./volumes/models:/root/.cache/huggingface
       - ./volumes/faiss-index:/app/faiss-index
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - truthgraph-net
+
+  # Worker Service (orchestrates workflow)
+  worker-service:
+    build:
+      context: .
+      dockerfile: docker/worker-service.Dockerfile
+    container_name: truthgraph-worker-service
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=truthgraph
+      - POSTGRES_USER=truthgraph
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=INFO
+      - OTEL_SERVICE_NAME=worker-service
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prometheus:9090
+    volumes:
+      - ./services/worker:/app/worker
     depends_on:
       postgres:
         condition: service_healthy
@@ -151,7 +235,7 @@ services:
     ports:
       - "5173:5173"
     depends_on:
-      - api
+      - api-gateway
     networks:
       - truthgraph-net
 
@@ -162,11 +246,12 @@ networks:
 volumes:
   postgres-data:
   redis-data:
+  prometheus-data:
 ```
 
 ### Volume Structure
 
-```
+```text
 truthgraph/
 ├── docker-compose.yml
 ├── .env
@@ -228,6 +313,7 @@ MODEL_CACHE_DIR=/root/.cache/huggingface
 ### Quick Start Commands
 
 **Prerequisites:**
+
 - Docker Desktop (Windows/Mac) or Docker Engine + Docker Compose (Linux)
 - uv (Python package manager): `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - Task (task runner): See [tech_stack_and_tooling.md](tech_stack_and_tooling.md#task-runner-taskfile-go-task) for installation
@@ -304,13 +390,28 @@ task down
 task reset
 ```
 
+## Cloud-Ready Architectural Patterns
+
+> **Detailed Implementation**: For complete code examples and implementation details of cloud-ready patterns, see [cloud_ready_patterns.md](cloud_ready_patterns.md).
+
+Phase 1 incorporates proven cloud-native patterns that provide immediate local benefits while dramatically reducing migration effort for Phase 2 (reducing v2 cloud migration effort by **50-70%**). These patterns are not theoretical - they're practical implementations that make the local system better:
+
+1. **Repository/Adapter Pattern**: Abstract data access to swap PostgreSQL, DynamoDB, or other stores with minimal code changes
+2. **CloudEvents Standard**: Event schemas that work identically with Redis Streams (v1), SQS, EventBridge, or Kafka (v2)
+3. **Observability from Day One**: Structured logging (structlog), distributed tracing (OpenTelemetry), and metrics (Prometheus)
+4. **Multi-Tenant Database Schema**: All tables include `tenant_id` (set to "default" in v1, real tenant IDs in v2)
+5. **Configuration Adapters**: Swap environment variables for AWS Secrets Manager or Vault without code changes
+
+See [cloud_ready_patterns.md](cloud_ready_patterns.md) for detailed implementation examples.
+
 ## Simplified Event Flow
 
-### Redis Streams Architecture
+### Redis Streams Architecture with CloudEvents
 
-Instead of Kafka, Phase 1 uses Redis Streams for event-driven processing. This provides pub/sub, message persistence, and consumer groups without operational complexity.
+Instead of Kafka, Phase 1 uses Redis Streams for event-driven processing. This provides pub/sub, message persistence, and consumer groups without operational complexity. **All events follow the CloudEvents 1.0 specification**, ensuring they work identically when migrating to cloud event buses (SQS, EventBridge, Kafka).
 
 > **Technical Rationale**: Redis Streams chosen over Kafka for Phase 1 due to lower operational overhead, simpler setup, and sufficient throughput for local MVP. See [tech_stack_and_tooling.md](tech_stack_and_tooling.md#redis) for details on Redis usage patterns.
+> **Cloud Benefit**: CloudEvents-compliant events require zero schema changes when migrating from Redis Streams to AWS EventBridge or SQS in v2.
 
 ### Event Streams
 
@@ -321,7 +422,7 @@ Instead of Kafka, Phase 1 uses Redis Streams for event-driven processing. This p
 
 ### Processing Pipeline
 
-```
+```text
 User submits claim
     ↓
 API creates Claim record in PostgreSQL
@@ -347,22 +448,72 @@ Worker publishes to 'verdicts-ready' stream
 API polls or subscribes for UI updates
 ```
 
-### Message Schema
+### CloudEvents-Compliant Event Schemas
+
+All events follow the [CloudEvents 1.0 specification](https://cloudevents.io/), ensuring portability across event systems (Redis Streams, SQS, EventBridge, Kafka).
+
+**Claim Submitted Event**:
 
 ```json
 {
-  "stream": "claims-submitted",
-  "message": {
+  "specversion": "1.0",
+  "id": "a234-5678-90ab-cdef",
+  "source": "api-gateway",
+  "type": "com.truthgraph.claim.submitted.v1",
+  "datacontenttype": "application/json",
+  "time": "2025-01-15T10:30:00Z",
+  "data": {
     "claim_id": "uuid",
     "claim_text": "string",
-    "submitted_at": "timestamp",
-    "metadata": {
-      "source": "api|ui",
-      "user_id": "optional"
-    }
+    "tenant_id": "default",
+    "submitted_at": "2025-01-15T10:30:00Z"
   }
 }
 ```
+
+**Evidence Retrieved Event**:
+
+```json
+{
+  "specversion": "1.0",
+  "id": "b234-5678-90ab-cdef",
+  "source": "corpus-service",
+  "type": "com.truthgraph.evidence.retrieved.v1",
+  "datacontenttype": "application/json",
+  "time": "2025-01-15T10:30:05Z",
+  "data": {
+    "claim_id": "uuid",
+    "evidence_ids": ["uuid1", "uuid2", "uuid3"],
+    "tenant_id": "default",
+    "evidence_count": 3
+  }
+}
+```
+
+**Verdict Ready Event**:
+
+```json
+{
+  "specversion": "1.0",
+  "id": "c234-5678-90ab-cdef",
+  "source": "verification-service",
+  "type": "com.truthgraph.verdict.ready.v1",
+  "datacontenttype": "application/json",
+  "time": "2025-01-15T10:30:10Z",
+  "data": {
+    "claim_id": "uuid",
+    "verdict": "SUPPORTED|REFUTED|INSUFFICIENT",
+    "confidence": 0.85,
+    "tenant_id": "default"
+  }
+}
+```
+
+**Redis Streams Storage** (v1):
+Events are stored in Redis Streams with the CloudEvents payload as JSON.
+
+**AWS SQS/EventBridge** (v2):
+Same CloudEvents JSON payload, zero schema changes required.
 
 ## Minimal Retrieval System
 
@@ -394,17 +545,25 @@ LIMIT 5;
 -- pgvector extension
 CREATE EXTENSION vector;
 
--- Embeddings table
+-- Embeddings table (multi-tenant ready)
 CREATE TABLE evidence_embeddings (
-    id UUID PRIMARY KEY,
-    evidence_id UUID REFERENCES evidence(id),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
+    evidence_id UUID REFERENCES evidence(id) ON DELETE CASCADE,
     embedding VECTOR(384),  -- all-MiniLM-L6-v2 dimension
-    created_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Similarity search
+-- Indexes for tenant-scoped vector search
+CREATE INDEX idx_embeddings_tenant_vector ON evidence_embeddings(tenant_id) INCLUDE (embedding);
+CREATE INDEX idx_embeddings_vector_similarity ON evidence_embeddings
+    USING ivfflat (embedding vector_cosine_ops);
+
+-- Tenant-scoped similarity search
 SELECT e.* FROM evidence e
 JOIN evidence_embeddings ee ON e.id = ee.evidence_id
+WHERE ee.tenant_id = $tenant_id
+  AND e.tenant_id = $tenant_id
 ORDER BY ee.embedding <-> $claim_embedding
 LIMIT 5;
 ```
@@ -502,6 +661,7 @@ Simple majority voting with confidence weighting:
 3. **Uncertainty score**: Sum of (confidence * weight) for neutral labels
 
 **Final label**:
+
 - `SUPPORTED` if support_score > 0.6
 - `REFUTED` if refute_score > 0.6
 - `INSUFFICIENT` otherwise
@@ -530,22 +690,32 @@ confidence = max(support_score, refute_score) / len(evidence_list)
 
 ## Provenance Storage
 
-### PostgreSQL Schema
+### PostgreSQL Schema (Cloud-Ready, Multi-Tenant)
 
 > **Technical Rationale**: PostgreSQL chosen over document stores or graph databases for Phase 1 due to ACID guarantees, mature tooling, and pgvector extension for hybrid relational+vector storage. See [tech_stack_and_tooling.md](tech_stack_and_tooling.md#postgresql--pgvector-extension) for detailed comparison.
+>
+> **Cloud-Ready Design**: All tables include `tenant_id` for multi-tenancy (always "default" in v1, real tenant IDs in v2). UUIDs used instead of auto-increment IDs for distributed systems compatibility. Indexes optimized for tenant-scoped queries.
 
 ```sql
--- Claims table
+-- Claims table (multi-tenant ready)
 CREATE TABLE claims (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
     text TEXT NOT NULL,
     submitted_at TIMESTAMP DEFAULT NOW(),
-    metadata JSONB
+    metadata JSONB,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Evidence table
+-- Composite indexes for tenant-scoped queries
+CREATE INDEX idx_claims_tenant_submitted ON claims(tenant_id, submitted_at DESC);
+CREATE INDEX idx_claims_tenant_id ON claims(tenant_id, id);
+
+-- Evidence table (multi-tenant ready)
 CREATE TABLE evidence (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
     content TEXT NOT NULL,
     source_url TEXT,
     source_type VARCHAR(50),
@@ -554,24 +724,78 @@ CREATE TABLE evidence (
     metadata JSONB
 );
 
--- Verdicts table
-CREATE TABLE verdicts (
-    id UUID PRIMARY KEY,
-    claim_id UUID REFERENCES claims(id),
-    verdict VARCHAR(20),
-    confidence FLOAT,
-    reasoning TEXT,
+CREATE INDEX idx_evidence_tenant ON evidence(tenant_id);
+CREATE INDEX idx_evidence_fts ON evidence USING gin(to_tsvector('english', content));
+
+-- Evidence embeddings (multi-tenant ready)
+CREATE TABLE evidence_embeddings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
+    evidence_id UUID REFERENCES evidence(id) ON DELETE CASCADE,
+    embedding VECTOR(384),  -- all-MiniLM-L6-v2 dimension
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Evidence-Verdict relationships
+CREATE INDEX idx_embeddings_tenant_vector ON evidence_embeddings(tenant_id) INCLUDE (embedding);
+CREATE INDEX idx_embeddings_vector_similarity ON evidence_embeddings
+    USING ivfflat (embedding vector_cosine_ops);
+
+-- Verdicts table (multi-tenant ready)
+CREATE TABLE verdicts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
+    claim_id UUID REFERENCES claims(id) ON DELETE CASCADE,
+    verdict VARCHAR(20) NOT NULL,
+    confidence FLOAT NOT NULL,
+    reasoning TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    metadata JSONB
+);
+
+CREATE INDEX idx_verdicts_tenant_claim ON verdicts(tenant_id, claim_id);
+CREATE INDEX idx_verdicts_tenant_created ON verdicts(tenant_id, created_at DESC);
+
+-- Evidence-Verdict relationships (multi-tenant ready)
 CREATE TABLE verdict_evidence (
-    verdict_id UUID REFERENCES verdicts(id),
-    evidence_id UUID REFERENCES evidence(id),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(255) NOT NULL DEFAULT 'default',
+    verdict_id UUID REFERENCES verdicts(id) ON DELETE CASCADE,
+    evidence_id UUID REFERENCES evidence(id) ON DELETE CASCADE,
     relationship VARCHAR(20),  -- supports|refutes|neutral
     confidence FLOAT,
-    PRIMARY KEY (verdict_id, evidence_id)
+    UNIQUE (verdict_id, evidence_id)
 );
+
+CREATE INDEX idx_verdict_evidence_tenant ON verdict_evidence(tenant_id);
+
+-- Row-level security (prepared for v2, disabled in v1)
+-- In v2, uncomment these to enable tenant isolation at the database level:
+-- ALTER TABLE claims ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY tenant_isolation ON claims
+--   USING (tenant_id = current_setting('app.current_tenant')::text);
+-- (Repeat for all tables)
+
+COMMENT ON COLUMN claims.tenant_id IS 'Tenant identifier: always "default" in v1, real tenant IDs in v2';
+COMMENT ON COLUMN evidence.tenant_id IS 'Tenant identifier: always "default" in v1, real tenant IDs in v2';
+COMMENT ON COLUMN verdicts.tenant_id IS 'Tenant identifier: always "default" in v1, real tenant IDs in v2';
+```
+
+**Query Pattern (Tenant-Scoped)**:
+
+```python
+# Always include tenant_id in queries to prevent data leakage
+async def get_claim(claim_id: UUID, tenant_id: str = "default") -> Optional[Claim]:
+    """Get claim by ID (tenant-scoped)
+
+    In v1: tenant_id defaults to "default"
+    In v2: tenant_id extracted from JWT/API key
+    """
+    query = """
+        SELECT * FROM claims
+        WHERE id = $1 AND tenant_id = $2
+    """
+    row = await db.fetchrow(query, claim_id, tenant_id)
+    return Claim.from_row(row) if row else None
 ```
 
 ### RDFLib Integration
@@ -666,17 +890,20 @@ Phase 1 implements three levels of testing to ensure reliability and correctness
 **Scope**: Individual functions and classes in isolation
 
 **Tools**:
+
 - pytest for test execution
 - pytest-mock for mocking
 - pytest-asyncio for async tests
 
 **Coverage Targets**:
+
 - Core ML functions: 90%+
 - API business logic: 85%+
 - Database operations: 80%+
 - Overall: 80%+
 
 **Examples**:
+
 ```bash
 # Run unit tests only
 task test:unit
@@ -689,6 +916,7 @@ uv run pytest tests/unit --cov=api --cov=ml --cov-report=html
 ```
 
 **Key Test Areas**:
+
 - Embedding generation (mock transformers models)
 - NLI verification logic
 - Verdict aggregation algorithms
@@ -700,11 +928,13 @@ uv run pytest tests/unit --cov=api --cov=ml --cov-report=html
 **Scope**: Component interactions and API endpoints
 
 **Tools**:
+
 - pytest-docker for test containers
 - FastAPI TestClient for API testing
 - Test PostgreSQL and Redis instances
 
 **Setup**:
+
 ```python
 # conftest.py fixture example
 @pytest.fixture(scope="session")
@@ -716,6 +946,7 @@ def test_database():
 ```
 
 **Examples**:
+
 ```bash
 # Run integration tests
 task test:integration
@@ -725,6 +956,7 @@ uv run pytest tests/integration -v
 ```
 
 **Key Test Areas**:
+
 - API endpoint flows (claim submission → verdict retrieval)
 - Database transactions and rollbacks
 - Redis stream publishing and consumption
@@ -736,11 +968,13 @@ uv run pytest tests/integration -v
 **Scope**: Full user workflows through UI and API
 
 **Tools**:
+
 - Docker Compose for full stack
 - httpx for API calls
 - Playwright (optional) for UI testing
 
 **Setup**:
+
 ```bash
 # Start test environment
 docker compose -f docker-compose.test.yml up -d
@@ -753,6 +987,7 @@ docker compose -f docker-compose.test.yml down -v
 ```
 
 **Key Test Areas**:
+
 - Submit claim → receive verdict (under 30s)
 - Evidence retrieval quality (test with known claims)
 - UI claim submission and results display
@@ -761,6 +996,7 @@ docker compose -f docker-compose.test.yml down -v
 ### Running Tests
 
 **Quick Commands**:
+
 ```bash
 # All tests with coverage
 task test
@@ -784,11 +1020,13 @@ uv run pytest -x
 ### Test Data
 
 **Fixtures Location**: `tests/fixtures/`
+
 - `sample_claims.json`: Test claims with known verdicts
 - `sample_evidence.json`: Pre-labeled evidence documents
 - `test_corpus.parquet`: Small corpus for retrieval tests
 
 **Generating Test Data**:
+
 ```bash
 # Create test corpus
 uv run python -m scripts.generate_test_data --output tests/fixtures/
@@ -797,6 +1035,7 @@ uv run python -m scripts.generate_test_data --output tests/fixtures/
 ### CI Integration
 
 Tests run automatically on GitHub Actions (future):
+
 ```yaml
 # .github/workflows/test.yml
 - name: Run tests
@@ -804,6 +1043,7 @@ Tests run automatically on GitHub Actions (future):
 ```
 
 **CI Pipeline**:
+
 1. Lint code (ruff)
 2. Type check (mypy)
 3. Unit tests (fast, parallel)
@@ -814,6 +1054,7 @@ Tests run automatically on GitHub Actions (future):
 ### Performance Testing
 
 **Targets**:
+
 - Claim processing: < 30 seconds (end-to-end)
 - Embedding generation: < 100ms per text
 - NLI inference: < 500ms per evidence-claim pair
@@ -821,6 +1062,7 @@ Tests run automatically on GitHub Actions (future):
 - API latency: < 200ms (excluding ML operations)
 
 **Tools**:
+
 ```bash
 # Load test API
 locust -f tests/performance/locustfile.py --host http://localhost:8000
@@ -837,6 +1079,7 @@ locust -f tests/performance/locustfile.py --host http://localhost:8000
 **Symptom**: `docker compose up` exits with errors
 
 **Solutions**:
+
 ```bash
 # 1. Check Docker is running
 docker version
@@ -866,6 +1109,7 @@ docker compose logs
 **Symptom**: `psycopg2.OperationalError: could not connect to server`
 
 **Solutions**:
+
 ```bash
 # 1. Wait for PostgreSQL to be ready
 docker compose logs postgres
@@ -891,6 +1135,7 @@ sleep 10  # Wait for startup
 **Symptom**: `redis.exceptions.ConnectionError`
 
 **Solutions**:
+
 ```bash
 # 1. Check Redis is running
 docker compose exec redis redis-cli ping
@@ -911,6 +1156,7 @@ docker compose exec redis redis-cli FLUSHALL
 **Symptom**: `OSError: Model not found` or slow first startup
 
 **Solutions**:
+
 ```bash
 # 1. Pre-download models manually
 uv run python -c "
@@ -940,6 +1186,7 @@ export TRANSFORMERS_OFFLINE=1
 **Symptom**: Containers crash or `MemoryError`
 
 **Solutions**:
+
 ```bash
 # 1. Check available memory
 docker stats
@@ -964,6 +1211,7 @@ echo "ENABLE_FAISS=false" >> .env
 **Symptom**: `ERROR: extension "vector" is not available`
 
 **Solutions**:
+
 ```bash
 # 1. Verify pgvector image
 docker compose config | grep image
@@ -988,6 +1236,7 @@ docker compose up -d postgres
 **Symptom**: Code changes don't reflect in running services
 
 **Solutions**:
+
 ```bash
 # 1. Verify volume mounts
 docker compose config | grep volumes
@@ -1008,6 +1257,7 @@ docker compose restart api
 **Symptom**: Claim processing takes > 60 seconds
 
 **Solutions**:
+
 ```bash
 # 1. Check if models are cached
 docker compose logs api | grep "Loading model"
@@ -1040,6 +1290,7 @@ docker compose exec postgres psql -U truthgraph -d truthgraph -c "\d evidence"
 **Symptom**: `pytest` shows failures
 
 **Solutions**:
+
 ```bash
 # 1. Run with verbose output
 uv run pytest -vv -s
@@ -1065,6 +1316,7 @@ uv run python -c "import api.main; import ml.embeddings"
 **Symptom**: `alembic upgrade head` fails
 
 **Solutions**:
+
 ```bash
 # 1. Check current database version
 docker compose exec api alembic current
@@ -1091,6 +1343,7 @@ docker compose exec api alembic upgrade head
 ### Getting Help
 
 **Resources**:
+
 - Check [tech_stack_and_tooling.md](tech_stack_and_tooling.md) for detailed configuration
 - Review logs: `docker compose logs -f`
 - Inspect container: `docker compose exec api bash`
@@ -1098,6 +1351,7 @@ docker compose exec api alembic upgrade head
 - Redis CLI: `docker compose exec redis redis-cli`
 
 **Debug Mode**:
+
 ```bash
 # Enable debug logging
 echo "LOG_LEVEL=DEBUG" >> .env
@@ -1106,6 +1360,145 @@ docker compose restart api worker
 # View detailed logs
 docker compose logs -f api worker
 ```
+
+---
+
+## Cloud Migration Preparation
+
+Before migrating to cloud (Phase 2), verify that v1 implements cloud-ready patterns correctly.
+
+### Cloud-Readiness Verification Checklist
+
+Use this checklist to ensure Phase 1 is truly cloud-ready:
+
+#### Repository/Adapter Pattern
+
+- [ ] All database access goes through repository interfaces (no direct SQL in business logic)
+- [ ] Repositories can be swapped via dependency injection
+- [ ] Test suite includes tests with in-memory/SQLite repositories
+
+#### CloudEvents Compliance
+
+- [ ] All events follow CloudEvents 1.0 schema (specversion, id, source, type, data)
+- [ ] Event publisher is abstracted (can swap Redis for SQS without changing producers)
+- [ ] Event types use reverse-domain naming (com.truthgraph.*.v1)
+
+#### Multi-Tenant Schema
+
+- [ ] All tables include `tenant_id` column
+- [ ] All queries include `WHERE tenant_id = $1` filter
+- [ ] Indexes include `tenant_id` as first column in composites
+- [ ] Row-level security policies defined (commented out for v1)
+
+#### Observability
+
+- [ ] All services use structlog with JSON output
+- [ ] OpenTelemetry tracing configured and tested
+- [ ] Prometheus metrics exposed at `/metrics` endpoint
+- [ ] Logs include correlation IDs (request_id, claim_id, tenant_id)
+
+#### Configuration Management
+
+- [ ] All config accessed through ConfigProvider abstraction
+- [ ] No hardcoded connection strings or secrets in code
+- [ ] Config provider can be swapped (env vars → AWS Secrets Manager)
+
+### Testing with Cloud Emulators
+
+Test cloud migration patterns locally using emulators:
+
+**LocalStack (AWS Services Emulator)**:
+
+```bash
+# Install LocalStack
+pip install localstack
+
+# Start LocalStack with SQS, DynamoDB, S3
+docker run --rm -d \
+  -p 4566:4566 \
+  -e SERVICES=sqs,dynamodb,s3 \
+  --name localstack \
+  localstack/localstack
+
+# Test SQS event publisher
+AWS_ENDPOINT_URL=http://localhost:4566 python -m scripts.test_sqs_events
+
+# Test DynamoDB repository
+AWS_ENDPOINT_URL=http://localhost:4566 python -m scripts.test_dynamodb_repo
+```
+
+**Contract Testing Between Services**:
+
+```python
+# tests/contract/test_event_schemas.py
+import json
+from core.events.schemas import ClaimSubmittedEvent, VerdictReadyEvent
+
+def test_claim_submitted_event_schema():
+    """Verify ClaimSubmittedEvent matches CloudEvents 1.0"""
+    event = ClaimSubmittedEvent(
+        claim_id="123",
+        claim_text="Test claim",
+        tenant_id="default"
+    )
+
+    # Serialize to JSON
+    event_json = json.dumps(event.to_dict())
+
+    # Verify CloudEvents required fields
+    event_dict = json.loads(event_json)
+    assert event_dict["specversion"] == "1.0"
+    assert "id" in event_dict
+    assert "source" in event_dict
+    assert "type" in event_dict
+    assert "time" in event_dict
+    assert event_dict["datacontenttype"] == "application/json"
+
+    # Verify event type format
+    assert event_dict["type"].startswith("com.truthgraph.")
+    assert event_dict["type"].endswith(".v1")
+
+    # Verify tenant_id in data
+    assert event_dict["data"]["tenant_id"] == "default"
+```
+
+### Reference: v2 Cloud Migration Guide
+
+Phase 2 cloud migration involves these high-level steps:
+
+1. **Infrastructure as Code** (Terraform/CDK):
+   - Provision AWS resources (RDS, SQS, EventBridge, ECS/Lambda, ALB)
+   - Set up VPC, security groups, IAM roles
+   - Configure CloudWatch Logs and dashboards
+
+2. **Swap Adapters**:
+   - `PostgresClaimRepository` → `DynamoDBClaimRepository` (or keep RDS)
+   - `RedisStreamPublisher` → `SQSEventPublisher` / `EventBridgePublisher`
+   - `EnvConfigProvider` → `AWSSecretsManagerProvider`
+
+3. **Deploy Services**:
+   - API Gateway → AWS API Gateway + Lambda or ECS
+   - Worker Services → Lambda (event-driven) or ECS Tasks
+   - UI → S3 + CloudFront
+
+4. **Data Migration**:
+   - Export PostgreSQL data from v1
+   - Import to AWS RDS (PostgreSQL) or DynamoDB
+   - Verify data integrity with checksums
+
+5. **Testing**:
+   - Run contract tests against staging environment
+   - Load test with realistic traffic
+   - Chaos engineering (kill random services)
+
+6. **Cutover**:
+   - Blue/green deployment
+   - Gradual traffic shift (10% → 50% → 100%)
+   - Rollback plan
+
+**No code changes to**: business logic, event schemas, API contracts, service boundaries.
+
+See `/docs/roadmap/v2/cloud_migration_guide.md` (to be created) for detailed step-by-step migration instructions.
 
 ---
 
@@ -1128,25 +1521,34 @@ docker compose logs -f api worker
 - [ ] Create `Taskfile.yml` with common development tasks (setup, dev, test, lint)
 - [ ] Test Docker Compose stack starts cleanly
 
-### Database Layer
+### Database Layer (Cloud-Ready)
 
-- [ ] Design PostgreSQL schema (claims, evidence, verdicts, relationships)
+- [ ] Design PostgreSQL schema with multi-tenant support (tenant_id in all tables)
+- [ ] Use UUIDs for all primary keys (gen_random_uuid())
 - [ ] Create migration files using Alembic
 - [ ] Implement pgvector extension setup
 - [ ] Create FTS indexes on evidence table
-- [ ] Write database connection pooling logic (SQLAlchemy)
-- [ ] Implement basic CRUD operations for entities
+- [ ] Create composite indexes with tenant_id as first column
+- [ ] Implement repository pattern interfaces (ClaimRepository, EvidenceRepository)
+- [ ] Write PostgreSQL repository implementations
+- [ ] Add prepared (but commented) row-level security policies
+- [ ] Write database connection pooling logic (SQLAlchemy with repository pattern)
+- [ ] Implement tenant-scoped CRUD operations (always include tenant_id in queries)
 - [ ] Add database seeding script with sample evidence
+- [ ] Write repository abstraction tests (test with in-memory/SQLite repos)
 
-### Event Processing
+### Event Processing (CloudEvents-Compliant)
 
-- [ ] Implement Redis Streams client wrapper
-- [ ] Create producer functions for each event stream
+- [ ] Implement CloudEvents 1.0 schema classes (ClaimSubmittedEvent, VerdictReadyEvent, etc.)
+- [ ] Implement event publisher abstraction (EventPublisher interface)
+- [ ] Implement RedisStreamPublisher with CloudEvents payload
+- [ ] Create producer functions that use CloudEvents schemas
 - [ ] Implement consumer groups for workers
-- [ ] Add event schema validation (Pydantic models)
+- [ ] Add CloudEvents schema validation (Pydantic models with CloudEvents fields)
 - [ ] Write dead-letter queue handling for failed events
 - [ ] Implement retry logic with exponential backoff
 - [ ] Add event logging and monitoring
+- [ ] Write contract tests for event schemas (verify CloudEvents 1.0 compliance)
 
 ### Retrieval System
 
@@ -1218,6 +1620,18 @@ docker compose logs -f api worker
 - [ ] Add responsive design
 - [ ] Write UI Dockerfile (nginx for production)
 
+### Cloud-Ready Patterns Implementation
+
+- [ ] Implement repository pattern for all data access (ClaimRepository, EvidenceRepository, VerdictRepository)
+- [ ] Implement CloudEvents event schemas (all events include specversion, id, source, type, data)
+- [ ] Configure structured logging with structlog (JSON output, correlation IDs)
+- [ ] Configure OpenTelemetry tracing (instrument FastAPI, asyncpg, Redis)
+- [ ] Expose Prometheus metrics at `/metrics` endpoint
+- [ ] Implement ConfigProvider abstraction (EnvConfigProvider for v1)
+- [ ] Add Prometheus container to docker-compose.yml
+- [ ] Verify all logs include tenant_id, request_id, claim_id
+- [ ] Write adapter swap tests (test repository swapping, config provider swapping)
+
 ### Testing and Documentation
 
 > See Testing Strategy section above for detailed test structure
@@ -1227,7 +1641,9 @@ docker compose logs -f api worker
 - [ ] Write unit tests for embedding generation (mock models)
 - [ ] Write unit tests for NLI verification logic
 - [ ] Write unit tests for verdict aggregation
-- [ ] Write unit tests for Redis stream message formatting
+- [ ] Write unit tests for CloudEvents schema formatting
+- [ ] Write contract tests for CloudEvents compliance (verify spec version, required fields)
+- [ ] Write repository abstraction tests (test with in-memory repos)
 - [ ] Create integration tests for API endpoints (using TestClient)
 - [ ] Create integration tests for retrieval pipeline
 - [ ] Create integration tests for worker job processing
@@ -1235,12 +1651,14 @@ docker compose logs -f api worker
 - [ ] Add end-to-end test: evidence retrieval quality
 - [ ] Set up code coverage reporting (pytest-cov)
 - [ ] Add performance tests (locust or similar)
+- [ ] Test with LocalStack (AWS emulator) for cloud patterns
 - [ ] Create `docker-compose.test.yml` for test environment
 - [ ] Write `README.md` with quick start guide
 - [ ] Document API endpoints (OpenAPI/Swagger auto-generated)
 - [ ] Add inline code documentation (docstrings)
 - [ ] Create troubleshooting guide (see Troubleshooting section above)
 - [ ] Document development workflow (using Task commands)
+- [ ] Document cloud-ready patterns (link to cloud_ready_patterns.md)
 - [ ] Create CI/CD pipeline configuration (.github/workflows/test.yml)
 
 ### Initial Knowledge Base
@@ -1251,7 +1669,7 @@ docker compose logs -f api worker
 - [ ] Load into PostgreSQL and FAISS
 - [ ] Verify retrieval quality with test queries
 
-### Final Integration
+### Final Integration and Cloud-Readiness Verification
 
 - [ ] Test full pipeline end-to-end (Depends: All components)
 - [ ] Verify Docker Compose brings up all services (`task dev`)
@@ -1264,8 +1682,16 @@ docker compose logs -f api worker
 - [ ] Run full test suite (`task test`)
 - [ ] Run linters and type checks (`task lint && task type-check`)
 - [ ] Generate and review code coverage report
+- [ ] **Verify cloud-readiness checklist** (see Cloud Migration Preparation section)
+- [ ] **Test repository swapping** (swap PostgreSQL for in-memory repo in tests)
+- [ ] **Test event publisher swapping** (swap Redis for LocalStack SQS)
+- [ ] **Verify all events are CloudEvents-compliant** (run contract tests)
+- [ ] **Verify all tables have tenant_id** (check database schema)
+- [ ] **Verify all queries are tenant-scoped** (grep for "SELECT.*WHERE.*tenant_id")
+- [ ] **Test observability stack** (verify logs in JSON, traces in Prometheus, metrics at /metrics)
 - [ ] Create demo video or screenshots
 - [ ] Update README.md with final setup instructions
+- [ ] **Document cloud-ready patterns** in README (link to cloud_ready_patterns.md)
 - [ ] Tag v0.1.0 release
 
 ---
@@ -1279,6 +1705,7 @@ If you're migrating from or inspired by existing systems, consider these notes:
 #### From ClaimBuster/ClaimReview Systems
 
 **Data Migration**:
+
 - ClaimReview JSON-LD can be imported directly into PostgreSQL
 - Map ClaimReview properties to TruthGraph schema:
   - `claimReviewed` → `claims.text`
@@ -1287,6 +1714,7 @@ If you're migrating from or inspired by existing systems, consider these notes:
   - `url` → `evidence.source_url`
 
 **Example Import Script**:
+
 ```python
 import json
 from api.models import Claim, Evidence, Verdict
@@ -1303,10 +1731,12 @@ def import_claimreview(json_file):
 #### From FEVER Dataset
 
 **Data Format**:
+
 - FEVER provides claim-evidence pairs with labels (SUPPORTS/REFUTES/NOT ENOUGH INFO)
 - Can be used directly for testing and validation
 
 **Import Process**:
+
 ```bash
 # 1. Download FEVER dataset
 wget https://fever.ai/download/fever/train.jsonl
@@ -1318,11 +1748,13 @@ uv run python -m scripts.import_fever --input train.jsonl --limit 10000
 #### From Manual Fact-Checking Databases
 
 **Common Sources**:
+
 - PolitiFact data
 - Snopes archives
 - FactCheck.org exports
 
 **CSV/JSON Import**:
+
 ```bash
 # Generic CSV import
 uv run python -m scripts.import_corpus \
@@ -1336,6 +1768,7 @@ uv run python -m scripts.import_corpus \
 #### From Wikipedia Dumps
 
 **Using Wikipedia as Knowledge Base**:
+
 ```bash
 # 1. Download Wikipedia dump
 wget https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2
@@ -1358,16 +1791,19 @@ task corpus:index
 If you have earlier prototypes or proof-of-concepts:
 
 **Database Schema Changes**:
+
 - Unified `verdicts` table replaces separate support/refute tables
 - Added `metadata` JSONB columns for extensibility
 - Vector embeddings now use pgvector instead of separate vector DB
 
 **API Changes**:
+
 - RESTful endpoints instead of GraphQL (simplicity for Phase 1)
 - Async/await throughout
 - Standardized error responses
 
 **Configuration Changes**:
+
 - Environment variables replace YAML config files
 - Docker Compose v2 syntax (`docker compose` not `docker-compose`)
 - `uv` replaces `pip` and `pip-tools`
