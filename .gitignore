@@ -215,3 +215,6 @@ infra/factchecker-stack/neo4j-data/
 infra/factchecker-stack/pg-data/
 .env
 *.log
+
+# taskfile
+.task/
