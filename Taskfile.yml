@@ -21,9 +21,9 @@ tasks:
       - task: lint:python
 
   lint:markdown:
-    desc: Lint Markdown files with pymarkdownlnt
+    desc: Lint Markdown files with pymarkdownlnt (excluding .claude/)
     cmds:
-      - '{{.PYMARKDOWNLNT}} -d md013,md036 scan -r .'
+      - powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-markdown.ps1
     sources:
       - '**/*.md'
 
@@ -42,9 +42,9 @@ tasks:
       - task: lint:fix:python
 
   lint:fix:markdown:
-    desc: Auto-fix Markdown linting issues with pymarkdownlnt
+    desc: Auto-fix Markdown linting issues with pymarkdownlnt (excluding .claude/)
     cmds:
-      - '{{.PYMARKDOWNLNT}} -d md013,md036 fix -r .'
+      - powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-markdown-fix.ps1
     sources:
       - '**/*.md'
 
