@@ -216,5 +216,13 @@ infra/factchecker-stack/pg-data/
 .env
 *.log
 
+# Docker volumes (local development)
+.volumes/
+
+# Node modules (for frontend)
+node_modules/
+frontend/node_modules/
+frontend-react/node_modules/
+
 # taskfile
 .task/

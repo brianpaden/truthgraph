@@ -1,0 +1,38 @@
+{% if claims %}
+<div class="claims-table">
+    {% for claim in claims %}
+    <div class="claim-row">
+        <div class="claim-header">
+            <span class="claim-id" title="{{ claim.id }}">{{ claim.id[:8] }}...</span>
+            <span class="claim-date">{{ claim.submitted_at[:19] }}</span>
+        </div>
+        <div class="claim-text">{{ claim.text }}</div>
+        {% if claim.source_url %}
+        <div class="claim-source">
+            <a href="{{ claim.source_url }}" target="_blank" rel="noopener">
+                📎 Source
+            </a>
+        </div>
+        {% endif %}
+        {% if claim.verdict %}
+        <div class="claim-verdict verdict-{{ claim.verdict.verdict|lower }}">
+            {{ claim.verdict.verdict }} ({{ (claim.verdict.confidence * 100)|round }}% confidence)
+        </div>
+        {% else %}
+        <div class="claim-verdict verdict-pending">
+            Pending verification
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if total > claims|length %}
+<div class="pagination">
+    <p>Showing {{ claims|length }} of {{ total }} claims</p>
+</div>
+{% endif %}
+
+{% else %}
+<p class="empty-state">No claims yet. Submit your first claim above!</p>
+{% endif %}

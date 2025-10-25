@@ -82,7 +82,7 @@ TruthGraph v0 is a **simplified, local-first fact-checking system** designed for
 | **Embeddings Model** | all-MiniLM-L6-v2 | Fast on CPU, good quality, 384 dimensions |
 | **NLI Model** | microsoft/deberta-v3-base | Superior accuracy, MNLI fine-tuned |
 | **Logging** | structlog | Structured, JSON-capable, minimal overhead |
-| **Frontend** | React 18 + Vite | Modern, fast HMR, TypeScript ready |
+| **Frontend** | **htmx** (recommended) or React | **htmx**: 3x faster, no build tools; React: if team prefers |
 | **Container Orchestration** | Docker Compose | Simple, local-first, documented |
 | **Task Runner** | Task (go-task) | Shell-agnostic alternative to Make |
 
@@ -107,6 +107,32 @@ Focus on ML logic and critical paths. UI can be tested manually for MVP.
 
 ### 6. **Pragmatic Infrastructure**
 Use minimal DevOps. Docker Compose, not Kubernetes. Structured logging, not full observability stack. One database, not a fleet.
+
+### 7. **Frontend: htmx Over React (Recommended for v0)**
+
+**Decision**: Use **htmx** instead of React for v0's simple UI needs.
+
+**Why htmx for v0?**
+
+- **3x faster development**: 2 weeks vs 4-5 weeks for same UI
+- **No build tooling**: No webpack, npm, babel - just HTML templates
+- **Backend team can build UI**: Python devs already know Jinja2 templates
+- **10x smaller bundle**: 14KB vs 140KB (faster page loads)
+- **Server-side rendering**: SEO-friendly, works without JavaScript
+
+**v0 UI Requirements** (simple enough for htmx):
+
+- Claim submission form (text input + button)
+- Claim history list (paginated table)
+- Verification results display (verdict, confidence, evidence)
+- Loading states (<60s processing time)
+- Error messages
+
+**When to use React instead**: If your team already has React expertise and prefers it, or if you want to practice React for v1. htmx saves time but isn't mandatory.
+
+**v1 Migration**: When v1 adds interactive reasoning graphs, real-time WebSocket updates, and temporal timelines, switch to React (estimated 2-3 week migration effort for complex pages only).
+
+**See**: [tech_stack.md - htmx vs React](./tech_stack.md#htmx-vs-react-the-decision) for detailed comparison and code examples.
 
 ---
 

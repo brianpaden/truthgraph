@@ -1,0 +1,15 @@
+<div class="alert alert-success">
+    <strong>✓ Claim submitted successfully!</strong>
+    <p>Claim ID: <code>{{ claim.id }}</code></p>
+    <p>Status: Pending verification</p>
+</div>
+
+<script>
+    // Trigger refresh of claims list
+    htmx.trigger("#claims-list", "load");
+
+    // Clear this message after 5 seconds
+    setTimeout(() => {
+        document.getElementById('submission-result').innerHTML = '';
+    }, 5000);
+</script>

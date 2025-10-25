@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-grid">
+    <!-- Claim Submission Form -->
+    <section class="card">
+        <h2>Submit a Claim</h2>
+        <form
+            hx-post="/claims/submit"
+            hx-target="#submission-result"
+            hx-swap="innerHTML"
+            hx-on::after-request="if(event.detail.successful) this.reset()">
+
+            <div class="form-group">
+                <label for="text">Claim Text *</label>
+                <textarea
+                    id="text"
+                    name="text"
+                    rows="4"
+                    required
+                    placeholder="Enter the claim you want to verify..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="source_url">Source URL (optional)</label>
+                <input
+                    type="url"
+                    id="source_url"
+                    name="source_url"
+                    placeholder="https://example.com/article">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <span class="htmx-indicator">Submitting...</span>
+                <span>Submit Claim</span>
+            </button>
+        </form>
+
+        <div id="submission-result" class="result-container"></div>
+    </section>
+
+    <!-- Claim History -->
+    <section class="card">
+        <h2>Recent Claims</h2>
+        <div
+            id="claims-list"
+            hx-get="/claims?limit=10"
+            hx-trigger="load, every 30s"
+            hx-swap="innerHTML">
+            <p class="loading">Loading claims...</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

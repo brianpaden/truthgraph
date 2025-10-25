@@ -58,6 +58,102 @@ tasks:
       - pyproject.toml
 
   # ============================================================================
+  # Docker Development Tasks
+  # ============================================================================
+
+  setup:
+    desc: Setup development environment (create .env, build containers)
+    cmds:
+      - cmd: powershell -Command "if (!(Test-Path .env)) { Copy-Item .env.example .env }"
+        platforms: [windows]
+      - cmd: test -f .env || cp .env.example .env
+        platforms: [linux, darwin]
+      - docker-compose build
+      - echo "✓ Setup complete! Run task dev to start services"
+
+  dev:
+    desc: Start development environment (htmx frontend only)
+    cmds:
+      - docker-compose up -d postgres api frontend
+      - echo "✓ Services starting..."
+      - echo "  PostgreSQL at localhost:5432"
+      - echo "  API at http://localhost:8000"
+      - echo "  Frontend (htmx) at http://localhost:5000"
+      - echo "  API Docs at http://localhost:8000/docs"
+      - echo "Run task logs to view logs"
+
+  dev:react:
+    desc: Start development environment with React frontend
+    cmds:
+      - docker-compose --profile react up -d
+      - echo "✓ Services starting..."
+      - echo "  PostgreSQL at localhost:5432"
+      - echo "  API at http://localhost:8000"
+      - echo "  Frontend (htmx) at http://localhost:5000"
+      - echo "  Frontend (React) at http://localhost:5173"
+      - echo "  API Docs at http://localhost:8000/docs"
+
+  down:
+    desc: Stop and remove containers
+    cmds:
+      - docker-compose down
+      - echo "✓ Services stopped"
+
+  restart:
+    desc: Restart all services
+    cmds:
+      - task: down
+      - task: dev
+
+  reset:
+    desc: Reset everything (destructive - removes volumes)
+    cmds:
+      - docker-compose down -v
+      - cmd: powershell -Command "if (Test-Path .volumes) { Remove-Item -Recurse -Force .volumes }"
+        platforms: [windows]
+        ignore_error: true
+      - cmd: rm -rf .volumes
+        platforms: [linux, darwin]
+        ignore_error: true
+      - echo "✓ Reset complete. Run task setup to start fresh"
+
+  logs:
+    desc: View logs from all services
+    cmds:
+      - docker-compose logs -f
+
+  logs:api:
+    desc: View API logs only
+    cmds:
+      - docker-compose logs -f api
+
+  logs:db:
+    desc: View database logs only
+    cmds:
+      - docker-compose logs -f postgres
+
+  shell:
+    desc: Open shell in API container
+    cmds:
+      - docker-compose exec api bash
+
+  shell:db:
+    desc: Open PostgreSQL shell
+    cmds:
+      - docker-compose exec postgres psql -U truthgraph -d truthgraph
+
+  db:migrate:
+    desc: Run database migrations (placeholder for Phase 2)
+    cmds:
+      - echo "Database migrations will be added in Phase 2"
+
+  test:api:
+    desc: Run API tests (placeholder for Phase 2)
+    cmds:
+      - echo "API tests will be added in Phase 2"
+      - echo "docker-compose exec api pytest tests/"
+
+  # ============================================================================
   # Helper Tasks
   # ============================================================================
 

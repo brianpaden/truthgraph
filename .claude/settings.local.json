@@ -10,7 +10,14 @@
       "Bash(task lint:markdown:*)",
       "Bash(task lint:*)",
       "Bash(dir /s \"c:\\repos\\truthgraph\\docs\\roadmap\")",
-      "Bash(task lint:fix:markdown:*)"
+      "Bash(task lint:fix:markdown:*)",
+      "Bash(copy .env.example .env)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(task --list:*)",
+      "Bash(task setup:*)",
+      "Bash(task dev)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

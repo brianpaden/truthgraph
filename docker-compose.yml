@@ -1,0 +1,106 @@
+version: '3.8'
+
+# TruthGraph v0 Development Stack
+# Includes: PostgreSQL + pgvector, FastAPI backend, htmx frontend, React frontend (optional)
+
+services:
+  # PostgreSQL with pgvector extension
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: truthgraph-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-truthgraph}
+      POSTGRES_USER: ${POSTGRES_USER:-truthgraph}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - ./.volumes/postgres:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-truthgraph}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - truthgraph-network
+
+  # FastAPI Backend
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: truthgraph-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-truthgraph}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-truthgraph}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      API_HOST: ${API_HOST:-0.0.0.0}
+      API_PORT: ${API_PORT:-8000}
+    volumes:
+      # Mount source for hot reload in development
+      - ./truthgraph:/app/truthgraph:ro
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - truthgraph-network
+
+  # htmx Frontend (Primary - Server-side rendered)
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: truthgraph-frontend
+    environment:
+      API_URL: http://api:8000
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
+    volumes:
+      # Mount templates and static files for hot reload
+      - ./frontend/templates:/app/templates:ro
+      - ./frontend/static:/app/static:ro
+    ports:
+      - "${FRONTEND_PORT:-5000}:5000"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - truthgraph-network
+
+  # React Frontend (Optional - for teams preferring React)
+  frontend-react:
+    build:
+      context: ./frontend-react
+      dockerfile: Dockerfile.dev
+    container_name: truthgraph-frontend-react
+    environment:
+      VITE_API_URL: http://localhost:${API_PORT:-8000}
+    volumes:
+      # Mount source for hot module replacement
+      - ./frontend-react/src:/app/src:ro
+      - ./frontend-react/public:/app/public:ro
+    ports:
+      - "${REACT_PORT:-5173}:5173"
+    depends_on:
+      - api
+    networks:
+      - truthgraph-network
+    profiles:
+      - react  # Only start with: docker-compose --profile react up
+
+networks:
+  truthgraph-network:
+    driver: bridge
+
+volumes:
+  # Named volumes are defined but we use bind mounts to .volumes/ for easier access
+  postgres-data:
+    driver: local
