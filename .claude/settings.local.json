@@ -17,7 +17,10 @@
       "Bash(task --list:*)",
       "Bash(task setup:*)",
       "Bash(task dev)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dir:*)",
+      "Bash(tree:*)",
+      "Bash(awk '{print $9, \"\"\"\"(\"\"\"\" $5 \"\"\"\")\"\"\"\"}')"
     ],
     "deny": [],
     "ask": []
