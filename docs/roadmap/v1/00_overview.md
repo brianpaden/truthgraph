@@ -1,8 +1,12 @@
 # TruthGraph v1: Local-First Implementation Overview
 
+> **New to TruthGraph?** Start with [v0 MVP](../v0/README.md) first! v0 is a simplified 4-5 week implementation that proves the concept before building the more complex v1 architecture. v1 adds microservices, event-driven architecture, and cloud-ready patterns on top of v0's foundation.
+
 ## Executive Summary
 
 TruthGraph v1 is a **local-first fact-checking system** designed for researchers, journalists, and analysts who need privacy-preserving, portable, and research-friendly tools for claim verification and evidence analysis.
+
+**v1 builds upon v0** by extracting the modular monolith into independent services, adding async processing, and implementing cloud-ready patterns. If you haven't built v0 yet, we strongly recommend starting there.
 
 The system runs entirely on a user's workstation via **Docker Compose**, providing:
 

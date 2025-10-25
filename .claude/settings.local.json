@@ -8,7 +8,9 @@
       "Bash(task lint:markdown)",
       "Bash(del .pymarkdown)",
       "Bash(task lint:markdown:*)",
-      "Bash(task lint:*)"
+      "Bash(task lint:*)",
+      "Bash(dir /s \"c:\\repos\\truthgraph\\docs\\roadmap\")",
+      "Bash(task lint:fix:markdown:*)"
     ],
     "deny": [],
     "ask": []
