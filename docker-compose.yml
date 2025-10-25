@@ -1,5 +1,3 @@
-version: '3.8'
-
 # TruthGraph v0 Development Stack
 # Includes: PostgreSQL + pgvector, FastAPI backend, htmx frontend, React frontend (optional)
 
