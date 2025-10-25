@@ -48,7 +48,8 @@ Welcome to the TruthGraph v0 (Minimum Viable Product) roadmap documentation. Thi
    - Testing strategy
 
 4. **[tech_stack.md](./tech_stack.md)** - Technology choices and rationale
-   - Why Python 3.12+, FastAPI, PostgreSQL, React
+   - Why Python 3.12+, FastAPI, PostgreSQL
+   - **htmx vs React decision**: Use htmx for v0 (3x faster), migrate to React for v1
    - Why NOT microservices, Redis, FAISS for v0
    - Performance expectations
    - Migration path to v1
@@ -59,12 +60,32 @@ Welcome to the TruthGraph v0 (Minimum Viable Product) roadmap documentation. Thi
 |--------|----------|-----------------|
 | **Timeline** | 4-5 weeks | 8-12 weeks |
 | **Architecture** | Single FastAPI app | 4 microservices |
+| **Frontend** | **htmx** (HTML-over-the-wire) | **React** (interactive graphs) |
 | **Processing** | Synchronous | Event-driven (Redis Streams) |
 | **Vector Store** | pgvector only | pgvector + FAISS |
 | **Containers** | 3 (API, DB, UI) | 7+ (services + infra) |
 | **Complexity** | Low | High |
 | **Multi-Tenancy** | Single user | Multi-tenant ready |
 | **Observability** | Basic logs | OpenTelemetry + Prometheus |
+
+### Why htmx for v0? 🚀
+
+**v0's simple UI** (forms, lists, results) is perfect for htmx:
+- **3x faster development**: 2 weeks vs 4-5 weeks for React
+- **No build tooling**: No webpack, npm, babel - just HTML templates
+- **Backend team can build UI**: Python devs already know Jinja2
+- **10x smaller bundle**: 14KB vs 140KB
+- **Server-side rendering**: SEO-friendly, works without JS
+
+**v1 needs React** because:
+- Interactive reasoning graph visualization (Cytoscape.js, D3.js)
+- Real-time WebSocket updates
+- Temporal timeline charts
+- Multimodal UI (images, PDFs, videos)
+
+**Migration**: htmx → React takes 2-3 weeks (only rewrite complex pages)
+
+See [tech_stack.md - htmx vs React](./tech_stack.md#htmx-vs-react-the-decision) for detailed analysis.
 
 ## Reading Order
 
@@ -140,6 +161,7 @@ Key architectural decisions documented in [00_overview.md](./00_overview.md#arch
 - **ADR-002**: Synchronous vs Asynchronous (chose synchronous)
 - **ADR-003**: pgvector Only (defer FAISS)
 - **ADR-004**: No Multi-Tenancy (add in v1)
+- **ADR-005**: htmx vs React (chose htmx for v0, React for v1)
 
 ## Related Documentation
 
