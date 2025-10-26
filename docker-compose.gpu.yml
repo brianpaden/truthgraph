@@ -1,0 +1,61 @@
+# Docker Compose GPU Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up
+#
+# This file enables NVIDIA GPU support for the API service
+# Requires:
+#   1. NVIDIA GPU with CUDA Compute Capability 5.0+
+#   2. NVIDIA Docker runtime installed: https://github.com/NVIDIA/nvidia-docker
+#   3. nvidia-docker2 package installed
+#
+# Installation (Ubuntu/Debian):
+#   distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+#   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+#   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
+#     sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+#   sudo apt-get update && sudo apt-get install -y nvidia-docker2
+#   sudo systemctl restart docker
+#
+# Verification:
+#   docker run --rm --gpus all nvidia/cuda:12.1.0-runtime-ubuntu22.04 nvidia-smi
+#
+# Performance Impact:
+#   - Embedding throughput: ~1000+ texts/second (vs 500 on CPU)
+#   - NLI throughput: ~10+ pairs/second (vs 2 on CPU)
+#   - Memory usage: 2-3GB (stays under 4GB limit with optimizations)
+
+version: "3.9"
+
+services:
+  api:
+    # Enable GPU access via NVIDIA runtime
+    deploy:
+      resources:
+        reservations:
+          # Request GPU device(s)
+          # all: use all available GPUs
+          # Can specify: device_ids: ['0', '1'] for specific GPUs
+          devices:
+            - driver: nvidia
+              count: all
+              # Or for specific GPUs:
+              # device_ids: ['0']
+              capabilities: [compute, utility]
+
+    environment:
+      # GPU-specific settings
+      # CUDA device selection (auto-detected if not set)
+      # CUDA_VISIBLE_DEVICES: "0"
+
+      # PyTorch GPU settings
+      TORCH_NUM_THREADS: "8"  # Can increase on GPU
+      CUDA_DEVICE_ORDER: PCI_BUS_ID
+
+      # Hugging Face GPU optimization
+      # TRANSFORMERS_NO_ADVISORY_WARNINGS: 1
+
+    # GPU-optimized batch sizes
+    # Reduce if you see OOM errors
+    # Notes:
+    #   - Embedding batch size: can use 256+ with GPU
+    #   - NLI batch size: can use 32+ with GPU
+    #   - Adjust in code if needed for your GPU VRAM

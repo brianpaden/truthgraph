@@ -48,3 +48,43 @@ class HealthResponse(BaseModel):
     """Response model for health check."""
     status: str
     database: str
+
+
+class VectorSearchRequest(BaseModel):
+    """Request model for vector similarity search."""
+    query_embedding: list[float] = Field(
+        ...,
+        description="Query embedding vector (384-dimensional)",
+        min_length=384,
+        max_length=384
+    )
+    top_k: int = Field(default=10, ge=1, le=100, description="Maximum number of results")
+    min_similarity: float = Field(
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Minimum similarity threshold"
+    )
+    tenant_id: str = Field(default="default", description="Tenant identifier")
+    source_filter: Optional[str] = Field(None, description="Filter by source URL")
+
+
+class VectorSearchResultItem(BaseModel):
+    """Individual result from vector similarity search."""
+    evidence_id: UUID
+    content: str
+    source_url: Optional[str] = None
+    similarity: float = Field(..., ge=0.0, le=1.0)
+
+    class Config:
+        from_attributes = True
+
+
+class VectorSearchResponse(BaseModel):
+    """Response model for vector similarity search."""
+    results: list[VectorSearchResultItem]
+    total: int
+    query_time_ms: Optional[float] = None
+
+    class Config:
+        from_attributes = True

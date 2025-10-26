@@ -142,16 +142,132 @@ tasks:
     cmds:
       - docker-compose exec postgres psql -U truthgraph -d truthgraph
 
-  db:migrate:
-    desc: Run database migrations (placeholder for Phase 2)
-    cmds:
-      - echo "Database migrations will be added in Phase 2"
+  # ============================================================================
+  # Database Tasks
+  # ============================================================================
 
-  test:api:
-    desc: Run API tests (placeholder for Phase 2)
+  db:migrate:
+    desc: Run database migrations (Alembic)
     cmds:
-      - echo "API tests will be added in Phase 2"
-      - echo "docker-compose exec api pytest tests/"
+      - docker-compose exec api alembic upgrade head
+      - echo "✓ Database migrations applied"
+
+  db:migrate:down:
+    desc: Rollback last database migration
+    cmds:
+      - docker-compose exec api alembic downgrade -1
+      - echo "✓ Last migration rolled back"
+
+  db:migrate:status:
+    desc: Show current migration status
+    cmds:
+      - docker-compose exec api alembic current
+
+  db:migrate:history:
+    desc: Show migration history
+    cmds:
+      - docker-compose exec api alembic history
+
+  db:migrate:create:
+    desc: Create a new migration (MIGRATION_NAME required)
+    cmds:
+      - docker-compose exec api alembic revision --autogenerate -m "{{.MIGRATION_NAME}}"
+
+  # ============================================================================
+  # Testing Tasks
+  # ============================================================================
+
+  test:
+    desc: Run all tests
+    cmds:
+      - task: test:unit
+      - task: test:integration
+
+  test:unit:
+    desc: Run unit tests only
+    cmds:
+      - docker-compose exec api pytest tests/unit tests/services -v -m "not integration"
+
+  test:integration:
+    desc: Run integration tests only
+    cmds:
+      - docker-compose exec api pytest tests/integration -v
+
+  test:ml:
+    desc: Run ML service tests (embedding, NLI, vector search)
+    cmds:
+      - docker-compose exec api pytest tests/services/ml tests/integration/test_*_integration.py -v
+
+  test:coverage:
+    desc: Run tests with coverage report
+    cmds:
+      - docker-compose exec api pytest --cov=truthgraph --cov-report=html --cov-report=term
+
+  # ============================================================================
+  # ML Service Tasks
+  # ============================================================================
+
+  ml:warmup:
+    desc: Warmup ML models (download and cache)
+    cmds:
+      - docker-compose exec api python -c "from truthgraph.services.ml.model_cache import ModelCache; ModelCache.get_instance().warmup_all_models()"
+      - echo "✓ ML models warmed up and cached"
+
+  ml:benchmark:
+    desc: Run ML performance benchmarks
+    cmds:
+      - task: ml:benchmark:embedding
+      - task: ml:benchmark:nli
+      - task: ml:benchmark:vector
+
+  ml:benchmark:embedding:
+    desc: Benchmark embedding service
+    cmds:
+      - docker-compose exec api python scripts/benchmark_embeddings.py
+
+  ml:benchmark:nli:
+    desc: Benchmark NLI service
+    cmds:
+      - docker-compose exec api python scripts/benchmark_nli.py
+
+  ml:benchmark:vector:
+    desc: Benchmark vector search
+    cmds:
+      - docker-compose exec api python scripts/benchmark_vector_search.py
+
+  ml:benchmark:e2e:
+    desc: Benchmark end-to-end pipeline
+    cmds:
+      - docker-compose exec api python scripts/test_e2e_performance.py --warmup
+
+  ml:profile:
+    desc: Profile ML services for bottlenecks
+    cmds:
+      - docker-compose exec api python scripts/profile_ml_services.py
+
+  ml:optimize:
+    desc: Optimize batch sizes for current hardware
+    cmds:
+      - docker-compose exec api python scripts/optimize_batch_sizes.py
+
+  # ============================================================================
+  # GPU Support Tasks
+  # ============================================================================
+
+  dev:gpu:
+    desc: Start development environment with GPU support
+    cmds:
+      - docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+      - echo "✓ Services starting with GPU support..."
+      - echo "  PostgreSQL at localhost:5432"
+      - echo "  API at http://localhost:8000"
+      - echo "  API Docs at http://localhost:8000/docs"
+      - echo "  GPU acceleration enabled for ML models"
+
+  gpu:check:
+    desc: Check GPU availability in container
+    cmds:
+      - docker-compose exec api python -c "import torch; print('CUDA available:', torch.cuda.is_available()); print('Device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')"
 
   # ============================================================================
   # Helper Tasks

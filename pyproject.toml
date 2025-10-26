@@ -21,7 +21,10 @@ dependencies = [
     "fastapi>=0.104.1",
     "uvicorn[standard]>=0.24.0",
     "sqlalchemy>=2.0.23",
-    "psycopg[binary]>=3.1.17",
+    "alembic>=1.13.0",
+    "psycopg[c]>=3.1.17",
+    "asyncpg>=0.29.0",
+    "pgvector>=0.2.4",
     "pydantic>=2.5.0",
     "pydantic-settings>=2.1.0",
     "structlog>=24.1.0",
@@ -35,6 +38,7 @@ dev = [
     "httpx>=0.25.1",
     "ruff>=0.1.6",
     "mypy>=1.7.0",
+    "psutil>=7.1.0",
 ]
 
 ml = [

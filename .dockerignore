@@ -1,0 +1,71 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache and builds
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+dist/
+build/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Development artifacts
+.venv
+venv/
+.env
+.env.local
+.env.*.local
+
+# IDE configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker files (don't copy into image)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation and examples
+docs/
+examples/
+*.md
+LICENSE
+
+# Test outputs (not source files)
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# Volumes and data directories
+.volumes/
+volumes/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Node modules (for frontend-react)
+node_modules/
+frontend-react/dist/
+
+# Frontend build outputs
+frontend/static/dist/

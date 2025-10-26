@@ -1,0 +1,34 @@
+# TruthGraph Phase 2 ML Dependencies
+# For use with: pip install -r requirements-ml.txt
+# Or via pyproject.toml: pip install .[ml]
+
+# Core ML Framework
+torch>=2.1.0
+  # PyTorch with CPU support by default
+  # For GPU: torch with CUDA wheels (auto-selected on GPU systems)
+
+# Transformers and Model Hub
+transformers>=4.35.0
+  # Hugging Face transformers library
+  # Required for: DeBERTa-v3-base (NLI), tokenization
+
+sentence-transformers>=2.2.2
+  # Sentence-level embeddings
+  # Model: all-MiniLM-L6-v2 (384-dimensional vectors)
+  # Optimized for semantic similarity
+
+# Supporting dependencies (pulled in by above)
+# numpy
+# scipy
+# scikit-learn
+# tqdm
+# requests
+# huggingface-hub
+
+# Optional: For GPU acceleration (uncomment as needed)
+# torch-cuda>=2.1.0  # CUDA runtime
+# pytorch-gpu>=2.1.0  # GPU-specific wheels
+
+# Optional: For quantization and optimization
+# bitsandbytes>=0.41.0  # Quantization support
+# optimum>=1.14.0       # ONNX optimization
