@@ -56,7 +56,7 @@ services:
     container_name: truthgraph-api
     environment:
       # Database Configuration
-      DATABASE_URL: postgresql://${POSTGRES_USER:-truthgraph}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-truthgraph}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-truthgraph}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-truthgraph}
       # Test database URL (for integration tests)
       TEST_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-truthgraph}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-truthgraph}
 
