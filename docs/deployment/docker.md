@@ -602,14 +602,14 @@ useradd -m -u 1000 appuser
 - [Multi-stage Builds](https://docs.docker.com/build/building/multi-stage/)
 - [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
 - [NVIDIA Docker](https://github.com/NVIDIA/nvidia-docker)
-- [ML Model Deployment](./docs/DOCKER_ML_SETUP.md)
+- [ML Model Deployment](./docker-ml.md)
 
 ## Support
 
 For issues or questions:
 
-1. Check [Docker ML Setup Guide](./docs/DOCKER_ML_SETUP.md)
-2. Review [Phase 2 Implementation Plan](./PHASE_2_IMPLEMENTATION_PLAN.md)
+1. Check [Docker ML Setup Guide](./docker-ml.md)
+2. Review [Phase 2 Implementation Plan](../../planning/phases/phase_2/plan.md)
 3. Check logs: `docker-compose logs api`
 4. Run health check: `bash docker/docker-health-check.sh`
 

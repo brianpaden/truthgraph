@@ -3,6 +3,7 @@
 Welcome to TruthGraph documentation.
 
 ## Quick Links
+- [Documentation Cheat Sheet](guides/documentation-cheat-sheet.md) - Quick reference for daily use
 - [API Documentation](api/README.md) - REST API reference
 - [Architecture](architecture/README.md) - System architecture and ADRs
 - [Services](services/README.md) - Service documentation

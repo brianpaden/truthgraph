@@ -107,7 +107,7 @@ docker-compose build --no-cache api     # Force rebuild
   ```
 - [ ] Install nvidia-docker:
   ```bash
-  # See docs/DOCKER_ML_SETUP.md for installation
+  # See ../../deployment/docker-ml.md for installation
   ```
 - [ ] Verify NVIDIA runtime:
   ```bash
@@ -361,10 +361,10 @@ docker exec truthgraph-api whoami
 ## Documentation
 
 ### Main References
-- [DOCKER_README.md](./DOCKER_README.md) - Full deployment guide
-- [docs/DOCKER_ML_SETUP.md](./docs/DOCKER_ML_SETUP.md) - ML configuration guide
-- [DOCKER_IMPLEMENTATION_SUMMARY.md](./DOCKER_IMPLEMENTATION_SUMMARY.md) - Implementation details
-- [FEATURE_11_DELIVERY_REPORT.md](./FEATURE_11_DELIVERY_REPORT.md) - Delivery details
+- [Docker Deployment Guide](../../deployment/docker.md) - Full deployment guide
+- [Docker ML Setup](../../deployment/docker-ml.md) - ML configuration guide
+- [Docker Implementation Summary](../../../archive/implementation_summaries/docker-implementation-summary.md) - Implementation details
+- [Feature 11 Delivery Report](../../../archive/completed_features/feature-11-docker-delivery.md) - Delivery details
 
 ### Quick Links
 - Docker Compose: https://docs.docker.com/compose/
@@ -385,8 +385,8 @@ docker exec truthgraph-api whoami
    ```
 
 3. **Review Documentation**
-   - [DOCKER_README.md](./DOCKER_README.md#troubleshooting)
-   - [docs/DOCKER_ML_SETUP.md](./docs/DOCKER_ML_SETUP.md#troubleshooting)
+   - [Docker Deployment Guide](../../deployment/docker.md#troubleshooting)
+   - [Docker ML Setup](../../deployment/docker-ml.md#troubleshooting)
 
 4. **Common Issues**
    - Models not downloading? Check internet + disk space

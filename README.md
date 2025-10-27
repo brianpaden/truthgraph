@@ -18,7 +18,7 @@ curl http://localhost:8000/health
 curl http://localhost:8000/docs
 ```
 
-See [Docker README](./DOCKER_README.md) for detailed setup instructions.
+See [Docker Setup Guide](./docs/deployment/docker-setup-guide.md) for detailed setup instructions.
 
 ### With GPU (Optional)
 
@@ -26,7 +26,7 @@ See [Docker README](./DOCKER_README.md) for detailed setup instructions.
 docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up
 ```
 
-Requires NVIDIA Docker runtime. See [GPU Setup Guide](./docs/DOCKER_ML_SETUP.md#gpu-support).
+Requires NVIDIA Docker runtime. See [GPU Setup Guide](./docs/deployment/docker-ml.md#gpu-support).
 
 ## What's Included
 
@@ -55,18 +55,30 @@ Phase 2 implements core ML capabilities for claim verification:
 - **Vector Search**: pgvector integration for evidence retrieval
 - **Verdict Aggregation**: Confidence-based verdict scoring
 
-See [Phase 2 Implementation Plan](./PHASE_2_IMPLEMENTATION_PLAN.md) for details.
+See [Phase 2 Plan](./planning/phases/phase_2/plan.md) for details.
 
 ## Documentation
 
+### Quick Links
+- **[Documentation Hub](./docs/README.md)** - Complete documentation index
+- **[Planning & Roadmap](./planning/README.md)** - Active planning and features
+- **[Archive](./archive/README.md)** - Completed features and history
+
 ### Deployment
-- [Docker README](./DOCKER_README.md) - Main deployment guide
-- [Docker ML Setup](./docs/DOCKER_ML_SETUP.md) - Comprehensive ML configuration
-- [Docker Implementation Summary](./DOCKER_IMPLEMENTATION_SUMMARY.md) - Feature 11 details
+- [Docker Deployment Guide](./docs/deployment/docker.md) - Main deployment guide
+- [Docker Setup Guide](./docs/deployment/docker-setup-guide.md) - Setup instructions
+- [Docker ML Setup](./docs/deployment/docker-ml.md) - Comprehensive ML configuration
+- [Docker Quick Checklist](./docs/guides/quickstart/docker-checklist.md) - Quick reference
 
 ### Development
-- [Phase 2 Implementation Plan](./PHASE_2_IMPLEMENTATION_PLAN.md) - Full feature breakdown
+- [Developer Guide](./docs/guides/developer-guide.md) - Development guide
+- [API Quick Reference](./docs/guides/api-quick-reference.md) - API reference
 - [API Documentation](http://localhost:8000/docs) - Swagger UI (after startup)
+
+### Phase 2
+- [Phase 2 Plan](./planning/phases/phase_2/plan.md) - Full feature breakdown
+- [Phase 2 Quick Reference](./planning/phases/phase_2/quick-reference.md) - Quick lookup
+- [Phase 2 README](./planning/phases/phase_2/README.md) - Navigation hub
 
 ## System Requirements
 
@@ -147,7 +159,7 @@ docker-compose config | grep memory
 docker run --rm --gpus all nvidia/cuda:12.1.0-runtime nvidia-smi
 ```
 
-See [Troubleshooting Guide](./docs/DOCKER_ML_SETUP.md#troubleshooting) for more.
+See [Troubleshooting Guide](./docs/deployment/docker-ml.md#troubleshooting) for more.
 
 ## Development
 
@@ -191,13 +203,13 @@ docker-compose run --rm api pytest --cov=truthgraph
 4. **Test with production data**
 5. **Set up backups** for PostgreSQL
 
-See [Production Guide](./DOCKER_README.md#production-deployment) for details.
+See [Production Guide](./docs/deployment/docker.md#production-deployment) for details.
 
 ## Support
 
 - Check logs: `docker-compose logs api`
 - Run health check: `bash docker/docker-health-check.sh`
-- Review guides: [Docker README](./DOCKER_README.md)
+- Review guides: [Documentation Hub](./docs/README.md)
 - Open an issue on GitHub
 
 ## Next Steps
