@@ -198,6 +198,26 @@ tasks:
     cmds:
       - docker-compose exec api pytest tests/services/ml tests/integration/test_*_integration.py -v
 
+  test:api:
+    desc: Run API endpoint tests
+    cmds:
+      - docker-compose exec api pytest tests/test_api_ml_endpoints.py -v
+
+  test:hybrid:
+    desc: Run hybrid search tests
+    cmds:
+      - docker-compose exec api pytest tests/unit/services/test_hybrid_search_service.py tests/integration/test_hybrid_search_integration.py -v
+
+  test:verdict:
+    desc: Run verdict aggregation tests
+    cmds:
+      - docker-compose exec api pytest tests/services/ml/test_verdict_aggregation_service.py tests/services/ml/test_verdict_aggregation_integration.py -v
+
+  test:pipeline:
+    desc: Run verification pipeline tests
+    cmds:
+      - docker-compose exec api pytest tests/unit/services/test_verification_pipeline_service.py tests/integration/test_verification_pipeline_integration.py -v
+
   test:coverage:
     desc: Run tests with coverage report
     cmds:
@@ -214,11 +234,14 @@ tasks:
       - echo "✓ ML models warmed up and cached"
 
   ml:benchmark:
-    desc: Run ML performance benchmarks
+    desc: Run all ML performance benchmarks
     cmds:
       - task: ml:benchmark:embedding
       - task: ml:benchmark:nli
       - task: ml:benchmark:vector
+      - task: ml:benchmark:hybrid
+      - task: ml:benchmark:verdict
+      - task: ml:benchmark:pipeline
 
   ml:benchmark:embedding:
     desc: Benchmark embedding service
@@ -235,10 +258,25 @@ tasks:
     cmds:
       - docker-compose exec api python scripts/benchmark_vector_search.py
 
-  ml:benchmark:e2e:
-    desc: Benchmark end-to-end pipeline
+  ml:benchmark:hybrid:
+    desc: Benchmark hybrid search (vector + keyword)
     cmds:
-      - docker-compose exec api python scripts/test_e2e_performance.py --warmup
+      - docker-compose exec api python -m pytest tests/benchmarks/test_hybrid_search_performance.py -v
+
+  ml:benchmark:verdict:
+    desc: Benchmark verdict aggregation
+    cmds:
+      - docker-compose exec api python scripts/benchmark_verdict_aggregation.py
+
+  ml:benchmark:pipeline:
+    desc: Benchmark verification pipeline (end-to-end)
+    cmds:
+      - docker-compose exec api python scripts/benchmark_verification_pipeline.py
+
+  ml:benchmark:e2e:
+    desc: Benchmark end-to-end pipeline (alias for ml:benchmark:pipeline)
+    cmds:
+      - task: ml:benchmark:pipeline
 
   ml:profile:
     desc: Profile ML services for bottlenecks
@@ -249,6 +287,33 @@ tasks:
     desc: Optimize batch sizes for current hardware
     cmds:
       - docker-compose exec api python scripts/optimize_batch_sizes.py
+
+  # ============================================================================
+  # API & Service Tasks
+  # ============================================================================
+
+  api:verify:
+    desc: Test claim verification via API (example)
+    cmds:
+      - |
+        curl -X POST http://localhost:8000/api/v1/verify \
+          -H "Content-Type: application/json" \
+          -d '{"claim": "The Earth orbits around the Sun", "tenant_id": "default", "max_evidence": 10}'
+
+  api:health:
+    desc: Check API health status
+    cmds:
+      - curl http://localhost:8000/health
+
+  api:docs:
+    desc: Open API documentation in browser
+    cmds:
+      - cmd: start http://localhost:8000/docs
+        platforms: [windows]
+      - cmd: open http://localhost:8000/docs
+        platforms: [darwin]
+      - cmd: xdg-open http://localhost:8000/docs
+        platforms: [linux]
 
   # ============================================================================
   # GPU Support Tasks

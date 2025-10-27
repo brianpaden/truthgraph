@@ -16,6 +16,33 @@ from truthgraph.services.vector_search_service import (
 class TestVectorSearchService:
     """Test suite for VectorSearchService."""
 
+    @pytest.fixture
+    def mock_db_with_cursor(self):
+        """Create a mock database session with proper cursor nesting."""
+        def _make_mock(fetchall_return=None, execute_side_effect=None):
+            mock_cursor = MagicMock()
+            if execute_side_effect:
+                mock_cursor.execute.side_effect = execute_side_effect
+            else:
+                mock_cursor.execute.return_value = None
+
+            if fetchall_return is not None:
+                mock_cursor.fetchall.return_value = fetchall_return
+
+            mock_conn = MagicMock()
+            mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+            mock_conn.cursor.return_value.__exit__.return_value = None
+
+            mock_connection = MagicMock()
+            mock_connection.connection = mock_conn
+
+            db_mock = MagicMock()
+            db_mock.connection.return_value = mock_connection
+
+            return db_mock, mock_cursor
+
+        return _make_mock
+
     def test_initialization_default_dimension(self):
         """Test service initializes with default 1536 dimensions."""
         service = VectorSearchService()
@@ -45,11 +72,10 @@ class TestVectorSearchService:
     def test_search_similar_evidence_success(self):
         """Test successful vector search returns results."""
         service = VectorSearchService(embedding_dimension=384)
-        db_mock = Mock()
 
-        # Mock database response
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = [
+        # Create properly nested mocks for db.connection().connection.cursor()
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = [
             (
                 UUID("12345678-1234-5678-1234-567812345678"),
                 "Test evidence content",
@@ -63,7 +89,15 @@ class TestVectorSearchService:
                 0.87,
             ),
         ]
-        db_mock.execute.return_value = mock_result
+
+        mock_conn = MagicMock()
+        mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+
+        mock_connection = MagicMock()
+        mock_connection.connection = mock_conn
+
+        db_mock = MagicMock()
+        db_mock.connection.return_value = mock_connection
 
         # Execute search
         query_embedding = [0.1] * 384
@@ -81,18 +115,25 @@ class TestVectorSearchService:
 
         assert results[1].similarity == 0.87
 
-        # Verify query was executed
-        db_mock.execute.assert_called_once()
+        # Verify cursor was used
+        mock_cursor.execute.assert_called_once()
 
     def test_search_similar_evidence_empty_results(self):
         """Test vector search with no matching results."""
         service = VectorSearchService(embedding_dimension=1536)
-        db_mock = Mock()
 
-        # Mock empty response
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = []
-        db_mock.execute.return_value = mock_result
+        # Create properly nested mocks
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = []
+
+        mock_conn = MagicMock()
+        mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+
+        mock_connection = MagicMock()
+        mock_connection.connection = mock_conn
+
+        db_mock = MagicMock()
+        db_mock.connection.return_value = mock_connection
 
         # Execute search
         query_embedding = [0.1] * 1536
@@ -104,22 +145,19 @@ class TestVectorSearchService:
         assert len(results) == 0
         assert isinstance(results, list)
 
-    def test_search_similar_evidence_with_source_filter(self):
+    def test_search_similar_evidence_with_source_filter(self, mock_db_with_cursor):
         """Test vector search with source URL filter."""
         service = VectorSearchService(embedding_dimension=384)
-        db_mock = Mock()
 
-        # Mock database response
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = [
+        # Create mock with filtered results
+        db_mock, mock_cursor = mock_db_with_cursor(fetchall_return=[
             (
                 uuid4(),
                 "Filtered evidence",
                 "https://example.com",
                 0.92,
             )
-        ]
-        db_mock.execute.return_value = mock_result
+        ])
 
         # Execute search with source filter
         query_embedding = [0.1] * 384
@@ -133,12 +171,12 @@ class TestVectorSearchService:
         assert len(results) == 1
         assert results[0].source_url == "https://example.com"
 
-        # Verify SQL contains source filter
-        call_args = db_mock.execute.call_args
-        sql = call_args[0][0].text
-        # Params are passed as the second positional arg to execute()
-        params = call_args.args[1] if len(call_args.args) > 1 else {}
+        # Verify SQL was executed with source_filter parameter
+        call_args = mock_cursor.execute.call_args
+        sql = call_args[0][0]
+        params = call_args[0][1]
         assert "source_filter" in params
+        assert params["source_filter"] == "https://example.com"
 
     def test_search_similar_evidence_database_error(self):
         """Test vector search handles database errors."""
@@ -153,15 +191,12 @@ class TestVectorSearchService:
         with pytest.raises(RuntimeError, match="Vector search query failed"):
             service.search_similar_evidence(db=db_mock, query_embedding=query_embedding)
 
-    def test_search_similar_evidence_tenant_isolation(self):
+    def test_search_similar_evidence_tenant_isolation(self, mock_db_with_cursor):
         """Test vector search respects tenant isolation."""
         service = VectorSearchService(embedding_dimension=384)
-        db_mock = Mock()
 
-        # Mock database response
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = []
-        db_mock.execute.return_value = mock_result
+        # Create mock with empty results
+        db_mock, mock_cursor = mock_db_with_cursor(fetchall_return=[])
 
         # Execute search with custom tenant
         query_embedding = [0.1] * 384
@@ -170,8 +205,8 @@ class TestVectorSearchService:
         )
 
         # Verify tenant_id was passed to query
-        call_args = db_mock.execute.call_args
-        params = call_args.args[1] if len(call_args.args) > 1 else {}
+        call_args = mock_cursor.execute.call_args
+        params = call_args[0][1]
         assert params.get("tenant_id") == "tenant_123"
 
     def test_search_similar_evidence_batch_success(self):
