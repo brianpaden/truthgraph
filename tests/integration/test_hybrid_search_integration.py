@@ -5,16 +5,16 @@ Run with: pytest tests/integration/test_hybrid_search_integration.py -v
 """
 
 import os
-import pytest
-from uuid import uuid4
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine, text
+from uuid import uuid4
+
+import pytest
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Evidence, Embedding
+from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.hybrid_search_service import HybridSearchService
-
 
 # Database URL for testing
 TEST_DATABASE_URL = os.getenv(

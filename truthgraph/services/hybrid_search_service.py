@@ -17,7 +17,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Literal, Optional
+from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import text

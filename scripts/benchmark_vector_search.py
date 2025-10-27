@@ -25,7 +25,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Evidence, Embedding
+from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.vector_search_service import VectorSearchService
 
 
@@ -77,7 +77,7 @@ def create_test_corpus(session, size: int, embedding_dim: int = 1536) -> None:
         if (i + batch_size) % 1000 == 0 or i + batch_size >= size:
             print(f"  Created {min(i + batch_size, size)}/{size} items...")
 
-    print(f"Test corpus created successfully!")
+    print("Test corpus created successfully!")
 
 
 def benchmark_queries(
@@ -200,7 +200,7 @@ def print_results(results: dict, target_ms: float = 100.0) -> None:
     print("=" * 60)
 
     if "mean_time_ms" in results:
-        print(f"\nQuery Statistics:")
+        print("\nQuery Statistics:")
         print(f"  Number of queries:  {results['num_queries']}")
         print(f"  Mean query time:    {results['mean_time_ms']:.2f}ms")
         print(f"  Median query time:  {results['median_time_ms']:.2f}ms")
@@ -219,7 +219,7 @@ def print_results(results: dict, target_ms: float = 100.0) -> None:
             )
 
     if "mean_batch_time_ms" in results:
-        print(f"\nBatch Query Statistics:")
+        print("\nBatch Query Statistics:")
         print(f"  Number of batches:      {results['num_batches']}")
         print(f"  Batch size:             {results['batch_size']}")
         print(f"  Mean batch time:        {results['mean_batch_time_ms']:.2f}ms")
@@ -326,7 +326,7 @@ def main():
         stats = service.get_embedding_stats(
             db=session, entity_type="evidence", tenant_id="benchmark"
         )
-        print(f"\nCorpus statistics:")
+        print("\nCorpus statistics:")
         print(f"  Total embeddings: {stats['total_embeddings']}")
 
         # Benchmark single queries

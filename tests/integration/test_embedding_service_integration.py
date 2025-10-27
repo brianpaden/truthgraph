@@ -234,7 +234,7 @@ class TestPerformance:
         assert len(embeddings) == num_texts
 
         # Print performance metrics
-        print(f"\nPerformance metrics:")
+        print("\nPerformance metrics:")
         print(f"  Texts processed: {num_texts}")
         print(f"  Time elapsed: {elapsed:.2f}s")
         print(f"  Throughput: {throughput:.1f} texts/second")

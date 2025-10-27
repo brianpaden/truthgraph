@@ -8,12 +8,11 @@ This module tests the Phase 2 migration including:
 5. Backward compatibility
 """
 
-import asyncio
 import pytest
-from sqlalchemy import text, inspect
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from truthgraph.db_async import async_engine, AsyncSessionLocal
+from truthgraph.db_async import AsyncSessionLocal
 
 
 class TestPhase2Migration:

@@ -294,7 +294,7 @@ class E2EPerformanceTester:
         overhead_times = [r.overhead_time_s for r in successful]
 
         print(f"\nSuccessful runs: {len(successful)}/{len(results)}")
-        print(f"\nAverage timings:")
+        print("\nAverage timings:")
         print(f"  Total:        {mean(total_times):.2f}s (median: {median(total_times):.2f}s)")
         print(f"  Embedding:    {mean(embedding_times):.3f}s")
         print(f"  Retrieval:    {mean(retrieval_times):.2f}s")
@@ -305,7 +305,7 @@ class E2EPerformanceTester:
 
         # Component percentages
         avg_total = mean(total_times)
-        print(f"\nTime breakdown (% of total):")
+        print("\nTime breakdown (% of total):")
         print(f"  Embedding:    {mean(embedding_times) / avg_total * 100:.1f}%")
         print(f"  Retrieval:    {mean(retrieval_times) / avg_total * 100:.1f}%")
         print(f"  NLI:          {mean(nli_times) / avg_total * 100:.1f}%")
@@ -372,7 +372,7 @@ class E2EPerformanceTester:
             print(f"Final process memory: {final_memory:.1f} MB")
 
             if final_memory > 4000:
-                print(f"  WARNING: Exceeds 4GB target")
+                print("  WARNING: Exceeds 4GB target")
 
 
 def main() -> None:
@@ -407,14 +407,14 @@ def main() -> None:
     print("=" * 80)
     print("END-TO-END PERFORMANCE TEST")
     print("=" * 80)
-    print(f"\nConfiguration:")
+    print("\nConfiguration:")
     print(f"  Number of claims: {args.num_claims}")
     print(f"  Evidence per claim: {args.evidence_count}")
     print(f"  Verbose: {args.verbose}")
     print(f"  Warmup: {args.warmup}")
 
     # System info
-    print(f"\nSystem Information:")
+    print("\nSystem Information:")
     print(f"  CUDA available: {torch.cuda.is_available()}")
     if torch.cuda.is_available():
         print(f"  CUDA device: {torch.cuda.get_device_name(0)}")

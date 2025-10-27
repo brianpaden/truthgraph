@@ -21,12 +21,11 @@ Test Dataset:
 import statistics
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import pytest
 
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult
-
+from truthgraph.services.ml.nli_service import NLILabel
 
 # ===== Data Models =====
 

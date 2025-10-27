@@ -1,7 +1,7 @@
 """Service layer for TruthGraph."""
 
-from .vector_search_service import VectorSearchService, SearchResult
-from .hybrid_search_service import HybridSearchService, HybridSearchResult
+from .hybrid_search_service import HybridSearchResult, HybridSearchService
+from .vector_search_service import SearchResult, VectorSearchService
 
 __all__ = [
     "VectorSearchService",

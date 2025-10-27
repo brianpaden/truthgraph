@@ -9,15 +9,15 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .api.routes import router
-from .api.ml_routes import router as ml_router
 from .api.middleware import (
+    ErrorHandlingMiddleware,
     RateLimitMiddleware,
     RequestIDMiddleware,
-    ErrorHandlingMiddleware,
 )
+from .api.ml_routes import router as ml_router
 from .api.models import HealthResponse, ServiceStatus
-from .db import engine, Base
+from .api.routes import router
+from .db import Base, engine
 from .logger import setup_logging
 
 
@@ -35,8 +35,6 @@ async def lifespan(app: FastAPI):
 
     # Pre-load ML models (optional - can be lazy loaded)
     try:
-        from .services.ml.embedding_service import get_embedding_service
-        from .services.ml.nli_service import get_nli_service
 
         logger.info("ML services available for lazy loading")
     except Exception as e:

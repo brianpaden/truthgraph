@@ -29,9 +29,8 @@ import asyncio
 import statistics
 import time
 import uuid
-from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List
 
 import pytest
 
@@ -420,7 +419,7 @@ class LoadTestRunner:
         try:
             await self.request_factory()
             return (time.time() - start) * 1000
-        except Exception as e:
+        except Exception:
             raise  # Re-raise to be caught by caller
 
 

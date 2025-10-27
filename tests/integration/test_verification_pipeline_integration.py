@@ -4,14 +4,14 @@ These tests verify end-to-end pipeline functionality with real ML services
 and database interactions.
 """
 
-import pytest
 from uuid import uuid4
 
+import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Claim, Evidence, Embedding
+from truthgraph.schemas import Claim, Evidence
 from truthgraph.services.verification_pipeline_service import (
     VerdictLabel,
     VerificationPipelineService,
@@ -410,7 +410,7 @@ class TestErrorHandling:
     @pytest.mark.integration
     def test_retry_logic_on_transient_failure(self):
         """Test retry logic handles transient failures."""
-        from unittest.mock import Mock, patch
+        from unittest.mock import patch
 
         service = VerificationPipelineService()
 

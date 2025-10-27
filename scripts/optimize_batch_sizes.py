@@ -432,7 +432,7 @@ def main() -> None:
     print("=" * 80)
     print("BATCH SIZE OPTIMIZER")
     print("=" * 80)
-    print(f"\nConfiguration:")
+    print("\nConfiguration:")
     print(f"  Service: {args.service}")
     print(f"  Memory limit: {args.memory_limit} MB")
 

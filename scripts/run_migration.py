@@ -69,8 +69,9 @@ def check_prerequisites() -> tuple[bool, list[str]]:
 async def test_database_connection() -> bool:
     """Test that we can connect to the database."""
     try:
-        from truthgraph.db_async import async_engine
         from sqlalchemy import text
+
+        from truthgraph.db_async import async_engine
 
         async with async_engine.connect() as conn:
             result = await conn.execute(text("SELECT 1"))

@@ -21,7 +21,7 @@ sys.path.insert(0, str(project_root))
 
 import structlog
 
-from truthgraph.services.ml import NLILabel, get_nli_service
+from truthgraph.services.ml import get_nli_service
 
 logger = structlog.get_logger(__name__)
 

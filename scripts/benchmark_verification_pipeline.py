@@ -25,10 +25,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Claim, Evidence, Embedding
+from truthgraph.schemas import Claim
 from truthgraph.services.verification_pipeline_service import (
     VerificationPipelineService,
-    VerdictLabel,
 )
 
 

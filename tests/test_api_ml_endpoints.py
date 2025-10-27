@@ -10,13 +10,14 @@ Tests cover:
 Includes unit tests, integration tests, and error handling tests.
 """
 
+from uuid import uuid4
+
 import pytest
 from fastapi.testclient import TestClient
-from uuid import UUID, uuid4
 
+from truthgraph.db import Base, SessionLocal, engine
 from truthgraph.main import app
-from truthgraph.db import Base, engine, SessionLocal
-from truthgraph.schemas import Claim, Evidence, Embedding, VerificationResult
+from truthgraph.schemas import Claim, Embedding, Evidence, VerificationResult
 from truthgraph.services.ml.embedding_service import get_embedding_service
 
 

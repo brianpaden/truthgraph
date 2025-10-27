@@ -2,12 +2,11 @@
 
 import uuid
 from datetime import datetime
-from typing import List
 
-from sqlalchemy import Column, String, Text, DateTime, Float, ForeignKey, Index, func, Integer
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.dialects.postgresql import ARRAY, UUID
+from sqlalchemy.orm import relationship
 
 from .db import Base
 

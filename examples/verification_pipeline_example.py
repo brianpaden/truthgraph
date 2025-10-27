@@ -19,7 +19,6 @@ from truthgraph.db import Base
 from truthgraph.schemas import Claim, Evidence
 from truthgraph.services.verification_pipeline_service import (
     VerificationPipelineService,
-    VerdictLabel,
 )
 
 

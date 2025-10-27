@@ -6,15 +6,15 @@ This module provides middleware components including:
 - Error handling
 """
 
+import logging
 import time
 import uuid
 from collections import defaultdict
 from typing import Callable, Dict
 
-from fastapi import Request, Response, HTTPException, status
+from fastapi import HTTPException, Request, Response, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from typing import Literal, Optional
 from uuid import UUID
 
-from sqlalchemy import bindparam, text
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)

@@ -4,14 +4,15 @@ import asyncio
 import os
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from alembic import context
+from truthgraph import schemas  # noqa: F401 - Import to register models
+
 # Import your Base and models
 from truthgraph.db import Base
-from truthgraph import schemas  # noqa: F401 - Import to register models
 
 # This is the Alembic Config object
 config = context.config

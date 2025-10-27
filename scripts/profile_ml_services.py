@@ -389,7 +389,7 @@ class PerformanceProfiler:
         stats = cache.get_cache_stats()
         results["cache_stats"] = stats
 
-        print(f"\nCache statistics:")
+        print("\nCache statistics:")
         print(f"  Models loaded: {stats['models_loaded']}")
         print(f"  Total memory: {stats['total_memory_mb']:.1f} MB")
 
@@ -459,7 +459,7 @@ class PerformanceProfiler:
 
         if "embedding" in self.results:
             emb = self.results["embedding"]
-            print(f"\nEmbedding Service:")
+            print("\nEmbedding Service:")
             print(f"  Model load time: {emb.get('model_load_time_ms', 0):.1f} ms")
             print(
                 f"  Single text latency: {emb.get('single_text_avg_latency_ms', 0):.2f} ms"
@@ -472,7 +472,7 @@ class PerformanceProfiler:
 
         if "nli" in self.results:
             nli = self.results["nli"]
-            print(f"\nNLI Service:")
+            print("\nNLI Service:")
             print(f"  Model load time: {nli.get('model_load_time_ms', 0):.1f} ms")
             print(
                 f"  Single pair latency: {nli.get('single_pair_avg_latency_ms', 0):.1f} ms"
@@ -485,7 +485,7 @@ class PerformanceProfiler:
 
         if "model_cache" in self.results:
             cache = self.results["model_cache"]
-            print(f"\nModel Cache:")
+            print("\nModel Cache:")
             print(f"  Total warmup time: {cache.get('warmup_time_ms', 0):.1f} ms")
             if "total_memory_mb" in cache:
                 print(f"  Total memory: {cache['total_memory_mb']:.1f} MB")
@@ -578,7 +578,7 @@ def main() -> None:
     print("=" * 80)
     print("ML SERVICES PERFORMANCE PROFILER")
     print("=" * 80)
-    print(f"\nConfiguration:")
+    print("\nConfiguration:")
     print(f"  Service: {args.service}")
     print(f"  Samples: {args.num_samples}")
     print(f"  Output directory: {args.output_dir}")

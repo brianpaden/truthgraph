@@ -10,30 +10,26 @@ This module orchestrates the end-to-end verification pipeline:
 Performance target: <60s end-to-end for typical claim
 """
 
-import asyncio
 import hashlib
-import logging
 import time
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from functools import wraps
 from typing import Any, Callable, Optional, TypeVar
 from uuid import UUID
 
 import structlog
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from truthgraph.schemas import (
-    Claim,
-    Evidence,
     NLIResult as NLIResultModel,
+)
+from truthgraph.schemas import (
     VerificationResult as VerificationResultModel,
 )
 from truthgraph.services.ml.embedding_service import EmbeddingService
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult, NLIService
+from truthgraph.services.ml.nli_service import NLILabel, NLIService
 from truthgraph.services.vector_search_service import (
     SearchResult,
     VectorSearchService,

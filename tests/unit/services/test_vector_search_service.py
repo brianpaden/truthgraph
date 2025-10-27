@@ -3,13 +3,14 @@
 These tests use mocks to avoid requiring a real database connection.
 """
 
-import pytest
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock, Mock
 from uuid import UUID, uuid4
 
+import pytest
+
 from truthgraph.services.vector_search_service import (
-    VectorSearchService,
     SearchResult,
+    VectorSearchService,
 )
 
 

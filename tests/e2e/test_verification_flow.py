@@ -22,29 +22,24 @@ Accuracy Targets:
 - >70% accuracy on 20+ test claims
 """
 
-import asyncio
 import time
 import uuid
-from datetime import datetime
 from typing import Optional
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from truthgraph.models import Claim, Evidence, Embedding, NLIResult, VerificationResult
+from truthgraph.models import Claim, Embedding, Evidence
 from truthgraph.schemas import Base
 from truthgraph.services.ml.embedding_service import EmbeddingService
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult as NLIResultService, NLIService
+from truthgraph.services.ml.nli_service import NLILabel, NLIService
+from truthgraph.services.ml.nli_service import NLIResult as NLIResultService
 from truthgraph.services.verification_pipeline_service import (
-    VerificationPipelineService,
     VerdictLabel,
-    EvidenceItem,
 )
-
 
 # ===== Fixtures =====
 

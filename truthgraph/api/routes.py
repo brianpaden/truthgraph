@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from ..db import get_db
-from ..models import ClaimCreate, ClaimResponse, ClaimListResponse
+from ..models import ClaimCreate, ClaimListResponse, ClaimResponse
 from ..schemas import Claim, Verdict
 
 logger = logging.getLogger(__name__)

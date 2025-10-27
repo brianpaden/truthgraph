@@ -3,14 +3,13 @@
 These tests verify the pipeline orchestration logic using mocked dependencies.
 """
 
-import hashlib
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, Mock, patch
-from uuid import UUID, uuid4
+from unittest.mock import Mock
+from uuid import uuid4
 
 import pytest
 
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult
+from truthgraph.services.ml.nli_service import NLILabel
 from truthgraph.services.vector_search_service import SearchResult
 from truthgraph.services.verification_pipeline_service import (
     EvidenceItem,

@@ -10,14 +10,15 @@ Tests the hybrid search functionality including:
 Run with: pytest tests/unit/services/test_hybrid_search_service.py -v
 """
 
-import pytest
-from uuid import uuid4
-from unittest.mock import Mock, MagicMock, patch
 from datetime import datetime
+from unittest.mock import Mock, patch
+from uuid import uuid4
+
+import pytest
 
 from truthgraph.services.hybrid_search_service import (
-    HybridSearchService,
     HybridSearchResult,
+    HybridSearchService,
 )
 from truthgraph.services.vector_search_service import SearchResult
 
@@ -253,7 +254,7 @@ class TestReciprocalRankFusion:
         # Both should return both results
         assert len(merged_vector_heavy) == 2
         assert len(merged_keyword_heavy) == 2
-        
+
         # Top result should differ based on weights
         assert merged_vector_heavy[0].evidence_id == id1  # Vector-heavy favors id1
         assert merged_keyword_heavy[0].evidence_id == id2  # Keyword-heavy favors id2

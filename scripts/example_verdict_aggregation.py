@@ -11,7 +11,6 @@ from truthgraph.services.ml import (
     AggregationStrategy,
     NLILabel,
     NLIResult,
-    VerdictLabel,
     get_verdict_aggregation_service,
 )
 
@@ -37,12 +36,12 @@ def print_verdict(verdict, title: str = "Verdict") -> None:
     print(f"  Has Conflict:  {verdict.has_conflict}")
     print(f"  Strategy:      {verdict.strategy_used}")
     print()
-    print(f"  Scores:")
+    print("  Scores:")
     print(f"    Support:     {verdict.support_score:.3f}")
     print(f"    Refute:      {verdict.refute_score:.3f}")
     print(f"    Neutral:     {verdict.neutral_score:.3f}")
     print()
-    print(f"  Explanation:")
+    print("  Explanation:")
     print(f"    {verdict.explanation}")
     print()
 

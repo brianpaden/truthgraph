@@ -9,18 +9,18 @@ Run with: pytest tests/benchmarks/test_hybrid_search_performance.py -v -s
 """
 
 import os
-import time
-import pytest
 import statistics
-from uuid import uuid4
+import time
 from datetime import datetime
+from uuid import uuid4
+
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Evidence, Embedding
+from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.hybrid_search_service import HybridSearchService
-
 
 # Database URL for testing
 TEST_DATABASE_URL = os.getenv(
@@ -156,7 +156,7 @@ class TestHybridSearchPerformance:
         max_time = max(times)
         stddev_time = statistics.stdev(times) if len(times) > 1 else 0
 
-        print(f"\n=== Hybrid Search Performance (100 docs) ===")
+        print("\n=== Hybrid Search Performance (100 docs) ===")
         print(f"Runs: {num_runs}")
         print(f"Average: {avg_time:.2f}ms")
         print(f"Median: {median_time:.2f}ms")
@@ -202,7 +202,7 @@ class TestHybridSearchPerformance:
         avg_time = statistics.mean(times)
         median_time = statistics.median(times)
 
-        print(f"\n=== Hybrid Search Performance (500 docs) ===")
+        print("\n=== Hybrid Search Performance (500 docs) ===")
         print(f"Runs: {num_runs}")
         print(f"Average: {avg_time:.2f}ms")
         print(f"Median: {median_time:.2f}ms")
@@ -239,7 +239,7 @@ class TestHybridSearchPerformance:
 
         avg_time = statistics.mean(times)
 
-        print(f"\n=== Keyword-Only Search Performance ===")
+        print("\n=== Keyword-Only Search Performance ===")
         print(f"Runs: {num_runs}")
         print(f"Average: {avg_time:.2f}ms")
 
@@ -263,7 +263,7 @@ class TestHybridSearchPerformance:
             (0.0, 1.0, "Keyword-only"),
         ]
 
-        print(f"\n=== Weight Configuration Performance ===")
+        print("\n=== Weight Configuration Performance ===")
 
         for vector_weight, keyword_weight, label in weight_configs:
             times = []
@@ -298,7 +298,7 @@ class TestHybridSearchPerformance:
 
         top_k_values = [5, 10, 20, 50, 100]
 
-        print(f"\n=== Top-K Performance ===")
+        print("\n=== Top-K Performance ===")
 
         for top_k in top_k_values:
             times = []
@@ -335,7 +335,7 @@ class TestHybridSearchScalability:
         sizes = [50, 100, 200]
         results_summary = []
 
-        print(f"\n=== Scalability Analysis ===")
+        print("\n=== Scalability Analysis ===")
 
         for size in sizes:
             # Clear and create new dataset
@@ -385,7 +385,7 @@ class TestRRFPerformance:
         """Benchmark RRF fusion with varying result set sizes."""
         service = HybridSearchService(embedding_dimension=1536)
 
-        print(f"\n=== RRF Fusion Performance ===")
+        print("\n=== RRF Fusion Performance ===")
 
         result_sizes = [(10, 10), (50, 50), (100, 100), (200, 200)]
 

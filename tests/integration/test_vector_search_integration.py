@@ -5,15 +5,15 @@ Run with: pytest tests/integration/test_vector_search_integration.py
 """
 
 import os
-import pytest
 from uuid import uuid4
-from sqlalchemy import create_engine, text
+
+import pytest
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Evidence, Embedding
+from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.vector_search_service import VectorSearchService
-
 
 # Database URL for testing
 TEST_DATABASE_URL = os.getenv(

@@ -18,27 +18,26 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from ..db import get_db
-from ..schemas import Claim, VerificationResult, Evidence, NLIResult as DBNLIResult
+from ..schemas import Claim, VerificationResult
 from ..services.ml.embedding_service import get_embedding_service
-from ..services.ml.nli_service import get_nli_service, NLILabel
+from ..services.ml.nli_service import NLILabel, get_nli_service
 from ..services.vector_search_service import VectorSearchService
 from .models import (
     EmbedRequest,
     EmbedResponse,
-    SearchRequest,
-    SearchResponse,
-    SearchResultItem,
+    ErrorResponse,
+    EvidenceItem,
+    NLIBatchRequest,
+    NLIBatchResponse,
     NLIRequest,
     NLIResponse,
     NLIScores,
-    NLIBatchRequest,
-    NLIBatchResponse,
+    SearchRequest,
+    SearchResponse,
+    SearchResultItem,
+    VerdictResponse,
     VerifyRequest,
     VerifyResponse,
-    EvidenceItem,
-    VerdictRequest,
-    VerdictResponse,
-    ErrorResponse,
 )
 
 logger = logging.getLogger(__name__)

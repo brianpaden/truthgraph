@@ -11,15 +11,16 @@ Tests include:
 - Performance benchmarks
 """
 
-import pytest
 import time
-from uuid import uuid4
 
-from truthgraph.services.ml.embedding_service import get_embedding_service, EmbeddingService
-from truthgraph.services.ml.nli_service import get_nli_service, NLIService, NLILabel
+import pytest
+
+from truthgraph.db import Base, SessionLocal, engine
+from truthgraph.schemas import Embedding as DBEmbedding
+from truthgraph.schemas import Evidence
+from truthgraph.services.ml.embedding_service import get_embedding_service
+from truthgraph.services.ml.nli_service import NLILabel, get_nli_service
 from truthgraph.services.vector_search_service import VectorSearchService
-from truthgraph.db import SessionLocal, Base, engine
-from truthgraph.schemas import Evidence, Embedding as DBEmbedding
 
 
 @pytest.fixture(scope="module")

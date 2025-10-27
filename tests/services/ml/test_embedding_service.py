@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, Mock, patch
 
 import numpy as np
 import pytest
-import torch
 
 from truthgraph.services.ml.embedding_service import EmbeddingService, get_embedding_service
 
