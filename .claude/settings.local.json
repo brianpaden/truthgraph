@@ -35,7 +35,11 @@
       "Bash(task db:migrate:*)",
       "Bash(task db:migrate:status:*)",
       "Bash(task test:unit)",
-      "Bash(task test:*)"
+      "Bash(task test:*)",
+      "Bash(cat:*)",
+      "Bash(python scripts/benchmark_verdict_aggregation.py:*)",
+      "Bash(python scripts/example_verdict_aggregation.py:*)",
+      "Bash(timeout 30 python:*)"
     ],
     "deny": [],
     "ask": []
