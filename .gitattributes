@@ -1,0 +1,148 @@
+# Git Line Ending Configuration
+# https://git-scm.com/docs/gitattributes
+
+# Default behavior: Use LF for all text files in the repository
+* text=auto eol=lf
+
+# ============================================================================
+# Source Code Files - Force LF
+# ============================================================================
+
+# Python
+*.py text eol=lf
+*.pyi text eol=lf
+*.pyx text eol=lf
+
+# Web files
+*.html text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.svg text eol=lf
+
+# Shell scripts (must use LF)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# ============================================================================
+# Windows-Specific Files - Force CRLF
+# ============================================================================
+
+# PowerShell scripts (Windows-specific)
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+
+# Windows batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# ============================================================================
+# Documentation - Force LF
+# ============================================================================
+
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+*.adoc text eol=lf
+
+# ============================================================================
+# Configuration Files - Force LF
+# ============================================================================
+
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+*.conf text eol=lf
+*.config text eol=lf
+*.editorconfig text eol=lf
+
+# Docker files
+Dockerfile* text eol=lf
+*.dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+.dockerignore text eol=lf
+
+# Git files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.gitmodules text eol=lf
+
+# CI/CD
+.travis.yml text eol=lf
+.gitlab-ci.yml text eol=lf
+*.jenkinsfile text eol=lf
+
+# ============================================================================
+# Binary Files - No conversion
+# ============================================================================
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg binary
+
+# Fonts
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.tgz binary
+*.7z binary
+*.rar binary
+
+# Python compiled
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+*.exe binary
+
+# Databases
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+
+# Data files
+*.parquet binary
+*.feather binary
+*.pkl binary
+*.pickle binary
+*.h5 binary
+*.hdf5 binary
+
+# ML Models
+*.pt binary
+*.pth binary
+*.onnx binary
+*.pb binary
+*.ckpt binary
+
+# ============================================================================
+# Lock Files - Do not diff
+# ============================================================================
+
+package-lock.json -diff
+yarn.lock -diff
+pnpm-lock.yaml -diff
+uv.lock -diff linguist-generated=true
+poetry.lock -diff
+Pipfile.lock -diff
