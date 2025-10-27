@@ -6,10 +6,29 @@ version: '3'
 
 vars:
   PYTHON: python
-  PYMARKDOWNLNT: pymarkdownlnt.exe
-  RUFF: ruff
+  UV: uv
+  # Use uv to run tools from the dev environment
+  PYMARKDOWNLNT: uv run pymarkdownlnt
+  RUFF: uv run ruff
+  PYTEST: uv run pytest
 
 tasks:
+  # ============================================================================
+  # Environment Setup
+  # ============================================================================
+
+  install:
+    desc: Install project with dev dependencies using uv
+    cmds:
+      - '{{.UV}} sync --extra dev --extra ml'
+      - echo "✓ Dependencies installed in .venv"
+
+  install:dev:
+    desc: Install only dev dependencies (no ML)
+    cmds:
+      - '{{.UV}} sync --extra dev'
+      - echo "✓ Dev dependencies installed (no ML dependencies)"
+
   # ============================================================================
   # Linting Tasks
   # ============================================================================

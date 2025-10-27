@@ -1,5 +1,5 @@
 # Fix all markdown files excluding directories from .gitignore
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 # Function to parse .gitignore and extract directory patterns
 function Get-GitignorePatterns {
@@ -64,7 +64,7 @@ $toolErrors = @()
 
 foreach ($file in $files) {
     Write-Host "Fixing: $($file.FullName)"
-    $output = & pymarkdownlnt.exe -d md013,md022,md031,md032,md036 fix $file.FullName 2>&1 | Out-String
+    $output = & uv run pymarkdownlnt -d md013,md022,md031,md032,md036 fix $file.FullName 2>&1 | Out-String
 
     if ($LASTEXITCODE -ne 0) {
         # Check if it's a tool error (AttributeError, etc.) vs actual linting error

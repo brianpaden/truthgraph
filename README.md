@@ -163,25 +163,62 @@ See [Troubleshooting Guide](./docs/deployment/docker-ml.md#troubleshooting) for 
 
 ## Development
 
-### Local Setup
+### Prerequisites
+
+- **[uv](https://docs.astral.sh/uv/)**: Fast Python package manager
+- **[Task](https://taskfile.dev)**: Task runner for development workflows
+
+Install Task:
+```bash
+# Windows
+winget install Task.Task
+
+# macOS/Linux
+brew install go-task
+```
+
+### Local Development Setup
+
+```bash
+# Install dev dependencies (linting, testing, etc.)
+task install:dev
+
+# Install with ML dependencies
+task install
+
+# View all available tasks
+task --list
+```
+
+### Development Workflow
+
+```bash
+# Lint code
+task lint              # Run all linters
+task lint:markdown     # Lint markdown files
+task lint:python       # Lint Python files
+
+# Auto-fix issues
+task lint:fix          # Fix all linting issues
+task lint:fix:markdown # Fix markdown issues
+task lint:fix:python   # Fix Python issues
+
+# Testing
+task test              # Run all tests
+task test:unit         # Unit tests only
+task test:integration  # Integration tests only
+task test:coverage     # With coverage report
+```
+
+### Running API Locally
 
 ```bash
 # Start only database
 docker-compose up postgres
 
-# Run API locally
+# Run API locally with hot reload
 cd truthgraph
-python -m uvicorn main:app --reload
-```
-
-### Testing
-
-```bash
-# Run all tests
-docker-compose run --rm api pytest
-
-# With coverage
-docker-compose run --rm api pytest --cov=truthgraph
+uv run uvicorn main:app --reload
 ```
 
 ## Performance
