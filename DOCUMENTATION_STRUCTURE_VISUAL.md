@@ -54,7 +54,7 @@ docs/
 │
 ├── deployment/              # Deployment guides
 │   ├── docker.md
-│   ├── docker_ml.md
+│   ├── docker-ml.md
 │   └── troubleshooting.md
 │
 ├── development/             # Development guides
@@ -64,12 +64,12 @@ docs/
 │
 ├── operations/              # Operations/runbooks
 │   ├── monitoring.md
-│   ├── performance_tuning.md
-│   └── incident_response.md
+│   ├── performance-tuning.md
+│   └── incident-response.md
 │
 ├── guides/                  # User guides
-│   ├── user_guide.md
-│   ├── developer_guide.md
+│   ├── user-guide.md
+│   ├── developer-guide.md
 │   └── quickstart/
 │
 ├── research/                # Research & experiments
@@ -77,7 +77,7 @@ docs/
 │   └── concept/
 │
 └── integration/             # Integration guides
-    └── external_services.md
+    └── external-services.md
 ```
 
 **Update frequency**: Monthly or less
@@ -119,12 +119,12 @@ planning/
 │
 ├── technical_debt/          # Technical debt tracking
 │   ├── README.md            # Debt index
-│   ├── test_fixes_needed.md # 🐛 Test issues
-│   ├── performance_debt.md  # ⚡ Performance issues
-│   └── refactoring_candidates.md
+│   ├── test-fixes-needed.md # 🐛 Test issues
+│   ├── performance-debt.md  # ⚡ Performance issues
+│   └── refactoring-candidates.md
 │
 └── tasks/                   # Task management
-    └── taskfile_updates.md  # Taskfile change log
+    └── taskfile-updates.md  # Taskfile change log
 ```
 
 **Update frequency**: Daily/weekly
@@ -141,24 +141,24 @@ planning/
 archive/
 │
 ├── completed_features/      # ✓ Completed features
-│   ├── feature_5_verdict_aggregation.md
-│   ├── feature_6_implementation.md
-│   ├── feature_10_implementation.md
-│   └── feature_11_docker_delivery.md
+│   ├── feature-5-verdict-aggregation.md
+│   ├── feature-6-implementation.md
+│   ├── feature-10-implementation.md
+│   └── feature-11-docker-delivery.md
 │
 ├── completed_phases/        # ✓ Completed phases
-│   ├── phase_1_completion.md
-│   └── phase_2_completion.md
+│   ├── phase-1-completion.md
+│   └── phase-2-completion.md
 │
 ├── implementation_summaries/# 📊 Implementation summaries
-│   ├── api_integration_summary.md
-│   ├── docker_implementation_summary.md
-│   ├── embedding_service_summary.md
-│   ├── hybrid_search_summary.md
-│   └── nli_service_summary.md
+│   ├── api-integration-summary.md
+│   ├── docker-implementation-summary.md
+│   ├── embedding-service-summary.md
+│   ├── hybrid-search-summary.md
+│   └── nli-service-summary.md
 │
 └── deprecated/              # ⚠️ Deprecated docs
-    └── old_api_design.md
+    └── old-api-design.md
 ```
 
 **Update frequency**: Never (read-only)
@@ -206,13 +206,13 @@ archive/
 │ How to run tests?           │ docs/development/testing.md       │
 │ How to monitor?             │ docs/operations/monitoring.md     │
 │ Quick start guide?          │ docs/guides/quickstart/           │
-│ User guide?                 │ docs/guides/user_guide.md         │
+│ User guide?                 │ docs/guides/user-guide.md         │
 │ Product roadmap?            │ planning/roadmap/                 │
 │ What's being worked on?     │ planning/features/in_progress/    │
 │ What's next?                │ planning/features/planned/        │
 │ Current phase status?       │ planning/phases/phase_N/progress.md│
 │ Known issues?               │ planning/technical_debt/          │
-│ How was feature X built?    │ archive/completed_features/X.md   │
+│ How was feature X built?    │ archive/completed_features/feature-X.md   │
 │ Phase completion report?    │ archive/completed_phases/         │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -391,17 +391,17 @@ docs/services/
 Deployment & Operations          Integration Guides
 ───────────────────────          ──────────────────
 docs/deployment/                 docs/integration/
-├── docker.md                    ├── external_services.md
-├── docker_ml.md                 └── webhooks.md
-├── gpu_support.md
+├── docker.md                    ├── external-services.md
+├── docker-ml.md                 └── webhooks.md
+├── gpu-support.md
 └── troubleshooting.md           Research & Experiments
                                  ───────────────────────
 docs/operations/                 docs/research/
 ├── monitoring.md                ├── experiments/
-├── performance_tuning.md        │   └── 00_bayesian.md
-└── incident_response.md         └── concept/
-                                     ├── compound_fact_reasoning.md
-                                     └── temporal_fact_engine.md
+├── performance-tuning.md        │   └── 00-bayesian.md
+└── incident-response.md         └── concept/
+                                     ├── compound-fact-reasoning.md
+                                     └── temporal-fact-engine.md
 ```
 
 ---

@@ -37,12 +37,12 @@ c:/repos/truthgraph/
 
 | Current Location | New Location | Category |
 |-----------------|--------------|----------|
-| `API_QUICK_REFERENCE.md` | `docs/guides/api_quick_reference.md` | Permanent |
+| `API_QUICK_REFERENCE.md` | `docs/guides/api-quick-reference.md` | Permanent |
 | `DOCKER_README.md` | `docs/deployment/docker.md` | Permanent |
 | `HYBRID_SEARCH_SERVICE.md` | `docs/services/hybrid_search.md` | Permanent |
 | `PHASE_2_IMPLEMENTATION_PLAN.md` | `planning/phases/phase_2/plan.md` | Active |
-| `TEST_FIXES_NEEDED.md` | `planning/technical_debt/test_fixes_needed.md` | Active |
-| `FEATURE_5_SUMMARY.md` | `archive/completed_features/feature_5.md` | Historical |
+| `TEST_FIXES_NEEDED.md` | `planning/technical_debt/test-fixes-needed.md` | Active |
+| `FEATURE_5_SUMMARY.md` | `archive/completed_features/feature-5.md` | Historical |
 
 ## Implementation Steps
 
@@ -73,6 +73,7 @@ mkdir -p docs/api/{endpoints,schemas}
 mkdir -p docs/architecture/decisions
 mkdir -p docs/guides/quickstart
 mkdir -p docs/database/migrations
+mkdir -p docs/templates
 mkdir -p planning/{features,phases,technical_debt,tasks,roadmap}
 mkdir -p planning/features/{in_progress,planned,backlog}
 mkdir -p planning/phases/phase_2
@@ -85,11 +86,12 @@ touch docs/architecture/README.md
 touch docs/services/README.md
 touch docs/database/README.md
 touch docs/deployment/README.md
+touch docs/templates/README.md
 touch planning/README.md
 touch archive/README.md
 
 # Copy ADR template
-cp ADR_TEMPLATE.md docs/architecture/decisions/template.md
+cp ADR_TEMPLATE.md docs/templates/adr-template.md
 ```
 
 ### Phase 3: Migration (1-2 hours)
@@ -115,12 +117,12 @@ mv docs/DOCKER_ML_SETUP.md docs/deployment/docker_ml.md
 mkdir -p planning/phases/phase_2
 mv PHASE_2_IMPLEMENTATION_PLAN.md planning/phases/phase_2/plan.md
 mv PHASE_2_README.md planning/phases/phase_2/README.md
-mv TEST_FIXES_NEEDED.md planning/technical_debt/test_fixes_needed.md
+mv TEST_FIXES_NEEDED.md planning/technical_debt/test-fixes-needed.md
 
 # 3. Move historical archive
 mkdir -p archive/completed_features
-mv FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md archive/completed_features/feature_5_verdict_aggregation.md
-mv FEATURE_11_DELIVERY_REPORT.md archive/completed_features/feature_11_docker_delivery.md
+mv FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md archive/completed_features/feature-5-verdict-aggregation.md
+mv FEATURE_11_DELIVERY_REPORT.md archive/completed_features/feature-11-docker-delivery.md
 
 # ... continue with remaining files (see DOCUMENTATION_MIGRATION_PLAN.md)
 ```

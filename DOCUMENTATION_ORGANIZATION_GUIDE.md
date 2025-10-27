@@ -93,49 +93,49 @@ c:/repos/truthgraph/
 │   ├── deployment/                              # Deployment Documentation
 │   │   ├── README.md                            # Deployment overview
 │   │   ├── docker.md                            # Docker deployment
-│   │   ├── docker_ml.md                         # ML setup
-│   │   ├── gpu_support.md                       # GPU config
-│   │   ├── environment_variables.md             # Configuration
-│   │   ├── health_checks.md                     # Health checks
+│   │   ├── docker-ml.md                         # ML setup
+│   │   ├── gpu-support.md                       # GPU config
+│   │   ├── environment-variables.md             # Configuration
+│   │   ├── health-checks.md                     # Health checks
 │   │   └── troubleshooting.md                   # Troubleshooting
 │   │
 │   ├── development/                             # Development Guides
 │   │   ├── README.md                            # Dev overview
 │   │   ├── setup.md                             # Local setup
 │   │   ├── testing.md                           # Testing guide
-│   │   ├── code_style.md                        # Code conventions
+│   │   ├── code-style.md                        # Code conventions
 │   │   └── debugging.md                         # Debugging
 │   │
 │   ├── operations/                              # Operations/Runbooks
 │   │   ├── README.md                            # Ops overview
 │   │   ├── monitoring.md                        # Monitoring
-│   │   ├── performance_tuning.md                # Performance
-│   │   ├── incident_response.md                 # Incident response
-│   │   ├── backup_restore.md                    # Backups
+│   │   ├── performance-tuning.md                # Performance
+│   │   ├── incident-response.md                 # Incident response
+│   │   ├── backup-restore.md                    # Backups
 │   │   └── scaling.md                           # Scaling guide
 │   │
 │   ├── guides/                                  # User-Facing Guides
-│   │   ├── user_guide.md                        # User guide
-│   │   ├── developer_guide.md                   # Developer guide
-│   │   ├── api_quick_reference.md               # Quick reference
+│   │   ├── user-guide.md                        # User guide
+│   │   ├── developer-guide.md                   # Developer guide
+│   │   ├── api-quick-reference.md               # Quick reference
 │   │   └── quickstart/                          # Quick starts
-│   │       ├── hybrid_search.md
-│   │       ├── embedding_service.md
+│   │       ├── hybrid-search.md
+│   │       ├── embedding-service.md
 │   │       └── migration.md
 │   │
 │   ├── research/                                # Research & Experiments
 │   │   ├── README.md                            # Research overview
 │   │   ├── experiments/                         # Experimental work
-│   │   │   └── 00_bayesian.md
+│   │   │   └── 00-bayesian.md
 │   │   └── concept/                             # Concept docs
-│   │       ├── compound_fact_reasoning.md
-│   │       ├── explainable_reasoning_graph.md
-│   │       ├── multimodal_fact_verification.md
-│   │       └── temporal_fact_engine.md
+│   │       ├── compound-fact-reasoning.md
+│   │       ├── explainable-reasoning-graph.md
+│   │       ├── multimodal-fact-verification.md
+│   │       └── temporal-fact-engine.md
 │   │
 │   └── integration/                             # Integration Guides
 │       ├── README.md                            # Integration overview
-│       ├── external_services.md                 # External integrations
+│       ├── external-services.md                 # External integrations
 │       └── webhooks.md                          # Webhooks
 │
 ├── planning/                                    # ACTIVE PLANNING
@@ -160,7 +160,7 @@ c:/repos/truthgraph/
 │   │   ├── phase_2/                             # Current phase
 │   │   │   ├── plan.md                          # Original plan
 │   │   │   ├── progress.md                      # LIVING DOC: daily updates
-│   │   │   ├── quick_reference.md               # Quick ref
+│   │   │   ├── quick-reference.md               # Quick ref
 │   │   │   ├── tasks.md                         # Task breakdown
 │   │   │   └── blockers.md                      # Current blockers
 │   │   └── phase_3/                             # Next phase
@@ -168,35 +168,35 @@ c:/repos/truthgraph/
 │   │
 │   ├── technical_debt/                          # Technical Debt
 │   │   ├── README.md                            # Debt index
-│   │   ├── test_fixes_needed.md                 # Test issues
-│   │   ├── performance_debt.md                  # Performance issues
-│   │   └── refactoring_candidates.md            # Refactoring needs
+│   │   ├── test-fixes-needed.md                 # Test issues
+│   │   ├── performance-debt.md                  # Performance issues
+│   │   └── refactoring-candidates.md            # Refactoring needs
 │   │
 │   └── tasks/                                   # Task Management
 │       ├── README.md                            # Task overview
-│       └── taskfile_updates.md                  # Taskfile changes
+│       └── taskfile-updates.md                  # Taskfile changes
 │
 └── archive/                                     # HISTORICAL ARCHIVE
     ├── README.md                                # Archive index
     │
     ├── completed_features/                      # Completed Features
-    │   ├── feature_5_verdict_aggregation.md
-    │   ├── feature_6_implementation.md
-    │   ├── feature_10_implementation.md
-    │   └── feature_11_docker_delivery.md
+    │   ├── feature-5-verdict-aggregation.md
+    │   ├── feature-6-implementation.md
+    │   ├── feature-10-implementation.md
+    │   └── feature-11-docker-delivery.md
     │
     ├── completed_phases/                        # Completed Phases
-    │   ├── phase_1_completion.md
-    │   └── phase_2_completion.md
+    │   ├── phase-1-completion.md
+    │   └── phase-2-completion.md
     │
     ├── implementation_summaries/                # Implementation Summaries
-    │   ├── api_integration_summary.md
-    │   ├── docker_implementation_summary.md
-    │   ├── embedding_service_summary.md
-    │   └── hybrid_search_summary.md
+    │   ├── api-integration-summary.md
+    │   ├── docker-implementation-summary.md
+    │   ├── embedding-service-summary.md
+    │   └── hybrid-search-summary.md
     │
     └── deprecated/                              # Deprecated Docs
-        └── old_api_design.md
+        └── old-api-design.md
 ```
 
 ## Backend-Specific Considerations
@@ -878,10 +878,10 @@ vim archive/completed_phases/phase_3_completion.md  # Add summary
   - `_quickstart.md` - Quick start guides
 
 **Feature naming**:
-- Format: `feature_N_short_name.md`
+- Format: `feature-N-short-name.md`
 - Examples:
-  - `feature_5_verdict_aggregation.md`
-  - `feature_13_webhook_integration.md`
+  - `feature-5-verdict-aggregation.md`
+  - `feature-13-webhook-integration.md`
 
 **ADR naming**:
 - Format: `NNN-short-title.md` (zero-padded)

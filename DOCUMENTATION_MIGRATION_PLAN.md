@@ -9,33 +9,33 @@ This document maps current documentation locations to the new structure.
 #### Permanent Documentation (to docs/)
 ```bash
 # API Documentation
-mv API_QUICK_REFERENCE.md docs/guides/api_quick_reference.md
+mv API_QUICK_REFERENCE.md docs/guides/api-quick-reference.md
 
 # Deployment Documentation
 mv DOCKER_README.md docs/deployment/docker.md
-mv DOCKER_SETUP.md docs/deployment/docker_setup_guide.md
-mv docs/DOCKER_ML_SETUP.md docs/deployment/docker_ml.md
+mv DOCKER_SETUP.md docs/deployment/docker-setup-guide.md
+mv docs/DOCKER_ML_SETUP.md docs/deployment/docker-ml.md
 
 # Quick Start Guides
-mv HYBRID_SEARCH_QUICKSTART.md docs/guides/quickstart/hybrid_search.md
-mv EMBEDDING_SERVICE_QUICKSTART.md docs/guides/quickstart/embedding_service.md
+mv HYBRID_SEARCH_QUICKSTART.md docs/guides/quickstart/hybrid-search.md
+mv EMBEDDING_SERVICE_QUICKSTART.md docs/guides/quickstart/embedding-service.md
 mv MIGRATION_QUICKSTART.md docs/guides/quickstart/migration.md
-mv DOCKER_QUICK_CHECKLIST.md docs/guides/quickstart/docker_checklist.md
+mv DOCKER_QUICK_CHECKLIST.md docs/guides/quickstart/docker-checklist.md
 
 # Service Documentation
-mv docs/HYBRID_SEARCH_SERVICE.md docs/services/hybrid_search.md
-mv docs/verification_pipeline.md docs/services/verification_pipeline.md
-mv docs/VECTOR_SEARCH_IMPLEMENTATION.md docs/services/vector_search.md
+mv docs/HYBRID_SEARCH_SERVICE.md docs/services/hybrid-search.md
+mv docs/verification_pipeline.md docs/services/verification-pipeline.md
+mv docs/VECTOR_SEARCH_IMPLEMENTATION.md docs/services/vector-search.md
 
 # Operations Documentation
-mv docs/PERFORMANCE_OPTIMIZATION.md docs/operations/performance_tuning.md
+mv docs/PERFORMANCE_OPTIMIZATION.md docs/operations/performance-tuning.md
 
 # Developer Guides
-mv docs/DEVELOPER_GUIDE.md docs/guides/developer_guide.md
-mv docs/USER_GUIDE.md docs/guides/user_guide.md
+mv docs/DEVELOPER_GUIDE.md docs/guides/developer-guide.md
+mv docs/USER_GUIDE.md docs/guides/user-guide.md
 
 # Reference Documentation
-mv VECTOR_SEARCH_QUICK_REF.md docs/guides/quickstart/vector_search_reference.md
+mv VECTOR_SEARCH_QUICK_REF.md docs/guides/quickstart/vector-search-reference.md
 ```
 
 #### Active Planning (to planning/)
@@ -44,12 +44,12 @@ mv VECTOR_SEARCH_QUICK_REF.md docs/guides/quickstart/vector_search_reference.md
 mkdir -p planning/phases/phase_2
 mv PHASE_2_IMPLEMENTATION_PLAN.md planning/phases/phase_2/plan.md
 mv PHASE_2_README.md planning/phases/phase_2/README.md
-mv PHASE_2_QUICK_REFERENCE.md planning/phases/phase_2/quick_reference.md
+mv PHASE_2_QUICK_REFERENCE.md planning/phases/phase_2/quick-reference.md
 
 # Task Management
 mkdir -p planning/tasks
-mv TASKFILE_PHASE2_UPDATES.md planning/tasks/taskfile_phase2_updates.md
-mv TASKFILE_UPDATES.md planning/tasks/taskfile_updates.md
+mv TASKFILE_PHASE2_UPDATES.md planning/tasks/taskfile-phase2-updates.md
+mv TASKFILE_UPDATES.md planning/tasks/taskfile-updates.md
 
 # Technical Debt
 mkdir -p planning/technical_debt
@@ -144,77 +144,77 @@ mkdir -p archive/{completed_features,completed_phases,implementation_summaries,d
 echo "Moving permanent documentation..."
 # Deployment docs
 [ -f DOCKER_README.md ] && mv DOCKER_README.md docs/deployment/docker.md
-[ -f DOCKER_SETUP.md ] && mv DOCKER_SETUP.md docs/deployment/docker_setup_guide.md
-[ -f docs/DOCKER_ML_SETUP.md ] && mv docs/DOCKER_ML_SETUP.md docs/deployment/docker_ml.md
+[ -f DOCKER_SETUP.md ] && mv DOCKER_SETUP.md docs/deployment/docker-setup-guide.md
+[ -f docs/DOCKER_ML_SETUP.md ] && mv docs/DOCKER_ML_SETUP.md docs/deployment/docker-ml.md
 
 # Quick starts
-[ -f API_QUICK_REFERENCE.md ] && mv API_QUICK_REFERENCE.md docs/guides/api_quick_reference.md
-[ -f HYBRID_SEARCH_QUICKSTART.md ] && mv HYBRID_SEARCH_QUICKSTART.md docs/guides/quickstart/hybrid_search.md
-[ -f EMBEDDING_SERVICE_QUICKSTART.md ] && mv EMBEDDING_SERVICE_QUICKSTART.md docs/guides/quickstart/embedding_service.md
+[ -f API_QUICK_REFERENCE.md ] && mv API_QUICK_REFERENCE.md docs/guides/api-quick-reference.md
+[ -f HYBRID_SEARCH_QUICKSTART.md ] && mv HYBRID_SEARCH_QUICKSTART.md docs/guides/quickstart/hybrid-search.md
+[ -f EMBEDDING_SERVICE_QUICKSTART.md ] && mv EMBEDDING_SERVICE_QUICKSTART.md docs/guides/quickstart/embedding-service.md
 [ -f MIGRATION_QUICKSTART.md ] && mv MIGRATION_QUICKSTART.md docs/guides/quickstart/migration.md
-[ -f DOCKER_QUICK_CHECKLIST.md ] && mv DOCKER_QUICK_CHECKLIST.md docs/guides/quickstart/docker_checklist.md
-[ -f VECTOR_SEARCH_QUICK_REF.md ] && mv VECTOR_SEARCH_QUICK_REF.md docs/guides/quickstart/vector_search_reference.md
+[ -f DOCKER_QUICK_CHECKLIST.md ] && mv DOCKER_QUICK_CHECKLIST.md docs/guides/quickstart/docker-checklist.md
+[ -f VECTOR_SEARCH_QUICK_REF.md ] && mv VECTOR_SEARCH_QUICK_REF.md docs/guides/quickstart/vector-search-reference.md
 
 # Service docs
-[ -f docs/HYBRID_SEARCH_SERVICE.md ] && mv docs/HYBRID_SEARCH_SERVICE.md docs/services/hybrid_search.md
-[ -f docs/verification_pipeline.md ] && mv docs/verification_pipeline.md docs/services/verification_pipeline.md
-[ -f docs/VECTOR_SEARCH_IMPLEMENTATION.md ] && mv docs/VECTOR_SEARCH_IMPLEMENTATION.md docs/services/vector_search.md
+[ -f docs/HYBRID_SEARCH_SERVICE.md ] && mv docs/HYBRID_SEARCH_SERVICE.md docs/services/hybrid-search.md
+[ -f docs/verification_pipeline.md ] && mv docs/verification_pipeline.md docs/services/verification-pipeline.md
+[ -f docs/VECTOR_SEARCH_IMPLEMENTATION.md ] && mv docs/VECTOR_SEARCH_IMPLEMENTATION.md docs/services/vector-search.md
 
 # Operations
-[ -f docs/PERFORMANCE_OPTIMIZATION.md ] && mv docs/PERFORMANCE_OPTIMIZATION.md docs/operations/performance_tuning.md
+[ -f docs/PERFORMANCE_OPTIMIZATION.md ] && mv docs/PERFORMANCE_OPTIMIZATION.md docs/operations/performance-tuning.md
 
 # Guides
-[ -f docs/DEVELOPER_GUIDE.md ] && mv docs/DEVELOPER_GUIDE.md docs/guides/developer_guide.md
-[ -f docs/USER_GUIDE.md ] && mv docs/USER_GUIDE.md docs/guides/user_guide.md
+[ -f docs/DEVELOPER_GUIDE.md ] && mv docs/DEVELOPER_GUIDE.md docs/guides/developer-guide.md
+[ -f docs/USER_GUIDE.md ] && mv docs/USER_GUIDE.md docs/guides/user-guide.md
 
 echo "Moving active planning documentation..."
 [ -f PHASE_2_IMPLEMENTATION_PLAN.md ] && mv PHASE_2_IMPLEMENTATION_PLAN.md planning/phases/phase_2/plan.md
 [ -f PHASE_2_README.md ] && mv PHASE_2_README.md planning/phases/phase_2/README.md
-[ -f PHASE_2_QUICK_REFERENCE.md ] && mv PHASE_2_QUICK_REFERENCE.md planning/phases/phase_2/quick_reference.md
-[ -f TASKFILE_PHASE2_UPDATES.md ] && mv TASKFILE_PHASE2_UPDATES.md planning/tasks/taskfile_phase2_updates.md
-[ -f TASKFILE_UPDATES.md ] && mv TASKFILE_UPDATES.md planning/tasks/taskfile_updates.md
-[ -f TEST_FIXES_NEEDED.md ] && mv TEST_FIXES_NEEDED.md planning/technical_debt/test_fixes_needed.md
+[ -f PHASE_2_QUICK_REFERENCE.md ] && mv PHASE_2_QUICK_REFERENCE.md planning/phases/phase_2/quick-reference.md
+[ -f TASKFILE_PHASE2_UPDATES.md ] && mv TASKFILE_PHASE2_UPDATES.md planning/tasks/taskfile-phase2-updates.md
+[ -f TASKFILE_UPDATES.md ] && mv TASKFILE_UPDATES.md planning/tasks/taskfile-updates.md
+[ -f TEST_FIXES_NEEDED.md ] && mv TEST_FIXES_NEEDED.md planning/technical_debt/test-fixes-needed.md
 [ -f PLANNING_DOCUMENTATION_INDEX.md ] && mv PLANNING_DOCUMENTATION_INDEX.md planning/README.md
 [ -d docs/roadmap ] && mv docs/roadmap planning/roadmap
 
 echo "Moving historical documentation..."
 # Completed features
-[ -f FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md ] && mv FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md archive/completed_features/feature_5_verdict_aggregation.md
-[ -f IMPLEMENTATION_SUMMARY_FEATURE6.md ] && mv IMPLEMENTATION_SUMMARY_FEATURE6.md archive/completed_features/feature_6_implementation.md
-[ -f docs/FEATURE_10_IMPLEMENTATION_SUMMARY.md ] && mv docs/FEATURE_10_IMPLEMENTATION_SUMMARY.md archive/completed_features/feature_10_implementation.md
-[ -f FEATURE_11_DELIVERY_REPORT.md ] && mv FEATURE_11_DELIVERY_REPORT.md archive/completed_features/feature_11_docker_delivery.md
+[ -f FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md ] && mv FEATURE_5_VERDICT_AGGREGATION_SUMMARY.md archive/completed_features/feature-5-verdict-aggregation.md
+[ -f IMPLEMENTATION_SUMMARY_FEATURE6.md ] && mv IMPLEMENTATION_SUMMARY_FEATURE6.md archive/completed_features/feature-6-implementation.md
+[ -f docs/FEATURE_10_IMPLEMENTATION_SUMMARY.md ] && mv docs/FEATURE_10_IMPLEMENTATION_SUMMARY.md archive/completed_features/feature-10-implementation.md
+[ -f FEATURE_11_DELIVERY_REPORT.md ] && mv FEATURE_11_DELIVERY_REPORT.md archive/completed_features/feature-11-docker-delivery.md
 
 # Completed phases
-[ -f PHASE_2_COMPLETION_REPORT.md ] && mv PHASE_2_COMPLETION_REPORT.md archive/completed_phases/phase_2_completion.md
-[ -f PHASE_2_EXECUTION_SUMMARY.md ] && mv PHASE_2_EXECUTION_SUMMARY.md archive/completed_phases/phase_2_execution.md
+[ -f PHASE_2_COMPLETION_REPORT.md ] && mv PHASE_2_COMPLETION_REPORT.md archive/completed_phases/phase-2-completion.md
+[ -f PHASE_2_EXECUTION_SUMMARY.md ] && mv PHASE_2_EXECUTION_SUMMARY.md archive/completed_phases/phase-2-execution.md
 
 # Implementation summaries
-[ -f API_INTEGRATION_SUMMARY.md ] && mv API_INTEGRATION_SUMMARY.md archive/implementation_summaries/api_integration_summary.md
-[ -f DOCKER_IMPLEMENTATION_SUMMARY.md ] && mv DOCKER_IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/docker_implementation_summary.md
-[ -f HYBRID_SEARCH_IMPLEMENTATION_SUMMARY.md ] && mv HYBRID_SEARCH_IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/hybrid_search_summary.md
-[ -f EMBEDDING_SERVICE_IMPLEMENTATION_REPORT.md ] && mv EMBEDDING_SERVICE_IMPLEMENTATION_REPORT.md archive/implementation_summaries/embedding_service_summary.md
-[ -f NLI_SERVICE_IMPLEMENTATION_REPORT.md ] && mv NLI_SERVICE_IMPLEMENTATION_REPORT.md archive/implementation_summaries/nli_service_summary.md
-[ -f IMPLEMENTATION_SUMMARY.md ] && mv IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/general_implementation_summary.md
-[ -f SETUP_SUMMARY.md ] && mv SETUP_SUMMARY.md archive/implementation_summaries/setup_summary.md
-[ -f SUBAGENT_IMPLEMENTATION_PLAN_SUMMARY.md ] && mv SUBAGENT_IMPLEMENTATION_PLAN_SUMMARY.md archive/implementation_summaries/subagent_implementation_summary.md
-[ -f SWARM_EXECUTION_SUMMARY.md ] && mv SWARM_EXECUTION_SUMMARY.md archive/implementation_summaries/swarm_execution_summary.md
-[ -f VECTOR_SEARCH_SUMMARY.md ] && mv VECTOR_SEARCH_SUMMARY.md archive/implementation_summaries/vector_search_summary.md
-[ -f DOCKER_TEST_SETUP_COMPLETE.md ] && mv DOCKER_TEST_SETUP_COMPLETE.md archive/implementation_summaries/docker_test_setup.md
-[ -f DOCKERFILE_FIX_ALEMBIC.md ] && mv DOCKERFILE_FIX_ALEMBIC.md archive/implementation_summaries/dockerfile_alembic_fix.md
-[ -f TEST_FIXES_COMPLETE.md ] && mv TEST_FIXES_COMPLETE.md archive/implementation_summaries/test_fixes_complete.md
+[ -f API_INTEGRATION_SUMMARY.md ] && mv API_INTEGRATION_SUMMARY.md archive/implementation_summaries/api-integration-summary.md
+[ -f DOCKER_IMPLEMENTATION_SUMMARY.md ] && mv DOCKER_IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/docker-implementation-summary.md
+[ -f HYBRID_SEARCH_IMPLEMENTATION_SUMMARY.md ] && mv HYBRID_SEARCH_IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/hybrid-search-summary.md
+[ -f EMBEDDING_SERVICE_IMPLEMENTATION_REPORT.md ] && mv EMBEDDING_SERVICE_IMPLEMENTATION_REPORT.md archive/implementation_summaries/embedding-service-summary.md
+[ -f NLI_SERVICE_IMPLEMENTATION_REPORT.md ] && mv NLI_SERVICE_IMPLEMENTATION_REPORT.md archive/implementation_summaries/nli-service-summary.md
+[ -f IMPLEMENTATION_SUMMARY.md ] && mv IMPLEMENTATION_SUMMARY.md archive/implementation_summaries/general-implementation-summary.md
+[ -f SETUP_SUMMARY.md ] && mv SETUP_SUMMARY.md archive/implementation_summaries/setup-summary.md
+[ -f SUBAGENT_IMPLEMENTATION_PLAN_SUMMARY.md ] && mv SUBAGENT_IMPLEMENTATION_PLAN_SUMMARY.md archive/implementation_summaries/subagent-implementation-summary.md
+[ -f SWARM_EXECUTION_SUMMARY.md ] && mv SWARM_EXECUTION_SUMMARY.md archive/implementation_summaries/swarm-execution-summary.md
+[ -f VECTOR_SEARCH_SUMMARY.md ] && mv VECTOR_SEARCH_SUMMARY.md archive/implementation_summaries/vector-search-summary.md
+[ -f DOCKER_TEST_SETUP_COMPLETE.md ] && mv DOCKER_TEST_SETUP_COMPLETE.md archive/implementation_summaries/docker-test-setup.md
+[ -f DOCKERFILE_FIX_ALEMBIC.md ] && mv DOCKERFILE_FIX_ALEMBIC.md archive/implementation_summaries/dockerfile-alembic-fix.md
+[ -f TEST_FIXES_COMPLETE.md ] && mv TEST_FIXES_COMPLETE.md archive/implementation_summaries/test-fixes-complete.md
 
 echo "Moving database documentation..."
-[ -f docs/PHASE2_DATABASE_MIGRATION.md ] && mv docs/PHASE2_DATABASE_MIGRATION.md docs/database/migrations/phase2_migration.md
+[ -f docs/PHASE2_DATABASE_MIGRATION.md ] && mv docs/PHASE2_DATABASE_MIGRATION.md docs/database/migrations/phase2-migration.md
 
 echo "Moving architecture documentation..."
 [ -d docs/roadmap/v0 ] && {
-  [ -f docs/roadmap/v0/database_schema.md ] && mv docs/roadmap/v0/database_schema.md docs/database/schema_v0.md
-  [ -f docs/roadmap/v0/backend_architecture.md ] && mv docs/roadmap/v0/backend_architecture.md docs/architecture/backend_architecture_v0.md
-  [ -f docs/roadmap/v0/tech_stack.md ] && mv docs/roadmap/v0/tech_stack.md docs/architecture/tech_stack_v0.md
+  [ -f docs/roadmap/v0/database_schema.md ] && mv docs/roadmap/v0/database_schema.md docs/database/schema-v0.md
+  [ -f docs/roadmap/v0/backend_architecture.md ] && mv docs/roadmap/v0/backend_architecture.md docs/architecture/backend-architecture-v0.md
+  [ -f docs/roadmap/v0/tech_stack.md ] && mv docs/roadmap/v0/tech_stack.md docs/architecture/tech-stack-v0.md
 }
 [ -d docs/roadmap/v1 ] && {
-  [ -f docs/roadmap/v1/tech_stack_and_tooling.md ] && mv docs/roadmap/v1/tech_stack_and_tooling.md docs/architecture/tech_stack_v1.md
-  [ -f docs/roadmap/v1/cloud_ready_patterns.md ] && mv docs/roadmap/v1/cloud_ready_patterns.md docs/architecture/cloud_ready_patterns.md
+  [ -f docs/roadmap/v1/tech_stack_and_tooling.md ] && mv docs/roadmap/v1/tech_stack_and_tooling.md docs/architecture/tech-stack-v1.md
+  [ -f docs/roadmap/v1/cloud_ready_patterns.md ] && mv docs/roadmap/v1/cloud_ready_patterns.md docs/architecture/cloud-ready-patterns.md
 }
 
 echo "Moving research documentation..."
@@ -232,7 +232,7 @@ Welcome to TruthGraph documentation.
 - [Architecture](architecture/README.md) - System architecture and ADRs
 - [Services](services/README.md) - Service documentation
 - [Deployment](deployment/docker.md) - Docker deployment guide
-- [Developer Guide](guides/developer_guide.md) - Development guide
+- [Developer Guide](guides/developer-guide.md) - Development guide
 
 ## Documentation Structure
 - `api/` - API documentation and schemas
