@@ -39,7 +39,9 @@
       "Bash(cat:*)",
       "Bash(python scripts/benchmark_verdict_aggregation.py:*)",
       "Bash(python scripts/example_verdict_aggregation.py:*)",
-      "Bash(timeout 30 python:*)"
+      "Bash(timeout 30 python:*)",
+      "Bash(git mv:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
