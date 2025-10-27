@@ -503,14 +503,14 @@ Based on time budget:
 python scripts/optimize_batch_sizes.py
 ```
 
-2. Check device:
+1. Check device:
 ```python
 cache = ModelCache.get_instance()
 stats = cache.get_cache_stats()
 print(stats['device_info'])
 ```
 
-3. Profile for bottlenecks:
+1. Profile for bottlenecks:
 ```bash
 python scripts/profile_ml_services.py --service embedding
 ```
@@ -530,12 +530,12 @@ python scripts/profile_ml_services.py --service embedding
 batch_size = 16
 ```
 
-2. Enable memory cleanup:
+1. Enable memory cleanup:
 ```python
 cache.cleanup_memory()
 ```
 
-3. Use memory profiler:
+1. Use memory profiler:
 ```bash
 pip install memory-profiler
 python -m memory_profiler scripts/benchmark_embeddings.py
@@ -555,7 +555,7 @@ cache = ModelCache.get_instance()
 cache.warmup_all_models()
 ```
 
-2. Pre-load in container startup:
+1. Pre-load in container startup:
 ```dockerfile
 # In Dockerfile
 CMD python -c "from truthgraph.services.ml.model_cache import ModelCache; ModelCache.get_instance().warmup_all_models()" && uvicorn app.main:app
@@ -573,9 +573,9 @@ CMD python -c "from truthgraph.services.ml.model_cache import ModelCache; ModelC
 python scripts/test_e2e_performance.py --verbose
 ```
 
-2. Identify bottleneck component
+1. Identify bottleneck component
 
-3. Apply component-specific optimizations
+2. Apply component-specific optimizations
 
 ---
 

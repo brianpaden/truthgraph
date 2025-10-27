@@ -164,7 +164,7 @@ sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-3. Verify GPU support
+1. Verify GPU support
 
 ```bash
 docker run --rm --gpus all nvidia/cuda:12.1.0-runtime-ubuntu22.04 nvidia-smi
