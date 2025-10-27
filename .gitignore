@@ -226,3 +226,6 @@ frontend-react/node_modules/
 
 # taskfile
 .task/
+
+# Windows WA
+nul
