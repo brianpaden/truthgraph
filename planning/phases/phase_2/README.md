@@ -128,7 +128,7 @@ Navigation guide and quick orientation document.
 ## Key Metrics at a Glance
 
 ### Success Criteria (Hard Requirements)
-```
+```text
 ✓ <60s end-to-end verification
 ✓ >70% accuracy on 20+ test claims
 ✓ >500 texts/sec embedding throughput
@@ -140,7 +140,7 @@ Navigation guide and quick orientation document.
 ```
 
 ### Timeline & Effort
-```
+```text
 Duration: 2 weeks (60-80 hours)
 Critical Path: ~44 hours sequential
 Parallelization: 1.8-2.4x factor
@@ -148,7 +148,7 @@ Team Size: 6-8 specialized agents
 ```
 
 ### Dependency Graph (Critical Path)
-```
+```text
 DB Migration (4h)
   ↓
 Embeddings + NLI + Vector Search (24-32h parallel)
@@ -215,7 +215,7 @@ API + Testing + Optimization (20h parallel)
 
 ## File Locations
 
-```
+```text
 Documentation:
   PHASE_2_README.md                          (This file)
   PHASE_2_IMPLEMENTATION_PLAN.md             (Complete spec - READ THIS)
@@ -320,7 +320,7 @@ cat PHASE_2_EXECUTION_SUMMARY.md
 
 Validate these every week:
 
-```
+```text
 Component                Target              Measure
 ─────────────────────────────────────────────────────
 Embedding throughput     >500 texts/sec      Batch of 1000

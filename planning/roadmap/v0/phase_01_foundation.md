@@ -89,7 +89,7 @@ services:
 
 ### Volume Structure
 
-```
+```text
 truthgraph/
 ├── docker-compose.yml
 ├── .env.example
@@ -324,7 +324,7 @@ Example:
 
 ### Project Structure
 
-```
+```text
 truthgraph/
 ├── __init__.py
 ├── main.py                 # Entry point
@@ -568,9 +568,9 @@ def get_claim(claim_id: UUID, db: Session = Depends(get_db)):
 
 ## React Frontend (Minimal)
 
-### Project Structure
+### Project Structure - React
 
-```
+```text
 frontend/
 ├── src/
 │   ├── main.tsx

@@ -4,7 +4,7 @@ This directory contains Alembic database migrations for TruthGraph v0.
 
 ## Structure
 
-```
+```text
 alembic/
 ├── versions/                          # Migration files
 │   └── 20251025_0000_phase2_ml_tables.py  # Phase 2 ML tables migration
@@ -125,6 +125,6 @@ Check that all migration files are in `alembic/versions/` and the revision IDs m
 
 ## Resources
 
-- Alembic Documentation: https://alembic.sqlalchemy.org/
-- SQLAlchemy 2.0 Docs: https://docs.sqlalchemy.org/en/20/
-- pgvector Documentation: https://github.com/pgvector/pgvector
+- Alembic Documentation: <https://alembic.sqlalchemy.org/>
+- SQLAlchemy 2.0 Docs: <https://docs.sqlalchemy.org/en/20/>
+- pgvector Documentation: <https://github.com/pgvector/pgvector>

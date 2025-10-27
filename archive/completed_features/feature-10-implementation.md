@@ -91,7 +91,7 @@ print(f"Total memory: {stats['total_memory_mb']:.1f} MB")
 **Lines**: 567 lines
 **Purpose**: Comprehensive performance profiling and bottleneck identification
 
-#### Features
+#### 2.1 Features
 
 - **CPU Profiling**: cProfile integration with detailed hotspot analysis
 - **Memory Profiling**: psutil-based memory tracking
@@ -101,7 +101,7 @@ print(f"Total memory: {stats['total_memory_mb']:.1f} MB")
 - **Optimization Recommendations**: Actionable suggestions based on profiling results
 - **Multiple Output Formats**: .prof files, text summaries, JSON reports
 
-#### Usage Example
+#### 2.2 Usage Example
 
 ```bash
 # Profile all services with default settings
@@ -119,7 +119,7 @@ python scripts/profile_ml_services.py --memory-profile
 
 #### Output Files
 
-```
+```text
 profiling_results/
 ├── embedding_model_load.prof      # cProfile data for model loading
 ├── embedding_model_load.txt       # Text summary
@@ -148,7 +148,7 @@ profiling_results/
 **Lines**: 483 lines
 **Purpose**: Automated batch size tuning for maximum throughput
 
-#### Features
+#### 3.1 Features
 
 - **Automated Testing**: Tests range of batch sizes (powers of 2)
 - **Throughput Measurement**: Precise texts/second and pairs/second metrics
@@ -158,7 +158,7 @@ profiling_results/
 - **Recommendations**: Identifies optimal batch size with justification
 - **Results Export**: JSON output for analysis and tracking
 
-#### Usage Example
+#### 3.2 Usage Example
 
 ```bash
 # Optimize all services
@@ -180,7 +180,7 @@ python scripts/optimize_batch_sizes.py --num-samples 2000
 #### Typical Results
 
 **CPU (8 cores, 16GB RAM)**:
-```
+```text
 Embedding Service:
   Tested batch sizes: 4, 8, 16, 32, 64, 128
   Optimal: 32
@@ -195,7 +195,7 @@ NLI Service:
 ```
 
 **GPU (NVIDIA RTX 3090, 24GB VRAM)**:
-```
+```text
 Embedding Service:
   Optimal: 128
     Throughput: 2100 texts/second
@@ -215,7 +215,7 @@ NLI Service:
 **Lines**: 478 lines
 **Purpose**: Validate complete verification pipeline performance
 
-#### Features
+#### 4.1 Features
 
 - **Complete Pipeline**: Tests claim → embedding → retrieval → NLI → verdict
 - **Component Timing**: Detailed breakdown of each step
@@ -226,7 +226,7 @@ NLI Service:
 - **Warmup Support**: Optional model pre-loading
 - **Statistical Analysis**: Mean, median, percentile calculations
 
-#### Usage Example
+#### 4.2 Usage Example
 
 ```bash
 # Basic test (5 claims, 10 evidence each)
@@ -244,7 +244,7 @@ python scripts/test_e2e_performance.py --verbose --warmup
 
 #### Sample Output
 
-```
+```text
 END-TO-END PERFORMANCE SUMMARY
 ================================================================================
 

@@ -20,7 +20,7 @@
 
 ## Execution Timeline
 
-```
+```text
 Week 3:
   Mon-Tue  [A] Database Migration + env setup (4h)
   Wed-Fri  [B] Embeddings, NLI, Vector Search (parallel, 24-32h)
@@ -80,7 +80,7 @@ Week 5:
 ## Key Deliverables by Agent
 
 ### Python-Pro
-```
+```text
 truthgraph/ml/embeddings.py        (320 lines, 8h)
 truthgraph/ml/verification.py      (260 lines, 8h)
 scripts/embed_corpus.py            (170 lines, 6h)
@@ -90,28 +90,28 @@ Performance tuning & optimization (8h)
 ```
 
 ### Database-Architect
-```
+```text
 docker/migrations/002_evidence_embeddings.sql
 truthgraph/retrieval/vector_search.py  (140 lines, 12h)
 Query optimization & tuning (6h)
 ```
 
 ### Backend-Architect
-```
+```text
 truthgraph/retrieval/hybrid_search.py    (180 lines, 10h)
 truthgraph/verification/pipeline.py      (260 lines, 10h)
 Architecture review & integration (4h)
 ```
 
 ### FastAPI-Pro
-```
+```text
 truthgraph/api/verification_routes.py
 Updates to truthgraph/models.py
 tests/integration/test_api_verification.py
 ```
 
 ### Test-Automator
-```
+```text
 tests/fixtures/test_claims.json          (Known verdicts)
 tests/fixtures/nli_test_pairs.json       (NLI test cases)
 tests/unit/test_aggregation.py
@@ -123,7 +123,7 @@ conftest.py (fixtures)
 ```
 
 ### Deployment-Engineer
-```
+```text
 docker/api.Dockerfile (updated)
 docker-compose.yml (updated)
 docs/DOCKER_ML_SETUP.md
@@ -304,7 +304,7 @@ def test_embedding_throughput():
 
 ## Key Files & Locations
 
-```
+```text
 truthgraph/                          # Main package
 ├── ml/                              # ML services
 │   ├── embeddings.py               # (Python-Pro)

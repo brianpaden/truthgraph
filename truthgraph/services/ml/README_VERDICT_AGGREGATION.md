@@ -58,7 +58,7 @@ verdict = service.aggregate(
 - Automatically filters low-confidence evidence (default threshold: 0.5)
 
 **Example**:
-```
+```text
 Evidence 1: ENTAILMENT (confidence: 0.95)  → weight: 0.95
 Evidence 2: ENTAILMENT (confidence: 0.85)  → weight: 0.85
 Evidence 3: NEUTRAL (confidence: 0.60)     → weight: 0.60
@@ -93,7 +93,7 @@ verdict = service.aggregate(
 - Confidence is the proportion of votes received
 
 **Example**:
-```
+```text
 Evidence 1: ENTAILMENT (confidence: 0.55)  → 1 vote
 Evidence 2: ENTAILMENT (confidence: 0.60)  → 1 vote
 Evidence 3: CONTRADICTION (confidence: 0.95)  → 1 vote
@@ -123,7 +123,7 @@ verdict = service.aggregate(
 - Falls back to weighted vote if no high-confidence evidence exists
 
 **Example**:
-```
+```text
 Evidence 1: ENTAILMENT (confidence: 0.85)     → included
 Evidence 2: ENTAILMENT (confidence: 0.65)     → excluded (too low)
 Evidence 3: CONTRADICTION (confidence: 0.60)  → excluded (too low)
@@ -148,7 +148,7 @@ verdict = service.aggregate(
 - Confidence is the average of all evidence confidences
 
 **Example**:
-```
+```text
 Scenario 1 (Unanimous):
 Evidence 1: ENTAILMENT (confidence: 0.90)
 Evidence 2: ENTAILMENT (confidence: 0.85)
@@ -307,14 +307,14 @@ The service automatically generates human-readable explanations:
 ### Example Explanations
 
 **High Confidence Support**:
-```
+```text
 Claim is SUPPORTED with 95.0% confidence. Analyzed 3 evidence items:
 3 supporting, 0 refuting, 0 neutral. High confidence verdict -
 strong evidence consensus.
 ```
 
 **Conflicting Evidence**:
-```
+```text
 Claim is UNCERTAIN with 55.0% confidence. Analyzed 5 evidence items:
 2 supporting, 2 refuting, 1 neutral. WARNING: Conflicting evidence
 detected. Both supporting and refuting evidence exist with significant
@@ -322,7 +322,7 @@ confidence.
 ```
 
 **Low Confidence**:
-```
+```text
 Claim is UNCERTAIN with 35.0% confidence. Analyzed 4 evidence items:
 1 supporting, 0 refuting, 0 neutral. 3 items excluded due to low
 confidence. Low confidence verdict - consider gathering more evidence.
@@ -512,7 +512,7 @@ verification = VerificationResult(
 
 The Verdict Aggregation Service is part of the complete verification pipeline:
 
-```
+```text
 1. User submits claim
 2. Claim embedding generated → EmbeddingService
 3. Similar evidence retrieved → VectorSearchService

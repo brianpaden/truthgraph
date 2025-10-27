@@ -358,7 +358,7 @@ docker-compose exec -T postgres psql -U truthgraph truthgraph < backup_pre_phase
 #### 1. pgvector Extension Not Found
 
 **Error**:
-```
+```sql
 ERROR: extension "vector" is not available
 ```
 
@@ -379,7 +379,7 @@ sudo make install
 #### 2. Migration Timeout on Large Corpus
 
 **Error**:
-```
+```sql
 ERROR: canceling statement due to statement timeout
 ```
 
@@ -394,7 +394,7 @@ SET statement_timeout = '10min';
 #### 3. IVFFlat Index Build Fails
 
 **Error**:
-```
+```sql
 ERROR: IVFFlat index build failed
 ```
 
@@ -413,7 +413,7 @@ WITH (lists = 100);
 #### 4. Foreign Key Violation on Downgrade
 
 **Error**:
-```
+```sql
 ERROR: cannot drop table embeddings because other objects depend on it
 ```
 
@@ -442,7 +442,7 @@ After successful migration:
 
 ## Schema Diagram
 
-```
+```text
 ┌─────────────────────┐
 │      claims         │
 │  (Phase 1)          │
@@ -485,9 +485,9 @@ After successful migration:
 
 ## References
 
-- **Alembic Documentation**: https://alembic.sqlalchemy.org/
-- **pgvector Documentation**: https://github.com/pgvector/pgvector
-- **SQLAlchemy 2.0 Async**: https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html
+- **Alembic Documentation**: <https://alembic.sqlalchemy.org/>
+- **pgvector Documentation**: <https://github.com/pgvector/pgvector>
+- **SQLAlchemy 2.0 Async**: <https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html>
 - **Phase 2 Implementation Plan**: `PHASE_2_IMPLEMENTATION_PLAN.md`
 
 ---

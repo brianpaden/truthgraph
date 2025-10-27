@@ -40,7 +40,7 @@ This document outlines a comprehensive subagent-driven implementation plan for P
 - **Frontend**: htmx (primary) + optional React
 
 **Existing Codebase Structure**:
-```
+```text
 truthgraph/
 ├── api/
 │   ├── routes.py          # API endpoints (claims CRUD)
@@ -66,7 +66,7 @@ truthgraph/
 - `GET /api/v1/claims/{claim_id}` - Get claim with verdict
 
 **Dependencies Already Available**:
-```
+```text
 fastapi>=0.104.1
 uvicorn[standard]>=0.24.0
 sqlalchemy>=2.0.23
@@ -78,7 +78,7 @@ python-multipart>=0.0.6
 ```
 
 **ML Dependencies (In pyproject.toml but not yet used)**:
-```
+```text
 torch>=2.1.0
 sentence-transformers>=2.2.2
 transformers>=4.35.0
@@ -119,7 +119,7 @@ transformers>=4.35.0
 - **Secondary**: `fastapi-pro` - API integration point
 
 **Deliverables**:
-```
+```text
 truthgraph/ml/embeddings.py         # Core service (320 lines as specified in roadmap)
 truthgraph/ml/__init__.py           # Package init
 scripts/embed_corpus.py             # Batch corpus embedding (170 lines)
@@ -159,7 +159,7 @@ tests/unit/test_embeddings.py       # Unit tests with mocks
 - **Secondary**: `fastapi-pro` - Async database patterns
 
 **Deliverables**:
-```
+```text
 truthgraph/retrieval/vector_search.py    # Core search (140 lines)
 truthgraph/retrieval/__init__.py
 tests/unit/test_vector_search.py
@@ -199,7 +199,7 @@ tests/integration/test_vector_search_e2e.py
 - **Secondary**: `database-architect` - FTS optimization
 
 **Deliverables**:
-```
+```text
 truthgraph/retrieval/hybrid_search.py    # Hybrid search (180 lines)
 tests/unit/test_hybrid_search.py
 tests/integration/test_hybrid_search_e2e.py
@@ -239,7 +239,7 @@ tests/integration/test_hybrid_search_e2e.py
 - **Secondary**: `test-automator` - Comprehensive test suite
 
 **Deliverables**:
-```
+```text
 truthgraph/ml/verification.py       # NLI service (260 lines)
 tests/unit/test_verification.py
 tests/fixtures/nli_test_pairs.json
@@ -279,7 +279,7 @@ tests/fixtures/nli_test_pairs.json
 - **Secondary**: `test-automator` - Validation tests
 
 **Deliverables**:
-```
+```text
 truthgraph/verification/aggregation.py    # Aggregation logic (190 lines)
 truthgraph/verification/__init__.py
 tests/unit/test_aggregation.py
@@ -322,7 +322,7 @@ tests/fixtures/test_claims.json
 - **Secondary**: `fastapi-pro` - API integration
 
 **Deliverables**:
-```
+```text
 truthgraph/verification/pipeline.py      # Pipeline orchestration (260 lines)
 tests/integration/test_verification_pipeline.py
 ```
@@ -360,7 +360,7 @@ tests/integration/test_verification_pipeline.py
 - **Secondary**: `backend-architect` - Architecture review
 
 **Deliverables**:
-```
+```text
 truthgraph/api/verification_routes.py  # New verification endpoints
 truthgraph/models.py                   # Updated with verification models
 tests/integration/test_api_verification.py
@@ -399,7 +399,7 @@ tests/integration/test_api_verification.py
 - **Secondary**: `deployment-engineer` - Migration safety
 
 **Deliverables**:
-```
+```text
 docker/migrations/002_evidence_embeddings.sql
 truthgraph/db_migrations.py  (optional Alembic)
 ```
@@ -458,7 +458,7 @@ CREATE INDEX idx_embeddings_vector_similarity ON evidence_embeddings
 - **Secondary**: `python-pro` - Unit test implementation
 
 **Deliverables**:
-```
+```text
 tests/
 ├── unit/
 │   ├── test_embeddings.py
@@ -515,7 +515,7 @@ tests/
 - **Total: <60s**
 
 **Deliverables**:
-```
+```text
 Performance reports and tuning recommendations
 Optimized index configurations
 Batch size recommendations for CPU/GPU
@@ -559,7 +559,7 @@ Batch size recommendations for CPU/GPU
 - **Secondary**: `backend-architect` - Configuration validation
 
 **Deliverables**:
-```
+```text
 docker/api.Dockerfile                    # Updated with ML deps
 docker-compose.yml                       # Updated volumes & env
 .dockerignore                            # Updated
@@ -598,7 +598,7 @@ docs/DOCKER_ML_SETUP.md                 # Setup guide
 - **Secondary**: `deployment-engineer` - Operational guide
 
 **Deliverables**:
-```
+```text
 truthgraph/ml/                          # Docstrings in code
 truthgraph/retrieval/                   # Docstrings in code
 truthgraph/verification/                # Docstrings in code
@@ -621,7 +621,7 @@ docs/TROUBLESHOOTING.md                 # Troubleshooting
 
 ### Execution Order
 
-```
+```text
 PHASE A (Can start immediately, 4-5 hours):
 ├─ Database Migration [database-architect]
 │  └─ Creates evidence_embeddings table
@@ -940,7 +940,7 @@ PHASE G (Final validation):
 ---
 
 ### Total Capacity Allocation
-```
+```text
 Python-Pro:           38 hours
 Database-Architect:   23 hours
 Backend-Architect:    24 hours

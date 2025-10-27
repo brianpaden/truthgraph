@@ -176,7 +176,7 @@ python scripts/optimize_batch_sizes.py --memory-limit 3000
 - `batch_size_optimization_results.json` - Full results
 
 **Typical Results**:
-```
+```text
 Embedding Service (cpu):
   Recommended batch size: 32
   Expected throughput: 523 texts/second
@@ -208,7 +208,7 @@ python scripts/test_e2e_performance.py --verbose --warmup
 ```
 
 **Output**:
-```
+```text
 End-to-end performance: 48.32s (PASS <60s target)
   Embedding: 0.8s (1.7%)
   Retrieval: 2.1s (4.4%)
@@ -551,7 +551,7 @@ python scripts/test_e2e_performance.py
 
 ### Performance Targets Quick Reference
 
-```
+```text
 ✓ Embedding: >500 texts/s
 ✓ NLI: >2 pairs/s
 ✓ E2E: <60s

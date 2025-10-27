@@ -1,7 +1,7 @@
 # TruthGraph Phase 2 - API Quick Reference
 
 ## Base URL
-```
+```url
 http://localhost:8000
 ```
 
@@ -289,9 +289,9 @@ All responses include:
 ## Interactive Documentation
 
 Access comprehensive API docs at:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-- **OpenAPI JSON**: http://localhost:8000/openapi.json
+- **Swagger UI**: <http://localhost:8000/docs>
+- **ReDoc**: <http://localhost:8000/redoc>
+- **OpenAPI JSON**: <http://localhost:8000/openapi.json>
 
 ## Running the API
 
@@ -388,7 +388,7 @@ grep "/api/v1/verify" logs/truthgraph.log
 
 ## Support
 
-- **Documentation**: http://localhost:8000/docs
+- **Documentation**: <http://localhost:8000/docs>
 - **Issues**: GitHub Issues
 - **Logs**: Check application logs for errors
 - **Health**: GET /health for system status

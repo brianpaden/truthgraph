@@ -31,7 +31,7 @@ $ task test:unit
 
 **Solution**: Use `call_args.args[1]` to access the params dictionary.
 
-#### Fixed Tests:
+#### Fixed Tests
 - ✅ `test_search_similar_evidence_with_source_filter`
 - ✅ `test_search_similar_evidence_tenant_isolation`
 - ✅ `test_similarity_threshold_conversion`
@@ -57,7 +57,7 @@ assert params.get("tenant_id") == "tenant_123"  # Works!
 
 **Solution**: Added proper `@patch` decorator for `torch.backends.mps.is_available`.
 
-#### Fixed Test:
+#### Fixed Test
 - ✅ `test_detect_device_cpu_fallback`
 
 **Before**:
@@ -100,7 +100,7 @@ def test_detect_device_cpu_fallback(self, mock_mps, mock_cuda):
 
 ### Transformers Cache Warning (Non-Critical)
 
-```
+```text
 FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
 ```
 

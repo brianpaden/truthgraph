@@ -33,7 +33,7 @@ This guide provides comprehensive architectural guidance for organizing markdown
 
 ## Directory Structure
 
-```
+```text
 c:/repos/truthgraph/
 │
 ├── README.md                                    # Project overview only

@@ -54,7 +54,7 @@ A comprehensive, multi-layered implementation plan for Phase 2 Core Features of 
 ## Key Planning Artifacts
 
 ### 1. Complete Feature Breakdown
-```
+```text
 Feature 1:  Embedding Generation         (8 hours)  → Python-Pro
 Feature 2:  Vector Search with pgvector  (12 hours) → Database-Architect
 Feature 3:  Hybrid Search (FTS + Vector) (10 hours) → Backend-Architect
@@ -70,7 +70,7 @@ Feature 12: Documentation                (6 hours)  → Python-Pro + Deployment-
 ```
 
 ### 2. Agent Allocation (141 hours budgeted, 60-80 actual with parallelization)
-```
+```text
 Python-Pro            38 hours  (27%)  - 5 major deliverables
 Database-Architect    23 hours  (16%)  - 3 major deliverables
 Backend-Architect     24 hours  (17%)  - 3 major deliverables
@@ -167,18 +167,18 @@ Context-Manager       4-6 hours (3%)   - Coordination & checkpoints
 
 ### Resource Risks
 
-6. **Agent Unavailability** (Medium probability)
+1. **Agent Unavailability** (Medium probability)
    - Mitigation: Cross-training, clear documentation, checkpoint handoff
 
-7. **Scope Creep** (High probability, medium impact)
+2. **Scope Creep** (High probability, medium impact)
    - Mitigation: Feature freeze, out-of-scope list for Phase 3, checkpoint reviews
 
 ### Integration Risks
 
-8. **API Integration Complexity** (Low probability, medium impact)
+1. **API Integration Complexity** (Low probability, medium impact)
    - Mitigation: Early contract definition, mock API, integration tests
 
-9. **Database Schema Issues** (Low probability, high impact)
+2. **Database Schema Issues** (Low probability, high impact)
    - Mitigation: Test on full backup, backward compatibility, staging validation
 
 ---
@@ -247,7 +247,7 @@ Context-Manager       4-6 hours (3%)   - Coordination & checkpoints
 
 All documents are in the project root: `c:\repos\truthgraph\`
 
-```
+```text
 PHASE_2_README.md                      ← START HERE (navigation)
 PHASE_2_QUICK_REFERENCE.md             ← Quick lookup (2-page summary)
 PHASE_2_IMPLEMENTATION_PLAN.md          ← Complete spec (agent instructions)

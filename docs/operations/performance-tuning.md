@@ -30,7 +30,7 @@ TruthGraph Phase 2 implements ML-powered claim verification using:
 
 ### Architecture
 
-```
+```text
 Claim → Embedding → Vector Search → Evidence → NLI → Aggregation → Verdict
          (<1s)         (<3s)         Retrieval   (<40s)    (<1s)     (<60s total)
 ```
@@ -55,7 +55,7 @@ Claim → Embedding → Vector Search → Evidence → NLI → Aggregation → V
 
 ### Component Time Budget (60s total)
 
-```
+```text
 Embedding generation:     <1s   (1.7%)
 Evidence retrieval:       <3s   (5.0%)
 NLI verification:        <40s  (66.7%)
@@ -68,7 +68,7 @@ Overhead:                 <10s  (16.7%)
 
 ## Model Cache System
 
-### Overview
+### Model Cache System - Overview
 
 The `ModelCache` class provides centralized model management with:
 - Singleton pattern for consistent instances
@@ -140,7 +140,7 @@ python scripts/profile_ml_services.py --output-dir ./my_profiling_results
 - Optimization recommendations
 
 **Files generated:**
-```
+```text
 profiling_results/
 ├── embedding_model_load.prof      # Model loading profile
 ├── embedding_single_text.prof     # Single inference profile
@@ -198,7 +198,7 @@ p.print_callers('embed_batch')
 
 ## Batch Size Optimization
 
-### Overview
+### Overview - Batch Size Optimization
 
 Batch size significantly impacts throughput and memory usage. The optimizer finds optimal values for your hardware.
 
@@ -221,7 +221,7 @@ python scripts/optimize_batch_sizes.py --memory-limit 3000
 ### Typical Results
 
 **CPU (8 cores, 16GB RAM):**
-```
+```text
 Embedding Service:
   Optimal batch size: 32
   Throughput: 523 texts/second
@@ -234,7 +234,7 @@ NLI Service:
 ```
 
 **GPU (NVIDIA RTX 3090, 24GB VRAM):**
-```
+```text
 Embedding Service:
   Optimal batch size: 128
   Throughput: 2100 texts/second
@@ -453,7 +453,7 @@ python scripts/test_e2e_performance.py --verbose --warmup
 
 ### Interpreting Results
 
-```
+```text
 End-to-end performance: 45.2s (PASS <60s target)
   Embedding: 0.8s (1.8%)
   Retrieval: 2.1s (4.6%)

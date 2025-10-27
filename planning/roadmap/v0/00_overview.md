@@ -256,7 +256,7 @@ This roadmap is **intentionally simple** so that v1 can add sophistication witho
 To make v0 → v1 upgrade smooth:
 
 1. **Module Boundaries**: Even in monolith, organize by domain
-   ```
+   ```text
    truthgraph/
    ├── api/           # FastAPI routes
    ├── models/        # Pydantic models
@@ -376,7 +376,7 @@ This v0 roadmap is split into focused documents:
 1. Clone repository
 2. Copy `.env.example` to `.env`
 3. Run `docker-compose up`
-4. Open http://localhost:5173
+4. Open <http://localhost:5173>
 5. Upload evidence corpus (sample provided)
 6. Submit claims and verify
 

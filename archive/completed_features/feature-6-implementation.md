@@ -35,7 +35,7 @@ Successfully implemented the end-to-end Verification Pipeline Orchestration serv
 
 ### Pipeline Flow
 
-```
+```text
 Client Request
     ↓
 1. Cache Check (optional) - <1ms
@@ -388,9 +388,9 @@ Based on implementation and ML service benchmarks:
 
 ## Testing Results
 
-### Unit Tests
+### Unit Tests - Files Created
 
-```
+```text
 ======================== 25 passed, 10 warnings in 5.51s ========================
 ```
 

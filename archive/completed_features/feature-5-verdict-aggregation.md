@@ -188,7 +188,7 @@ NEUTRAL           → UNCERTAIN
 
 ## File Structure
 
-```
+```text
 truthgraph/
 ├── services/ml/
 │   ├── verdict_aggregation_service.py  (673 lines) - Core service
@@ -212,7 +212,7 @@ scripts/
 
 The Verdict Aggregation Service is Feature 5 in the Phase 2 pipeline:
 
-```
+```text
 1. User submits claim
 2. Claim embedding generated → EmbeddingService (✅ Complete)
 3. Similar evidence retrieved → VectorSearchService (✅ Complete)

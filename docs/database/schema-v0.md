@@ -331,7 +331,7 @@ COMMENT ON COLUMN verdict_evidence.nli_score IS 'Raw NLI model confidence score'
 
 ### Schema Diagram (ERD)
 
-```
+```text
 ┌─────────────────┐
 │     claims      │
 ├─────────────────┤
@@ -966,7 +966,7 @@ uv run alembic init alembic
 ```
 
 This creates:
-```
+```text
 truthgraph/
 ├── alembic/
 │   ├── versions/       # Migration scripts

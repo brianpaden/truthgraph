@@ -1949,7 +1949,7 @@ if __name__ == "__main__":
 
 **Expected Output**:
 
-```
+```text
 Claim: The Earth orbits the Sun once every 365 days.
 Verdict: SUPPORTED
 Confidence: 89.00%
@@ -2350,7 +2350,7 @@ embeddings = service.embed_batch(texts)  # Good
 
 ---
 
-### Query Optimization
+### Query Optimization - Phase 2
 
 **pgvector Index Tuning**:
 
@@ -2487,7 +2487,7 @@ SET ivfflat.probes = 10;  -- Default: 1, Range: 1-lists
 - [ ] Achieve 70%+ accuracy on 20+ test claims
 - [ ] Run full test suite (`pytest tests/ -v`)
 
-### Performance Optimization
+### Performance Optimization - Todo Checklist
 
 - [ ] Profile embedding generation with cProfile
 - [ ] Profile NLI inference with cProfile

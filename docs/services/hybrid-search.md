@@ -15,7 +15,7 @@ The Hybrid Search Service combines **vector similarity search** and **PostgreSQL
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    HybridSearchService                       │
 └─────────────────────────────────────────────────────────────┘
@@ -55,7 +55,7 @@ RRF is a rank aggregation method that combines rankings from multiple retrieval 
 
 **Formula:**
 
-```
+```text
 RRF_score(d) = Σ w_i × 1 / (k + rank_i(d))
 ```
 
@@ -465,7 +465,7 @@ if stats['embedding_coverage'] < 80:
 
 The Hybrid Search Service integrates into the TruthGraph verification pipeline:
 
-```
+```text
 ┌─────────────┐
 │ User Claim  │
 └──────┬──────┘

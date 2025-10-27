@@ -65,7 +65,7 @@ vim docs/architecture/decisions/005-new-decision.md
 
 ## Feature Lifecycle
 
-```
+```text
 1. CREATE   → planning/features/planned/feature_N.md
 2. START    → mv to planning/features/in_progress/
 3. DEVELOP  → update feature_N.md with progress

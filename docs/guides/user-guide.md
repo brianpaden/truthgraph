@@ -86,7 +86,7 @@ Expected response:
 
 1. **Access the Interactive API Documentation**
 
-Open your browser to: http://localhost:8000/docs
+Open your browser to: <http://localhost:8000/docs>
 
 ---
 
@@ -201,7 +201,7 @@ The claim is backed by strong evidence.
 - **Confidence < 0.5**: Low confidence, weak support
 
 **Example:**
-```
+```text
 Claim: "Water boils at 100°C at sea level"
 Verdict: SUPPORTED (confidence: 0.95)
 ```
@@ -215,7 +215,7 @@ The claim contradicts available evidence.
 - **Confidence < 0.5**: Weak contradiction
 
 **Example:**
-```
+```text
 Claim: "The Earth is flat"
 Verdict: REFUTED (confidence: 0.91)
 ```
@@ -229,7 +229,7 @@ Not enough evidence to make a determination.
 - **Low Confidence**: All evidence below confidence threshold
 
 **Example:**
-```
+```text
 Claim: "Aliens visited Earth in 2024"
 Verdict: INSUFFICIENT (confidence: 0.42)
 Reasoning: "No relevant evidence found in database"
@@ -543,7 +543,7 @@ logger.info(
 | `/health` | Unlimited | - |
 
 **Rate Limit Headers:**
-```
+```text
 X-RateLimit-Limit: 10
 X-RateLimit-Remaining: 7
 X-RateLimit-Reset: 1698765432
@@ -555,15 +555,15 @@ X-RateLimit-Reset: 1698765432
 
 ### Documentation
 
-- **API Reference**: http://localhost:8000/docs
+- **API Reference**: <http://localhost:8000/docs>
 - **Developer Guide**: [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)
 - **Architecture**: [PHASE_2_IMPLEMENTATION_PLAN.md](../PHASE_2_IMPLEMENTATION_PLAN.md)
 - **Performance**: [PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md)
 
 ### Getting Help
 
-1. **Interactive Docs**: http://localhost:8000/docs
-2. **GitHub Issues**: https://github.com/yourusername/truthgraph/issues
+1. **Interactive Docs**: <http://localhost:8000/docs>
+2. **GitHub Issues**: <https://github.com/yourusername/truthgraph/issues>
 3. **Documentation**: Check the `docs/` folder
 
 ### Contributing

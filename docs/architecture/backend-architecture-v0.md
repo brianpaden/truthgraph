@@ -105,7 +105,7 @@ TruthGraph v0 uses a **modular monolith** architecture - a single FastAPI applic
 
 ### Code Organization
 
-```
+```text
 backend/
 ├── truthgraph/                    # Main package
 │   ├── __init__.py
@@ -175,7 +175,7 @@ backend/
 
 **Dependency Flow** (inner layers don't depend on outer layers):
 
-```
+```text
 API Layer ──depends on──> Domain Layer ──depends on──> Infrastructure Layer
      │                          │                              │
      │                          │                              │
@@ -208,7 +208,7 @@ Request/Response          Business Logic                  External Systems
 
 **Endpoints**:
 
-```
+```text
 POST   /api/v1/claims                    Create new claim
 GET    /api/v1/claims                    List claims (paginated)
 GET    /api/v1/claims/{claim_id}         Get claim details
@@ -1181,7 +1181,7 @@ async def verify_claim(
 
 **Principle**: Organize by layer and feature, not by technical role.
 
-```
+```text
 backend/
 ├── truthgraph/                    # Single Python package (modular monolith)
 │   │
@@ -1233,7 +1233,7 @@ backend/
 
 **Allowed dependency directions**:
 
-```
+```text
 api/ ──────> domain/ ──────> infrastructure/
              (imports)        (implements interfaces)
 
@@ -1821,7 +1821,7 @@ docker-compose down
 
 **Test Pyramid**:
 
-```
+```text
               ▲
              ╱│╲
             ╱ │ ╲

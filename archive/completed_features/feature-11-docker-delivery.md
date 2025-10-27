@@ -233,7 +233,7 @@ Service health validation script that:
 
 ### Multi-Stage Build Strategy
 
-```
+```text
 ┌─ Stage 1: base ────────────────────────┐
 │ Python 3.12 slim + system deps         │
 │ (curl, gcc, g++, postgresql-client)   │
@@ -285,7 +285,7 @@ Service health validation script that:
 ## File Structure
 
 ### Created Files (5 new)
-```
+```text
 .dockerignore                          (optimization)
 backend/requirements-ml.txt            (ML dependencies)
 docker-compose.gpu.yml                 (GPU support)
@@ -298,7 +298,7 @@ FEATURE_11_DELIVERY_REPORT.md         (this file)
 ```
 
 ### Updated Files (2)
-```
+```text
 docker-compose.yml                     (ML configuration)
 docker/api.Dockerfile                  (multi-stage build)
 README.md                              (documentation links)
@@ -525,7 +525,7 @@ README.md                              (documentation links)
 - Use docker-compose down -v to reset
 
 **Backend-Architect**: API service ready for feature implementation
-- API runs on http://localhost:8000
+- API runs on <http://localhost:8000>
 - Database on localhost:5432
 - Models pre-cached after first startup
 

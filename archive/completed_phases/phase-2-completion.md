@@ -49,7 +49,7 @@
 
 ## Architecture Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                   TruthGraph v0.2 Architecture               │
 ├─────────────────────────────────────────────────────────────┤
@@ -287,8 +287,8 @@ All endpoints are fully functional with OpenAPI documentation at `/docs`:
 ✅ **Development Environment:** Fully operational
 - Services: PostgreSQL, FastAPI API, Frontend
 - Health: All services healthy
-- API: http://localhost:8000 (responsive)
-- Docs: http://localhost:8000/docs (interactive)
+- API: <http://localhost:8000> (responsive)
+- Docs: <http://localhost:8000/docs> (interactive)
 
 ✅ **Docker Deployment:** Production-ready
 - Multi-stage Dockerfile
@@ -531,7 +531,7 @@ curl -X POST http://localhost:8000/api/v1/verify ... # Verify claim
 
 - **User Guide:** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
 - **Developer Guide:** [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
-- **API Docs:** http://localhost:8000/docs
+- **API Docs:** <http://localhost:8000/docs>
 - **GitHub Issues:** (configure as needed)
 
 ---

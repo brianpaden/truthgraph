@@ -11,6 +11,8 @@ vars:
   PYMARKDOWNLNT: uv run pymarkdownlnt
   RUFF: uv run ruff
   PYTEST: uv run pytest
+  PYMD_FLAGS: -d md013,md022,md031,md032,md036
+  PYMD_DIRS: ['alembic','archive','backend','data','docker','docs','examples','frontend','frontend-react','planning','scripts','tests','truthgraph']
 
 tasks:
   # ============================================================================
@@ -22,12 +24,6 @@ tasks:
     cmds:
       - '{{.UV}} sync --extra dev --extra ml'
       - echo "✓ Dependencies installed in .venv"
-
-  install:dev:
-    desc: Install only dev dependencies (no ML)
-    cmds:
-      - '{{.UV}} sync --extra dev'
-      - echo "✓ Dev dependencies installed (no ML dependencies)"
 
   # ============================================================================
   # Linting Tasks
@@ -42,7 +38,10 @@ tasks:
   lint:markdown:
     desc: Lint Markdown files with pymarkdownlnt (excluding .claude/)
     cmds:
-      - powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-markdown.ps1
+      - '{{.PYMARKDOWNLNT}} {{.PYMD_FLAGS}} scan .'
+      - for:
+          var: PYMD_DIRS
+        cmd: '{{.PYMARKDOWNLNT}} {{.PYMD_FLAGS}} scan -r {{.ITEM}}'
     sources:
       - '**/*.md'
 
@@ -63,7 +62,10 @@ tasks:
   lint:fix:markdown:
     desc: Auto-fix Markdown linting issues with pymarkdownlnt (excluding .claude/)
     cmds:
-      - powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-markdown-fix.ps1
+      - '{{.PYMARKDOWNLNT}} {{.PYMD_FLAGS}} fix .'
+      - for:
+          var: PYMD_DIRS
+        cmd: '{{.PYMARKDOWNLNT}} {{.PYMD_FLAGS}} fix -r {{.ITEM}}'
     sources:
       - '**/*.md'
 

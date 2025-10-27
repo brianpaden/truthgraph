@@ -212,7 +212,7 @@ This implementation adds comprehensive database migration support for TruthGraph
 
 ## File Structure
 
-```
+```text
 truthgraph/
 ├── alembic/
 │   ├── versions/

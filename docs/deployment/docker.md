@@ -42,7 +42,7 @@ bash docker/docker-health-check.sh
 
 ### Service Stack
 
-```
+```text
 TruthGraph v0 with ML Services
 ├── PostgreSQL 16 + pgvector
 │   └── Port: 5432
@@ -202,7 +202,7 @@ GPU provides ~4-10x speedup:
 
 At runtime with loaded models:
 
-```
+```text
 Base OS:              ~50 MB
 Python:               ~150 MB
 Sentence-Transformers: ~400 MB
@@ -268,7 +268,7 @@ This doesn't affect subsequent starts (cached models load in < 1s).
 
 ### Volume Structure
 
-```
+```text
 .volumes/
 ├── postgres/          # PostgreSQL data
 │   └── (database files)

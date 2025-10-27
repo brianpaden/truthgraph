@@ -305,7 +305,7 @@ pytest-asyncio>=0.21.1
 
 ## Files Created
 
-```
+```text
 truthgraph/
 ├── services/
 │   ├── __init__.py                    # Package init

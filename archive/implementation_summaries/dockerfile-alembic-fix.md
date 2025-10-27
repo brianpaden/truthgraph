@@ -4,7 +4,7 @@
 
 The Alembic migration files were not being copied into the Docker container, causing the `task db:migrate` command to fail with:
 
-```
+```text
 FAILED: No 'script_location' key found in configuration.
 ```
 

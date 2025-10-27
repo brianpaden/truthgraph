@@ -90,7 +90,7 @@ Open interactive API documentation in browser
 ```bash
 task api:docs
 ```
-Opens: http://localhost:8000/docs
+Opens: <http://localhost:8000/docs>
 
 ---
 
@@ -331,7 +331,7 @@ All benchmarks have specific performance targets:
 
 - **User Guide:** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
 - **Developer Guide:** [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
-- **API Reference:** http://localhost:8000/docs
+- **API Reference:** <http://localhost:8000/docs>
 - **Phase 2 Completion:** [PHASE_2_COMPLETION_REPORT.md](PHASE_2_COMPLETION_REPORT.md)
 
 ---

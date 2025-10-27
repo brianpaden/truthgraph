@@ -168,7 +168,7 @@ Based on pgvector benchmarks and implementation:
 
 ### Test Pyramid
 
-```
+```text
                 Performance (1 test)
               /
             Integration (10 tests)

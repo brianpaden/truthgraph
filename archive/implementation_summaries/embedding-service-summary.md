@@ -157,7 +157,7 @@ python scripts/benchmark_embeddings.py --skip-memory --verbose
 
 ## File Structure
 
-```
+```text
 truthgraph/
 ├── services/
 │   ├── __init__.py

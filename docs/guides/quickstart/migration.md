@@ -81,7 +81,7 @@ alembic current
 
 **pgvector not found**:
 - Ensure using `pgvector/pgvector:pg16` Docker image
-- Or manually install: https://github.com/pgvector/pgvector
+- Or manually install: <https://github.com/pgvector/pgvector>
 
 **Migration timeout**:
 ```sql

@@ -2,7 +2,7 @@
 
 ## Project Status Dashboard
 
-```
+```text
 PHASE 1 (Complete)
 ├── ✓ FastAPI backend
 ├── ✓ PostgreSQL database schema
@@ -25,7 +25,7 @@ Status: Ready for Implementation
 
 ## Dependency Graph (Visual)
 
-```
+```text
 DATABASE MIGRATION (4h)
 │
 ├─→ EMBEDDING SERVICE (8h)
@@ -61,7 +61,7 @@ PARALLEL TRACK
 
 ## Task Assignment Matrix
 
-```
+```text
                     WEEK 3        WEEK 4           WEEK 5
                    Mon Tue|Wed Thu Fri|Mon Tue|Wed Thu Fri|
 DATABASE        [===]
@@ -88,7 +88,7 @@ FINAL VAL           ..........................[==]
 
 ## Agent Workload Distribution
 
-```
+```text
 Total Work: 141 hours over 2 weeks
 With Parallelization: 28-32 hour critical path (1.8-2.4x factor)
 
@@ -115,7 +115,7 @@ Critical Path: ~44 hours sequential
 
 ## Weekly Milestone Targets
 
-```
+```text
 WEEK 3 - FOUNDATION
 └─ Phase A: Database Migration           [4 hours]
 └─ Phase B: Core ML Components          [24-32 hours parallel]
@@ -164,7 +164,7 @@ EXIT CRITERIA:
 
 ## Success Metrics Checklist
 
-```
+```text
 HARD REQUIREMENTS (Must Meet)
 
 Latency & Performance
@@ -208,7 +208,7 @@ Testing & Validation
 
 ## Component Architecture Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    FASTAPI APPLICATION                       │
 ├─────────────────────────────────────────────────────────────┤
@@ -272,7 +272,7 @@ Testing & Validation
 
 ## ML Models Integration
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │       EMBEDDING SERVICE                     │
 │  sentence-transformers/all-MiniLM-L6-v2    │
@@ -318,7 +318,7 @@ Testing & Validation
 
 ## Latency Budget Breakdown
 
-```
+```text
 Target: <60 seconds total
 Status: Design Phase
 
@@ -346,7 +346,7 @@ Optimization Priority:
 
 ## Risk Heat Map
 
-```
+```text
 SEVERITY vs PROBABILITY
 
             MEDIUM              HIGH
@@ -381,7 +381,7 @@ Mitigation:
 
 ## File Structure (Created & Modified)
 
-```
+```text
 truthgraph/
 ├── ml/
 │   ├── __init__.py                    (NEW)
@@ -451,7 +451,7 @@ Total Lines of Code: ~2000 (core + tests)
 
 ## Integration Test Data Requirements
 
-```
+```text
 INITIAL DATA SETUP
 
 Evidence Corpus (for testing):
@@ -482,7 +482,7 @@ Performance Test Corpus:
 
 ## Phase 3 Preparation (Post Phase 2)
 
-```
+```text
 PHASE 2 COMPLETION ───→ PHASE 3 CONSIDERATIONS
 
 What Phase 2 Enables:
@@ -519,7 +519,7 @@ Documentation:
 
 ## Quick Troubleshooting Guide
 
-```
+```text
 PROBLEM: Models fail to download
 SOLUTION:
   1. Check HF_HOME environment variable
@@ -560,7 +560,7 @@ SOLUTION:
 
 ## Deployment Checklist
 
-```
+```text
 BEFORE PRODUCTION DEPLOYMENT
 
 Functionality:

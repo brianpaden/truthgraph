@@ -39,7 +39,7 @@ This document provides comprehensive guidance for implementing TruthGraph v0 as 
 
 ### 1.1 Directory Layout
 
-```
+```text
 truthgraph/
 ├── __init__.py
 ├── main.py                    # Application entry point
@@ -322,7 +322,7 @@ class TimeoutMiddleware(BaseHTTPMiddleware):
 
 All routes are organized under `/api/v1` prefix for versioning. Health/metrics endpoints are at root level.
 
-```
+```text
 /                          Root (redirect to docs)
 /health                    Health check
 /metrics                   Basic metrics
@@ -1540,7 +1540,7 @@ async def verify_claim_async(
 
 ### 7.1 Testing Pyramid
 
-```
+```text
         /\
        /  \
       / E2E \ (10%) - Full system tests
@@ -1555,7 +1555,7 @@ async def verify_claim_async(
 
 ### 7.2 Test Organization
 
-```
+```text
 tests/
 ├── __init__.py
 ├── conftest.py              # Shared fixtures
@@ -2719,7 +2719,7 @@ def list_claims(skip: int = 0, limit: int = 20):
 
 **Typical verification request** (POST /claims/{id}/verify):
 
-```
+```text
 Total: ~30s
 
 1. Embed claim (100ms)
@@ -2766,7 +2766,7 @@ logger.info("memory_usage", mb=get_memory_usage())
 ```
 
 **Expected memory profile**:
-```
+```text
 Baseline (no models): ~100MB
 + Embedder loaded: ~200MB
 + NLI loaded: ~700MB
@@ -2831,7 +2831,7 @@ def verify_claim(claim: Claim) -> Verdict:
 
 **1. Architecture: Monolith → Microservices**
 
-```
+```text
 v0 (Monolith):
 ┌──────────────────────┐
 │   FastAPI App        │
@@ -2934,21 +2934,21 @@ async def get_claim(claim_id: UUID, db: AsyncSession = Depends(get_db)):
 ### 10.4 Code Mapping: v0 → v1
 
 **API Gateway Service** (v1) = `api/` (v0)
-```
+```text
 v0: truthgraph/api/routes/claims.py
 v1: api-gateway/app/routes/claims.py
     (same endpoints, same logic, different service)
 ```
 
 **Verification Service** (v1) = `services/verification.py` (v0)
-```
+```text
 v0: truthgraph/services/verification.py
 v1: verification-service/app/verification.py
     (same algorithm, now in separate service)
 ```
 
 **Corpus Service** (v1) = `services/retrieval.py` + `repositories/evidence.py` (v0)
-```
+```text
 v0: truthgraph/services/retrieval.py
     truthgraph/repositories/evidence.py
 v1: corpus-service/app/retrieval.py

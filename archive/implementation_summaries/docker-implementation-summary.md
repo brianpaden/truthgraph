@@ -86,7 +86,7 @@ api:
 
 **Excludes**:
 - Version control (.git, .gitignore)
-- Python cache (__pycache__, .pytest_cache)
+- Python cache (`__pycache__`, .pytest_cache)
 - Development files (.venv, .env)
 - IDE configurations (.vscode, .idea)
 - Documentation (docs/, *.md)
@@ -242,7 +242,7 @@ docker-compose -f docker-compose.yml -f docker-compose.gpu.yml up
 
 ### Multi-Stage Build Design
 
-```
+```text
 Stage 1: base (python:3.12-slim)
 ├── System dependencies (gcc, curl, postgresql-client)
 └── uv package manager
@@ -405,7 +405,7 @@ API_HEALTH_START_PERIOD=60s
 ```
 
 ### Volume Structure
-```
+```text
 .volumes/
 ├── postgres/
 │   └── (PostgreSQL data files)

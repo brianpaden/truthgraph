@@ -18,7 +18,7 @@
 
 **Three-tier documentation architecture**:
 
-```
+```text
 c:/repos/truthgraph/
 ├── docs/           # PERMANENT: Long-lived technical documentation
 ├── planning/       # ACTIVE: Work in progress, current planning
@@ -266,7 +266,7 @@ git commit -m "docs: add ADR for caching strategy"
 
 ## Directory Structure Overview
 
-```
+```text
 c:/repos/truthgraph/
 │
 ├── README.md                    # Project overview

@@ -138,7 +138,7 @@ Successfully implemented a production-ready hybrid search service that combines 
 
 ### Reciprocal Rank Fusion (RRF)
 
-```
+```text
 RRF_score(d) = vector_weight × 1/(k + vector_rank) +
                keyword_weight × 1/(k + keyword_rank)
 ```
@@ -156,7 +156,7 @@ RRF_score(d) = vector_weight × 1/(k + vector_rank) +
 
 ### Search Flow
 
-```
+```text
 Query (text + embedding)
     ↓
 ┌───────────────────────────┐
@@ -332,6 +332,7 @@ All functionality implemented using existing dependencies.
 ## Performance Validation
 
 ### Target vs Actual
+
 | Metric | Target | Actual | Status |
 |--------|--------|--------|--------|
 | Hybrid Search (100 docs) | <150ms | ~45ms | ✅ EXCEEDED |

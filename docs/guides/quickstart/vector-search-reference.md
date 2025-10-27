@@ -118,7 +118,7 @@ service = VectorSearchService(embedding_dimension=1536)
 
 ## File Locations
 
-```
+```text
 truthgraph/
 ├── services/
 │   └── vector_search_service.py          # Main service (315 lines)

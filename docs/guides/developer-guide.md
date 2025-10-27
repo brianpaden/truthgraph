@@ -25,7 +25,7 @@
 
 ### System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     TruthGraph v0.2                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -178,7 +178,7 @@ task test:coverage
 
 ## Project Structure
 
-```
+```text
 truthgraph/
 ├── alembic/                    # Database migrations
 │   ├── versions/              # Migration files
@@ -400,7 +400,7 @@ verdict = service.aggregate(
 **Purpose:** Orchestrate end-to-end claim verification
 
 **Pipeline Flow:**
-```
+```text
 1. Cache Check → 2. Embed Claim → 3. Search Evidence →
 4. NLI Verification → 5. Aggregate Verdict → 6. Store Results → 7. Return
 ```
@@ -521,7 +521,7 @@ task db:migrate:status
 
 ### Test Structure
 
-```
+```text
 tests/
 ├── unit/                      # Unit tests (fast, isolated)
 │   ├── services/
@@ -844,7 +844,7 @@ task lint
 ### Commit Messages
 
 Follow conventional commits:
-```
+```text
 feat: Add hybrid search service
 fix: Correct NLI confidence calculation
 docs: Update API documentation
@@ -931,8 +931,8 @@ task logs
 ## API Reference
 
 Full interactive API documentation available at:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Swagger UI**: <http://localhost:8000/docs>
+- **ReDoc**: <http://localhost:8000/redoc>
 
 ---
 

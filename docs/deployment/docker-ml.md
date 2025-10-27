@@ -77,7 +77,7 @@ LOG_LEVEL=INFO
 
 The `docker/api.Dockerfile` uses multi-stage builds for optimization:
 
-```
+```text
 Stage 1 (base): Core system dependencies
     ↓
 Stage 2a (ml-stage): ML dependencies (torch, transformers)
@@ -108,7 +108,7 @@ docker-compose build --build-arg INCLUDE_ML=false
 
 Models are stored in a named volume to persist across restarts:
 
-```
+```text
 .volumes/models/
 ├── models--sentence-transformers--all-MiniLM-L6-v2/
 │   └── snapshots/...
@@ -149,7 +149,7 @@ rm -rf .volumes/models/
 
 ## GPU Support
 
-### Prerequisites
+### Model Prerequisites
 
 1. NVIDIA GPU (Compute Capability 5.0+)
 2. NVIDIA Docker runtime
@@ -353,7 +353,7 @@ docker-compose down  # 10s timeout before kill
 
 The multi-stage Dockerfile optimizes build times:
 
-```
+```text
 First build:     ~5-10 minutes (downloads, installs ML deps)
 Subsequent builds: ~30-60 seconds (reuses cached layers)
 ```

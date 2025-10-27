@@ -50,7 +50,7 @@
   # Should return: {"status": "healthy"}
   ```
 - [ ] View Swagger UI:
-  ```
+  ```text
   http://localhost:8000/docs
   ```
 - [ ] Check database connection:
@@ -367,10 +367,10 @@ docker exec truthgraph-api whoami
 - [Feature 11 Delivery Report](../../../archive/completed_features/feature-11-docker-delivery.md) - Delivery details
 
 ### Quick Links
-- Docker Compose: https://docs.docker.com/compose/
-- Docker Buildx: https://docs.docker.com/build/
-- Hugging Face Models: https://huggingface.co/models
-- NVIDIA Docker: https://github.com/NVIDIA/nvidia-docker
+- Docker Compose: <https://docs.docker.com/compose/>
+- Docker Buildx: <https://docs.docker.com/build/>
+- Hugging Face Models: <https://huggingface.co/models>
+- NVIDIA Docker: <https://github.com/NVIDIA/nvidia-docker>
 
 ## Getting Help
 

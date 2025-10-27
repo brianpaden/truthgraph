@@ -346,7 +346,7 @@ cat DOCS_CHEAT_SHEET.md
 
 ## 📁 File Locations (After Migration)
 
-```
+```text
 c:/repos/truthgraph/
 │
 ├── DOCUMENTATION_REORG_INDEX.md              # This file

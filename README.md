@@ -38,7 +38,7 @@ Requires NVIDIA Docker runtime. See [GPU Setup Guide](./docs/deployment/docker-m
 
 ## Architecture
 
-```
+```text
 TruthGraph v0 Stack
 ├── PostgreSQL 16 + pgvector (port 5432)
 ├── FastAPI Backend with ML (port 8000)
@@ -161,7 +161,7 @@ docker run --rm --gpus all nvidia/cuda:12.1.0-runtime nvidia-smi
 
 See [Troubleshooting Guide](./docs/deployment/docker-ml.md#troubleshooting) for more.
 
-## Development
+## TruthGraph Development
 
 ### Prerequisites
 
@@ -253,7 +253,7 @@ See [Production Guide](./docs/deployment/docker.md#production-deployment) for de
 
 - [ ] Start services: `docker-compose up`
 - [ ] Test API: `curl http://localhost:8000/health`
-- [ ] View docs: http://localhost:8000/docs
+- [ ] View docs: <http://localhost:8000/docs>
 - [ ] Submit claims via API
 - [ ] Review Phase 2 features
 
