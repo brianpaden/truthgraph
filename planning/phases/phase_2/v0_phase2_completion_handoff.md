@@ -80,7 +80,7 @@ Create comprehensive test fixtures with known verdicts to validate accuracy.
 - Include edge cases: insufficient evidence, contradictory evidence, ambiguous evidence
 
 **Architecture**:
-```
+```text
 tests/fixtures/
 ├── test_claims.json          # Test data with verdicts
 ├── sample_evidence.json       # Evidence corpus
@@ -141,7 +141,7 @@ Integrate FEVER dataset samples for realistic performance benchmarking.
 - Create loader script for pytest
 
 **Architecture**:
-```
+```text
 scripts/
 ├── download_fever_dataset.py  # Download and extract FEVER
 ├── process_fever_data.py      # Convert to TruthGraph format
@@ -211,7 +211,7 @@ Validate system accuracy against real-world claims from fact-checking sites.
 - Performance tracking
 
 **Architecture**:
-```
+```text
 tests/accuracy/
 ├── real_world_claims.json     # Validated real-world data
 ├── test_accuracy_baseline.py  # Accuracy measurement
@@ -271,7 +271,7 @@ Create specialized test data for edge cases and error conditions.
 - Adversarial examples (near-false claims)
 
 **Architecture**:
-```
+```text
 tests/fixtures/edge_cases/
 ├── insufficient_evidence.json
 ├── contradictory_evidence.json
@@ -328,7 +328,7 @@ Create production-ready script for loading evidence corpus and generating embedd
 - Resume capability for interrupted loads
 
 **Architecture**:
-```
+```text
 scripts/
 ├── embed_corpus.py            # Main corpus loading script
 ├── corpus_loaders/
@@ -397,7 +397,7 @@ Create sample evidence corpus for demo and testing purposes.
 - Documentation
 
 **Architecture**:
-```
+```text
 data/samples/
 ├── evidence_corpus.json      # Evidence documents
 ├── evidence_corpus.csv       # CSV format
@@ -451,7 +451,7 @@ Establish performance baselines for all major components.
 - Create tracking system for regression detection
 
 **Architecture**:
-```
+```text
 scripts/benchmarks/
 ├── benchmark_embeddings.py
 ├── benchmark_nli.py
@@ -513,7 +513,7 @@ Profile and optimize embedding generation for throughput and memory.
 - Create profiling utilities
 
 **Architecture**:
-```
+```text
 scripts/profile/
 ├── profile_embeddings.py     # Profiling script
 ├── profile_nli.py            # NLI profiling
@@ -574,7 +574,7 @@ Optimize NLI inference for speed and accuracy.
 - Document optimization decisions
 
 **Architecture**:
-```
+```text
 scripts/profile/
 ├── profile_nli.py            # NLI profiling
 ├── nli_batch_optimization.py # Batch testing
@@ -635,7 +635,7 @@ Optimize pgvector index parameters for search performance.
 - Create benchmark with different corpus sizes
 
 **Architecture**:
-```
+```text
 scripts/benchmarks/
 ├── benchmark_vector_search.py
 ├── index_optimization.py     # IVFFlat parameter tuning
@@ -698,7 +698,7 @@ Optimize complete verification pipeline for <60 second target.
 - Document optimization decisions
 
 **Architecture**:
-```
+```text
 truthgraph/verification/
 ├── pipeline.py               # Optimized pipeline
 ├── pipeline_optimizer.py     # Optimization utilities
@@ -765,7 +765,7 @@ Analyze and optimize memory usage across the system.
 - Validate <4GB target
 
 **Architecture**:
-```
+```text
 truthgraph/monitoring/
 ├── memory_monitor.py         # Memory tracking
 ├── memory_alerts.py          # Alert system
@@ -829,7 +829,7 @@ Optimize database queries for evidence retrieval and verdict storage.
 - Measure query improvement
 
 **Architecture**:
-```
+```text
 truthgraph/db/
 ├── queries.py               # Optimized queries
 ├── query_builder.py        # Query optimization utilities
@@ -894,7 +894,7 @@ Build comprehensive framework for measuring and tracking accuracy.
 - HTML report generation
 
 **Architecture**:
-```
+```text
 tests/accuracy/
 ├── accuracy_framework.py     # Core framework
 ├── metrics.py               # Metric calculation
@@ -959,7 +959,7 @@ Evaluate system accuracy across multiple claim categories.
 - Create category-specific recommendations
 
 **Architecture**:
-```
+```text
 tests/accuracy/
 ├── categories/
 │   ├── politics.json
@@ -1022,7 +1022,7 @@ Validate system behavior on edge cases and error conditions.
 - Recommend handling strategies
 
 **Architecture**:
-```
+```text
 tests/accuracy/
 ├── edge_cases/
 │   ├── test_insufficient_evidence.py
@@ -1081,7 +1081,7 @@ Test model robustness to input variations and adversarial examples.
 - Identify vulnerability areas
 
 **Architecture**:
-```
+```text
 tests/robustness/
 ├── test_typos.py
 ├── test_paraphrasing.py
@@ -1149,7 +1149,7 @@ Create automated regression tests to catch performance/accuracy degradation.
 - Report generation
 
 **Architecture**:
-```
+```text
 tests/regression/
 ├── test_performance_regression.py
 ├── test_accuracy_regression.py
@@ -1213,7 +1213,7 @@ Implement API endpoints for claim verification workflow.
 - Queue integration
 
 **Architecture**:
-```
+```text
 truthgraph/api/
 ├── routes.py                # Updated with verification routes
 ├── models.py                # Request/response models
@@ -1278,7 +1278,7 @@ Define comprehensive Pydantic models for verification requests and responses.
 - Validation rules
 
 **Architecture**:
-```
+```text
 truthgraph/api/
 ├── models.py                # Updated models
 └── schemas/
@@ -1335,7 +1335,7 @@ Implement asynchronous background job processing for long-running verifications.
 - Webhook notifications (optional)
 
 **Architecture**:
-```
+```text
 truthgraph/workers/
 ├── task_queue.py            # Queue management
 ├── verification_worker.py   # Worker implementation
@@ -1405,7 +1405,7 @@ Create comprehensive API documentation with examples and usage patterns.
 - Troubleshooting guide
 
 **Architecture**:
-```
+```text
 docs/api/
 ├── endpoints/
 │   ├── verification.md     # Verification API docs
@@ -1473,7 +1473,7 @@ Implement rate limiting to protect API from abuse and ensure fair resource alloc
 - Configuration system
 
 **Architecture**:
-```
+```text
 truthgraph/api/
 ├── middleware.py            # Rate limiting middleware
 ├── rate_limit.py           # Rate limit logic
@@ -1538,7 +1538,7 @@ Add comprehensive docstrings to all public functions and classes.
 - 100% coverage of public APIs
 
 **Architecture**:
-```
+```text
 truthgraph/
 ├── ml/
 │   ├── embeddings.py       # With complete docstrings
@@ -1606,7 +1606,7 @@ Create comprehensive troubleshooting guides and FAQ for common issues.
 - Deployment issues
 
 **Architecture**:
-```
+```text
 docs/guides/
 ├── troubleshooting.md       # Main guide
 ├── faq.md                   # FAQ document
@@ -1670,7 +1670,7 @@ Create usage examples and tutorials for developers.
 - Video/screenshot documentation
 
 **Architecture**:
-```
+```text
 docs/guides/tutorials/
 ├── getting_started.md       # Basic setup
 ├── basic_usage.md           # Simple examples
@@ -1739,7 +1739,7 @@ Create comprehensive guide for performance optimization and tuning.
 - Monitoring recommendations
 
 **Architecture**:
-```
+```text
 docs/performance/
 ├── optimization_guide.md    # Main guide
 ├── batch_size_tuning.md    # Batch size guide
@@ -1791,7 +1791,7 @@ docs/performance/
 
 ### Critical Path Analysis
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ PHASE 1: FOUNDATION (Already Complete)                      │
 │ - Database schema                                            │
@@ -2240,4 +2240,3 @@ docs/performance/
 ---
 
 **For questions or clarifications, refer to the Phase 2 documentation or contact the context manager.**
-
