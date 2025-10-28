@@ -116,7 +116,7 @@ class TestSingleTextEmbedding:
         emb2 = embedding_service.embed_text(text2)
 
         # Calculate cosine similarity
-        similarity = sum(a * b for a, b in zip(emb1, emb2))
+        similarity = sum(a * b for a, b in zip(emb1, emb2, strict=None))
 
         # Similar texts should have high similarity (>0.7)
         assert similarity > 0.7, f"Expected similarity >0.7, got {similarity}"
@@ -133,7 +133,7 @@ class TestSingleTextEmbedding:
         emb2 = embedding_service.embed_text(text2)
 
         # Calculate cosine similarity
-        similarity = sum(a * b for a, b in zip(emb1, emb2))
+        similarity = sum(a * b for a, b in zip(emb1, emb2, strict=None))
 
         # Dissimilar texts should have lower similarity (<0.5)
         assert similarity < 0.5, f"Expected similarity <0.5, got {similarity}"
@@ -198,8 +198,8 @@ class TestBatchEmbedding:
         batch = embedding_service.embed_batch(texts)
 
         # Results should be very similar (allowing for small numerical differences)
-        for ind_emb, batch_emb in zip(individual, batch):
-            differences = [abs(a - b) for a, b in zip(ind_emb, batch_emb)]
+        for ind_emb, batch_emb in zip(individual, batch, strict=None):
+            differences = [abs(a - b) for a, b in zip(ind_emb, batch_emb, strict=None)]
             max_diff = max(differences)
             assert max_diff < 0.001, f"Expected max diff <0.001, got {max_diff}"
 
@@ -250,8 +250,7 @@ class TestPerformance:
 
         # Allow some variance for system performance
         assert throughput > target_throughput * 0.7, (
-            f"Expected throughput >{target_throughput * 0.7:.0f} texts/s, "
-            f"got {throughput:.1f} texts/s on {device}"
+            f"Expected throughput >{target_throughput * 0.7:.0f} texts/s, got {throughput:.1f} texts/s on {device}"
         )
 
     def test_single_embedding_latency(

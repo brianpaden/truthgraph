@@ -38,7 +38,9 @@ def check_prerequisites() -> tuple[bool, list[str]]:
 
     # Check Python version
     if sys.version_info < (3, 12):
-        errors.append(f"Python 3.12+ required, got {sys.version_info.major}.{sys.version_info.minor}")
+        errors.append(
+            f"Python 3.12+ required, got {sys.version_info.major}.{sys.version_info.minor}"
+        )
 
     # Check Alembic is installed
     try:
@@ -111,21 +113,28 @@ def backup_database() -> bool:
     # Format: postgresql+asyncpg://user:pass@host:port/dbname
     try:
         from urllib.parse import urlparse
+
         parsed = urlparse(db_url)
 
         # Create backup filename
         import datetime
+
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_file = f"backup_pre_migration_{timestamp}.sql"
 
         # Build pg_dump command
         cmd = [
             "pg_dump",
-            "-h", parsed.hostname or "localhost",
-            "-p", str(parsed.port or 5432),
-            "-U", parsed.username or "truthgraph",
-            "-d", parsed.path.lstrip("/") if parsed.path else "truthgraph",
-            "-f", backup_file,
+            "-h",
+            parsed.hostname or "localhost",
+            "-p",
+            str(parsed.port or 5432),
+            "-U",
+            parsed.username or "truthgraph",
+            "-d",
+            parsed.path.lstrip("/") if parsed.path else "truthgraph",
+            "-f",
+            backup_file,
         ]
 
         # Set password if available
@@ -263,7 +272,9 @@ async def main():
 
     # Test database connection
     if not await test_database_connection():
-        print("\n✗ Cannot connect to database. Check DATABASE_URL and ensure PostgreSQL is running.")
+        print(
+            "\n✗ Cannot connect to database. Check DATABASE_URL and ensure PostgreSQL is running."
+        )
         sys.exit(1)
 
     # Execute command

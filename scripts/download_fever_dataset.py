@@ -31,17 +31,14 @@ import argparse
 import hashlib
 import json
 import logging
-import os
 import sys
 import urllib.request
 from pathlib import Path
 from typing import Dict, Optional
-from zipfile import ZipFile
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -96,7 +93,9 @@ class FEVERDatasetDownloader:
         logger.info(f"Downloading {filename} from {url}...")
         try:
             urllib.request.urlretrieve(url, output_path)
-            logger.info(f"Downloaded successfully: {output_path} ({output_path.stat().st_size} bytes)")
+            logger.info(
+                f"Downloaded successfully: {output_path} ({output_path.stat().st_size} bytes)"
+            )
             return output_path
         except urllib.error.URLError as e:
             logger.error(f"Failed to download {url}: {e}")
@@ -123,8 +122,7 @@ class FEVERDatasetDownloader:
             return True
         else:
             logger.warning(
-                f"Checksum mismatch for {filepath.name}: "
-                f"expected {expected_md5}, got {actual_md5}"
+                f"Checksum mismatch for {filepath.name}: expected {expected_md5}, got {actual_md5}"
             )
             return False
 
@@ -138,6 +136,7 @@ class FEVERDatasetDownloader:
             Path to extracted file
         """
         import gzip
+
         output_path = filepath.with_suffix("")
 
         logger.info(f"Extracting {filepath} to {output_path}...")
@@ -273,36 +272,23 @@ def main():
         "--output-dir",
         type=Path,
         default=Path("./data/fever"),
-        help="Output directory for dataset (default: ./data/fever)"
+        help="Output directory for dataset (default: ./data/fever)",
     )
     parser.add_argument(
-        "--dev-only",
-        action="store_true",
-        help="Download only dev set (recommended for testing)"
+        "--dev-only", action="store_true", help="Download only dev set (recommended for testing)"
+    )
+    parser.add_argument("--validate", action="store_true", help="Validate checksums after download")
+    parser.add_argument(
+        "--info", action="store_true", help="Show dataset statistics after download"
     )
     parser.add_argument(
-        "--validate",
-        action="store_true",
-        help="Validate checksums after download"
-    )
-    parser.add_argument(
-        "--info",
-        action="store_true",
-        help="Show dataset statistics after download"
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force re-download even if files exist"
+        "--force", action="store_true", help="Force re-download even if files exist"
     )
 
     args = parser.parse_args()
 
     try:
-        downloader = FEVERDatasetDownloader(
-            output_dir=args.output_dir,
-            validate=args.validate
-        )
+        downloader = FEVERDatasetDownloader(output_dir=args.output_dir, validate=args.validate)
 
         if args.dev_only:
             logger.info("Downloading dev set only...")

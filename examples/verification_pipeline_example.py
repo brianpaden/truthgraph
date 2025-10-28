@@ -154,7 +154,9 @@ async def verify_claim_example(
     if result.evidence_items:
         print("\nTop Evidence:")
         for i, item in enumerate(result.evidence_items[:3], 1):
-            print(f"\n  [{i}] Similarity: {item.similarity:.2%} | NLI: {item.nli_label.value} ({item.nli_confidence:.2%})")
+            print(
+                f"\n  [{i}] Similarity: {item.similarity:.2%} | NLI: {item.nli_label.value} ({item.nli_confidence:.2%})"
+            )
             print(f"      {item.content[:100]}...")
 
     print()
@@ -244,4 +246,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\nExample failed with error: {e}")
         import traceback
+
         traceback.print_exc()

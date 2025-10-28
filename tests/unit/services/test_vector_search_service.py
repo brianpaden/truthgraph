@@ -20,6 +20,7 @@ class TestVectorSearchService:
     @pytest.fixture
     def mock_db_with_cursor(self):
         """Create a mock database session with proper cursor nesting."""
+
         def _make_mock(fetchall_return=None, execute_side_effect=None):
             mock_cursor = MagicMock()
             if execute_side_effect:
@@ -67,7 +68,8 @@ class TestVectorSearchService:
         # Wrong dimension should raise error
         with pytest.raises(ValueError, match="must be 384-dimensional"):
             service.search_similar_evidence(
-                db=db_mock, query_embedding=[0.1] * 1536  # Wrong size
+                db=db_mock,
+                query_embedding=[0.1] * 1536,  # Wrong size
             )
 
     def test_search_similar_evidence_success(self):
@@ -151,14 +153,16 @@ class TestVectorSearchService:
         service = VectorSearchService(embedding_dimension=384)
 
         # Create mock with filtered results
-        db_mock, mock_cursor = mock_db_with_cursor(fetchall_return=[
-            (
-                uuid4(),
-                "Filtered evidence",
-                "https://example.com",
-                0.92,
-            )
-        ])
+        db_mock, mock_cursor = mock_db_with_cursor(
+            fetchall_return=[
+                (
+                    uuid4(),
+                    "Filtered evidence",
+                    "https://example.com",
+                    0.92,
+                )
+            ]
+        )
 
         # Execute search with source filter
         query_embedding = [0.1] * 384
@@ -176,6 +180,7 @@ class TestVectorSearchService:
         call_args = mock_cursor.execute.call_args
         sql = call_args[0][0]
         params = call_args[0][1]
+        assert sql
         assert "source_filter" in params
         assert params["source_filter"] == "https://example.com"
 
@@ -346,9 +351,7 @@ class TestVectorSearchService:
 
         # Search with top_k=5
         query_embedding = [0.1] * 384
-        service.search_similar_evidence(
-            db=db_mock, query_embedding=query_embedding, top_k=5
-        )
+        service.search_similar_evidence(db=db_mock, query_embedding=query_embedding, top_k=5)
 
         # Verify top_k was passed
         call_args = db_mock.execute.call_args
@@ -379,8 +382,6 @@ class TestSearchResult:
 
     def test_search_result_optional_source_url(self):
         """Test SearchResult with no source URL."""
-        result = SearchResult(
-            evidence_id=uuid4(), content="Test", source_url=None, similarity=0.8
-        )
+        result = SearchResult(evidence_id=uuid4(), content="Test", source_url=None, similarity=0.8)
 
         assert result.source_url is None

@@ -42,9 +42,13 @@ TruthGraph v0 Phase 2 (ML Core) is 70-75% complete with core implementation fini
 | 1.2 FEVER Dataset Integration | 2025-10-27 | test-automator | 8h |
 | 1.3 Real-World Claims Validation | 2025-10-27 | test-automator | 10h |
 
-### In Progress Features (0/27)
+### In Progress Features (3/27)
 
-None currently in progress.
+| Feature | Started | Agent | Status |
+|---------|---------|-------|--------|
+| 1.4 Edge Case Corpus | 2025-10-27 | test-automator | Creating specialized edge case test data |
+| 1.5 Corpus Loading Script | 2025-10-27 | python-pro | Building production corpus loader |
+| 1.6 Sample Corpus Creation | 2025-10-27 | python-pro | Generating sample evidence corpus |
 
 ### Next Up
 
@@ -266,7 +270,7 @@ tests/accuracy/
 ---
 
 #### Feature 1.4: Edge Case Corpus
-**Status**: 📋 Planned
+**Status**: 🚧 In Progress (Started: 2025-10-27)
 **Assigned To**: test-automator
 **Estimated Effort**: 6 hours
 **Complexity**: Small
@@ -324,7 +328,7 @@ tests/fixtures/edge_cases/
 ---
 
 #### Feature 1.5: Corpus Loading Script
-**Status**: 📋 Planned
+**Status**: 🚧 In Progress (Started: 2025-10-27)
 **Assigned To**: python-pro
 **Estimated Effort**: 8 hours
 **Complexity**: Medium
@@ -394,7 +398,7 @@ scripts/
 ---
 
 #### Feature 1.6: Sample Corpus Creation
-**Status**: 📋 Planned
+**Status**: 🚧 In Progress (Started: 2025-10-27)
 **Assigned To**: python-pro
 **Estimated Effort**: 4 hours
 **Complexity**: Small

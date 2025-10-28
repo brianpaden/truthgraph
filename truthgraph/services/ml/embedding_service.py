@@ -69,9 +69,7 @@ class EmbeddingService:
             RuntimeError: If called more than once (singleton violation)
         """
         if EmbeddingService._instance is not None:
-            raise RuntimeError(
-                "EmbeddingService is a singleton. Use get_instance() instead."
-            )
+            raise RuntimeError("EmbeddingService is a singleton. Use get_instance() instead.")
 
         # Model will be lazy-loaded on first use
         self._model = None
@@ -163,8 +161,7 @@ class EmbeddingService:
             self._model.eval()
 
             logger.info(
-                f"Model loaded successfully. "
-                f"Embedding dimension: {self.EMBEDDING_DIMENSION}"
+                f"Model loaded successfully. Embedding dimension: {self.EMBEDDING_DIMENSION}"
             )
 
         except Exception as e:

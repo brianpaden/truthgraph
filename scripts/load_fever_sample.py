@@ -15,12 +15,11 @@ import logging
 import shutil
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -286,11 +285,13 @@ class FEVERSampleLoader:
         for filepath in sorted(self.output_dir.glob("*.json")):
             try:
                 data = self.load_json_file(filepath)
-                info["files"].append({
-                    "name": filepath.name,
-                    "size_bytes": filepath.stat().st_size,
-                    "metadata": data.get("metadata", {}),
-                })
+                info["files"].append(
+                    {
+                        "name": filepath.name,
+                        "size_bytes": filepath.stat().st_size,
+                        "metadata": data.get("metadata", {}),
+                    }
+                )
             except Exception as e:
                 logger.warning(f"Could not read {filepath.name}: {e}")
 
@@ -299,46 +300,33 @@ class FEVERSampleLoader:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Load processed FEVER data into test fixtures"
-    )
+    parser = argparse.ArgumentParser(description="Load processed FEVER data into test fixtures")
     parser.add_argument(
-        "--input-dir",
-        type=Path,
-        required=True,
-        help="Directory with processed FEVER data"
+        "--input-dir", type=Path, required=True, help="Directory with processed FEVER data"
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("tests/fixtures/fever"),
-        help="Test fixtures output directory (default: tests/fixtures/fever)"
+        help="Test fixtures output directory (default: tests/fixtures/fever)",
     )
     parser.add_argument(
         "--validate",
         action="store_true",
         default=True,
-        help="Validate data structure (default: True)"
+        help="Validate data structure (default: True)",
     )
     parser.add_argument(
-        "--no-validate",
-        dest="validate",
-        action="store_false",
-        help="Skip validation"
+        "--no-validate", dest="validate", action="store_false", help="Skip validation"
     )
     parser.add_argument(
-        "--info",
-        action="store_true",
-        help="Show fixture information after loading"
+        "--info", action="store_true", help="Show fixture information after loading"
     )
 
     args = parser.parse_args()
 
     try:
-        loader = FEVERSampleLoader(
-            input_dir=args.input_dir,
-            output_dir=args.output_dir
-        )
+        loader = FEVERSampleLoader(input_dir=args.input_dir, output_dir=args.output_dir)
 
         if loader.load_all(validate=args.validate):
             if args.info:

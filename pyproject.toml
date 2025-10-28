@@ -41,6 +41,10 @@ dev = [
     "mypy>=1.7.0",
     "psutil>=7.1.0",
     "pymarkdownlnt>=0.9.17",
+    "pytest-xdist",
+    "pytest-timeout",
+    "hypothesis",
+    "pytest-sugar",
 ]
 
 ml = [

@@ -304,9 +304,7 @@ class TestWeightedVoteAggregation:
         verdict = service.aggregate(results, strategy=AggregationStrategy.WEIGHTED_VOTE)
 
         # Scores should sum to 1.0
-        total_score = (
-            verdict.support_score + verdict.refute_score + verdict.neutral_score
-        )
+        total_score = verdict.support_score + verdict.refute_score + verdict.neutral_score
         assert abs(total_score - 1.0) < 0.01
 
 
@@ -429,9 +427,7 @@ class TestConfidenceThresholdAggregation:
             ),
         ]
 
-        verdict = service.aggregate(
-            results, strategy=AggregationStrategy.CONFIDENCE_THRESHOLD
-        )
+        verdict = service.aggregate(results, strategy=AggregationStrategy.CONFIDENCE_THRESHOLD)
 
         assert verdict.verdict == VerdictLabel.SUPPORTED
         assert verdict.supporting_count == 1
@@ -452,9 +448,7 @@ class TestConfidenceThresholdAggregation:
             ),
         ]
 
-        verdict = service.aggregate(
-            results, strategy=AggregationStrategy.CONFIDENCE_THRESHOLD
-        )
+        verdict = service.aggregate(results, strategy=AggregationStrategy.CONFIDENCE_THRESHOLD)
 
         # Should fall back to weighted vote
         assert isinstance(verdict, VerdictResult)

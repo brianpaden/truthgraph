@@ -38,7 +38,7 @@ from truthgraph.services.vector_search_service import (
 logger = structlog.get_logger(__name__)
 
 # Type variable for retry decorator
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def retry_on_failure(
@@ -58,12 +58,13 @@ def retry_on_failure(
     Returns:
         Decorated function with retry logic
     """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
             delay = initial_delay
             last_exception = None
-            func_name = getattr(func, '__name__', 'unknown_function')
+            func_name = getattr(func, "__name__", "unknown_function")
 
             for attempt in range(max_attempts):
                 try:
@@ -96,6 +97,7 @@ def retry_on_failure(
             ) from last_exception
 
         return wrapper
+
     return decorator
 
 
@@ -220,9 +222,7 @@ class VerificationPipelineService:
         normalized = claim_text.strip().lower()
         return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
-    def _get_cached_result(
-        self, claim_text: str
-    ) -> Optional[VerificationPipelineResult]:
+    def _get_cached_result(self, claim_text: str) -> Optional[VerificationPipelineResult]:
         """Retrieve cached verification result if available and fresh.
 
         Args:
@@ -255,9 +255,7 @@ class VerificationPipelineService:
 
         return None
 
-    def _cache_result(
-        self, claim_text: str, result: VerificationPipelineResult
-    ) -> None:
+    def _cache_result(self, claim_text: str, result: VerificationPipelineResult) -> None:
         """Cache verification result.
 
         Args:
@@ -421,9 +419,7 @@ class VerificationPipelineService:
 
             # Step 6: Store verification result
             if store_result:
-                verdict_result = await self._store_verification_result(
-                    db=db, result=verdict_result
-                )
+                verdict_result = await self._store_verification_result(db=db, result=verdict_result)
 
             # Step 7: Cache result
             if use_cache:
@@ -776,19 +772,13 @@ class VerificationPipelineService:
                 neutral_score=result.neutral_score,
                 evidence_count=len(result.evidence_items),
                 supporting_evidence_count=sum(
-                    1
-                    for item in result.evidence_items
-                    if item.nli_label == NLILabel.ENTAILMENT
+                    1 for item in result.evidence_items if item.nli_label == NLILabel.ENTAILMENT
                 ),
                 refuting_evidence_count=sum(
-                    1
-                    for item in result.evidence_items
-                    if item.nli_label == NLILabel.CONTRADICTION
+                    1 for item in result.evidence_items if item.nli_label == NLILabel.CONTRADICTION
                 ),
                 neutral_evidence_count=sum(
-                    1
-                    for item in result.evidence_items
-                    if item.nli_label == NLILabel.NEUTRAL
+                    1 for item in result.evidence_items if item.nli_label == NLILabel.NEUTRAL
                 ),
                 reasoning=result.reasoning,
                 retrieval_method=result.retrieval_method,

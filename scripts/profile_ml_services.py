@@ -56,9 +56,7 @@ try:
     MEMORY_PROFILER_AVAILABLE = True
 except ImportError:
     MEMORY_PROFILER_AVAILABLE = False
-    print(
-        "Warning: memory_profiler not installed. Install with: pip install memory-profiler"
-    )
+    print("Warning: memory_profiler not installed. Install with: pip install memory-profiler")
 
 import torch
 
@@ -154,9 +152,7 @@ class PerformanceProfiler:
             print(f"  Model memory: {model_memory:.1f} MB")
 
         # Save model loading profile
-        self._save_profile_stats(
-            profiler, "embedding_model_load", "Model loading hotspots:"
-        )
+        self._save_profile_stats(profiler, "embedding_model_load", "Model loading hotspots:")
 
         # Profile single text embedding
         print("\nProfiling single text embedding...")
@@ -207,9 +203,7 @@ class PerformanceProfiler:
         print(f"  Target (>500 texts/s): {status}")
         results["throughput_target_met"] = throughput > target
 
-        self._save_profile_stats(
-            profiler, "embedding_batch", "Batch processing hotspots:"
-        )
+        self._save_profile_stats(profiler, "embedding_batch", "Batch processing hotspots:")
 
         # Memory after batch
         memory_peak = self.get_memory_info()
@@ -220,9 +214,7 @@ class PerformanceProfiler:
 
         return results
 
-    def profile_nli_service(
-        self, num_samples: int = 100, batch_size: int = 8
-    ) -> dict[str, Any]:
+    def profile_nli_service(self, num_samples: int = 100, batch_size: int = 8) -> dict[str, Any]:
         """Profile the NLI service.
 
         Args:
@@ -290,18 +282,14 @@ class PerformanceProfiler:
         profiler.disable()
 
         results["single_pair_avg_latency_ms"] = sum(latencies) / len(latencies)
-        results["single_pair_throughput_pairs_per_sec"] = 1000 / results[
-            "single_pair_avg_latency_ms"
-        ]
+        results["single_pair_throughput_pairs_per_sec"] = (
+            1000 / results["single_pair_avg_latency_ms"]
+        )
 
         print(f"  Average latency: {results['single_pair_avg_latency_ms']:.1f} ms")
-        print(
-            f"  Throughput: {results['single_pair_throughput_pairs_per_sec']:.2f} pairs/sec"
-        )
+        print(f"  Throughput: {results['single_pair_throughput_pairs_per_sec']:.2f} pairs/sec")
 
-        self._save_profile_stats(
-            profiler, "nli_single_pair", "Single pair inference hotspots:"
-        )
+        self._save_profile_stats(profiler, "nli_single_pair", "Single pair inference hotspots:")
 
         # Profile batch inference
         print(f"\nProfiling batch inference ({num_samples} pairs)...")
@@ -409,9 +397,7 @@ class PerformanceProfiler:
 
         return results
 
-    def _save_profile_stats(
-        self, profiler: cProfile.Profile, name: str, title: str
-    ) -> None:
+    def _save_profile_stats(self, profiler: cProfile.Profile, name: str, title: str) -> None:
         """Save profiling statistics to file and print summary.
 
         Args:
@@ -461,12 +447,8 @@ class PerformanceProfiler:
             emb = self.results["embedding"]
             print("\nEmbedding Service:")
             print(f"  Model load time: {emb.get('model_load_time_ms', 0):.1f} ms")
-            print(
-                f"  Single text latency: {emb.get('single_text_avg_latency_ms', 0):.2f} ms"
-            )
-            print(
-                f"  Batch throughput: {emb.get('batch_throughput_texts_per_sec', 0):.1f} texts/s"
-            )
+            print(f"  Single text latency: {emb.get('single_text_avg_latency_ms', 0):.2f} ms")
+            print(f"  Batch throughput: {emb.get('batch_throughput_texts_per_sec', 0):.1f} texts/s")
             if "model_memory_mb" in emb:
                 print(f"  Model memory: {emb['model_memory_mb']:.1f} MB")
 
@@ -474,12 +456,8 @@ class PerformanceProfiler:
             nli = self.results["nli"]
             print("\nNLI Service:")
             print(f"  Model load time: {nli.get('model_load_time_ms', 0):.1f} ms")
-            print(
-                f"  Single pair latency: {nli.get('single_pair_avg_latency_ms', 0):.1f} ms"
-            )
-            print(
-                f"  Batch throughput: {nli.get('batch_throughput_pairs_per_sec', 0):.2f} pairs/s"
-            )
+            print(f"  Single pair latency: {nli.get('single_pair_avg_latency_ms', 0):.1f} ms")
+            print(f"  Batch throughput: {nli.get('batch_throughput_pairs_per_sec', 0):.2f} pairs/s")
             if "model_memory_mb" in nli:
                 print(f"  Model memory: {nli['model_memory_mb']:.1f} MB")
 

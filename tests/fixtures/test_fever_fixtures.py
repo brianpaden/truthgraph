@@ -3,7 +3,6 @@
 Tests to ensure FEVER fixtures are properly structured and loaded correctly.
 """
 
-import json
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -81,7 +80,9 @@ class TestFEVERFixturesLoading:
         """Test that fever_stats fixture loads correctly."""
         assert fever_stats is not None, "FEVER stats fixture is None"
         assert isinstance(fever_stats, dict), "FEVER stats should be a dictionary"
-        assert "label_distribution" in fever_stats, "FEVER stats should have 'label_distribution' key"
+        assert "label_distribution" in fever_stats, (
+            "FEVER stats should have 'label_distribution' key"
+        )
         assert "metadata" in fever_stats, "FEVER stats should have 'metadata' key"
 
 
@@ -164,9 +165,7 @@ class TestFEVEREvidenceStructure:
                 assert field in evidence, (
                     f"Evidence {evidence.get('id')} missing required field: {field}"
                 )
-                assert evidence[field] is not None, (
-                    f"Evidence {evidence.get('id')}.{field} is None"
-                )
+                assert evidence[field] is not None, f"Evidence {evidence.get('id')}.{field} is None"
 
     def test_fever_evidence_have_unique_ids(self, fever_sample_evidence: Dict[str, Any]):
         """Test that all evidence IDs are unique."""
@@ -192,9 +191,7 @@ class TestFEVERMappingConsistency:
     """Test consistency between claims, evidence, and mappings."""
 
     def test_mapping_ids_match_claim_ids(
-        self,
-        fever_sample_claims: Dict[str, Any],
-        fever_mapping: Dict[str, Any]
+        self, fever_sample_claims: Dict[str, Any], fever_mapping: Dict[str, Any]
     ):
         """Test that mapping contains all claims."""
         claim_ids = {claim["id"] for claim in fever_sample_claims["claims"]}
@@ -207,9 +204,7 @@ class TestFEVERMappingConsistency:
         )
 
     def test_evidence_references_exist(
-        self,
-        fever_sample_claims: Dict[str, Any],
-        fever_sample_evidence: Dict[str, Any]
+        self, fever_sample_claims: Dict[str, Any], fever_sample_evidence: Dict[str, Any]
     ):
         """Test that all evidence IDs in claims exist in evidence."""
         evidence_ids = {ev["id"] for ev in fever_sample_evidence["evidence"]}
@@ -221,9 +216,7 @@ class TestFEVERMappingConsistency:
                 )
 
     def test_mapping_verdict_matches_claim_verdict(
-        self,
-        fever_sample_claims: Dict[str, Any],
-        fever_mapping: Dict[str, Any]
+        self, fever_sample_claims: Dict[str, Any], fever_mapping: Dict[str, Any]
     ):
         """Test that mappings have matching verdicts with claims."""
         for claim in fever_sample_claims["claims"]:
@@ -237,9 +230,7 @@ class TestFEVERMappingConsistency:
             )
 
     def test_mapping_evidence_ids_match_claim_evidence(
-        self,
-        fever_sample_claims: Dict[str, Any],
-        fever_mapping: Dict[str, Any]
+        self, fever_sample_claims: Dict[str, Any], fever_mapping: Dict[str, Any]
     ):
         """Test that mappings have matching evidence IDs with claims."""
         for claim in fever_sample_claims["claims"]:
@@ -282,9 +273,7 @@ class TestFEVERVerdictDistribution:
         assert insufficient / total >= 0.2, f"INSUFFICIENT verdict too low: {insufficient}/{total}"
 
     def test_verdict_distribution_matches_stats(
-        self,
-        fever_sample_claims: Dict[str, Any],
-        fever_stats: Dict[str, Any]
+        self, fever_sample_claims: Dict[str, Any], fever_stats: Dict[str, Any]
     ):
         """Test that claimed statistics match actual distribution."""
         verdicts = [claim["expected_verdict"] for claim in fever_sample_claims["claims"]]
@@ -311,8 +300,12 @@ class TestFEVEREvidenceCoverage:
 
     def test_evidence_coverage_is_reasonable(self, fever_sample_claims: Dict[str, Any]):
         """Test that a reasonable portion of claims have evidence."""
-        claims_with_evidence = sum(1 for c in fever_sample_claims["claims"] if c.get("evidence_ids"))
-        claims_without_evidence = sum(1 for c in fever_sample_claims["claims"] if not c.get("evidence_ids"))
+        claims_with_evidence = sum(
+            1 for c in fever_sample_claims["claims"] if c.get("evidence_ids")
+        )
+        claims_without_evidence = sum(
+            1 for c in fever_sample_claims["claims"] if not c.get("evidence_ids")
+        )
 
         total = len(fever_sample_claims["claims"])
 
@@ -322,14 +315,10 @@ class TestFEVEREvidenceCoverage:
             f"With evidence: {claims_with_evidence}, Without: {claims_without_evidence}"
         )
 
-    def test_insufficient_claims_typically_lack_evidence(
-        self,
-        fever_sample_claims: Dict[str, Any]
-    ):
+    def test_insufficient_claims_typically_lack_evidence(self, fever_sample_claims: Dict[str, Any]):
         """Test that INSUFFICIENT claims often have no evidence."""
         insufficient_claims = [
-            c for c in fever_sample_claims["claims"]
-            if c["expected_verdict"] == "INSUFFICIENT"
+            c for c in fever_sample_claims["claims"] if c["expected_verdict"] == "INSUFFICIENT"
         ]
 
         claims_without_evidence = sum(1 for c in insufficient_claims if not c.get("evidence_ids"))
@@ -350,15 +339,14 @@ class TestFEVERFixtureIntegrity:
         result = verify_fever_fixture_integrity()
 
         assert result["is_valid"], (
-            f"FEVER fixture integrity check failed. "
-            f"Issues: {result.get('issues', [])}"
+            f"FEVER fixture integrity check failed. Issues: {result.get('issues', [])}"
         )
 
     def test_fixture_metadata_is_accurate(
         self,
         fever_fixture_metadata: Dict[str, Any],
         fever_sample_claims: Dict[str, Any],
-        fever_sample_evidence: Dict[str, Any]
+        fever_sample_evidence: Dict[str, Any],
     ):
         """Test that fixture metadata matches actual data."""
         metadata = fever_fixture_metadata
@@ -381,9 +369,7 @@ class TestFEVERFactoryFixtures:
     """Test factory fixtures for accessing FEVER data."""
 
     def test_fever_claim_by_id_factory(
-        self,
-        fever_claim_by_id,
-        fever_sample_claims: Dict[str, Any]
+        self, fever_claim_by_id, fever_sample_claims: Dict[str, Any]
     ):
         """Test fever_claim_by_id factory fixture."""
         first_claim = fever_sample_claims["claims"][0]
@@ -397,9 +383,7 @@ class TestFEVERFactoryFixtures:
             fever_claim_by_id("invalid_id_12345")
 
     def test_fever_claims_by_verdict_factory(
-        self,
-        fever_claims_by_verdict,
-        fever_sample_claims: Dict[str, Any]
+        self, fever_claims_by_verdict, fever_sample_claims: Dict[str, Any]
     ):
         """Test fever_claims_by_verdict factory fixture."""
         supported_claims = fever_claims_by_verdict("SUPPORTED")
@@ -409,41 +393,32 @@ class TestFEVERFactoryFixtures:
             "All returned claims should be SUPPORTED"
         )
 
-    def test_fever_supported_claims_fixture(
-        self,
-        fever_supported_claims: List[Dict[str, Any]]
-    ):
+    def test_fever_supported_claims_fixture(self, fever_supported_claims: List[Dict[str, Any]]):
         """Test fever_supported_claims fixture."""
         assert len(fever_supported_claims) > 0, "Should have SUPPORTED claims"
         assert all(c["expected_verdict"] == "SUPPORTED" for c in fever_supported_claims)
 
-    def test_fever_refuted_claims_fixture(
-        self,
-        fever_refuted_claims: List[Dict[str, Any]]
-    ):
+    def test_fever_refuted_claims_fixture(self, fever_refuted_claims: List[Dict[str, Any]]):
         """Test fever_refuted_claims fixture."""
         assert len(fever_refuted_claims) > 0, "Should have REFUTED claims"
         assert all(c["expected_verdict"] == "REFUTED" for c in fever_refuted_claims)
 
     def test_fever_insufficient_claims_fixture(
-        self,
-        fever_insufficient_claims: List[Dict[str, Any]]
+        self, fever_insufficient_claims: List[Dict[str, Any]]
     ):
         """Test fever_insufficient_claims fixture."""
         assert len(fever_insufficient_claims) > 0, "Should have INSUFFICIENT claims"
         assert all(c["expected_verdict"] == "INSUFFICIENT" for c in fever_insufficient_claims)
 
     def test_fever_claims_with_evidence_fixture(
-        self,
-        fever_claims_with_evidence: List[Dict[str, Any]]
+        self, fever_claims_with_evidence: List[Dict[str, Any]]
     ):
         """Test fever_claims_with_evidence fixture."""
         assert len(fever_claims_with_evidence) > 0, "Should have claims with evidence"
         assert all(c.get("evidence_ids") for c in fever_claims_with_evidence)
 
     def test_fever_claims_without_evidence_fixture(
-        self,
-        fever_claims_without_evidence: List[Dict[str, Any]]
+        self, fever_claims_without_evidence: List[Dict[str, Any]]
     ):
         """Test fever_claims_without_evidence fixture."""
         assert all(not c.get("evidence_ids") for c in fever_claims_without_evidence)

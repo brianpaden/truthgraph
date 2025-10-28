@@ -19,12 +19,13 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 # Get database URL from environment
 # Using postgresql+asyncpg for async support
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+asyncpg://truthgraph:changeme@localhost:5432/truthgraph"
+    "DATABASE_URL", "postgresql+asyncpg://truthgraph:changeme@localhost:5432/truthgraph"
 )
 
 # Convert postgresql:// to postgresql+asyncpg:// if needed
-if DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("postgresql+asyncpg://"):
+if DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith(
+    "postgresql+asyncpg://"
+):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 elif DATABASE_URL.startswith("postgresql+psycopg://"):
     # Replace psycopg with asyncpg for async support

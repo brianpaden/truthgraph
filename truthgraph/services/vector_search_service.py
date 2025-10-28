@@ -301,9 +301,7 @@ class VectorSearchService:
                 "null_embedding_count": row[1],
             }
 
-            logger.info(
-                f"Embedding stats for {entity_type} in tenant '{tenant_id}': {stats}"
-            )
+            logger.info(f"Embedding stats for {entity_type} in tenant '{tenant_id}': {stats}")
             return stats
 
         except Exception as e:

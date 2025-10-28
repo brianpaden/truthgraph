@@ -132,9 +132,7 @@ class TestVerificationPipelineIntegration:
     @pytest.mark.skip(reason="Requires PostgreSQL with pgvector and test data")
     async def test_verify_claim_with_caching(self, in_memory_db, sample_claim):
         """Test that caching works correctly."""
-        service = VerificationPipelineService(
-            embedding_dimension=384, cache_ttl_seconds=3600
-        )
+        service = VerificationPipelineService(embedding_dimension=384, cache_ttl_seconds=3600)
 
         # First verification - should execute full pipeline
         result1 = await service.verify_claim(
@@ -258,9 +256,7 @@ class TestEmbeddingGeneration:
         """Test embedding generation with retry logic."""
         service = VerificationPipelineService(embedding_dimension=384)
 
-        embedding = service._generate_embedding_with_retry(
-            "The Earth orbits the Sun"
-        )
+        embedding = service._generate_embedding_with_retry("The Earth orbits the Sun")
 
         assert embedding is not None
         assert len(embedding) == 384
@@ -272,9 +268,7 @@ class TestEmbeddingGeneration:
         """Test that different texts produce different embeddings."""
         service = VerificationPipelineService(embedding_dimension=384)
 
-        embedding1 = service._generate_embedding_with_retry(
-            "The Earth orbits the Sun"
-        )
+        embedding1 = service._generate_embedding_with_retry("The Earth orbits the Sun")
         embedding2 = service._generate_embedding_with_retry(
             "Water is composed of hydrogen and oxygen"
         )
@@ -360,8 +354,7 @@ class TestPerformance:
 
         # Should complete in under 60 seconds (60000 ms)
         assert result.pipeline_duration_ms < 60000, (
-            f"Pipeline took {result.pipeline_duration_ms}ms, "
-            "exceeding 60s target"
+            f"Pipeline took {result.pipeline_duration_ms}ms, exceeding 60s target"
         )
 
     @pytest.mark.integration

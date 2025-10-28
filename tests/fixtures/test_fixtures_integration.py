@@ -57,11 +57,15 @@ def test_claim_evidence_linking(test_claims, test_evidence):
     for claim in test_claims["claims"]:
         # Every claim should have at least one evidence reference
         assert claim["evidence_ids"], f"Claim {claim['id']} has no evidence references"
-        assert isinstance(claim["evidence_ids"], list), f"Evidence IDs must be list for {claim['id']}"
+        assert isinstance(claim["evidence_ids"], list), (
+            f"Evidence IDs must be list for {claim['id']}"
+        )
 
         # All referenced evidence must exist
         for ev_id in claim["evidence_ids"]:
-            assert ev_id in evidence_ids, f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            assert ev_id in evidence_ids, (
+                f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            )
 
 
 def test_fixture_supports_verification_pipeline(test_claims, test_evidence):

@@ -35,7 +35,6 @@ async def lifespan(app: FastAPI):
 
     # Pre-load ML models (optional - can be lazy loaded)
     try:
-
         logger.info("ML services available for lazy loading")
     except Exception as e:
         logger.warning(f"ML services initialization warning: {e}")
@@ -139,54 +138,51 @@ async def health_check():
     # Check database
     try:
         from .db import SessionLocal
+
         db = SessionLocal()
         db.execute("SELECT 1")
         db.close()
-        services["database"] = ServiceStatus(
-            status="healthy",
-            message="Database connection OK"
-        )
+        services["database"] = ServiceStatus(status="healthy", message="Database connection OK")
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         services["database"] = ServiceStatus(
-            status="unhealthy",
-            message=f"Database error: {str(e)}"
+            status="unhealthy", message=f"Database error: {str(e)}"
         )
 
     # Check embedding service
     try:
         from .services.ml.embedding_service import get_embedding_service
+
         svc = get_embedding_service()
         start = time.time()
         # Don't load model yet, just check availability
         services["embedding_service"] = ServiceStatus(
             status="healthy",
             message=f"Embedding service available (loaded: {svc.is_loaded()})",
-            latency_ms=(time.time() - start) * 1000
+            latency_ms=(time.time() - start) * 1000,
         )
     except Exception as e:
         logger.error(f"Embedding service health check failed: {e}")
         services["embedding_service"] = ServiceStatus(
-            status="unhealthy",
-            message=f"Service error: {str(e)}"
+            status="unhealthy", message=f"Service error: {str(e)}"
         )
 
     # Check NLI service
     try:
         from .services.ml.nli_service import get_nli_service
+
         svc = get_nli_service()
         start = time.time()
         info = svc.get_model_info()
         services["nli_service"] = ServiceStatus(
             status="healthy",
             message=f"NLI service available (initialized: {info['initialized']})",
-            latency_ms=(time.time() - start) * 1000
+            latency_ms=(time.time() - start) * 1000,
         )
     except Exception as e:
         logger.error(f"NLI service health check failed: {e}")
         services["nli_service"] = ServiceStatus(
-            status="unhealthy",
-            message=f"Service error: {str(e)}"
+            status="unhealthy", message=f"Service error: {str(e)}"
         )
 
     # Determine overall status
@@ -198,10 +194,7 @@ async def health_check():
         overall_status = "healthy"
 
     return HealthResponse(
-        status=overall_status,
-        timestamp=datetime.utcnow(),
-        services=services,
-        version="2.0.0"
+        status=overall_status, timestamp=datetime.utcnow(), services=services, version="2.0.0"
     )
 
 

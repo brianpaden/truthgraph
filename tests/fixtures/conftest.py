@@ -363,7 +363,9 @@ def verify_fixture_integrity(test_claims: Dict[str, Any], test_evidence: Dict[st
         valid_verdicts = {"SUPPORTED", "REFUTED", "INSUFFICIENT"}
         for claim in test_claims["claims"]:
             if claim["expected_verdict"] not in valid_verdicts:
-                issues.append(f"Claim {claim['id']} has invalid verdict: {claim['expected_verdict']}")
+                issues.append(
+                    f"Claim {claim['id']} has invalid verdict: {claim['expected_verdict']}"
+                )
 
         # Check confidence values
         for claim in test_claims["claims"]:
@@ -503,19 +505,25 @@ def fever_stats() -> Dict[str, Any]:
 @pytest.fixture
 def fever_claim_by_id(fever_sample_claims: Dict[str, Any]):
     """Factory fixture to retrieve specific FEVER claims by ID."""
+
     def _get_claim(claim_id: str) -> Dict[str, Any]:
         for claim in fever_sample_claims["claims"]:
             if claim["id"] == claim_id:
                 return claim
         raise ValueError(f"FEVER claim with ID '{claim_id}' not found in fixtures")
+
     return _get_claim
 
 
 @pytest.fixture
 def fever_claims_by_verdict(fever_sample_claims: Dict[str, Any]):
     """Factory fixture to retrieve FEVER claims filtered by expected verdict."""
+
     def _get_claims_by_verdict(verdict: str) -> List[Dict[str, Any]]:
-        return [claim for claim in fever_sample_claims["claims"] if claim["expected_verdict"] == verdict]
+        return [
+            claim for claim in fever_sample_claims["claims"] if claim["expected_verdict"] == verdict
+        ]
+
     return _get_claims_by_verdict
 
 
@@ -553,7 +561,7 @@ def fever_claims_without_evidence(fever_sample_claims: Dict[str, Any]) -> List[D
 def fever_fixture_metadata(
     fever_sample_claims: Dict[str, Any],
     fever_sample_evidence: Dict[str, Any],
-    fever_stats: Dict[str, Any]
+    fever_stats: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Get metadata about the FEVER fixtures."""
     claims = fever_sample_claims["claims"]
@@ -589,9 +597,10 @@ def fever_fixture_metadata(
 def verify_fever_fixture_integrity(
     fever_sample_claims: Dict[str, Any],
     fever_sample_evidence: Dict[str, Any],
-    fever_mapping: Dict[str, Any]
+    fever_mapping: Dict[str, Any],
 ):
     """Verify the integrity of FEVER fixture data."""
+
     def _verify() -> Dict[str, Any]:
         issues = []
         claim_ids = {claim["id"] for claim in fever_sample_claims["claims"]}
@@ -609,7 +618,9 @@ def verify_fever_fixture_integrity(
         for claim in fever_sample_claims["claims"]:
             for ev_id in claim.get("evidence_ids", []):
                 if ev_id not in evidence_ids:
-                    issues.append(f"FEVER claim {claim['id']} references non-existent evidence {ev_id}")
+                    issues.append(
+                        f"FEVER claim {claim['id']} references non-existent evidence {ev_id}"
+                    )
 
         if claim_ids != mapping_ids:
             missing_in_mapping = claim_ids - mapping_ids
@@ -622,11 +633,15 @@ def verify_fever_fixture_integrity(
         valid_verdicts = {"SUPPORTED", "REFUTED", "INSUFFICIENT"}
         for claim in fever_sample_claims["claims"]:
             if claim["expected_verdict"] not in valid_verdicts:
-                issues.append(f"FEVER claim {claim['id']} has invalid verdict: {claim['expected_verdict']}")
+                issues.append(
+                    f"FEVER claim {claim['id']} has invalid verdict: {claim['expected_verdict']}"
+                )
 
         for claim in fever_sample_claims["claims"]:
             if claim.get("source") != "FEVER_Dataset":
-                issues.append(f"FEVER claim {claim['id']} has incorrect source: {claim.get('source')}")
+                issues.append(
+                    f"FEVER claim {claim['id']} has incorrect source: {claim.get('source')}"
+                )
 
         return {
             "is_valid": len(issues) == 0,

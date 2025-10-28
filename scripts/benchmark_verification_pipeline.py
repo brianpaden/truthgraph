@@ -239,15 +239,13 @@ async def run_benchmark(
         median_duration = statistics.median(all_durations)
         min_duration = min(all_durations)
         max_duration = max(all_durations)
-        stdev_duration = (
-            statistics.stdev(all_durations) if len(all_durations) > 1 else 0
-        )
+        stdev_duration = statistics.stdev(all_durations) if len(all_durations) > 1 else 0
 
         passed = sum(1 for r in all_results if r["met_target"])
         total = len(all_results)
 
         print(f"Total verifications: {total}")
-        print(f"Passed (<60s):       {passed} ({passed/total*100:.1f}%)")
+        print(f"Passed (<60s):       {passed} ({passed / total * 100:.1f}%)")
         print(f"Failed (>=60s):      {total - passed}")
         print()
         print("Duration Statistics (ms):")
@@ -279,7 +277,7 @@ async def run_benchmark(
 
         print("Verdict Distribution:")
         for verdict, count in verdict_counts.items():
-            print(f"  {verdict}: {count} ({count/total*100:.1f}%)")
+            print(f"  {verdict}: {count} ({count / total * 100:.1f}%)")
 
         print()
 

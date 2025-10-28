@@ -472,9 +472,7 @@ class VerdictAggregationService:
             # Disagreement exists - return UNCERTAIN
             total_count = len(nli_results)
             supporting_count = sum(1 for r in filtered_results if r.label == NLILabel.ENTAILMENT)
-            refuting_count = sum(
-                1 for r in filtered_results if r.label == NLILabel.CONTRADICTION
-            )
+            refuting_count = sum(1 for r in filtered_results if r.label == NLILabel.CONTRADICTION)
             neutral_count = sum(1 for r in filtered_results if r.label == NLILabel.NEUTRAL)
 
             return VerdictResult(
@@ -547,10 +545,7 @@ class VerdictAggregationService:
         Returns:
             True if conflict detected, False otherwise
         """
-        return (
-            support_score >= self.CONFLICT_THRESHOLD
-            and refute_score >= self.CONFLICT_THRESHOLD
-        )
+        return support_score >= self.CONFLICT_THRESHOLD and refute_score >= self.CONFLICT_THRESHOLD
 
     def _generate_explanation(
         self,

@@ -1,7 +1,6 @@
 """Test fixtures to validate fixture integrity and basic functionality."""
 
 
-
 def test_claims_fixture_loads(test_claims):
     """Test that test_claims fixture loads correctly."""
     assert test_claims is not None
@@ -102,4 +101,6 @@ def test_claim_evidence_references_valid(test_claims, test_evidence):
 
     for claim in test_claims["claims"]:
         for ev_id in claim["evidence_ids"]:
-            assert ev_id in evidence_ids, f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            assert ev_id in evidence_ids, (
+                f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            )

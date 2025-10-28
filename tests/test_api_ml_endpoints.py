@@ -61,9 +61,7 @@ def sample_evidence(db_session):
     for text in evidence_texts:
         # Create evidence
         evidence = Evidence(
-            content=text,
-            source_url="https://example.com/science",
-            source_type="scientific"
+            content=text, source_url="https://example.com/science", source_type="scientific"
         )
         db_session.add(evidence)
         db_session.flush()
@@ -75,7 +73,7 @@ def sample_evidence(db_session):
             entity_id=evidence.id,
             embedding=embedding_vector,
             model_name="sentence-transformers/all-MiniLM-L6-v2",
-            tenant_id="default"
+            tenant_id="default",
         )
         db_session.add(embedding)
 
@@ -88,15 +86,13 @@ def sample_evidence(db_session):
 
 # ===== Embedding Endpoint Tests =====
 
+
 class TestEmbedEndpoint:
     """Tests for /api/v1/embed endpoint."""
 
     def test_embed_single_text(self, client):
         """Test embedding generation for single text."""
-        response = client.post(
-            "/api/v1/embed",
-            json={"texts": ["Hello world"]}
-        )
+        response = client.post("/api/v1/embed", json={"texts": ["Hello world"]})
 
         assert response.status_code == 200
         data = response.json()
@@ -112,13 +108,10 @@ class TestEmbedEndpoint:
         texts = [
             "The Earth orbits the Sun",
             "Water freezes at zero degrees",
-            "Light travels at 3e8 m/s"
+            "Light travels at 3e8 m/s",
         ]
 
-        response = client.post(
-            "/api/v1/embed",
-            json={"texts": texts, "batch_size": 32}
-        )
+        response = client.post("/api/v1/embed", json={"texts": texts, "batch_size": 32})
 
         assert response.status_code == 200
         data = response.json()
@@ -130,10 +123,7 @@ class TestEmbedEndpoint:
 
     def test_embed_empty_text_error(self, client):
         """Test error handling for empty text."""
-        response = client.post(
-            "/api/v1/embed",
-            json={"texts": [""]}
-        )
+        response = client.post("/api/v1/embed", json={"texts": [""]})
 
         assert response.status_code == 422  # Pydantic validation error
 
@@ -141,7 +131,7 @@ class TestEmbedEndpoint:
         """Test error handling for too many texts."""
         response = client.post(
             "/api/v1/embed",
-            json={"texts": ["text"] * 101}  # Max is 100
+            json={"texts": ["text"] * 101},  # Max is 100
         )
 
         assert response.status_code == 422  # Validation error
@@ -150,13 +140,14 @@ class TestEmbedEndpoint:
         """Test error handling for invalid batch size."""
         response = client.post(
             "/api/v1/embed",
-            json={"texts": ["test"], "batch_size": 200}  # Max is 128
+            json={"texts": ["test"], "batch_size": 200},  # Max is 128
         )
 
         assert response.status_code == 422
 
 
 # ===== Search Endpoint Tests =====
+
 
 class TestSearchEndpoint:
     """Tests for /api/v1/search endpoint."""
@@ -165,12 +156,7 @@ class TestSearchEndpoint:
         """Test vector search mode."""
         response = client.post(
             "/api/v1/search",
-            json={
-                "query": "Earth orbits Sun",
-                "limit": 5,
-                "mode": "vector",
-                "min_similarity": 0.5
-            }
+            json={"query": "Earth orbits Sun", "limit": 5, "mode": "vector", "min_similarity": 0.5},
         )
 
         assert response.status_code == 200
@@ -199,8 +185,8 @@ class TestSearchEndpoint:
                 "query": "completely unrelated quantum mechanics",
                 "limit": 10,
                 "mode": "vector",
-                "min_similarity": 0.9  # Very high threshold
-            }
+                "min_similarity": 0.9,  # Very high threshold
+            },
         )
 
         assert response.status_code == 200
@@ -212,12 +198,7 @@ class TestSearchEndpoint:
     def test_search_with_limit(self, client, db_session, sample_evidence):
         """Test search result limiting."""
         response = client.post(
-            "/api/v1/search",
-            json={
-                "query": "science",
-                "limit": 2,
-                "mode": "vector"
-            }
+            "/api/v1/search", json={"query": "science", "limit": 2, "mode": "vector"}
         )
 
         assert response.status_code == 200
@@ -227,22 +208,13 @@ class TestSearchEndpoint:
 
     def test_search_keyword_mode_not_implemented(self, client):
         """Test that keyword mode returns not implemented."""
-        response = client.post(
-            "/api/v1/search",
-            json={
-                "query": "test",
-                "mode": "keyword"
-            }
-        )
+        response = client.post("/api/v1/search", json={"query": "test", "mode": "keyword"})
 
         assert response.status_code == 501
 
     def test_search_empty_query_error(self, client):
         """Test error handling for empty query."""
-        response = client.post(
-            "/api/v1/search",
-            json={"query": ""}
-        )
+        response = client.post("/api/v1/search", json={"query": ""})
 
         assert response.status_code == 422
 
@@ -250,13 +222,14 @@ class TestSearchEndpoint:
         """Test error handling for invalid limit."""
         response = client.post(
             "/api/v1/search",
-            json={"query": "test", "limit": 200}  # Max is 100
+            json={"query": "test", "limit": 200},  # Max is 100
         )
 
         assert response.status_code == 422
 
 
 # ===== NLI Endpoint Tests =====
+
 
 class TestNLIEndpoint:
     """Tests for /api/v1/nli endpoint."""
@@ -267,8 +240,8 @@ class TestNLIEndpoint:
             "/api/v1/nli",
             json={
                 "premise": "The Earth revolves around the Sun",
-                "hypothesis": "The Earth orbits the Sun"
-            }
+                "hypothesis": "The Earth orbits the Sun",
+            },
         )
 
         assert response.status_code == 200
@@ -289,11 +262,7 @@ class TestNLIEndpoint:
     def test_nli_contradiction(self, client):
         """Test NLI for contradiction relationship."""
         response = client.post(
-            "/api/v1/nli",
-            json={
-                "premise": "The Earth is round",
-                "hypothesis": "The Earth is flat"
-            }
+            "/api/v1/nli", json={"premise": "The Earth is round", "hypothesis": "The Earth is flat"}
         )
 
         assert response.status_code == 200
@@ -304,25 +273,13 @@ class TestNLIEndpoint:
 
     def test_nli_empty_premise_error(self, client):
         """Test error handling for empty premise."""
-        response = client.post(
-            "/api/v1/nli",
-            json={
-                "premise": "",
-                "hypothesis": "test"
-            }
-        )
+        response = client.post("/api/v1/nli", json={"premise": "", "hypothesis": "test"})
 
         assert response.status_code == 422
 
     def test_nli_empty_hypothesis_error(self, client):
         """Test error handling for empty hypothesis."""
-        response = client.post(
-            "/api/v1/nli",
-            json={
-                "premise": "test",
-                "hypothesis": ""
-            }
-        )
+        response = client.post("/api/v1/nli", json={"premise": "test", "hypothesis": ""})
 
         assert response.status_code == 422
 
@@ -335,13 +292,10 @@ class TestNLIBatchEndpoint:
         pairs = [
             ["The sky is blue", "The sky has a blue color"],
             ["Water is wet", "Water is dry"],
-            ["Cats are mammals", "Cats are reptiles"]
+            ["Cats are mammals", "Cats are reptiles"],
         ]
 
-        response = client.post(
-            "/api/v1/nli/batch",
-            json={"pairs": pairs, "batch_size": 8}
-        )
+        response = client.post("/api/v1/nli/batch", json={"pairs": pairs, "batch_size": 8})
 
         assert response.status_code == 200
         data = response.json()
@@ -360,15 +314,13 @@ class TestNLIBatchEndpoint:
         """Test error handling for too many pairs."""
         pairs = [["premise", "hypothesis"]] * 51  # Max is 50
 
-        response = client.post(
-            "/api/v1/nli/batch",
-            json={"pairs": pairs}
-        )
+        response = client.post("/api/v1/nli/batch", json={"pairs": pairs})
 
         assert response.status_code == 422
 
 
 # ===== Verify Endpoint Tests =====
+
 
 class TestVerifyEndpoint:
     """Tests for /api/v1/verify endpoint (full pipeline)."""
@@ -380,8 +332,8 @@ class TestVerifyEndpoint:
             json={
                 "claim": "The Earth orbits the Sun",
                 "max_evidence": 5,
-                "confidence_threshold": 0.5
-            }
+                "confidence_threshold": 0.5,
+            },
         )
 
         assert response.status_code == 200
@@ -407,10 +359,7 @@ class TestVerifyEndpoint:
         """Test verification when no evidence is available."""
         response = client.post(
             "/api/v1/verify",
-            json={
-                "claim": "This is a completely novel claim with no evidence",
-                "max_evidence": 10
-            }
+            json={"claim": "This is a completely novel claim with no evidence", "max_evidence": 10},
         )
 
         assert response.status_code == 200
@@ -428,8 +377,8 @@ class TestVerifyEndpoint:
             json={
                 "claim": "Water freezes at 0 degrees Celsius",
                 "confidence_threshold": 0.8,
-                "max_evidence": 10
-            }
+                "max_evidence": 10,
+            },
         )
 
         assert response.status_code == 200
@@ -439,10 +388,7 @@ class TestVerifyEndpoint:
 
     def test_verify_empty_claim_error(self, client):
         """Test error handling for empty claim."""
-        response = client.post(
-            "/api/v1/verify",
-            json={"claim": ""}
-        )
+        response = client.post("/api/v1/verify", json={"claim": ""})
 
         assert response.status_code == 422
 
@@ -450,13 +396,14 @@ class TestVerifyEndpoint:
         """Test error handling for invalid max_evidence."""
         response = client.post(
             "/api/v1/verify",
-            json={"claim": "test", "max_evidence": 100}  # Max is 50
+            json={"claim": "test", "max_evidence": 100},  # Max is 50
         )
 
         assert response.status_code == 422
 
 
 # ===== Verdict Endpoint Tests =====
+
 
 class TestVerdictEndpoint:
     """Tests for /api/v1/verdict endpoint."""
@@ -481,7 +428,7 @@ class TestVerdictEndpoint:
             refuting_evidence_count=0,
             neutral_evidence_count=1,
             reasoning="Strong supporting evidence found",
-            retrieval_method="vector"
+            retrieval_method="vector",
         )
         db_session.add(verification)
         db_session.commit()
@@ -520,6 +467,7 @@ class TestVerdictEndpoint:
 
 # ===== Health Check Tests =====
 
+
 class TestHealthEndpoint:
     """Tests for /health endpoint."""
 
@@ -543,6 +491,7 @@ class TestHealthEndpoint:
 
 # ===== Root Endpoint Tests =====
 
+
 class TestRootEndpoint:
     """Tests for root / endpoint."""
 
@@ -559,6 +508,7 @@ class TestRootEndpoint:
 
 
 # ===== Middleware Tests =====
+
 
 class TestMiddleware:
     """Tests for middleware functionality."""
@@ -582,10 +532,7 @@ class TestMiddleware:
 
         # Health endpoint should not have rate limit headers
         # Test with ML endpoint
-        response = client.post(
-            "/api/v1/embed",
-            json={"texts": ["test"]}
-        )
+        response = client.post("/api/v1/embed", json={"texts": ["test"]})
 
         assert "X-RateLimit-Limit" in response.headers
         assert "X-RateLimit-Remaining" in response.headers

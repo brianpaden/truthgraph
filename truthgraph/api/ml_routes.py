@@ -46,6 +46,7 @@ router = APIRouter(prefix="/api/v1", tags=["ML Services"])
 
 # ===== Dependency Injection =====
 
+
 def get_embedding_service_dep():
     """Dependency to get embedding service instance."""
     return get_embedding_service()
@@ -62,6 +63,7 @@ def get_vector_search_service():
 
 
 # ===== Embedding Endpoint =====
+
 
 @router.post(
     "/embed",
@@ -103,40 +105,34 @@ async def embed_texts(
         embeddings = await loop.run_in_executor(
             None,
             lambda: embedding_service.embed_batch(
-                texts=request.texts,
-                batch_size=request.batch_size,
-                show_progress=False
-            )
+                texts=request.texts, batch_size=request.batch_size, show_progress=False
+            ),
         )
 
         processing_time = (time.time() - start_time) * 1000
 
-        logger.info(
-            f"Generated {len(embeddings)} embeddings in {processing_time:.2f}ms"
-        )
+        logger.info(f"Generated {len(embeddings)} embeddings in {processing_time:.2f}ms")
 
         return EmbedResponse(
             embeddings=embeddings,
             count=len(embeddings),
             dimension=384,
-            processing_time_ms=processing_time
+            processing_time_ms=processing_time,
         )
 
     except ValueError as e:
         logger.error(f"Embedding validation error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        ) from e
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Embedding generation failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to generate embeddings"
+            detail="Failed to generate embeddings",
         ) from e
 
 
 # ===== Search Endpoint =====
+
 
 @router.post(
     "/search",
@@ -184,9 +180,7 @@ async def search_evidence(
         if request.mode in ["vector", "hybrid"]:
             loop = asyncio.get_event_loop()
             query_embedding = await loop.run_in_executor(
-                None,
-                embedding_service.embed_text,
-                request.query
+                None, embedding_service.embed_text, request.query
             )
 
             # Perform vector search
@@ -203,7 +197,7 @@ async def search_evidence(
             logger.warning("Keyword search mode not yet implemented, falling back to vector")
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail="Keyword search mode not yet implemented"
+                detail="Keyword search mode not yet implemented",
             )
 
         query_time = (time.time() - start_time) * 1000
@@ -215,7 +209,7 @@ async def search_evidence(
                 content=result.content,
                 source_url=result.source_url,
                 similarity=result.similarity,
-                rank=i + 1
+                rank=i + 1,
             )
             for i, result in enumerate(search_results)
         ]
@@ -230,7 +224,7 @@ async def search_evidence(
             count=len(result_items),
             query=request.query,
             mode=request.mode,
-            query_time_ms=query_time
+            query_time_ms=query_time,
         )
 
     except HTTPException as exc:
@@ -238,12 +232,12 @@ async def search_evidence(
     except Exception as e:
         logger.error(f"Search failed: {e}", exc_info=True)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Search operation failed"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Search operation failed"
         ) from e
 
 
 # ===== NLI Endpoint =====
+
 
 @router.post(
     "/nli",
@@ -287,10 +281,7 @@ async def run_nli(
         # Run NLI inference in executor to avoid blocking
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
-            None,
-            nli_service.verify_single,
-            request.premise,
-            request.hypothesis
+            None, nli_service.verify_single, request.premise, request.hypothesis
         )
 
         processing_time = (time.time() - start_time) * 1000
@@ -306,22 +297,18 @@ async def run_nli(
             scores=NLIScores(
                 entailment=result.scores["entailment"],
                 contradiction=result.scores["contradiction"],
-                neutral=result.scores["neutral"]
+                neutral=result.scores["neutral"],
             ),
-            processing_time_ms=processing_time
+            processing_time_ms=processing_time,
         )
 
     except ValueError as e:
         logger.error(f"NLI validation error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        ) from e
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
     except Exception as e:
         logger.error(f"NLI inference failed: {e}", exc_info=True)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="NLI inference failed"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="NLI inference failed"
         ) from e
 
 
@@ -363,10 +350,7 @@ async def run_nli_batch(
         loop = asyncio.get_event_loop()
         results = await loop.run_in_executor(
             None,
-            lambda: nli_service.verify_batch(
-                pairs=request.pairs,
-                batch_size=request.batch_size
-            )
+            lambda: nli_service.verify_batch(pairs=request.pairs, batch_size=request.batch_size),
         )
 
         processing_time = (time.time() - start_time) * 1000
@@ -379,37 +363,32 @@ async def run_nli_batch(
                 scores=NLIScores(
                     entailment=result.scores["entailment"],
                     contradiction=result.scores["contradiction"],
-                    neutral=result.scores["neutral"]
-                )
+                    neutral=result.scores["neutral"],
+                ),
             )
             for result in results
         ]
 
-        logger.info(
-            f"Batch NLI inference: {len(results)} pairs in {processing_time:.2f}ms"
-        )
+        logger.info(f"Batch NLI inference: {len(results)} pairs in {processing_time:.2f}ms")
 
         return NLIBatchResponse(
             results=response_results,
             count=len(response_results),
-            total_processing_time_ms=processing_time
+            total_processing_time_ms=processing_time,
         )
 
     except ValueError as e:
         logger.error(f"Batch NLI validation error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        ) from e
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Batch NLI inference failed: {e}", exc_info=True)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Batch NLI inference failed"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Batch NLI inference failed"
         ) from e
 
 
 # ===== Verification Endpoint =====
+
 
 @router.post(
     "/verify",
@@ -467,9 +446,7 @@ async def verify_claim(
         # Step 2: Generate claim embedding and search for evidence
         loop = asyncio.get_event_loop()
         claim_embedding = await loop.run_in_executor(
-            None,
-            embedding_service.embed_text,
-            request.claim
+            None, embedding_service.embed_text, request.claim
         )
 
         search_results = vector_search_service.search_similar_evidence(
@@ -511,21 +488,14 @@ async def verify_claim(
                 explanation="No relevant evidence found in the database to verify this claim.",
                 claim_id=claim.id,
                 verification_id=verification.id,
-                processing_time_ms=processing_time
+                processing_time_ms=processing_time,
             )
 
         # Step 3: Run NLI on claim-evidence pairs
-        nli_pairs = [
-            (result.content, request.claim)
-            for result in search_results
-        ]
+        nli_pairs = [(result.content, request.claim) for result in search_results]
 
         nli_results = await loop.run_in_executor(
-            None,
-            lambda: nli_service.verify_batch(
-                pairs=nli_pairs,
-                batch_size=8
-            )
+            None, lambda: nli_service.verify_batch(pairs=nli_pairs, batch_size=8)
         )
 
         # Step 4: Aggregate results and compute verdict
@@ -542,9 +512,9 @@ async def verify_claim(
             r.confidence for r in nli_results if r.label == NLILabel.CONTRADICTION
         ) / len(nli_results)
 
-        neutral_score = sum(
-            r.confidence for r in nli_results if r.label == NLILabel.NEUTRAL
-        ) / len(nli_results)
+        neutral_score = sum(r.confidence for r in nli_results if r.label == NLILabel.NEUTRAL) / len(
+            nli_results
+        )
 
         # Determine verdict
         if support_score > refute_score and support_score >= request.confidence_threshold:
@@ -587,7 +557,7 @@ async def verify_claim(
                 source_url=search_results[i].source_url,
                 nli_label=nli_results[i].label.value,
                 nli_confidence=nli_results[i].confidence,
-                similarity=search_results[i].similarity
+                similarity=search_results[i].similarity,
             )
             for i in range(len(search_results))
         ]
@@ -606,7 +576,7 @@ async def verify_claim(
             explanation=explanation,
             claim_id=claim.id,
             verification_id=verification.id,
-            processing_time_ms=processing_time
+            processing_time_ms=processing_time,
         )
 
     except HTTPException as exc:
@@ -615,12 +585,12 @@ async def verify_claim(
         logger.error(f"Verification pipeline failed: {e}", exc_info=True)
         db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Verification pipeline failed"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Verification pipeline failed"
         ) from e
 
 
 # ===== Verdict Retrieval Endpoint =====
+
 
 @router.get(
     "/verdict/{claim_id}",
@@ -658,8 +628,7 @@ async def get_verdict(
         claim = db.query(Claim).filter(Claim.id == claim_id).first()
         if not claim:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Claim not found: {claim_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Claim not found: {claim_id}"
             )
 
         # Get most recent verification result
@@ -673,7 +642,7 @@ async def get_verdict(
         if not verification:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"No verdict found for claim: {claim_id}"
+                detail=f"No verdict found for claim: {claim_id}",
             )
 
         logger.info(f"Retrieved verdict for claim: {claim_id}")
@@ -687,7 +656,7 @@ async def get_verdict(
             evidence_count=verification.evidence_count,
             supporting_evidence_count=verification.supporting_evidence_count,
             refuting_evidence_count=verification.refuting_evidence_count,
-            created_at=verification.created_at
+            created_at=verification.created_at,
         )
 
     except HTTPException as e:
@@ -695,6 +664,5 @@ async def get_verdict(
     except Exception as e:
         logger.error(f"Failed to retrieve verdict: {e}", exc_info=True)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve verdict"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve verdict"
         ) from e

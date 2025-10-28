@@ -15,13 +15,13 @@ import sys
 import time
 from pathlib import Path
 
+import structlog
+
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-import structlog
-
-from truthgraph.services.ml import get_nli_service
+from truthgraph.services.ml import get_nli_service  # noqa: E402
 
 logger = structlog.get_logger(__name__)
 
@@ -216,9 +216,7 @@ def benchmark_batch_inference(
     }
 
 
-def benchmark_memory(
-    service, pairs: list[tuple[str, str]], batch_size: int
-) -> dict[str, float]:
+def benchmark_memory(service, pairs: list[tuple[str, str]], batch_size: int) -> dict[str, float]:
     """Benchmark memory usage.
 
     Args:
@@ -332,15 +330,9 @@ def run_benchmark(
     print(f"Throughput: {single_results['throughput_pairs_per_sec']:.2f} pairs/sec")
 
     print("\n--- BATCH INFERENCE ---")
-    print(
-        f"Average Throughput: {batch_results['avg_throughput_pairs_per_sec']:.2f} pairs/sec"
-    )
-    print(
-        f"Min Throughput: {batch_results['min_throughput_pairs_per_sec']:.2f} pairs/sec"
-    )
-    print(
-        f"Max Throughput: {batch_results['max_throughput_pairs_per_sec']:.2f} pairs/sec"
-    )
+    print(f"Average Throughput: {batch_results['avg_throughput_pairs_per_sec']:.2f} pairs/sec")
+    print(f"Min Throughput: {batch_results['min_throughput_pairs_per_sec']:.2f} pairs/sec")
+    print(f"Max Throughput: {batch_results['max_throughput_pairs_per_sec']:.2f} pairs/sec")
     print(f"Avg Latency per Pair: {batch_results['avg_latency_per_pair_ms']:.1f} ms")
 
     print("\n--- MEMORY USAGE ---")
@@ -361,8 +353,7 @@ def run_benchmark(
         f"({batch_results['avg_throughput_pairs_per_sec']:.2f} pairs/sec)"
     )
     print(
-        f"Memory Target (<2GB): {'PASS' if memory_ok else 'FAIL'} "
-        f"({memory_results['peak_usage_mb']:.0f} MB)"
+        f"Memory Target (<2GB): {'PASS' if memory_ok else 'FAIL'} ({memory_results['peak_usage_mb']:.0f} MB)"
     )
 
     print("\n" + "=" * 80)

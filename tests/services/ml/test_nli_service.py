@@ -44,9 +44,7 @@ class TestNLIServiceMocked:
             patch(
                 "truthgraph.services.ml.nli_service.AutoModelForSequenceClassification"
             ) as mock_model_class,
-            patch(
-                "truthgraph.services.ml.nli_service.AutoTokenizer"
-            ) as mock_tokenizer_class,
+            patch("truthgraph.services.ml.nli_service.AutoTokenizer") as mock_tokenizer_class,
             patch("truthgraph.services.ml.nli_service.torch.cuda.is_available") as mock_cuda,
         ):
             mock_model_class.from_pretrained.return_value = mock_model
@@ -87,9 +85,7 @@ class TestNLIServiceMocked:
 
     def test_detect_device_cuda(self):
         """Test device detection returns CUDA when GPU available."""
-        with patch(
-            "truthgraph.services.ml.nli_service.torch.cuda.is_available"
-        ) as mock_cuda:
+        with patch("truthgraph.services.ml.nli_service.torch.cuda.is_available") as mock_cuda:
             mock_cuda.return_value = True
 
             device = NLIService._detect_device()
@@ -325,9 +321,7 @@ class TestNLIServiceErrorHandling:
             ) as mock_model_class,
             patch("truthgraph.services.ml.nli_service.torch.cuda.is_available") as mock_cuda,
         ):
-            mock_model_class.from_pretrained.side_effect = RuntimeError(
-                "Model download failed"
-            )
+            mock_model_class.from_pretrained.side_effect = RuntimeError("Model download failed")
             mock_cuda.return_value = False
 
             service = NLIService.get_instance()
@@ -352,9 +346,7 @@ class TestNLIServiceErrorHandling:
             patch(
                 "truthgraph.services.ml.nli_service.AutoModelForSequenceClassification"
             ) as mock_model_class,
-            patch(
-                "truthgraph.services.ml.nli_service.AutoTokenizer"
-            ) as mock_tokenizer_class,
+            patch("truthgraph.services.ml.nli_service.AutoTokenizer") as mock_tokenizer_class,
             patch("truthgraph.services.ml.nli_service.torch.cuda.is_available") as mock_cuda,
         ):
             mock_model_class.from_pretrained.return_value = mock_model

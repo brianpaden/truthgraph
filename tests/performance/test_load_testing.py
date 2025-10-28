@@ -69,10 +69,10 @@ class LoadTestResult:
     def is_passing(self) -> bool:
         """Check if test passes performance targets."""
         return (
-            self.error_rate < 0.01 and
-            self.latencies.p95_ms < 10_000 and
-            self.latencies.p99_ms < 15_000 and
-            self.throughput_rps >= 10
+            self.error_rate < 0.01
+            and self.latencies.p95_ms < 10_000
+            and self.latencies.p99_ms < 15_000
+            and self.throughput_rps >= 10
         )
 
     def __str__(self) -> str:
@@ -96,7 +96,7 @@ Latency (ms):
   p99:               {self.latencies.p99_ms:.2f}
   StdDev:            {self.latencies.stddev_ms:.2f}
 
-Status:              {'PASS' if self.is_passing else 'FAIL'}
+Status:              {"PASS" if self.is_passing else "FAIL"}
 """
 
 
@@ -104,8 +104,14 @@ def calculate_latency_metrics(latencies: List[float]) -> LatencyMetrics:
     """Calculate latency statistics from list of latencies (in ms)."""
     if not latencies:
         return LatencyMetrics(
-            min_ms=0.0, max_ms=0.0, mean_ms=0.0, median_ms=0.0,
-            p95_ms=0.0, p99_ms=0.0, stddev_ms=0.0, samples=0
+            min_ms=0.0,
+            max_ms=0.0,
+            mean_ms=0.0,
+            median_ms=0.0,
+            p95_ms=0.0,
+            p99_ms=0.0,
+            stddev_ms=0.0,
+            samples=0,
         )
 
     sorted_latencies = sorted(latencies)
@@ -178,10 +184,7 @@ class LoadTestRunner:
             # Calculate requests to issue this second
             batch_size = int(current_rps)
 
-            tasks = [
-                self._execute_request()
-                for _ in range(batch_size)
-            ]
+            tasks = [self._execute_request() for _ in range(batch_size)]
 
             batch_results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -204,10 +207,7 @@ class LoadTestRunner:
         while time.time() - sustain_start < sustain_duration_seconds:
             batch_size = final_rps // 10  # Send in 10 batches per second
 
-            tasks = [
-                self._execute_request()
-                for _ in range(batch_size)
-            ]
+            tasks = [self._execute_request() for _ in range(batch_size)]
 
             batch_results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -266,10 +266,7 @@ class LoadTestRunner:
         while time.time() - start_time < duration_seconds:
             batch_size = concurrent_rps // 10  # Send in 10 batches per second
 
-            tasks = [
-                self._execute_request()
-                for _ in range(batch_size)
-            ]
+            tasks = [self._execute_request() for _ in range(batch_size)]
 
             batch_results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -473,7 +470,9 @@ class TestLoadTesting:
 
         # Verify targets
         assert result.error_rate < 0.01, f"Error rate {result.error_rate:.2%} exceeds 1%"
-        assert result.latencies.p95_ms < 10_000, f"p95 latency {result.latencies.p95_ms:.0f}ms exceeds 10s"
+        assert result.latencies.p95_ms < 10_000, (
+            f"p95 latency {result.latencies.p95_ms:.0f}ms exceeds 10s"
+        )
         assert result.throughput_rps > 10, f"Throughput {result.throughput_rps:.2f} RPS below 10"
 
     @pytest.mark.asyncio

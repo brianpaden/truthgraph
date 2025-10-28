@@ -172,10 +172,12 @@ class TestNLIServiceIntegration:
         # First call
         result1 = nli_service.verify_single("Evidence 1", "Claim 1")
         info1 = nli_service.get_model_info()
+        assert result1
 
         # Second call
         result2 = nli_service.verify_single("Evidence 2", "Claim 2")
         info2 = nli_service.get_model_info()
+        assert result2
 
         # Model should remain loaded
         assert info1["initialized"]
@@ -184,9 +186,7 @@ class TestNLIServiceIntegration:
 
     def test_batch_size_variations(self, nli_service):
         """Test different batch sizes produce same results."""
-        pairs = [
-            (f"Evidence {i}", f"Claim {i}") for i in range(10)
-        ]
+        pairs = [(f"Evidence {i}", f"Claim {i}") for i in range(10)]
 
         # Process with different batch sizes
         results_batch_2 = nli_service.verify_batch(pairs, batch_size=2)
@@ -196,7 +196,7 @@ class TestNLIServiceIntegration:
         assert len(results_batch_2) == len(results_batch_5) == 10
 
         # Labels should be the same for corresponding pairs
-        for r1, r2 in zip(results_batch_2, results_batch_5):
+        for r1, r2 in zip(results_batch_2, results_batch_5, strict=False):
             assert r1.label == r2.label
             # Confidence should be very close
             assert abs(r1.confidence - r2.confidence) < 0.01
@@ -248,9 +248,7 @@ class TestNLIServicePerformance:
         gc.collect()
 
         # Process batch
-        pairs = [
-            (f"Evidence {i}", f"Claim {i}") for i in range(50)
-        ]
+        pairs = [(f"Evidence {i}", f"Claim {i}") for i in range(50)]
         results = nli_service.verify_batch(pairs, batch_size=8)
 
         assert len(results) == 50

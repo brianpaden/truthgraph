@@ -110,9 +110,7 @@ class HybridSearchService:
         """
         self.vector_service = VectorSearchService(embedding_dimension=embedding_dimension)
         self.embedding_dimension = embedding_dimension
-        logger.info(
-            f"HybridSearchService initialized with {embedding_dimension}-dim embeddings"
-        )
+        logger.info(f"HybridSearchService initialized with {embedding_dimension}-dim embeddings")
 
     def _keyword_search(
         self,
@@ -189,9 +187,7 @@ class HybridSearchService:
             rows = result.fetchall()
 
             # Convert to ranked results (rank position starts at 1)
-            ranked_results = [
-                (row[0], row[1], row[2], i + 1) for i, row in enumerate(rows)
-            ]
+            ranked_results = [(row[0], row[1], row[2], i + 1) for i, row in enumerate(rows)]
 
             logger.debug(
                 f"Keyword search returned {len(ranked_results)} results "
@@ -248,10 +244,7 @@ class HybridSearchService:
         }
 
         # Keyword results: evidence_id -> (content, source_url, rank_position)
-        keyword_dict = {
-            result[0]: (result[1], result[2], result[3])
-            for result in keyword_results
-        }
+        keyword_dict = {result[0]: (result[1], result[2], result[3]) for result in keyword_results}
 
         # Collect all unique evidence IDs
         all_evidence_ids = set(vector_dict.keys()) | set(keyword_dict.keys())
@@ -401,8 +394,7 @@ class HybridSearchService:
 
             # Convert to tuple format for RRF
             vector_results = [
-                (r.evidence_id, r.content, r.source_url, r.similarity)
-                for r in vector_results_objs
+                (r.evidence_id, r.content, r.source_url, r.similarity) for r in vector_results_objs
             ]
 
             # 2. Keyword full-text search
@@ -503,8 +495,7 @@ class HybridSearchService:
         query_time_ms = (time.time() - start_time) * 1000
 
         logger.info(
-            f"Keyword-only search completed in {query_time_ms:.1f}ms: "
-            f"{len(results)} results"
+            f"Keyword-only search completed in {query_time_ms:.1f}ms: {len(results)} results"
         )
 
         return results, query_time_ms

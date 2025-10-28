@@ -26,7 +26,6 @@ References:
 """
 
 import argparse
-import hashlib
 import json
 import logging
 import random
@@ -37,8 +36,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -206,9 +204,7 @@ class FEVERProcessor:
         return truthgraph_record
 
     def create_evidence_records(
-        self,
-        claim_record: Dict[str, Any],
-        evidence_snippets: List[str]
+        self, claim_record: Dict[str, Any], evidence_snippets: List[str]
     ) -> Dict[str, Dict[str, Any]]:
         """Create evidence records for a claim.
 
@@ -241,10 +237,7 @@ class FEVERProcessor:
         return evidence_records
 
     def process_dataset(
-        self,
-        input_file: Path,
-        sample_size: Optional[int] = None,
-        seed: int = 42
+        self, input_file: Path, sample_size: Optional[int] = None, seed: int = 42
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Dict[str, Any]], Dict[str, Any]]:
         """Process FEVER dataset and create TruthGraph format.
 
@@ -295,16 +288,15 @@ class FEVERProcessor:
             "processing_seed": seed,
         }
 
-        logger.info(f"Processing complete: {len(claims)} valid claims, {len(all_evidence)} evidence items")
+        logger.info(
+            f"Processing complete: {len(claims)} valid claims, {len(all_evidence)} evidence items"
+        )
         logger.info(f"Label distribution: {stats['label_distribution']}")
 
         return claims, all_evidence, stats
 
     def _create_balanced_sample(
-        self,
-        records: List[Dict[str, Any]],
-        sample_size: int,
-        seed: int
+        self, records: List[Dict[str, Any]], sample_size: int, seed: int
     ) -> List[Dict[str, Any]]:
         """Create a balanced sample of records by label.
 
@@ -326,7 +318,9 @@ class FEVERProcessor:
                 by_label[label] = []
             by_label[label].append(record)
 
-        logger.info(f"Label distribution in full dataset: {Counter(r.get('label') for r in records)}")
+        logger.info(
+            f"Label distribution in full dataset: {Counter(r.get('label') for r in records)}"
+        )
 
         # Calculate samples per label to maintain balance
         labels_with_data = [label for label in by_label if by_label[label]]
@@ -397,9 +391,7 @@ class FEVERProcessor:
         return output_path
 
     def save_mapping_json(
-        self,
-        claims: List[Dict[str, Any]],
-        evidence: Dict[str, Dict[str, Any]]
+        self, claims: List[Dict[str, Any]], evidence: Dict[str, Dict[str, Any]]
     ) -> Path:
         """Save claim-to-verdict mapping.
 
@@ -463,32 +455,22 @@ class FEVERProcessor:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Process FEVER dataset for TruthGraph integration"
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        required=True,
-        help="Input FEVER JSONL file"
-    )
+    parser = argparse.ArgumentParser(description="Process FEVER dataset for TruthGraph integration")
+    parser.add_argument("--input", type=Path, required=True, help="Input FEVER JSONL file")
     parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("./fever_processed"),
-        help="Output directory for processed data (default: ./fever_processed)"
+        help="Output directory for processed data (default: ./fever_processed)",
     )
     parser.add_argument(
         "--sample-size",
         type=int,
         default=100,
-        help="Create balanced sample of this size (default: 100, use 0 for all data)"
+        help="Create balanced sample of this size (default: 100, use 0 for all data)",
     )
     parser.add_argument(
-        "--seed",
-        type=int,
-        default=42,
-        help="Random seed for sampling (default: 42)"
+        "--seed", type=int, default=42, help="Random seed for sampling (default: 42)"
     )
 
     args = parser.parse_args()
@@ -505,7 +487,7 @@ def main():
         claims, evidence, stats = processor.process_dataset(
             input_file=args.input,
             sample_size=args.sample_size if args.sample_size > 0 else None,
-            seed=args.seed
+            seed=args.seed,
         )
 
         # Save results
@@ -515,7 +497,7 @@ def main():
         processor.save_stats_json(stats)
 
         logger.info("FEVER dataset processing complete!")
-        print(f"\nProcessing Summary:")
+        print("\nProcessing Summary:")
         print(f"  Claims processed: {stats['total_processed']}")
         print(f"  Evidence items: {stats['total_evidence']}")
         print(f"  Label distribution: {stats['label_distribution']}")

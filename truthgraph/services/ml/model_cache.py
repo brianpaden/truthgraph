@@ -97,9 +97,7 @@ class ModelCache:
             RuntimeError: If called more than once (singleton violation)
         """
         if ModelCache._instance is not None:
-            raise RuntimeError(
-                "ModelCache is a singleton. Use get_instance() instead."
-            )
+            raise RuntimeError("ModelCache is a singleton. Use get_instance() instead.")
 
         self._embedding_service: Any = None
         self._nli_service: Any = None
@@ -234,8 +232,7 @@ class ModelCache:
                     )
 
                     logger.info(
-                        f"NLI service loaded in {load_time:.1f}ms "
-                        f"on {model_info['device']}"
+                        f"NLI service loaded in {load_time:.1f}ms on {model_info['device']}"
                     )
         else:
             # Update access stats
@@ -330,19 +327,13 @@ class ModelCache:
         # Device info
         device_info = {
             "cuda_available": torch.cuda.is_available(),
-            "mps_available": (
-                hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
-            ),
+            "mps_available": (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()),
         }
 
         if torch.cuda.is_available():
             device_info["cuda_device"] = torch.cuda.get_device_name(0)
-            device_info["cuda_memory_allocated_mb"] = (
-                torch.cuda.memory_allocated() / 1024 / 1024
-            )
-            device_info["cuda_memory_reserved_mb"] = (
-                torch.cuda.memory_reserved() / 1024 / 1024
-            )
+            device_info["cuda_memory_allocated_mb"] = torch.cuda.memory_allocated() / 1024 / 1024
+            device_info["cuda_memory_reserved_mb"] = torch.cuda.memory_reserved() / 1024 / 1024
 
         # System info
         system_info = {}

@@ -61,9 +61,7 @@ def get_memory_usage() -> dict[str, Any]:
     if torch.cuda.is_available():
         memory_stats["gpu_allocated"] = torch.cuda.memory_allocated()
         memory_stats["gpu_reserved"] = torch.cuda.memory_reserved()
-        memory_stats["gpu_allocated_formatted"] = format_bytes(
-            torch.cuda.memory_allocated()
-        )
+        memory_stats["gpu_allocated_formatted"] = format_bytes(torch.cuda.memory_allocated())
         memory_stats["gpu_reserved_formatted"] = format_bytes(torch.cuda.memory_reserved())
 
     return memory_stats
@@ -285,9 +283,7 @@ def benchmark_memory_usage(
     print(f"  RSS increase:       {format_bytes(model_memory_rss)}")
 
     if "gpu_allocated" in loaded_memory:
-        model_memory_gpu = (
-            loaded_memory["gpu_allocated"] - baseline_memory.get("gpu_allocated", 0)
-        )
+        model_memory_gpu = loaded_memory["gpu_allocated"] - baseline_memory.get("gpu_allocated", 0)
         print(f"  GPU increase:       {format_bytes(model_memory_gpu)}")
 
     # Process large batch and measure peak memory
@@ -379,7 +375,9 @@ def main() -> None:
     print(f"  CUDA available:     {torch.cuda.is_available()}")
     if torch.cuda.is_available():
         print(f"  CUDA device:        {torch.cuda.get_device_name(0)}")
-    print(f"  MPS available:      {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}")
+    print(
+        f"  MPS available:      {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}"
+    )
     print(f"  psutil available:   {PSUTIL_AVAILABLE}")
 
     # Initialize service
@@ -397,9 +395,7 @@ def main() -> None:
         all_results["single_text"] = benchmark_single_text(service, args.iterations)
 
     if not args.skip_batch:
-        all_results["batch"] = benchmark_batch_processing(
-            service, args.num_texts, batch_sizes
-        )
+        all_results["batch"] = benchmark_batch_processing(service, args.num_texts, batch_sizes)
 
     if not args.skip_memory:
         all_results["memory"] = benchmark_memory_usage(service)

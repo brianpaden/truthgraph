@@ -24,7 +24,6 @@ from sqlalchemy.orm import Session
 
 from truthgraph.services.verification_pipeline_service import (
     VerificationPipelineService,
-    VerdictLabel,
 )
 
 
@@ -260,11 +259,7 @@ def real_world_claims_by_category(real_world_claims: Dict[str, Any]):
         Returns:
             List of claims in the specified category
         """
-        return [
-            claim
-            for claim in real_world_claims["claims"]
-            if claim["category"] == category
-        ]
+        return [claim for claim in real_world_claims["claims"] if claim["category"] == category]
 
     return _get_claims
 
@@ -290,9 +285,7 @@ def real_world_claims_by_verdict(real_world_claims: Dict[str, Any]):
             List of claims with the specified verdict
         """
         return [
-            claim
-            for claim in real_world_claims["claims"]
-            if claim["expected_verdict"] == verdict
+            claim for claim in real_world_claims["claims"] if claim["expected_verdict"] == verdict
         ]
 
     return _get_claims
@@ -318,11 +311,7 @@ def real_world_claims_by_source(real_world_claims: Dict[str, Any]):
         Returns:
             List of claims from the specified source
         """
-        return [
-            claim
-            for claim in real_world_claims["claims"]
-            if claim["source"] == source
-        ]
+        return [claim for claim in real_world_claims["claims"] if claim["source"] == source]
 
     return _get_claims
 
@@ -387,23 +376,23 @@ def test_real_world_claims_structure(real_world_claims: Dict[str, Any]) -> None:
 
     for claim in claims:
         # Check required fields
-        assert required_fields.issubset(
-            claim.keys()
-        ), f"Claim {claim['id']} missing required fields"
+        assert required_fields.issubset(claim.keys()), (
+            f"Claim {claim['id']} missing required fields"
+        )
 
         # Check verdict validity
-        assert (
-            claim["expected_verdict"] in valid_verdicts
-        ), f"Invalid verdict in claim {claim['id']}"
+        assert claim["expected_verdict"] in valid_verdicts, (
+            f"Invalid verdict in claim {claim['id']}"
+        )
 
         # Check confidence range
         confidence = claim["confidence"]
         assert 0 <= confidence <= 1, f"Invalid confidence in claim {claim['id']}"
 
         # Check evidence ID list
-        assert isinstance(
-            claim["evidence_ids"], list
-        ), f"Evidence IDs should be list in claim {claim['id']}"
+        assert isinstance(claim["evidence_ids"], list), (
+            f"Evidence IDs should be list in claim {claim['id']}"
+        )
 
 
 def test_real_world_evidence_structure(
@@ -434,24 +423,24 @@ def test_real_world_evidence_structure(
 
     for evidence in evidence_items:
         # Check required fields
-        assert required_fields.issubset(
-            evidence.keys()
-        ), f"Evidence {evidence['id']} missing required fields"
+        assert required_fields.issubset(evidence.keys()), (
+            f"Evidence {evidence['id']} missing required fields"
+        )
 
         # Check NLI label validity
-        assert (
-            evidence["nli_label"] in valid_labels
-        ), f"Invalid NLI label in evidence {evidence['id']}"
+        assert evidence["nli_label"] in valid_labels, (
+            f"Invalid NLI label in evidence {evidence['id']}"
+        )
 
         # Check content non-empty
-        assert (
-            evidence["content"] and evidence["content"].strip()
-        ), f"Empty content in evidence {evidence['id']}"
+        assert evidence["content"] and evidence["content"].strip(), (
+            f"Empty content in evidence {evidence['id']}"
+        )
 
         # Check URL provided
-        assert (
-            evidence["url"] and evidence["url"].strip()
-        ), f"Missing URL in evidence {evidence['id']}"
+        assert evidence["url"] and evidence["url"].strip(), (
+            f"Missing URL in evidence {evidence['id']}"
+        )
 
 
 def test_real_world_evidence_references(
@@ -466,9 +455,9 @@ def test_real_world_evidence_references(
 
     for claim in real_world_claims["claims"]:
         for ev_id in claim.get("evidence_ids", []):
-            assert (
-                ev_id in evidence_ids
-            ), f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            assert ev_id in evidence_ids, (
+                f"Claim {claim['id']} references non-existent evidence {ev_id}"
+            )
 
 
 def test_verdict_distribution(real_world_claims: Dict[str, Any]) -> None:
@@ -506,9 +495,7 @@ def test_category_coverage(real_world_claims: Dict[str, Any]) -> None:
         categories.add(claim["category"])
 
     # Require at least 4 different categories
-    assert (
-        len(categories) >= 4
-    ), f"Expected at least 4 categories, got {len(categories)}"
+    assert len(categories) >= 4, f"Expected at least 4 categories, got {len(categories)}"
 
     print(f"Categories covered: {', '.join(sorted(categories))}")
 
@@ -601,9 +588,7 @@ def test_accuracy_results_serialization() -> None:
 # ===== BASELINE ACCURACY TEST (Optional, requires database setup) =====
 
 
-@pytest.mark.skip(
-    reason="Requires active TruthGraph services and database connection"
-)
+@pytest.mark.skip(reason="Requires active TruthGraph services and database connection")
 def test_baseline_accuracy(
     db: Session,
     real_world_claims: Dict[str, Any],
@@ -670,15 +655,13 @@ def test_baseline_accuracy(
 
     # Report results
     accuracy = accuracy_results.get_accuracy()
-    print(f"\n{'='*60}")
-    print(f"BASELINE ACCURACY TEST RESULTS")
-    print(f"{'='*60}")
+    print(f"\n{'=' * 60}")
+    print("BASELINE ACCURACY TEST RESULTS")
+    print(f"{'=' * 60}")
     print(f"Overall Accuracy: {accuracy:.2%}")
     print(f"Correct: {accuracy_results.correct_verdicts}/{accuracy_results.total_claims}")
     print(f"Duration: {accuracy_results.end_time - accuracy_results.start_time}")
     print(f"Results saved to: {results_file}")
 
     # Assert minimum accuracy threshold
-    assert (
-        accuracy >= 0.50
-    ), f"Baseline accuracy {accuracy:.2%} below minimum threshold (50%)"
+    assert accuracy >= 0.50, f"Baseline accuracy {accuracy:.2%} below minimum threshold (50%)"

@@ -17,12 +17,13 @@ from pathlib import Path
 from statistics import mean, median, stdev
 from uuid import uuid4
 
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
 from truthgraph.schemas import Embedding, Evidence
@@ -102,9 +103,7 @@ def benchmark_queries(
     for i in range(num_queries):
         # Create query embedding (varying patterns)
         query_pattern = i / num_queries
-        query_embedding = [
-            query_pattern + (0.01 * k) for k in range(service.embedding_dimension)
-        ]
+        query_embedding = [query_pattern + (0.01 * k) for k in range(service.embedding_dimension)]
 
         # Measure query time
         start_time = time.time()
@@ -121,9 +120,7 @@ def benchmark_queries(
         result_counts.append(len(results))
 
         if (i + 1) % 10 == 0 or i == 0:
-            print(
-                f"  Query {i + 1}/{num_queries}: {query_time_ms:.2f}ms, {len(results)} results"
-            )
+            print(f"  Query {i + 1}/{num_queries}: {query_time_ms:.2f}ms, {len(results)} results")
 
     # Calculate statistics
     return {
@@ -230,9 +227,7 @@ def print_results(results: dict, target_ms: float = 100.0) -> None:
 
 def main():
     """Main benchmark script."""
-    parser = argparse.ArgumentParser(
-        description="Benchmark vector search performance"
-    )
+    parser = argparse.ArgumentParser(description="Benchmark vector search performance")
     parser.add_argument(
         "--corpus-size",
         type=int,
@@ -309,12 +304,8 @@ def main():
         # Create test corpus
         if not args.skip_corpus_creation:
             # Clean up existing benchmark data
-            session.execute(
-                text("DELETE FROM embeddings WHERE tenant_id = 'benchmark'")
-            )
-            session.execute(
-                text("DELETE FROM evidence WHERE source_type = 'benchmark'")
-            )
+            session.execute(text("DELETE FROM embeddings WHERE tenant_id = 'benchmark'"))
+            session.execute(text("DELETE FROM evidence WHERE source_type = 'benchmark'"))
             session.commit()
 
             create_test_corpus(session, args.corpus_size, args.embedding_dim)
@@ -330,9 +321,7 @@ def main():
         print(f"  Total embeddings: {stats['total_embeddings']}")
 
         # Benchmark single queries
-        single_results = benchmark_queries(
-            session, service, args.queries, args.top_k
-        )
+        single_results = benchmark_queries(session, service, args.queries, args.top_k)
         print_results(single_results)
 
         # Benchmark batch queries
@@ -343,23 +332,14 @@ def main():
 
         # Summary
         print("\nPerformance Summary:")
-        print(
-            f"  Single query avg:  {single_results['mean_time_ms']:.2f}ms "
-            f"(target: <100ms)"
-        )
-        print(
-            f"  Batch query avg:   {batch_results['mean_per_query_ms']:.2f}ms per query"
-        )
+        print(f"  Single query avg:  {single_results['mean_time_ms']:.2f}ms (target: <100ms)")
+        print(f"  Batch query avg:   {batch_results['mean_per_query_ms']:.2f}ms per query")
 
         if single_results["mean_time_ms"] < 100:
             print("\n✓ Performance target achieved!")
         else:
-            print(
-                f"\n⚠ Performance target missed by {single_results['mean_time_ms'] - 100:.2f}ms"
-            )
-            print(
-                "  Consider: adjusting IVFFlat lists parameter, increasing probes, or using GPU"
-            )
+            print(f"\n⚠ Performance target missed by {single_results['mean_time_ms'] - 100:.2f}ms")
+            print("  Consider: adjusting IVFFlat lists parameter, increasing probes, or using GPU")
 
     except Exception as e:
         print(f"\nError: {e}")

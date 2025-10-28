@@ -9,12 +9,14 @@ from pydantic import BaseModel, Field
 
 class ClaimCreate(BaseModel):
     """Request model for creating a new claim."""
+
     text: str = Field(..., min_length=1, description="The claim text to verify")
     source_url: Optional[str] = Field(None, description="Optional source URL for the claim")
 
 
 class VerdictResponse(BaseModel):
     """Response model for verdict information."""
+
     id: UUID
     verdict: Optional[str] = Field(None, description="SUPPORTED, REFUTED, or INSUFFICIENT")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
@@ -26,6 +28,7 @@ class VerdictResponse(BaseModel):
 
 class ClaimResponse(BaseModel):
     """Response model for claim information."""
+
     id: UUID
     text: str
     source_url: Optional[str] = None
@@ -38,6 +41,7 @@ class ClaimResponse(BaseModel):
 
 class ClaimListResponse(BaseModel):
     """Response model for paginated claim list."""
+
     items: list[ClaimResponse]
     total: int
     skip: int
@@ -46,24 +50,20 @@ class ClaimListResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     """Response model for health check."""
+
     status: str
     database: str
 
 
 class VectorSearchRequest(BaseModel):
     """Request model for vector similarity search."""
+
     query_embedding: list[float] = Field(
-        ...,
-        description="Query embedding vector (384-dimensional)",
-        min_length=384,
-        max_length=384
+        ..., description="Query embedding vector (384-dimensional)", min_length=384, max_length=384
     )
     top_k: int = Field(default=10, ge=1, le=100, description="Maximum number of results")
     min_similarity: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=1.0,
-        description="Minimum similarity threshold"
+        default=0.0, ge=0.0, le=1.0, description="Minimum similarity threshold"
     )
     tenant_id: str = Field(default="default", description="Tenant identifier")
     source_filter: Optional[str] = Field(None, description="Filter by source URL")
@@ -71,6 +71,7 @@ class VectorSearchRequest(BaseModel):
 
 class VectorSearchResultItem(BaseModel):
     """Individual result from vector similarity search."""
+
     evidence_id: UUID
     content: str
     source_url: Optional[str] = None
@@ -82,6 +83,7 @@ class VectorSearchResultItem(BaseModel):
 
 class VectorSearchResponse(BaseModel):
     """Response model for vector similarity search."""
+
     results: list[VectorSearchResultItem]
     total: int
     query_time_ms: Optional[float] = None
@@ -97,54 +99,32 @@ class HybridSearchRequest(BaseModel):
     """Request model for hybrid search combining vector and keyword search."""
 
     query_text: str = Field(
-        ...,
-        min_length=1,
-        description="Natural language query text for keyword search"
+        ..., min_length=1, description="Natural language query text for keyword search"
     )
     query_embedding: list[float] = Field(
         ...,
         description="Query embedding vector (384 or 1536-dimensional)",
         min_length=384,
     )
-    top_k: int = Field(
-        default=10,
-        ge=1,
-        le=100,
-        description="Maximum number of results to return"
-    )
+    top_k: int = Field(default=10, ge=1, le=100, description="Maximum number of results to return")
     vector_weight: float = Field(
-        default=0.5,
-        ge=0.0,
-        le=1.0,
-        description="Weight for vector search contribution (0.0-1.0)"
+        default=0.5, ge=0.0, le=1.0, description="Weight for vector search contribution (0.0-1.0)"
     )
     keyword_weight: float = Field(
-        default=0.5,
-        ge=0.0,
-        le=1.0,
-        description="Weight for keyword search contribution (0.0-1.0)"
+        default=0.5, ge=0.0, le=1.0, description="Weight for keyword search contribution (0.0-1.0)"
     )
     min_vector_similarity: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=1.0,
-        description="Minimum similarity threshold for vector search"
+        default=0.0, ge=0.0, le=1.0, description="Minimum similarity threshold for vector search"
     )
-    tenant_id: str = Field(
-        default="default",
-        description="Tenant identifier for multi-tenancy"
-    )
+    tenant_id: str = Field(default="default", description="Tenant identifier for multi-tenancy")
     source_filter: Optional[str] = Field(
-        None,
-        description="Filter results by source URL (exact match)"
+        None, description="Filter results by source URL (exact match)"
     )
     date_from: Optional[datetime] = Field(
-        None,
-        description="Filter results created on or after this date"
+        None, description="Filter results created on or after this date"
     )
     date_to: Optional[datetime] = Field(
-        None,
-        description="Filter results created on or before this date"
+        None, description="Filter results created on or before this date"
     )
 
 
@@ -154,24 +134,18 @@ class HybridSearchResultItem(BaseModel):
     evidence_id: UUID
     content: str
     source_url: Optional[str] = None
-    rank_score: float = Field(
-        ...,
-        description="Combined RRF score (higher is better)"
-    )
+    rank_score: float = Field(..., description="Combined RRF score (higher is better)")
     vector_similarity: Optional[float] = Field(
         None,
         ge=0.0,
         le=1.0,
-        description="Cosine similarity from vector search (if found via vector)"
+        description="Cosine similarity from vector search (if found via vector)",
     )
     keyword_rank: Optional[int] = Field(
-        None,
-        ge=1,
-        description="Rank position from keyword search (if found via keyword)"
+        None, ge=1, description="Rank position from keyword search (if found via keyword)"
     )
     matched_via: str = Field(
-        ...,
-        description="How result was found: 'vector', 'keyword', or 'both'"
+        ..., description="How result was found: 'vector', 'keyword', or 'both'"
     )
 
     class Config:
@@ -184,10 +158,7 @@ class HybridSearchResponse(BaseModel):
     results: list[HybridSearchResultItem]
     total: int
     query_time_ms: float
-    search_stats: dict = Field(
-        default_factory=dict,
-        description="Additional search statistics"
-    )
+    search_stats: dict = Field(default_factory=dict, description="Additional search statistics")
 
     class Config:
         from_attributes = True

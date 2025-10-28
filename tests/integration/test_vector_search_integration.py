@@ -119,9 +119,7 @@ def sample_evidence_with_embeddings(db_session):
 class TestVectorSearchIntegration:
     """Integration tests for VectorSearchService."""
 
-    def test_search_similar_evidence_basic(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_search_similar_evidence_basic(self, db_session, sample_evidence_with_embeddings):
         """Test basic vector search functionality."""
         evidence_data, embeddings_data = sample_evidence_with_embeddings
         service = VectorSearchService(embedding_dimension=384)
@@ -167,9 +165,7 @@ class TestVectorSearchIntegration:
         # Should return at most 2 results
         assert len(results) <= 2
 
-    def test_search_with_tenant_isolation(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_search_with_tenant_isolation(self, db_session, sample_evidence_with_embeddings):
         """Test tenant isolation in search."""
         evidence_data, embeddings_data = sample_evidence_with_embeddings
         service = VectorSearchService(embedding_dimension=384)
@@ -210,9 +206,7 @@ class TestVectorSearchIntegration:
         assert len(results_tenant2) > 0
         assert all("tenant2.com" in (r.source_url or "") for r in results_tenant2)
 
-    def test_search_with_source_filter(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_search_with_source_filter(self, db_session, sample_evidence_with_embeddings):
         """Test search with source URL filtering."""
         evidence_data, embeddings_data = sample_evidence_with_embeddings
         service = VectorSearchService(embedding_dimension=384)
@@ -229,9 +223,7 @@ class TestVectorSearchIntegration:
         assert len(results) > 0
         assert all(r.source_url == "https://example.com/astronomy" for r in results)
 
-    def test_search_returns_correct_content(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_search_returns_correct_content(self, db_session, sample_evidence_with_embeddings):
         """Test that search returns complete evidence content."""
         evidence_data, embeddings_data = sample_evidence_with_embeddings
         service = VectorSearchService(embedding_dimension=384)
@@ -280,16 +272,12 @@ class TestVectorSearchIntegration:
         service = VectorSearchService(embedding_dimension=384)
 
         query_embedding = [0.1] * 384
-        results = service.search_similar_evidence(
-            db=db_session, query_embedding=query_embedding
-        )
+        results = service.search_similar_evidence(db=db_session, query_embedding=query_embedding)
 
         # Should return empty results
         assert len(results) == 0
 
-    def test_similarity_scores_ordered(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_similarity_scores_ordered(self, db_session, sample_evidence_with_embeddings):
         """Test that results are ordered by similarity (highest first)."""
         evidence_data, embeddings_data = sample_evidence_with_embeddings
         service = VectorSearchService(embedding_dimension=384)
@@ -312,9 +300,7 @@ class TestVectorSearchIntegration:
 class TestVectorSearchPerformance:
     """Performance tests for vector search (requires test database)."""
 
-    def test_query_performance_small_corpus(
-        self, db_session, sample_evidence_with_embeddings
-    ):
+    def test_query_performance_small_corpus(self, db_session, sample_evidence_with_embeddings):
         """Test query performance on small corpus."""
         import time
 
@@ -329,6 +315,7 @@ class TestVectorSearchPerformance:
             db=db_session, query_embedding=query_embedding, top_k=10
         )
         end_time = time.time()
+        assert results
 
         query_time_ms = (end_time - start_time) * 1000
 

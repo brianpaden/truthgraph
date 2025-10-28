@@ -108,7 +108,6 @@ NLI_TEST_DATASET = [
         hypothesis="The book is red",
         expected_label=ExpectedLabel.ENTAILMENT,
     ),
-
     # Contradiction examples
     NLITestCase(
         premise="The cat is on the mat",
@@ -135,7 +134,6 @@ NLI_TEST_DATASET = [
         hypothesis="The Sun revolves around the Earth",
         expected_label=ExpectedLabel.CONTRADICTION,
     ),
-
     # Neutral examples
     NLITestCase(
         premise="The movie was released in 2020",
@@ -329,8 +327,7 @@ class TestNLIAccuracy:
         Target: >85% for entailment cases
         """
         entailment_cases = [
-            tc for tc in NLI_TEST_DATASET
-            if tc.expected_label == ExpectedLabel.ENTAILMENT
+            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.ENTAILMENT
         ]
 
         assert len(entailment_cases) > 0
@@ -343,8 +340,7 @@ class TestNLIAccuracy:
         Target: >85% for contradiction cases
         """
         contradiction_cases = [
-            tc for tc in NLI_TEST_DATASET
-            if tc.expected_label == ExpectedLabel.CONTRADICTION
+            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.CONTRADICTION
         ]
 
         assert len(contradiction_cases) > 0
@@ -356,8 +352,7 @@ class TestNLIAccuracy:
         Target: >70% for neutral cases (hardest class)
         """
         neutral_cases = [
-            tc for tc in NLI_TEST_DATASET
-            if tc.expected_label == ExpectedLabel.NEUTRAL
+            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.NEUTRAL
         ]
 
         assert len(neutral_cases) > 0
@@ -464,12 +459,16 @@ class TestVerdictAggregationAccuracy:
         ]
 
         # Mixed results should lead to lower confidence or INSUFFICIENT
-        entail_avg = statistics.mean(
-            [c for l, c in results if l == NLILabel.ENTAILMENT]
-        ) if any(l == NLILabel.ENTAILMENT for l, _ in results) else 0
-        contradict_avg = statistics.mean(
-            [c for l, c in results if l == NLILabel.CONTRADICTION]
-        ) if any(l == NLILabel.CONTRADICTION for l, _ in results) else 0
+        entail_avg = (
+            statistics.mean([c for l, c in results if l == NLILabel.ENTAILMENT])
+            if any(l == NLILabel.ENTAILMENT for l, _ in results)
+            else 0
+        )
+        contradict_avg = (
+            statistics.mean([c for l, c in results if l == NLILabel.CONTRADICTION])
+            if any(l == NLILabel.CONTRADICTION for l, _ in results)
+            else 0
+        )
 
         # Both are present, confidence should be reduced
         assert abs(entail_avg - contradict_avg) < 0.2
@@ -526,7 +525,11 @@ class TestVerdictAggregationAccuracy:
             # Determine verdict based on aggregation
             if entail_avg > 0.5 and entail_avg > contradict_avg and entail_avg > neutral_avg:
                 verdict = "SUPPORTED"
-            elif contradict_avg > 0.5 and contradict_avg > entail_avg and contradict_avg > neutral_avg:
+            elif (
+                contradict_avg > 0.5
+                and contradict_avg > entail_avg
+                and contradict_avg > neutral_avg
+            ):
                 verdict = "REFUTED"
             else:
                 verdict = "INSUFFICIENT"

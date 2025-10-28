@@ -359,11 +359,11 @@ def verify_fever_fixture_integrity(
 """
 
 # Read existing file
-with open('/c/repos/truthgraph/tests/fixtures/conftest.py', 'r') as f:
+with open("/c/repos/truthgraph/tests/fixtures/conftest.py", "r") as f:
     existing = f.read()
 
 # Append new content
-with open('/c/repos/truthgraph/tests/fixtures/conftest.py', 'w') as f:
+with open("/c/repos/truthgraph/tests/fixtures/conftest.py", "w") as f:
     f.write(existing)
     f.write(conftest_addition)
 

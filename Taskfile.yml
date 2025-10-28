@@ -72,8 +72,8 @@ tasks:
   lint:fix:python:
     desc: Auto-fix Python linting issues with ruff
     cmds:
-      - '{{.RUFF}} check --fix'
       - '{{.RUFF}} format'
+      - '{{.RUFF}} check --fix'
     sources:
       - '**/*.py'
       - pyproject.toml

@@ -155,7 +155,9 @@ class TestHappyPathVerification:
     """Test successful claim verification flows."""
 
     @pytest.mark.asyncio
-    async def test_simple_supported_claim(self, async_session, mock_embedding_service, mock_nli_service):
+    async def test_simple_supported_claim(
+        self, async_session, mock_embedding_service, mock_nli_service
+    ):
         """Test verification of a simple supported claim.
 
         Scenario:
@@ -179,7 +181,7 @@ class TestHappyPathVerification:
             id=evidence_id,
             content=evidence_text,
             source_url="https://example.com/evidence",
-            source_type="reference"
+            source_type="reference",
         )
         async_session.add(evidence)
 
@@ -218,12 +220,10 @@ class TestHappyPathVerification:
         evidence_id = uuid.uuid4()
 
         claim = Claim(id=claim_id, text=claim_text)
-        evidence = Evidence(
-            id=evidence_id,
-            content=evidence_text,
-            source_type="reference"
-        )
+        evidence = Evidence(id=evidence_id, content=evidence_text, source_type="reference")
 
+        assert claim
+        assert evidence
         # Store in database
         from truthgraph.services.verification_pipeline_service import VerdictLabel
 
@@ -316,14 +316,12 @@ class TestConflictingEvidenceScenarios:
         - Weak refuting evidence (confidence 0.45)
         - Expected: SUPPORTED verdict (weighted towards stronger evidence)
         """
-        claim_text = "Statement is true"
+        # claim_text = "Statement is true"
         strong_support_confidence = 0.95
         weak_refute_confidence = 0.45
 
         # Weighted verdict should lean towards support
-        weighted_verdict = (
-            strong_support_confidence - weak_refute_confidence
-        ) / 2
+        weighted_verdict = (strong_support_confidence - weak_refute_confidence) / 2
 
         assert weighted_verdict > 0.25
 
@@ -381,9 +379,7 @@ class TestDatabaseIntegrity:
         await async_session.commit()
 
         # Verify both exist
-        result = await async_session.execute(
-            select(Claim).where(Claim.id == claim_id)
-        )
+        result = await async_session.execute(select(Claim).where(Claim.id == claim_id))
         assert result.scalar_one() is not None
 
     @pytest.mark.asyncio
@@ -461,9 +457,7 @@ class TestConcurrentRequests:
     async def test_10_concurrent_verifications(self, async_session):
         """Test 10 concurrent claim verifications."""
         num_requests = 10
-        claims = [
-            f"Test claim {i} about topic {i % 3}" for i in range(num_requests)
-        ]
+        claims = [f"Test claim {i} about topic {i % 3}" for i in range(num_requests)]
 
         # Simulate concurrent requests
         start_time = time.time()
@@ -521,7 +515,7 @@ class TestAccuracyMetrics:
         correct = 0
         total = len(test_dataset)
 
-        for premise, hypothesis, expected_label in test_dataset:
+        for premise, hypothesis, _expected_label in test_dataset:
             # Would execute actual NLI here with mock_nli_service
             # For now, verify structure
             assert len(premise) > 0
@@ -571,7 +565,7 @@ class TestAccuracyMetrics:
             ),
         ]
 
-        for nli_results, expected_verdict, _ in test_cases:
+        for nli_results, _expected_verdict, _ in test_cases:
             assert len(nli_results) > 0
             # Would test aggregation logic here
             assert True
@@ -665,6 +659,7 @@ class TestPerformanceAndScaling:
 
         elapsed = time.time() - start_time
         throughput = num_texts / elapsed if elapsed > 0 else 0
+        assert throughput
 
         # For mock this will be fast
         assert True

@@ -13,6 +13,7 @@ from .db import Base
 
 class Claim(Base):
     """Claim table - stores user-submitted claims for verification."""
+
     __tablename__ = "claims"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -25,13 +26,12 @@ class Claim(Base):
     # Relationships
     verdicts = relationship("Verdict", back_populates="claim", cascade="all, delete-orphan")
 
-    __table_args__ = (
-        Index('idx_claims_submitted_at', submitted_at.desc()),
-    )
+    __table_args__ = (Index("idx_claims_submitted_at", submitted_at.desc()),)
 
 
 class Evidence(Base):
     """Evidence table - stores evidence documents and snippets."""
+
     __tablename__ = "evidence"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -40,17 +40,18 @@ class Evidence(Base):
     source_type = Column(String(50), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    __table_args__ = (
-        Index('idx_evidence_created_at', created_at.desc()),
-    )
+    __table_args__ = (Index("idx_evidence_created_at", created_at.desc()),)
 
 
 class Verdict(Base):
     """Verdict table - stores verification results for claims."""
+
     __tablename__ = "verdicts"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    claim_id = Column(UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False)
+    claim_id = Column(
+        UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False
+    )
     verdict = Column(String(20), nullable=True)  # SUPPORTED, REFUTED, INSUFFICIENT
     confidence = Column(Float, nullable=True)
     reasoning = Column(Text, nullable=True)
@@ -61,24 +62,27 @@ class Verdict(Base):
     claim = relationship("Claim", back_populates="verdicts")
 
     __table_args__ = (
-        Index('idx_verdicts_claim_id', claim_id),
-        Index('idx_verdicts_created_at', created_at.desc()),
+        Index("idx_verdicts_claim_id", claim_id),
+        Index("idx_verdicts_created_at", created_at.desc()),
     )
 
 
 class VerdictEvidence(Base):
     """Junction table linking verdicts to supporting/refuting evidence."""
+
     __tablename__ = "verdict_evidence"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    verdict_id = Column(UUID(as_uuid=True), ForeignKey("verdicts.id", ondelete="CASCADE"), nullable=False)
-    evidence_id = Column(UUID(as_uuid=True), ForeignKey("evidence.id", ondelete="CASCADE"), nullable=False)
+    verdict_id = Column(
+        UUID(as_uuid=True), ForeignKey("verdicts.id", ondelete="CASCADE"), nullable=False
+    )
+    evidence_id = Column(
+        UUID(as_uuid=True), ForeignKey("evidence.id", ondelete="CASCADE"), nullable=False
+    )
     relationship_type = Column(String(20), nullable=True)  # supports, refutes, neutral
     confidence = Column(Float, nullable=True)
 
-    __table_args__ = (
-        Index('idx_verdict_evidence_verdict_id', verdict_id),
-    )
+    __table_args__ = (Index("idx_verdict_evidence_verdict_id", verdict_id),)
 
 
 # Phase 2: ML-Enhanced Verification Tables
@@ -94,6 +98,7 @@ class Embedding(Base):
     but this design supports both by using 1536 (larger model).
     The actual dimension should match your embedding model choice.
     """
+
     __tablename__ = "embeddings"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -119,11 +124,11 @@ class Embedding(Base):
 
     __table_args__ = (
         # Index for tenant isolation
-        Index('idx_embeddings_tenant_id', tenant_id),
+        Index("idx_embeddings_tenant_id", tenant_id),
         # Composite index for entity lookups
-        Index('idx_embeddings_entity', entity_type, entity_id),
+        Index("idx_embeddings_entity", entity_type, entity_id),
         # Unique constraint to prevent duplicate embeddings
-        Index('idx_embeddings_entity_unique', entity_type, entity_id, unique=True),
+        Index("idx_embeddings_entity_unique", entity_type, entity_id, unique=True),
         # IVFFlat index for vector similarity search (cosine distance)
         # Lists parameter should be ~sqrt(total_rows) for optimal performance
         # Note: This index is created separately in migration for better control
@@ -136,15 +141,20 @@ class NLIResult(Base):
     Each record represents a single premise-hypothesis pair processed through
     the NLI model (e.g., microsoft/deberta-v3-base).
     """
+
     __tablename__ = "nli_results"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     # Link to claim being verified
-    claim_id = Column(UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False)
+    claim_id = Column(
+        UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False
+    )
 
     # Link to evidence used as premise
-    evidence_id = Column(UUID(as_uuid=True), ForeignKey("evidence.id", ondelete="CASCADE"), nullable=False)
+    evidence_id = Column(
+        UUID(as_uuid=True), ForeignKey("evidence.id", ondelete="CASCADE"), nullable=False
+    )
 
     # NLI prediction results
     label = Column(String(20), nullable=False)  # 'ENTAILMENT', 'CONTRADICTION', 'NEUTRAL'
@@ -168,13 +178,13 @@ class NLIResult(Base):
 
     __table_args__ = (
         # Index for claim-based lookups
-        Index('idx_nli_results_claim_id', claim_id),
+        Index("idx_nli_results_claim_id", claim_id),
         # Index for evidence-based lookups
-        Index('idx_nli_results_evidence_id', evidence_id),
+        Index("idx_nli_results_evidence_id", evidence_id),
         # Composite index for quick pair lookups
-        Index('idx_nli_results_claim_evidence', claim_id, evidence_id),
+        Index("idx_nli_results_claim_evidence", claim_id, evidence_id),
         # Index for filtering by label
-        Index('idx_nli_results_label', label),
+        Index("idx_nli_results_label", label),
     )
 
 
@@ -184,12 +194,15 @@ class VerificationResult(Base):
     This table contains the final verdict after aggregating multiple NLI results
     for a given claim. One claim can have multiple verification results over time.
     """
+
     __tablename__ = "verification_results"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     # Link to claim being verified
-    claim_id = Column(UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False)
+    claim_id = Column(
+        UUID(as_uuid=True), ForeignKey("claims.id", ondelete="CASCADE"), nullable=False
+    )
 
     # Final aggregated verdict
     verdict = Column(String(20), nullable=False)  # 'SUPPORTED', 'REFUTED', 'INSUFFICIENT'
@@ -222,11 +235,11 @@ class VerificationResult(Base):
 
     __table_args__ = (
         # Index for claim-based lookups
-        Index('idx_verification_results_claim_id', claim_id),
+        Index("idx_verification_results_claim_id", claim_id),
         # Index for filtering by verdict
-        Index('idx_verification_results_verdict', verdict),
+        Index("idx_verification_results_verdict", verdict),
         # Index for sorting by confidence
-        Index('idx_verification_results_confidence', confidence.desc()),
+        Index("idx_verification_results_confidence", confidence.desc()),
         # Index for time-based queries
-        Index('idx_verification_results_created_at', created_at.desc()),
+        Index("idx_verification_results_created_at", created_at.desc()),
     )

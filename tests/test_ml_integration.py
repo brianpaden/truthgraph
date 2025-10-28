@@ -53,6 +53,7 @@ def db_session():
 
 # ===== Embedding Service Integration Tests =====
 
+
 class TestEmbeddingServiceIntegration:
     """Integration tests for embedding service."""
 
@@ -67,6 +68,7 @@ class TestEmbeddingServiceIntegration:
         """Test that model is loaded lazily on first use."""
         # Model may or may not be loaded depending on previous tests
         initial_state = embedding_service.is_loaded()
+        assert initial_state
 
         # Generate embedding (should trigger loading if not loaded)
         embedding = embedding_service.embed_text("Test text")
@@ -125,7 +127,7 @@ class TestEmbeddingServiceIntegration:
 
         # Calculate cosine similarity
         def cosine_sim(a, b):
-            return sum(x*y for x, y in zip(a, b, strict=False))
+            return sum(x * y for x, y in zip(a, b, strict=False))
 
         sim_1_2 = cosine_sim(emb1, emb2)
         sim_1_3 = cosine_sim(emb1, emb3)
@@ -142,6 +144,7 @@ class TestEmbeddingServiceIntegration:
 
 
 # ===== NLI Service Integration Tests =====
+
 
 class TestNLIServiceIntegration:
     """Integration tests for NLI service."""
@@ -210,10 +213,7 @@ class TestNLIServiceIntegration:
 
     def test_batch_performance(self, nli_service):
         """Test batch NLI performance."""
-        pairs = [
-            (f"Premise {i}", f"Hypothesis {i}")
-            for i in range(20)
-        ]
+        pairs = [(f"Premise {i}", f"Hypothesis {i}") for i in range(20)]
 
         start_time = time.time()
         results = nli_service.verify_batch(pairs, batch_size=8)
@@ -238,14 +238,12 @@ class TestNLIServiceIntegration:
 
 # ===== Vector Search Integration Tests =====
 
+
 class TestVectorSearchIntegration:
     """Integration tests for vector search service."""
 
     def test_search_with_real_embeddings(
-        self,
-        db_session,
-        embedding_service,
-        vector_search_service
+        self, db_session, embedding_service, vector_search_service
     ):
         """Test vector search with real embeddings."""
         # Create evidence with embeddings
@@ -266,7 +264,7 @@ class TestVectorSearchIntegration:
                 entity_id=evidence.id,
                 embedding=embedding_vec,
                 model_name="sentence-transformers/all-MiniLM-L6-v2",
-                tenant_id="default"
+                tenant_id="default",
             )
             db_session.add(embedding)
 
@@ -277,10 +275,7 @@ class TestVectorSearchIntegration:
         query_embedding = embedding_service.embed_text(query)
 
         results = vector_search_service.search_similar_evidence(
-            db=db_session,
-            query_embedding=query_embedding,
-            top_k=3,
-            min_similarity=0.3
+            db=db_session, query_embedding=query_embedding, top_k=3, min_similarity=0.3
         )
 
         assert len(results) > 0
@@ -288,18 +283,13 @@ class TestVectorSearchIntegration:
         # First result should be most relevant
         assert "Earth" in results[0].content or "orbit" in results[0].content
 
-    def test_search_performance(
-        self,
-        db_session,
-        embedding_service,
-        vector_search_service
-    ):
+    def test_search_performance(self, db_session, embedding_service, vector_search_service):
         """Test vector search performance."""
         # Create 50 evidence items
         for i in range(50):
             evidence = Evidence(
                 content=f"Science fact number {i} about various topics",
-                source_url=f"https://example.com/{i}"
+                source_url=f"https://example.com/{i}",
             )
             db_session.add(evidence)
             db_session.flush()
@@ -310,7 +300,7 @@ class TestVectorSearchIntegration:
                 entity_id=evidence.id,
                 embedding=embedding_vec,
                 model_name="sentence-transformers/all-MiniLM-L6-v2",
-                tenant_id="default"
+                tenant_id="default",
             )
             db_session.add(embedding)
 
@@ -321,10 +311,9 @@ class TestVectorSearchIntegration:
 
         start_time = time.time()
         results = vector_search_service.search_similar_evidence(
-            db=db_session,
-            query_embedding=query_embedding,
-            top_k=10
+            db=db_session, query_embedding=query_embedding, top_k=10
         )
+        assert results
         search_time = (time.time() - start_time) * 1000  # Convert to ms
 
         print(f"\nVector search time: {search_time:.2f}ms for 50 vectors")
@@ -332,12 +321,7 @@ class TestVectorSearchIntegration:
         # Should be reasonably fast even without index
         assert search_time < 1000  # Less than 1 second
 
-    def test_similarity_ordering(
-        self,
-        db_session,
-        embedding_service,
-        vector_search_service
-    ):
+    def test_similarity_ordering(self, db_session, embedding_service, vector_search_service):
         """Test that results are ordered by similarity."""
         # Create evidence
         texts = [
@@ -357,7 +341,7 @@ class TestVectorSearchIntegration:
                 entity_id=evidence.id,
                 embedding=embedding_vec,
                 model_name="sentence-transformers/all-MiniLM-L6-v2",
-                tenant_id="default"
+                tenant_id="default",
             )
             db_session.add(embedding)
 
@@ -366,9 +350,7 @@ class TestVectorSearchIntegration:
         # Search
         query_embedding = embedding_service.embed_text("felines as pets")
         results = vector_search_service.search_similar_evidence(
-            db=db_session,
-            query_embedding=query_embedding,
-            top_k=3
+            db=db_session, query_embedding=query_embedding, top_k=3
         )
 
         # Results should be ordered by descending similarity
@@ -378,15 +360,12 @@ class TestVectorSearchIntegration:
 
 # ===== End-to-End Pipeline Tests =====
 
+
 class TestEndToEndPipeline:
     """Integration tests for complete verification pipeline."""
 
     def test_full_verification_pipeline(
-        self,
-        db_session,
-        embedding_service,
-        nli_service,
-        vector_search_service
+        self, db_session, embedding_service, nli_service, vector_search_service
     ):
         """Test complete verification pipeline."""
         # Step 1: Create evidence base
@@ -407,7 +386,7 @@ class TestEndToEndPipeline:
                 entity_id=evidence.id,
                 embedding=embedding_vec,
                 model_name="sentence-transformers/all-MiniLM-L6-v2",
-                tenant_id="default"
+                tenant_id="default",
             )
             db_session.add(embedding)
 
@@ -419,36 +398,26 @@ class TestEndToEndPipeline:
         # Search for evidence
         claim_embedding = embedding_service.embed_text(claim)
         search_results = vector_search_service.search_similar_evidence(
-            db=db_session,
-            query_embedding=claim_embedding,
-            top_k=3,
-            min_similarity=0.5
+            db=db_session, query_embedding=claim_embedding, top_k=3, min_similarity=0.5
         )
 
         assert len(search_results) > 0
 
         # Run NLI on results
         nli_results = nli_service.verify_batch(
-            pairs=[(result.content, claim) for result in search_results],
-            batch_size=8
+            pairs=[(result.content, claim) for result in search_results], batch_size=8
         )
 
         assert len(nli_results) == len(search_results)
 
         # Aggregate results
-        entailment_count = sum(
-            1 for r in nli_results if r.label == NLILabel.ENTAILMENT
-        )
+        entailment_count = sum(1 for r in nli_results if r.label == NLILabel.ENTAILMENT)
 
         # Should have at least one supporting evidence
         assert entailment_count > 0
 
     def test_pipeline_performance(
-        self,
-        db_session,
-        embedding_service,
-        nli_service,
-        vector_search_service
+        self, db_session, embedding_service, nli_service, vector_search_service
     ):
         """Test end-to-end pipeline performance."""
         # Create evidence
@@ -463,7 +432,7 @@ class TestEndToEndPipeline:
                 entity_id=evidence.id,
                 embedding=embedding_vec,
                 model_name="sentence-transformers/all-MiniLM-L6-v2",
-                tenant_id="default"
+                tenant_id="default",
             )
             db_session.add(embedding)
 
@@ -479,17 +448,15 @@ class TestEndToEndPipeline:
 
         # Search
         search_results = vector_search_service.search_similar_evidence(
-            db=db_session,
-            query_embedding=claim_embedding,
-            top_k=5
+            db=db_session, query_embedding=claim_embedding, top_k=5
         )
 
         # NLI
         if search_results:
             nli_results = nli_service.verify_batch(
-                pairs=[(r.content, claim) for r in search_results],
-                batch_size=8
+                pairs=[(r.content, claim) for r in search_results], batch_size=8
             )
+            assert nli_results
 
         total_time = (time.time() - start_time) * 1000
 

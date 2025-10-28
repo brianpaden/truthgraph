@@ -94,9 +94,7 @@ def create_test_dataset(db_session, size=100):
 
         # Create embedding (simple pattern based on document index)
         # Using 1536 dimensions
-        embedding_pattern = [
-            (i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01 for j in range(1536)
-        ]
+        embedding_pattern = [(i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01 for j in range(1536)]
 
         embedding = Embedding(
             entity_type="evidence",
@@ -391,13 +389,9 @@ class TestRRFPerformance:
 
         for vec_size, kw_size in result_sizes:
             # Create mock results
-            vector_results = [
-                (uuid4(), f"content {i}", None, 0.9 - i * 0.01) for i in range(vec_size)
-            ]
+            vector_results = [(uuid4(), f"content {i}", None, 0.9 - i * 0.01) for i in range(vec_size)]
 
-            keyword_results = [
-                (uuid4(), f"content {i}", None, i + 1) for i in range(kw_size)
-            ]
+            keyword_results = [(uuid4(), f"content {i}", None, i + 1) for i in range(kw_size)]
 
             # Benchmark RRF
             times = []
@@ -412,6 +406,7 @@ class TestRRFPerformance:
                 )
                 elapsed = (time.time() - start) * 1000
                 times.append(elapsed)
+                assert merged
 
             avg_time = statistics.mean(times)
             print(f"Vector: {vec_size:3d}, Keyword: {kw_size:3d} -> {avg_time:.4f}ms")

@@ -9,8 +9,7 @@ from sqlalchemy.orm import sessionmaker
 # Get database URL from environment
 # Using postgresql+psycopg to use psycopg3 driver instead of psycopg2
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph"
+    "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph"
 )
 
 # Convert postgresql:// to postgresql+psycopg:// if needed

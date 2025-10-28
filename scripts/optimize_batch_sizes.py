@@ -101,9 +101,7 @@ class BatchSizeOptimizer:
         print(f"Number of samples: {num_samples}")
 
         # Generate test data
-        texts = [
-            f"Test text number {i} for batch size optimization" for i in range(num_samples)
-        ]
+        texts = [f"Test text number {i} for batch size optimization" for i in range(num_samples)]
 
         # Test different batch sizes
         batch_sizes = []
@@ -130,9 +128,7 @@ class BatchSizeOptimizer:
 
                 # Benchmark
                 start_time = time.perf_counter()
-                embeddings = service.embed_batch(
-                    texts, batch_size=batch_size, show_progress=False
-                )
+                embeddings = service.embed_batch(texts, batch_size=batch_size, show_progress=False)
                 elapsed = time.perf_counter() - start_time
 
                 memory_after = self.get_memory_usage()
@@ -181,9 +177,7 @@ class BatchSizeOptimizer:
 
         # Filter by memory constraint
         valid_results = [
-            r
-            for r in successful_results
-            if r["memory_after_mb"] <= self.memory_limit_mb
+            r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb
         ]
 
         if not valid_results:
@@ -322,9 +316,7 @@ class BatchSizeOptimizer:
 
         # Filter by memory constraint
         valid_results = [
-            r
-            for r in successful_results
-            if r["memory_after_mb"] <= self.memory_limit_mb
+            r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb
         ]
 
         if not valid_results:

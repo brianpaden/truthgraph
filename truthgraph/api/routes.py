@@ -16,10 +16,7 @@ router = APIRouter()
 
 
 @router.post("/claims", response_model=ClaimResponse, status_code=201)
-def create_claim(
-    claim: ClaimCreate,
-    db: Annotated[Session, Depends(get_db)]
-):
+def create_claim(claim: ClaimCreate, db: Annotated[Session, Depends(get_db)]):
     """Create a new claim for verification."""
     db_claim = Claim(text=claim.text, source_url=claim.source_url)
     db.add(db_claim)
@@ -33,7 +30,7 @@ def create_claim(
         text=db_claim.text,
         source_url=db_claim.source_url,
         submitted_at=db_claim.submitted_at,
-        verdict=None
+        verdict=None,
     )
 
 
@@ -41,7 +38,7 @@ def create_claim(
 def list_claims(
     db: Annotated[Session, Depends(get_db)],
     skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=20, ge=1, le=100)
+    limit: int = Query(default=20, ge=1, le=100),
 ):
     """List all claims with pagination."""
     total = db.query(Claim).count()
@@ -56,21 +53,18 @@ def list_claims(
                 text=c.text,
                 source_url=c.source_url,
                 submitted_at=c.submitted_at,
-                verdict=None  # Will be populated in Phase 2
+                verdict=None,  # Will be populated in Phase 2
             )
             for c in claims
         ],
         total=total,
         skip=skip,
-        limit=limit
+        limit=limit,
     )
 
 
 @router.get("/claims/{claim_id}", response_model=ClaimResponse)
-def get_claim(
-    claim_id: UUID,
-    db: Annotated[Session, Depends(get_db)]
-):
+def get_claim(claim_id: UUID, db: Annotated[Session, Depends(get_db)]):
     """Get a specific claim by ID."""
     claim = db.query(Claim).filter(Claim.id == claim_id).first()
 
@@ -79,9 +73,12 @@ def get_claim(
         raise HTTPException(status_code=404, detail="Claim not found")
 
     # Get latest verdict if available
-    verdict = db.query(Verdict).filter(
-        Verdict.claim_id == claim_id
-    ).order_by(Verdict.created_at.desc()).first()
+    verdict = (
+        db.query(Verdict)
+        .filter(Verdict.claim_id == claim_id)
+        .order_by(Verdict.created_at.desc())
+        .first()
+    )
 
     logger.info(f"Claim retrieved: {claim_id}")
 
@@ -94,6 +91,8 @@ def get_claim(
             "id": verdict.id,
             "verdict": verdict.verdict,
             "confidence": verdict.confidence,
-            "reasoning": verdict.reasoning
-        } if verdict else None
+            "reasoning": verdict.reasoning,
+        }
+        if verdict
+        else None,
     )

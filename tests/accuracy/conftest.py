@@ -17,7 +17,6 @@ from typing import Any, Dict, List
 
 import pytest
 
-
 # ===== FIXTURE LOADING =====
 
 
@@ -126,9 +125,7 @@ def real_world_claims_summary(
         "total_claims": real_world_claims_metadata.get("total_claims", 0),
         "sources": real_world_claims_metadata.get("sources", []),
         "categories": real_world_claims_metadata.get("categories", []),
-        "verdict_distribution": real_world_claims_metadata.get(
-            "verdict_distribution", {}
-        ),
+        "verdict_distribution": real_world_claims_metadata.get("verdict_distribution", {}),
         "created_date": real_world_claims_metadata.get("created_date"),
         "version": real_world_claims_metadata.get("version"),
     }
@@ -147,13 +144,9 @@ def real_world_evidence_summary(
         Dictionary containing summary statistics
     """
     return {
-        "total_evidence": real_world_evidence_metadata.get(
-            "total_evidence_items", 0
-        ),
+        "total_evidence": real_world_evidence_metadata.get("total_evidence_items", 0),
         "sources": real_world_evidence_metadata.get("sources", []),
-        "nli_distribution": real_world_evidence_metadata.get(
-            "nli_label_distribution", {}
-        ),
+        "nli_distribution": real_world_evidence_metadata.get("nli_label_distribution", {}),
         "created_date": real_world_evidence_metadata.get("created_date"),
         "version": real_world_evidence_metadata.get("version"),
     }

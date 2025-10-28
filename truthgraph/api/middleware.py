@@ -109,16 +109,14 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # Count requests in current window
         if is_ml:
             ml_count = sum(
-                1 for ts, endpoint_type in self.request_history[ip]
-                if endpoint_type == "ml"
+                1 for ts, endpoint_type in self.request_history[ip] if endpoint_type == "ml"
             )
             limit = self.ml_requests_per_minute
 
             if ml_count >= limit:
                 # Calculate retry after
                 oldest_ml = min(
-                    ts for ts, endpoint_type in self.request_history[ip]
-                    if endpoint_type == "ml"
+                    ts for ts, endpoint_type in self.request_history[ip] if endpoint_type == "ml"
                 )
                 retry_after = int(window - (current_time - oldest_ml)) + 1
                 return False, retry_after
@@ -187,12 +185,13 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         # Add rate limit headers
-        remaining = (
-            self.ml_requests_per_minute if is_ml else self.requests_per_minute
-        ) - len([
-            1 for ts, endpoint_type in self.request_history[client_ip]
-            if (is_ml and endpoint_type == "ml") or (not is_ml)
-        ])
+        remaining = (self.ml_requests_per_minute if is_ml else self.requests_per_minute) - len(
+            [
+                1
+                for ts, endpoint_type in self.request_history[client_ip]
+                if (is_ml and endpoint_type == "ml") or (not is_ml)
+            ]
+        )
 
         response.headers["X-RateLimit-Limit"] = str(
             self.ml_requests_per_minute if is_ml else self.requests_per_minute
@@ -249,10 +248,7 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
             # Let FastAPI handle HTTPExceptions
             raise
         except Exception as e:
-            logger.error(
-                f"Unhandled exception for {request.url.path}: {e}",
-                exc_info=True
-            )
+            logger.error(f"Unhandled exception for {request.url.path}: {e}", exc_info=True)
 
             request_id = getattr(request.state, "request_id", "unknown")
 

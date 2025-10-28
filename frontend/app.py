@@ -26,19 +26,13 @@ def get_claims():
 
     try:
         response = requests.get(
-            f"{API_URL}/api/v1/claims",
-            params={"skip": skip, "limit": limit},
-            timeout=5
+            f"{API_URL}/api/v1/claims", params={"skip": skip, "limit": limit}, timeout=5
         )
         response.raise_for_status()
         data = response.json()
 
         return render_template(
-            "claim_list.html",
-            claims=data["items"],
-            total=data["total"],
-            skip=skip,
-            limit=limit
+            "claim_list.html", claims=data["items"], total=data["total"], skip=skip, limit=limit
         )
     except Exception as e:
         return render_template("error.html", error=str(e)), 500
@@ -55,9 +49,7 @@ def submit_claim():
 
     try:
         response = requests.post(
-            f"{API_URL}/api/v1/claims",
-            json={"text": text, "source_url": source_url},
-            timeout=10
+            f"{API_URL}/api/v1/claims", json={"text": text, "source_url": source_url}, timeout=10
         )
         response.raise_for_status()
         claim = response.json()
@@ -76,15 +68,8 @@ def health():
     except Exception:
         api_status = "unreachable"
 
-    return jsonify({
-        "status": "ok",
-        "api_status": api_status
-    })
+    return jsonify({"status": "ok", "api_status": api_status})
 
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=os.getenv("FLASK_DEBUG", "0") == "1"
-    )
+    app.run(host="0.0.0.0", port=5000, debug=os.getenv("FLASK_DEBUG", "0") == "1")

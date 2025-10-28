@@ -435,9 +435,7 @@ class TestHybridSearch:
 
     @patch.object(HybridSearchService, "_keyword_search")
     @patch.object(HybridSearchService, "_reciprocal_rank_fusion")
-    def test_hybrid_search_successful_execution(
-        self, mock_rrf, mock_keyword, monkeypatch
-    ):
+    def test_hybrid_search_successful_execution(self, mock_rrf, mock_keyword, monkeypatch):
         """Test successful hybrid search execution."""
         # Mock vector search
         mock_vector_results = [

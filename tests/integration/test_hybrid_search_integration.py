@@ -230,7 +230,9 @@ class TestHybridSearchIntegration:
         # With heavy keyword weight, should find ML content
         assert len(results) > 0
         # Keywords should dominate rankings
-        assert any("machine" in r.content.lower() or "learning" in r.content.lower() for r in results[:2])
+        assert any(
+            "machine" in r.content.lower() or "learning" in r.content.lower() for r in results[:2]
+        )
 
     def test_hybrid_search_with_source_filter(self, db_session, sample_evidence_data):
         """Test hybrid search with source URL filter."""
@@ -288,7 +290,11 @@ class TestHybridSearchIntegration:
 
         # Should have results matched via both methods
         matched_via_values = [r.matched_via for r in results]
-        assert "both" in matched_via_values or "vector" in matched_via_values or "keyword" in matched_via_values
+        assert (
+            "both" in matched_via_values
+            or "vector" in matched_via_values
+            or "keyword" in matched_via_values
+        )
 
     def test_hybrid_search_empty_results(self, db_session, sample_evidence_data):
         """Test hybrid search with query that matches nothing."""

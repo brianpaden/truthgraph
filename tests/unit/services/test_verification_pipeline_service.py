@@ -35,9 +35,7 @@ class TestRetryDecorator:
 
     def test_retry_succeeds_after_failures(self):
         """Test that operations retry after failures."""
-        mock_func = Mock(
-            side_effect=[RuntimeError("fail"), RuntimeError("fail"), "success"]
-        )
+        mock_func = Mock(side_effect=[RuntimeError("fail"), RuntimeError("fail"), "success"])
         decorated = retry_on_failure(
             max_attempts=3, initial_delay=0.01, exceptions=(RuntimeError,)
         )(mock_func)
@@ -535,9 +533,7 @@ class TestRetryWrapperMethods:
         mock_embedding_service = Mock()
         mock_embedding_service.embed_text.return_value = [0.1] * 384
 
-        service = VerificationPipelineService(
-            embedding_service=mock_embedding_service
-        )
+        service = VerificationPipelineService(embedding_service=mock_embedding_service)
 
         embedding = service._generate_embedding_with_retry("Test claim")
 
@@ -557,9 +553,7 @@ class TestRetryWrapperMethods:
         ]
         mock_vector_search.search_similar_evidence.return_value = mock_results
 
-        service = VerificationPipelineService(
-            vector_search_service=mock_vector_search
-        )
+        service = VerificationPipelineService(vector_search_service=mock_vector_search)
 
         mock_db = Mock()
         results = service._search_evidence_with_retry(

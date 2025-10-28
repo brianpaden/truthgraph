@@ -26,12 +26,13 @@ target_metadata = Base.metadata
 
 # Override sqlalchemy.url from environment variable if set
 database_url = os.getenv(
-    "DATABASE_URL",
-    "postgresql+asyncpg://truthgraph:changeme@localhost:5432/truthgraph"
+    "DATABASE_URL", "postgresql+asyncpg://truthgraph:changeme@localhost:5432/truthgraph"
 )
 
 # Convert postgresql:// to postgresql+asyncpg:// if needed
-if database_url.startswith("postgresql://") and not database_url.startswith("postgresql+asyncpg://"):
+if database_url.startswith("postgresql://") and not database_url.startswith(
+    "postgresql+asyncpg://"
+):
     database_url = database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 config.set_main_option("sqlalchemy.url", database_url)

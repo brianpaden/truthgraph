@@ -95,9 +95,7 @@ class E2EPerformanceTester:
             return process.memory_info().rss / 1024 / 1024
         return 0.0
 
-    def test_single_claim(
-        self, claim: str, evidence_count: int = 10
-    ) -> PerformanceBreakdown:
+    def test_single_claim(self, claim: str, evidence_count: int = 10) -> PerformanceBreakdown:
         """Test verification of a single claim.
 
         Args:
@@ -164,12 +162,8 @@ class E2EPerformanceTester:
             agg_start = time.perf_counter()
 
             # Simple aggregation logic (in real impl, uses aggregation.py)
-            entailment_count = sum(
-                1 for r in nli_results if r.label.value == "entailment"
-            )
-            contradiction_count = sum(
-                1 for r in nli_results if r.label.value == "contradiction"
-            )
+            entailment_count = sum(1 for r in nli_results if r.label.value == "entailment")
+            contradiction_count = sum(1 for r in nli_results if r.label.value == "contradiction")
 
             if entailment_count > contradiction_count:
                 verdict = "SUPPORTED"
@@ -355,7 +349,9 @@ class E2EPerformanceTester:
             print("OVERALL: FAIL - Some targets not met")
             print("\nRecommendations:")
             if mean(nli_times) > 40:
-                print("  - NLI is bottleneck. Consider: GPU, larger batch size, or model optimization")
+                print(
+                    "  - NLI is bottleneck. Consider: GPU, larger batch size, or model optimization"
+                )
             if mean(retrieval_times) > 3:
                 print("  - Retrieval slow. Consider: index optimization or caching")
             if mean(embedding_times) > 1:
@@ -395,12 +391,8 @@ def main() -> None:
         default=10,
         help="Number of evidence items per claim (default: 10)",
     )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose output"
-    )
-    parser.add_argument(
-        "--warmup", action="store_true", help="Warmup models before testing"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
+    parser.add_argument("--warmup", action="store_true", help="Warmup models before testing")
 
     args = parser.parse_args()
 
@@ -418,7 +410,9 @@ def main() -> None:
     print(f"  CUDA available: {torch.cuda.is_available()}")
     if torch.cuda.is_available():
         print(f"  CUDA device: {torch.cuda.get_device_name(0)}")
-    print(f"  MPS available: {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}")
+    print(
+        f"  MPS available: {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}"
+    )
 
     # Warmup if requested
     if args.warmup:
