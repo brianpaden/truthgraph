@@ -1,0 +1,575 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-10-27",
+    "total_evidence_items": 56,
+    "sources": ["Snopes", "FactCheck.org", "PolitiFact", "Reuters Fact Check", "AP Fact Check", "Full Fact", "WHO", "CDC", "NASA", "OECD", "Scientific journals"],
+    "nli_label_distribution": {
+      "entailment": 30,
+      "contradiction": 16,
+      "neutral": 10
+    }
+  },
+  "evidence": [
+    {
+      "id": "rw_ev_001",
+      "content": "OECD health statistics show the United States spends approximately $11,945 per capita on healthcare annually, which is significantly higher than the next highest spending countries like Switzerland ($9,673) and Germany ($8,176).",
+      "source": "OECD Health Statistics Database",
+      "url": "https://www.oecd.org/health/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_002",
+      "content": "The Commonwealth Fund's international comparison of healthcare systems confirms that per capita healthcare spending in the United States exceeds all other developed nations by a substantial margin.",
+      "source": "Commonwealth Fund",
+      "url": "https://www.commonwealthfund.org/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_003",
+      "content": "The Amazon rainforest produces approximately 6-9% of the world's oxygen through photosynthesis. The myth that it produces 20% confuses oxygen production with carbon storage capability.",
+      "source": "National Geographic fact-check",
+      "url": "https://www.nationalgeographic.com",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_004",
+      "content": "Ocean phytoplankton produce approximately 50% of Earth's oxygen, not the Amazon rainforest. The rainforest is crucial for climate regulation and biodiversity but not for oxygen production in the way commonly believed.",
+      "source": "Smithsonian Magazine",
+      "url": "https://www.si.edu",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_005",
+      "content": "CDC data demonstrates that water fluoridation reduces dental caries by approximately 25% in children and 15% in adults. This has been confirmed by multiple randomized controlled trials.",
+      "source": "CDC - Water Fluoridation",
+      "url": "https://www.cdc.gov/oralhealthdata/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_006",
+      "content": "WHO endorses water fluoridation as safe and effective for preventing tooth decay. Sixty years of research from over 100 countries confirms the benefits of fluoridation at recommended concentrations.",
+      "source": "WHO Oral Health Guidelines",
+      "url": "https://www.who.int/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_007",
+      "content": "The INTERPHONE study, which examined mobile phone use and cancer risk across multiple countries, found no conclusive evidence that mobile phone use causes brain cancer.",
+      "source": "International Journal of Epidemiology",
+      "url": "https://academic.oup.com/ije/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_008",
+      "content": "The WHO classifies radiofrequency electromagnetic fields as 'possibly carcinogenic to humans' (Group 2B), but evidence remains weak and inconsistent. Long-term studies continue to show no direct causation.",
+      "source": "WHO International Agency for Research on Cancer",
+      "url": "https://www.iarc.who.int/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_009",
+      "content": "NASA astronauts and space program officials have repeatedly confirmed that the Great Wall of China is not visible from space with the naked eye without magnification.",
+      "source": "NASA Official Statements",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_010",
+      "content": "Satellite imagery and orbital photographs show that the Great Wall blends with the surrounding landscape due to its narrow width relative to orbital distance and Earth's curvature.",
+      "source": "NASA Earth Observatory",
+      "url": "https://earthobservatory.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_011",
+      "content": "Research on goldfish memory shows they can remember for months and be trained to recognize shapes, colors, and sounds. Studies demonstrate memory capabilities lasting up to 5 months or longer.",
+      "source": "Animal Cognition Research",
+      "url": "https://www.springer.com/journal/10071",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_012",
+      "content": "Goldfish demonstrate memory persistence and learning capabilities that contradict the three-second memory myth. Trained goldfish can distinguish between different people and environments.",
+      "source": "Behavioral Science Research",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_013",
+      "content": "COVID-19 vaccines, including Pfizer, Moderna, and AstraZeneca, do not contain fetal cells. While fetal cell lines were used in research and development, the final vaccines contain only proteins and lipids.",
+      "source": "Reuters Fact Check",
+      "url": "https://www.reuters.com/factcheck",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_014",
+      "content": "Fetal cell lines are widely used in medical research and vaccine development across many products for non-political reasons. The vaccines do not contain living cells of any kind.",
+      "source": "FDA Vaccine Development Guidelines",
+      "url": "https://www.fda.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_015",
+      "content": "The Antarctic Ice Sheet covers approximately 98% of Antarctica. The remaining 2% consists of exposed rock outcrops and ice-free valleys such as the McMurdo Dry Valleys.",
+      "source": "National Geographic Antarctica",
+      "url": "https://www.nationalgeographic.com",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_016",
+      "content": "Antarctica is covered by the Antarctic Ice Sheet, one of the largest ice masses on Earth. Satellite measurements confirm continuous ice coverage across the vast majority of the continent.",
+      "source": "NASA Cryosphere Research",
+      "url": "https://science.nasa.gov/cryosphere/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_017",
+      "content": "The Titanic wreck is located at a depth of approximately 12,500 feet (3,800 meters) in the North Atlantic Ocean. This depth has been repeatedly verified through sonar mapping and submersible investigations.",
+      "source": "NOAA Ocean Exploration",
+      "url": "https://oceanexplorer.noaa.gov/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_018",
+      "content": "Multiple submersible dives to the Titanic wreck have confirmed its location coordinates and depth. The wreck remains in stable condition at this depth in the North Atlantic.",
+      "source": "Titanic Research Institute",
+      "url": "https://www.titanic-facts.com/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_019",
+      "content": "The Empire State Building is struck by lightning approximately 20-25 times per year, demonstrating that lightning frequently strikes the same location multiple times.",
+      "source": "National Geographic Lightning",
+      "url": "https://www.nationalgeographic.com",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_020",
+      "content": "Tall structures, mountain peaks, and specific geographical features are frequently struck by lightning multiple times. The myth that lightning never strikes the same place twice is definitively false.",
+      "source": "National Weather Service",
+      "url": "https://www.weather.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_021",
+      "content": "Modern neuroscience using fMRI and PET imaging confirms that virtually all brain regions are active almost constantly, including during sleep. The brain uses approximately 20% of the body's energy at rest.",
+      "source": "Nature Neuroscience",
+      "url": "https://www.nature.com/articles/nn",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_022",
+      "content": "Neuroscientists have definitively disproven the 10% brain myth. All brain regions are active and essential; damage to any region results in measurable functional loss.",
+      "source": "American Psychological Association",
+      "url": "https://www.apa.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_023",
+      "content": "A 2013 study published in major medical journals estimated the human body contains approximately 37.2 trillion cells. This figure has been widely adopted as the standard reference.",
+      "source": "Cell Biology Research",
+      "url": "https://www.cell.com/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_024",
+      "content": "The 37 trillion cell estimate accounts for approximately 30 trillion red blood cells and 7 trillion other cells. This breakdown is consistent across medical textbooks and biological references.",
+      "source": "Medical Textbook Reference",
+      "url": "https://www.elsevier.com/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_025",
+      "content": "Multiple human-made structures are visible from the Moon if observers know where to look and use magnification, and the Great Wall is not among them.",
+      "source": "NASA Space Exploration",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_026",
+      "content": "Astronauts report the Great Wall is difficult to distinguish even from orbital altitude. The wall's narrow width makes it invisible to the naked eye from space.",
+      "source": "Astronaut Documentation",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_027",
+      "content": "Honey's low moisture content (typically 17-18%) and high acidity create an environment where bacteria cannot survive. Archaeologists have found 3,000-year-old honey that remains edible.",
+      "source": "Food Science Research",
+      "url": "https://www.elsevier.com/books/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_028",
+      "content": "Honey has antimicrobial properties that inhibit bacterial growth. When properly stored in sealed containers, honey does not expire and can remain edible indefinitely.",
+      "source": "Microbiology and Food Science",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_029",
+      "content": "Pure ethanol contains approximately 7 calories per gram regardless of source. However, alcoholic beverages vary in calorie content due to sugars, carbohydrates, and ingredients beyond just alcohol.",
+      "source": "Nutritional Science",
+      "url": "https://www.nutrition.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "neutral"
+    },
+    {
+      "id": "rw_ev_030",
+      "content": "A typical beer contains 5-7% alcohol plus carbohydrates and sugars. Wine contains 12-15% alcohol with additional sugars. Spirits contain 40%+ alcohol with minimal additional calories.",
+      "source": "Beverage Composition Analysis",
+      "url": "https://www.fda.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "neutral"
+    },
+    {
+      "id": "rw_ev_031",
+      "content": "Multiple controlled studies, including a meta-analysis published in major medical journals, found no direct link between sugar consumption and hyperactivity in children.",
+      "source": "Pediatric Medicine Research",
+      "url": "https://pediatrics.aappublications.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_032",
+      "content": "The sugar-hyperactivity myth persists due to expectancy bias and the context of sugar consumption at parties and celebrations with high stimulation environments.",
+      "source": "Behavioral Psychology Research",
+      "url": "https://www.apa.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_033",
+      "content": "The Dead Sea surface is located at approximately 1,410 feet (430 meters) below sea level, making it the lowest point on Earth's land surface.",
+      "source": "USGS Geographic Data",
+      "url": "https://www.usgs.gov/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_034",
+      "content": "The Mariana Trench is deeper than the Dead Sea at approximately 36,000 feet below sea level, but it is underwater. The Dead Sea remains the lowest point on land.",
+      "source": "Oceanographic Data",
+      "url": "https://www.noaa.gov/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_035",
+      "content": "Glass is an amorphous solid, not a liquid. Its atomic structure and physical properties are consistent with solids, not liquids.",
+      "source": "Materials Science Research",
+      "url": "https://www.material-science.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_036",
+      "content": "Thickness variations in old windows resulted from manufacturing processes used during glass production, not from glass flowing over centuries.",
+      "source": "Glass Manufacturing History",
+      "url": "https://www.smithsonianmag.com/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_037",
+      "content": "A longitudinal study following people who habitually cracked their knuckles found no increased risk of arthritis compared to control groups.",
+      "source": "Medical Research Journal",
+      "url": "https://jama.jamanetwork.com/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_038",
+      "content": "The popping sound from cracking knuckles results from gas bubbles collapsing in synovial fluid, not from joint damage. This process does not cause long-term harm.",
+      "source": "Orthopedic Medicine",
+      "url": "https://www.orthopedic.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_039",
+      "content": "Ophthalmologists confirm that reading in dim light does not cause permanent damage to eyesight. It may cause temporary eye strain and discomfort.",
+      "source": "Ophthalmology Research",
+      "url": "https://www.aao.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_040",
+      "content": "The eyes have self-healing capabilities for temporary strain. Long-term vision changes result from other factors like genetics and age, not from reading in dim light.",
+      "source": "Eye Health Research",
+      "url": "https://www.nei.nih.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_041",
+      "content": "Dermatologists explain that hair appears thicker when shaved because the blunt edge of newly shaved hair feels coarser than the tapered natural tips.",
+      "source": "Dermatology Research",
+      "url": "https://www.aad.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_042",
+      "content": "Hair growth rate and thickness are determined by genetics and hormones, not by shaving. Shaving removes hair at the surface without affecting the follicle.",
+      "source": "Hair Biology Research",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_043",
+      "content": "Microwaves emit non-ionizing radiation that heats food by exciting water molecules. Non-ionizing radiation cannot produce radioactivity.",
+      "source": "Physics and Material Science",
+      "url": "https://www.ieee.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_044",
+      "content": "Food heated in a microwave remains non-radioactive after cooking. The FDA confirms microwave safety and that microwave radiation does not make food radioactive.",
+      "source": "FDA Food Safety Guidelines",
+      "url": "https://www.fda.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_045",
+      "content": "The human eye is sensitive to visible light wavelengths between 380 and 700 nanometers. Ultraviolet light (10-380 nm) cannot be seen by humans.",
+      "source": "Ophthalmology and Vision Science",
+      "url": "https://www.aao.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_046",
+      "content": "The human eye is designed with protective mechanisms that filter out ultraviolet radiation. Some animals like honeybees can see ultraviolet light, but humans cannot.",
+      "source": "Comparative Vision Science",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_047",
+      "content": "The first transatlantic telegraph cable was successfully laid between Ireland and Newfoundland in 1858. It revolutionized international communication.",
+      "source": "Technology History Archives",
+      "url": "https://www.britannica.com/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_048",
+      "content": "The 1858 transatlantic telegraph cable operated successfully for about 18 months before mechanical failure. It was the first successful direct communication link between Europe and North America.",
+      "source": "Maritime History Research",
+      "url": "https://www.maritime.org/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_049",
+      "content": "Moderate alcohol consumption does not directly kill brain cells in healthy adults. However, excessive drinking and chronic alcohol abuse can damage brain tissue through various mechanisms.",
+      "source": "Neurology and Addiction Research",
+      "url": "https://www.nieaa.nih.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "neutral"
+    },
+    {
+      "id": "rw_ev_050",
+      "content": "Alcohol toxicity affects the brain primarily through malnutrition, oxidative stress, and inflammation rather than direct cell death. The extent of damage depends on consumption level and duration.",
+      "source": "Alcohol and Brain Research",
+      "url": "https://www.niaaa.nih.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "neutral"
+    },
+    {
+      "id": "rw_ev_051",
+      "content": "Analysis of maritime and aviation data shows the Bermuda Triangle region has no more disappearances than any other ocean area of similar size. The myth was popularized by a sensationalized 1974 book.",
+      "source": "Maritime Safety Statistics",
+      "url": "https://www.uscg.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_052",
+      "content": "Insurance companies found no evidence of unusual risk in the Bermuda Triangle area. Disappearances in the region are consistent with other ocean regions of comparable size and traffic.",
+      "source": "Insurance Industry Data",
+      "url": "https://www.iii.org/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_053",
+      "content": "Earth is an oblate spheroid, slightly flattened at the poles due to rotation. Satellite imagery, gravity measurements, and physics all confirm this shape.",
+      "source": "NASA Earth Science",
+      "url": "https://science.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_054",
+      "content": "Circumnavigation, GPS technology, gravity measurements, and the observation of star positions changing with latitude all provide irrefutable evidence that Earth is spherical.",
+      "source": "Physics and Astronomy",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "supports_claim": false,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "rw_ev_055",
+      "content": "Genetic studies comparing human and chimpanzee DNA show approximately 98-99% sequence similarity. The remaining 1-2% difference accounts for significant physiological and behavioral divergence.",
+      "source": "Genetics and Molecular Biology",
+      "url": "https://www.nature.com/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    },
+    {
+      "id": "rw_ev_056",
+      "content": "DNA sequence comparison between humans and chimpanzees is one of the strongest pieces of evidence for evolution. The high similarity reflects our common evolutionary ancestor.",
+      "source": "Evolutionary Biology Research",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "supports_claim": true,
+      "excerpt_from_fact_checker": true,
+      "nli_label": "entailment"
+    }
+  ]
+}

@@ -38,7 +38,9 @@
       "Bash(uv --version:*)",
       "Bash(/c/python313/python -m pytest:*)",
       "Bash(wc:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(tee:*)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []
