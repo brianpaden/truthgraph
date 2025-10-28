@@ -35,7 +35,10 @@
       "Bash(test:*)",
       "Bash(timeout:*)",
       "Bash(tree:*)",
-      "Bash(uv --version:*)"
+      "Bash(uv --version:*)",
+      "Bash(/c/python313/python -m pytest:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

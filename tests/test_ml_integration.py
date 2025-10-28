@@ -125,7 +125,7 @@ class TestEmbeddingServiceIntegration:
 
         # Calculate cosine similarity
         def cosine_sim(a, b):
-            return sum(x*y for x, y in zip(a, b))
+            return sum(x*y for x, y in zip(a, b, strict=False))
 
         sim_1_2 = cosine_sim(emb1, emb2)
         sim_1_3 = cosine_sim(emb1, emb3)

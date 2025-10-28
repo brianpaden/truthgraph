@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "FEVER_Dataset",
+    "total_evidence": 38,
+    "created_date": "2025-10-27",
+    "description": "Evidence corpus for FEVER sample claims"
+  },
+  "evidence": [
+    {
+      "id": "fever_000001_ev_000",
+      "content": "Evidence from: Gadsden_flag (sentence 0)",
+      "source_reference": "Gadsden_flag (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000001",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000002_ev_000",
+      "content": "Evidence from: Python_programming_language (sentence 1)",
+      "source_reference": "Python_programming_language (sentence 1)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000002",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000004_ev_000",
+      "content": "Evidence from: Albert_Einstein (sentence 5)",
+      "source_reference": "Albert_Einstein (sentence 5)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000004",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000004_ev_001",
+      "content": "Evidence from: Nobel_Prize_in_Physics (sentence 10)",
+      "source_reference": "Nobel_Prize_in_Physics (sentence 10)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000004",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000005_ev_000",
+      "content": "Evidence from: Great_Wall_of_China (sentence 2)",
+      "source_reference": "Great_Wall_of_China (sentence 2)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000005",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000007_ev_000",
+      "content": "Evidence from: Mount_Everest (sentence 0)",
+      "source_reference": "Mount_Everest (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000007",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000008_ev_000",
+      "content": "Evidence from: Pacific_Ocean (sentence 0)",
+      "source_reference": "Pacific_Ocean (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000008",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000010_ev_000",
+      "content": "Evidence from: Statue_of_Liberty (sentence 1)",
+      "source_reference": "Statue_of_Liberty (sentence 1)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000010",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000010_ev_001",
+      "content": "Evidence from: France_United_States_relations (sentence 3)",
+      "source_reference": "France_United_States_relations (sentence 3)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000010",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000011_ev_000",
+      "content": "Evidence from: Napoleon (sentence 0)",
+      "source_reference": "Napoleon (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000011",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000013_ev_000",
+      "content": "Evidence from: Tim_Berners-Lee (sentence 2)",
+      "source_reference": "Tim_Berners-Lee (sentence 2)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000013",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000014_ev_000",
+      "content": "Evidence from: Human_skeleton (sentence 0)",
+      "source_reference": "Human_skeleton (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000014",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000015_ev_000",
+      "content": "Evidence from: Venus (sentence 1)",
+      "source_reference": "Venus (sentence 1)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000015",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000016_ev_000",
+      "content": "Evidence from: Great_Depression (sentence 8)",
+      "source_reference": "Great_Depression (sentence 8)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000016",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000018_ev_000",
+      "content": "Evidence from: Antarctica (sentence 2)",
+      "source_reference": "Antarctica (sentence 2)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000018",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000019_ev_000",
+      "content": "Evidence from: Eiffel_Tower (sentence 3)",
+      "source_reference": "Eiffel_Tower (sentence 3)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000019",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000021_ev_000",
+      "content": "Evidence from: Amazon_rainforest (sentence 5)",
+      "source_reference": "Amazon_rainforest (sentence 5)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000021",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000022_ev_000",
+      "content": "Evidence from: Titanic (sentence 0)",
+      "source_reference": "Titanic (sentence 0)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000022",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000023_ev_000",
+      "content": "Evidence from: Fall_of_the_Roman_Empire (sentence 2)",
+      "source_reference": "Fall_of_the_Roman_Empire (sentence 2)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000023",
+      "category": "fever_dataset"
+    },
+    {
+      "id": "fever_000025_ev_000",
+      "content": "Evidence from: William_Shakespeare (sentence 1)",
+      "source_reference": "William_Shakespeare (sentence 1)",
+      "source_type": "wikipedia",
+      "claim_id": "fever_000025",
+      "category": "fever_dataset"
+    }
+  ]
+}

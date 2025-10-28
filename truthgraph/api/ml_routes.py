@@ -127,13 +127,13 @@ async def embed_texts(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         logger.error(f"Embedding generation failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate embeddings"
-        )
+        ) from e
 
 
 # ===== Search Endpoint =====
@@ -233,14 +233,14 @@ async def search_evidence(
             query_time_ms=query_time
         )
 
-    except HTTPException:
-        raise
+    except HTTPException as exc:
+        raise exc
     except Exception as e:
         logger.error(f"Search failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Search operation failed"
-        )
+        ) from e
 
 
 # ===== NLI Endpoint =====
@@ -316,13 +316,13 @@ async def run_nli(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         logger.error(f"NLI inference failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="NLI inference failed"
-        )
+        ) from e
 
 
 @router.post(
@@ -400,13 +400,13 @@ async def run_nli_batch(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         logger.error(f"Batch NLI inference failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Batch NLI inference failed"
-        )
+        ) from e
 
 
 # ===== Verification Endpoint =====
@@ -609,15 +609,15 @@ async def verify_claim(
             processing_time_ms=processing_time
         )
 
-    except HTTPException:
-        raise
+    except HTTPException as exc:
+        raise exc
     except Exception as e:
         logger.error(f"Verification pipeline failed: {e}", exc_info=True)
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Verification pipeline failed"
-        )
+        ) from e
 
 
 # ===== Verdict Retrieval Endpoint =====
@@ -690,11 +690,11 @@ async def get_verdict(
             created_at=verification.created_at
         )
 
-    except HTTPException:
-        raise
+    except HTTPException as e:
+        raise e
     except Exception as e:
         logger.error(f"Failed to retrieve verdict: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve verdict"
-        )
+        ) from e

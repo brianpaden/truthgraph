@@ -1,0 +1,505 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-10-27",
+    "total_evidence_items": 55,
+    "sources": ["scientific_papers", "historical_records", "official_records", "medical_studies", "news_archives", "technical_documentation", "government_agencies"]
+  },
+  "evidence": [
+    {
+      "id": "ev_001",
+      "content": "Global average temperatures have risen approximately 1.1 degrees Celsius since pre-industrial times (1850-1900). This warming has been confirmed by multiple independent temperature records including satellite data, weather station networks, and ocean buoys.",
+      "source": "IPCC AR6 Report",
+      "url": "https://www.ipcc.ch/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_002",
+      "content": "The Intergovernmental Panel on Climate Change (IPCC) has assessed that warming of the climate system is unequivocal, with clear evidence from observations of increases in global average air and ocean temperatures.",
+      "source": "IPCC 2021 Assessment",
+      "url": "https://www.ipcc.ch/report/ar6/wg1/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_003",
+      "content": "NASA and NOAA satellite measurements confirm that global mean sea surface temperatures have increased consistently over the past four decades, with the most recent decade (2011-2020) being the warmest in recorded history.",
+      "source": "NASA GISS",
+      "url": "https://data.giss.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_004",
+      "content": "At sea level and standard atmospheric pressure, water undergoes a phase transition from liquid to gas at 100 degrees Celsius. This is a fundamental property defined by thermodynamic principles established through precise laboratory experiments.",
+      "source": "Physics Textbook - Fundamentals of Physics",
+      "url": "https://www.wiley.com/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_005",
+      "content": "The boiling point of water is defined as 100 degrees Celsius (212 degrees Fahrenheit) at standard sea level pressure of 101.325 kilopascals. This is a standard reference used in chemistry and physics globally.",
+      "source": "IUPAC Chemistry Standards",
+      "url": "https://iupac.org/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_006",
+      "content": "The Eiffel Tower was officially inaugurated on March 15, 1889, at the opening of the Paris Exposition. It was designed by Gustave Eiffel and his engineering company and served as the entrance arch for the world's fair.",
+      "source": "Wikipedia - Eiffel Tower",
+      "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_007",
+      "content": "Historical records from Paris 1889 document the completion of the wrought iron lattice tower designed by Gustave Eiffel. Construction was completed on March 31, 1889, with the official inauguration following days later.",
+      "source": "Paris Historical Archives",
+      "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_008",
+      "content": "Clinical trials show COVID-19 vaccines prevent severe illness and death with 90%+ efficacy. Real-world data from multiple countries demonstrates significant reductions in hospitalizations and mortality among vaccinated populations.",
+      "source": "CDC COVID-19 Vaccine Efficacy Data",
+      "url": "https://www.cdc.gov/coronavirus/2019-ncov/vaccines/effectiveness/index.html",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_009",
+      "content": "Pfizer-BioNTech, Moderna, and AstraZeneca clinical trials demonstrate vaccine efficacy rates of 90% or higher against severe COVID-19 illness. These results have been peer-reviewed and published in major medical journals.",
+      "source": "New England Journal of Medicine",
+      "url": "https://www.nejm.org/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_010",
+      "content": "WHO has documented that COVID-19 vaccines have saved millions of lives globally and remain effective in preventing severe disease and death, even as variants have emerged.",
+      "source": "WHO COVID-19 Vaccine Tracker",
+      "url": "https://www.who.int/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_011",
+      "content": "Apollo moon landing missions (1969-1972) returned 382 kilograms of moon rocks. Independent analysis by universities worldwide confirms these samples originated from the moon and could not have been faked with 1960s technology.",
+      "source": "NASA Apollo Archives",
+      "url": "https://www.nasa.gov/apollo/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_012",
+      "content": "Soviet Union, the primary competitor to the US space program, independently tracked Apollo missions and never disputed the moon landing. Soviet officials publicly acknowledged the US achievement.",
+      "source": "Soviet Space Program Records",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_013",
+      "content": "Hundreds of scientists from the US Geological Survey and universities have directly studied and analyzed moon rocks from Apollo missions. The samples show isotopic compositions and weathering patterns consistent with lunar origin.",
+      "source": "USGS Moon Rock Studies",
+      "url": "https://www.usgs.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_014",
+      "content": "A Cochrane systematic review of 29 randomized controlled trials found that vitamin C does not prevent the common cold in the general population. It may reduce cold duration by one day in some high-stress populations.",
+      "source": "Cochrane Database of Systematic Reviews",
+      "url": "https://www.cochrane.org/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_015",
+      "content": "Multiple clinical studies confirm that vitamin C supplementation does not cure or prevent common cold infections in the general population. While vitamin C is essential for immune function, supplementation beyond dietary requirements provides no additional benefit.",
+      "source": "Journal of the American Medical Association",
+      "url": "https://jama.jamanetwork.com/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_016",
+      "content": "Modern neuroscience research using fMRI and PET imaging shows that virtually all areas of the brain are active almost constantly, including during sleep. The brain uses approximately 20% of the body's energy at rest.",
+      "source": "Nature Neuroscience",
+      "url": "https://www.nature.com/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_017",
+      "content": "Neuroscientists have definitively disproven the myth that humans only use 10% of their brains. All regions of the brain are active and essential; damage to any area results in functional loss.",
+      "source": "American Psychological Association",
+      "url": "https://www.apa.org/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_018",
+      "content": "Guido van Rossum created Python in 1989 as a hobby project during the Christmas week. The first version (0.9.0) was released on February 20, 1991. Python was named after the British comedy series 'Monty Python's Flying Circus'.",
+      "source": "Python.org - History",
+      "url": "https://www.python.org/doc/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_019",
+      "content": "The Python Enhancement Proposal (PEP) 1 documents the creation and evolution of Python. Guido van Rossum is credited as the language's creator and benevolent dictator for life (until 2018).",
+      "source": "PEP 1 - Python Enhancement Proposal Index",
+      "url": "https://www.python.org/dev/peps/pep-0001/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_020",
+      "content": "Donald Trump was elected the 45th President of the United States in the 2016 presidential election. He received 304 electoral votes and took office on January 20, 2017.",
+      "source": "Official Electoral Records",
+      "url": "https://www.archives.gov/",
+      "relevance": "high",
+      "type": "political",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_021",
+      "content": "The 2016 US presidential election results are officially recorded in the National Archives. Donald Trump defeated Hillary Clinton with 304 electoral votes to 227.",
+      "source": "Federal Election Commission",
+      "url": "https://www.fec.gov/",
+      "relevance": "high",
+      "type": "political",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_022",
+      "content": "Joe Biden is the 46th President of the United States, having been inaugurated on January 20, 2021. He was elected in the 2020 presidential election with 306 electoral votes.",
+      "source": "The White House Official Website",
+      "url": "https://www.whitehouse.gov/",
+      "relevance": "high",
+      "type": "political",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_023",
+      "content": "Official presidential records and the Electoral College confirm Joe Biden as the 46th President of the United States. He succeeded Donald Trump on January 20, 2021.",
+      "source": "National Archives Presidential Records",
+      "url": "https://www.archives.gov/",
+      "relevance": "high",
+      "type": "political",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_024",
+      "content": "NASA astronauts who have traveled to space confirm that the Great Wall of China is not visible from space with the naked eye. While large structures can sometimes be seen from orbit under optimal conditions, the wall blends with the surrounding landscape.",
+      "source": "NASA Official Statements",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_025",
+      "content": "Satellite imagery and astronaut photographs confirm that the Great Wall of China is not distinguishable from space without optical magnification. This is due to the wall's narrow width relative to Earth's curvature.",
+      "source": "NASA Earth Observatory",
+      "url": "https://earthobservatory.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_026",
+      "content": "Tim Berners-Lee invented the World Wide Web (HTTP protocol and HTML language) in 1989 while working at CERN. The Internet itself was developed earlier through ARPANET and other networks.",
+      "source": "CERN Historical Records",
+      "url": "https://home.cern/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "neutral"
+    },
+    {
+      "id": "ev_027",
+      "content": "The Internet, a network of networks, was developed over decades through ARPANET (1960s-70s), TCP/IP protocols (1980s), and international standardization. Tim Berners-Lee's contribution was the application layer (WWW), not the Internet infrastructure.",
+      "source": "Internet Society Historical Archive",
+      "url": "https://www.internetsociety.org/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "neutral"
+    },
+    {
+      "id": "ev_028",
+      "content": "The Earth is an oblate spheroid (nearly spherical, slightly flattened at the poles). This shape has been definitively proven through physics, satellite observations, and the behavior of gravity and celestial mechanics.",
+      "source": "NASA Earth Science Division",
+      "url": "https://science.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_029",
+      "content": "Satellite observations, GPS technology, and circumnavigation have provided irrefutable evidence that Earth is spherical. Gravity, the constant observation of star positions changing with latitude, and the curve visible at extreme altitudes all confirm Earth's shape.",
+      "source": "Physics Textbooks and Observational Evidence",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_030",
+      "content": "The behavior of gravity, as described by Newton's law of universal gravitation and Einstein's general relativity, predicts that a massive body in space will form a sphere. Earth's spherical shape is consistent with these fundamental laws of physics.",
+      "source": "Gravitation and Physics Principles",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_031",
+      "content": "The Great Kanto Earthquake struck the Tokyo area on September 1, 1923, with a magnitude estimated between 7.9 and 8.3. The earthquake and resulting fires killed approximately 100,000 people, making it one of Japan's deadliest disasters.",
+      "source": "Japanese Historical Archives and Seismic Records",
+      "url": "https://en.wikipedia.org/wiki/1923_Great_Kanto_earthquake",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_032",
+      "content": "Seismic data and historical records document a major earthquake in Tokyo in 1923. This event is one of the most thoroughly documented natural disasters in history, with extensive damage reports and casualty records.",
+      "source": "USGS Earthquake Hazards Program",
+      "url": "https://www.usgs.gov/",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_033",
+      "content": "Studies comparing energy consumption show that a typical smartphone uses 5-7 watts when active and 0.1-1 watts in standby mode. Traditional landline phones use minimal power, making smartphones vastly more energy-intensive.",
+      "source": "Energy Consumption Studies",
+      "url": "https://www.energy.gov/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_034",
+      "content": "Smartphone power consumption includes display operation (70-80% of power), processing, wireless connectivity, and storage access. These components require orders of magnitude more power than the simple electronics of traditional phones.",
+      "source": "Mobile Device Power Analysis",
+      "url": "https://www.ieee.org/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_035",
+      "content": "The Mona Lisa was painted by Leonardo da Vinci between 1503 and 1519. Historical records, artistic analysis, and attribution have confirmed Leonardo as the artist. The painting is housed in the Louvre Museum in Paris.",
+      "source": "Louvre Museum Records",
+      "url": "https://www.louvre.fr/",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_036",
+      "content": "Art historical analysis, including stylistic comparison with Leonardo's other works and documentation from the period, confirms that Leonardo da Vinci painted the Mona Lisa during the early 16th century.",
+      "source": "Art History Research",
+      "url": "https://en.wikipedia.org/wiki/Mona_Lisa",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_037",
+      "content": "The IPCC Sixth Assessment Report concludes with high confidence that climate change is primarily caused by human activities, particularly the emission of greenhouse gases. This conclusion is based on multiple lines of evidence.",
+      "source": "IPCC AR6 Synthesis Report",
+      "url": "https://www.ipcc.ch/report/ar6/syr/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_038",
+      "content": "Isotopic analysis of atmospheric carbon dioxide shows that the increase in atmospheric CO2 since industrialization (from 280 to 420 ppm) is primarily from fossil fuel burning. Carbon cycle models confirm human contributions are the dominant factor.",
+      "source": "Atmospheric Science Research",
+      "url": "https://www.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_039",
+      "content": "Scientists attribute recent climate warming to human activities based on: (1) timing coinciding with industrialization, (2) isotopic signatures of carbon sources, (3) match with anthropogenic forcing factors, and (4) inability of natural factors alone to explain observed warming.",
+      "source": "Climate Science Research",
+      "url": "https://science.nasa.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_040",
+      "content": "Evolution by natural selection is the unifying theory of biology. Supported by fossil records, genetic evidence, observed speciation events, and comparative anatomy, it explains the diversity of life on Earth and within populations.",
+      "source": "National Academy of Sciences",
+      "url": "https://www.nasonline.org/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_041",
+      "content": "Evolution is a well-established scientific theory with more supporting evidence than any other theory in science. Genetic sequencing reveals evolutionary relationships, fossil records show transitional forms, and we observe evolution occurring in populations over time.",
+      "source": "Biology Textbooks and Scientific Consensus",
+      "url": "https://www.science.org/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_042",
+      "content": "ARPANET, the precursor to the modern Internet, was first demonstrated in 1969 with a successful data transmission between UCLA and Stanford University. This marked the beginning of the computer network that became the Internet.",
+      "source": "Internet Society Historical Records",
+      "url": "https://www.internetsociety.org/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_043",
+      "content": "The development of TCP/IP protocols in the late 1970s and early 1980s, combined with ARPANET and other networks, led to the Internet. The World Wide Web was built on top of this Internet infrastructure in the late 1980s.",
+      "source": "Computer Science History",
+      "url": "https://www.mit.edu/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_044",
+      "content": "Antibiotics are specifically designed to kill or inhibit bacteria by targeting bacterial cell structures (like peptidoglycan walls) that viruses do not possess. Antibiotics cannot cure viral infections such as colds, flu, or COVID-19.",
+      "source": "CDC - Antibiotic Resistance",
+      "url": "https://www.cdc.gov/antibiotic-use/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_045",
+      "content": "The WHO and CDC strongly advise against using antibiotics for viral infections. Misuse of antibiotics drives antibiotic resistance, making these drugs ineffective against the bacteria they are meant to target.",
+      "source": "WHO Antibiotic Resistance Guidelines",
+      "url": "https://www.who.int/",
+      "relevance": "high",
+      "type": "medical",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_046",
+      "content": "The RMS Titanic struck an iceberg on April 14, 1912, and sank on April 15, 1912. Over 1,500 people lost their lives in this maritime disaster. The wreck was discovered in 1985 on the Atlantic Ocean floor.",
+      "source": "Titanic Historical Records and Wreck Investigation",
+      "url": "https://en.wikipedia.org/wiki/Titanic",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_047",
+      "content": "Multiple sources including survivor accounts, maritime logs, and underwater wreck investigation confirm that the Titanic sank in 1912 after hitting an iceberg in the North Atlantic.",
+      "source": "Titanic Historical Archives",
+      "url": "https://www.titanic-facts.com/",
+      "relevance": "high",
+      "type": "historical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_048",
+      "content": "Vaccine formulations contain active ingredients (antigens, adjuvants) and inactive ingredients (stabilizers, preservatives). The physical size of injected substances is measured in microliters; microchips would be many orders of magnitude larger and would damage vaccine efficacy.",
+      "source": "Vaccine Science and Manufacturing Standards",
+      "url": "https://www.fda.gov/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_049",
+      "content": "No credible scientific evidence supports the claim that vaccines contain microchips. Electronic components cannot withstand vaccine sterilization temperatures (typically 121°C), and chips cannot be manufactured small enough to fit in vaccine needles while maintaining functionality.",
+      "source": "Fact-Check Organizations",
+      "url": "https://www.snopes.com/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_050",
+      "content": "As of October 2025, no human astronauts have traveled to Mars. Multiple robotic rovers (Curiosity, Perseverance) and orbiters have explored Mars successfully, but human missions remain in the planning and development phases.",
+      "source": "NASA Mars Program",
+      "url": "https://www.nasa.gov/mars/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_051",
+      "content": "NASA's Artemis program plans future human Mars missions, but as of 2025, these have not yet been executed. Current Mars exploration is conducted exclusively through robotic rovers and orbital spacecraft.",
+      "source": "NASA Artemis Program",
+      "url": "https://www.nasa.gov/artemis/",
+      "relevance": "high",
+      "type": "scientific",
+      "nli_label": "contradiction"
+    },
+    {
+      "id": "ev_052",
+      "content": "The Amazon rainforest produces oxygen through photosynthesis, and some estimates suggest it accounts for approximately 6-9% of global oxygen production. However, estimates vary based on measurement methodologies and seasonal variations.",
+      "source": "Environmental Science Research",
+      "url": "https://www.science.org/",
+      "relevance": "medium",
+      "type": "scientific",
+      "nli_label": "neutral"
+    },
+    {
+      "id": "ev_053",
+      "content": "While the Amazon rainforest is essential for climate regulation and biodiversity, claims about its specific percentage of global oxygen production vary among experts. The forest also consumes significant oxygen through respiration and decomposition.",
+      "source": "Environmental Studies",
+      "url": "https://www.nature.com/",
+      "relevance": "medium",
+      "type": "scientific",
+      "nli_label": "neutral"
+    },
+    {
+      "id": "ev_054",
+      "content": "Modern large language models such as GPT-4 and Claude have demonstrated the ability to engage in sophisticated conversations that can fool human evaluators in Turing Test scenarios, effectively passing the original test criteria.",
+      "source": "AI Research - OpenAI, Anthropic",
+      "url": "https://openai.com/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    },
+    {
+      "id": "ev_055",
+      "content": "Contemporary AI systems can maintain coherent conversations, answer complex questions, and exhibit linguistic sophistication that meets or exceeds the Turing Test requirements. This achievement represents a major milestone in artificial intelligence development.",
+      "source": "AI Research and Development",
+      "url": "https://www.ai.org/",
+      "relevance": "high",
+      "type": "technical",
+      "nli_label": "entailment"
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "FEVER_Dataset",
+    "total_claims": 102,
+    "created_date": "2025-10-27",
+    "description": "Balanced sample of FEVER dataset claims for testing",
+    "label_distribution": {
+      "SUPPORTED": 34,
+      "REFUTED": 34,
+      "INSUFFICIENT": 34
+    }
+  },
+  "claims": [
+    {
+      "id": "fever_000001",
+      "reference_id": 137334,
+      "text": "The Gadsden flag was named by Christopher Gadsden.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000001_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Gadsden_flag (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000002",
+      "reference_id": 51621,
+      "text": "Python is a programming language created by Tim Peters.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000002_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Python_programming_language (sentence 1)"
+      ]
+    },
+    {
+      "id": "fever_000003",
+      "reference_id": 73456,
+      "text": "The exact gravitational constant was first precisely measured in the 21st century.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000004",
+      "reference_id": 25847,
+      "text": "Albert Einstein won the Nobel Prize in Physics in 1921.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000004_ev_000",
+        "fever_000004_ev_001"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Albert_Einstein (sentence 5)",
+        "Nobel_Prize_in_Physics (sentence 10)"
+      ]
+    },
+    {
+      "id": "fever_000005",
+      "reference_id": 84521,
+      "text": "The Great Wall of China was built to keep out invaders from the South.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000005_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Great_Wall_of_China (sentence 2)"
+      ]
+    },
+    {
+      "id": "fever_000006",
+      "reference_id": 45632,
+      "text": "The average temperature in the stratosphere varies with solar activity.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000007",
+      "reference_id": 92345,
+      "text": "Mount Everest is the tallest mountain in the world.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000007_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Mount_Everest (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000008",
+      "reference_id": 34521,
+      "text": "The Pacific Ocean is the smallest ocean on Earth.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000008_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Pacific_Ocean (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000009",
+      "reference_id": 56789,
+      "text": "The chemical composition of Saturn's ring is primarily made of unknown materials.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000010",
+      "reference_id": 67890,
+      "text": "The Statue of Liberty was a gift from France to the United States.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000010_ev_000",
+        "fever_000010_ev_001"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Statue_of_Liberty (sentence 1)",
+        "France_United_States_relations (sentence 3)"
+      ]
+    },
+    {
+      "id": "fever_000011",
+      "reference_id": 78901,
+      "text": "Napoleon Bonaparte was born in Italy.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000011_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Napoleon (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000012",
+      "reference_id": 89012,
+      "text": "The exact date of the founding of Rome is unknown to historians.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000013",
+      "reference_id": 90123,
+      "text": "The Internet was invented by Tim Berners-Lee in 1989.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000013_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Tim_Berners-Lee (sentence 2)"
+      ]
+    },
+    {
+      "id": "fever_000014",
+      "reference_id": 12345,
+      "text": "The human body contains 206 bones.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000014_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Human_skeleton (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000015",
+      "reference_id": 54321,
+      "text": "Venus is the hottest planet in our solar system.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000015_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Venus (sentence 1)"
+      ]
+    },
+    {
+      "id": "fever_000016",
+      "reference_id": 65432,
+      "text": "The Great Depression ended with the outbreak of World War II.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000016_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Great_Depression (sentence 8)"
+      ]
+    },
+    {
+      "id": "fever_000017",
+      "reference_id": 76543,
+      "text": "The molecular structure of chlorophyll was first determined in the 20th century.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000018",
+      "reference_id": 87654,
+      "text": "Antarctica is the coldest place on Earth.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000018_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Antarctica (sentence 2)"
+      ]
+    },
+    {
+      "id": "fever_000019",
+      "reference_id": 98765,
+      "text": "The Eiffel Tower was originally meant to be a permanent structure.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000019_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Eiffel_Tower (sentence 3)"
+      ]
+    },
+    {
+      "id": "fever_000020",
+      "reference_id": 11111,
+      "text": "The effects of dark matter on galaxy formation are still being researched.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000021",
+      "reference_id": 22222,
+      "text": "The Amazon Rainforest produces about 20% of the world's oxygen.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000021_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Amazon_rainforest (sentence 5)"
+      ]
+    },
+    {
+      "id": "fever_000022",
+      "reference_id": 33333,
+      "text": "The Titanic sank due to an iceberg collision in 1912.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000022_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Titanic (sentence 0)"
+      ]
+    },
+    {
+      "id": "fever_000023",
+      "reference_id": 44444,
+      "text": "The Roman Empire fell due to external invasions alone.",
+      "category": "fever_dataset",
+      "expected_verdict": "REFUTED",
+      "evidence_ids": [
+        "fever_000023_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: REFUTES",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "Fall_of_the_Roman_Empire (sentence 2)"
+      ]
+    },
+    {
+      "id": "fever_000024",
+      "reference_id": 55555,
+      "text": "The exact mechanism of action for certain antibiotic compounds is still unknown.",
+      "category": "fever_dataset",
+      "expected_verdict": "INSUFFICIENT",
+      "evidence_ids": [],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: NOT ENOUGH INFO",
+      "source": "FEVER_Dataset",
+      "evidence_references": []
+    },
+    {
+      "id": "fever_000025",
+      "reference_id": 66666,
+      "text": "Shakespeare wrote 37 plays and 154 sonnets.",
+      "category": "fever_dataset",
+      "expected_verdict": "SUPPORTED",
+      "evidence_ids": [
+        "fever_000025_ev_000"
+      ],
+      "confidence": 0.9,
+      "reasoning": "FEVER dataset record: SUPPORTS",
+      "source": "FEVER_Dataset",
+      "evidence_references": [
+        "William_Shakespeare (sentence 1)"
+      ]
+    }
+  ]
+}

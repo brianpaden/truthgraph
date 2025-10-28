@@ -525,7 +525,7 @@ class VerificationPipelineService:
 
         # Combine search results with NLI results
         evidence_items = []
-        for search_result, nli_result in zip(search_results, nli_results):
+        for search_result, nli_result in zip(search_results, nli_results, strict=False):
             evidence_item = EvidenceItem(
                 evidence_id=search_result.evidence_id,
                 content=search_result.content,

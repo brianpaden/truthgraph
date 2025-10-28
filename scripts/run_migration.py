@@ -42,19 +42,19 @@ def check_prerequisites() -> tuple[bool, list[str]]:
 
     # Check Alembic is installed
     try:
-        import alembic
+        import alembic  # noqa: F401
     except ImportError:
         errors.append("Alembic not installed. Run: uv pip install alembic")
 
     # Check pgvector is installed
     try:
-        import pgvector
+        import pgvector  # noqa: F401
     except ImportError:
         errors.append("pgvector not installed. Run: uv pip install pgvector")
 
     # Check asyncpg is installed
     try:
-        import asyncpg
+        import asyncpg  # noqa: F401
     except ImportError:
         errors.append("asyncpg not installed. Run: uv pip install asyncpg")
 

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-10-27",
+    "source": "FEVER_Dataset"
+  },
+  "total_processed": 25,
+  "label_distribution": {
+    "SUPPORTED": 11,
+    "REFUTED": 7,
+    "INSUFFICIENT": 7
+  },
+  "total_evidence": 20,
+  "avg_evidence_per_claim": 0.8,
+  "processing_seed": 42,
+  "statistics": {
+    "supported_claims": 11,
+    "refuted_claims": 7,
+    "insufficient_claims": 7,
+    "claims_with_evidence": 17,
+    "claims_without_evidence": 8,
+    "total_evidence_references": 20,
+    "avg_evidence_per_supported_claim": 1.22,
+    "avg_evidence_per_refuted_claim": 1.0,
+    "verifiable_claims": 17,
+    "non_verifiable_claims": 8
+  }
+}

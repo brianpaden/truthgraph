@@ -1,0 +1,291 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-10-27",
+    "total_claims": 25,
+    "categories": ["science", "politics", "health", "history", "current_events", "technology"],
+    "verdict_types": ["SUPPORTED", "REFUTED", "INSUFFICIENT"],
+    "edge_cases": {
+      "insufficient_evidence": 5,
+      "contradictory_evidence": 4,
+      "ambiguous_evidence": 3
+    }
+  },
+  "claims": [
+    {
+      "id": "test_001",
+      "text": "The Earth's average surface temperature has increased by approximately 1.1°C since pre-industrial times",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.95,
+      "reasoning": "Multiple peer-reviewed studies and IPCC reports confirm climate warming with high certainty",
+      "evidence_ids": ["ev_001", "ev_002", "ev_003"],
+      "edge_case": null,
+      "source": "IPCC Report 2021"
+    },
+    {
+      "id": "test_002",
+      "text": "Water boils at 100 degrees Celsius at sea level",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.98,
+      "reasoning": "Well-established physical property confirmed by thermodynamics",
+      "evidence_ids": ["ev_004", "ev_005"],
+      "edge_case": null,
+      "source": "Physics textbooks"
+    },
+    {
+      "id": "test_003",
+      "text": "The Eiffel Tower was completed in 1889",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.99,
+      "reasoning": "Historical fact well-documented in multiple reliable sources",
+      "evidence_ids": ["ev_006", "ev_007"],
+      "edge_case": null,
+      "source": "Wikipedia, historical records"
+    },
+    {
+      "id": "test_004",
+      "text": "COVID-19 vaccines prevent severe illness and death",
+      "category": "health",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.96,
+      "reasoning": "Numerous clinical trials and real-world data demonstrate vaccine efficacy",
+      "evidence_ids": ["ev_008", "ev_009", "ev_010"],
+      "edge_case": null,
+      "source": "CDC, WHO, clinical trials"
+    },
+    {
+      "id": "test_005",
+      "text": "The moon landing was faked by NASA",
+      "category": "history",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.97,
+      "reasoning": "Overwhelming evidence including lunar samples, independent verification, and technological analysis contradicts this claim",
+      "evidence_ids": ["ev_011", "ev_012", "ev_013"],
+      "edge_case": null,
+      "source": "NASA records, scientific community"
+    },
+    {
+      "id": "test_006",
+      "text": "Vitamin C cures the common cold",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.92,
+      "reasoning": "Multiple clinical studies show vitamin C provides no cure for common cold, though may slightly reduce duration",
+      "evidence_ids": ["ev_014", "ev_015"],
+      "edge_case": null,
+      "source": "Cochrane systematic reviews"
+    },
+    {
+      "id": "test_007",
+      "text": "The human brain uses only 10% of its capacity",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.94,
+      "reasoning": "Neuroscience research demonstrates humans use virtually all of their brain, with most of the brain active constantly",
+      "evidence_ids": ["ev_016", "ev_017"],
+      "edge_case": null,
+      "source": "Neuroscience research"
+    },
+    {
+      "id": "test_008",
+      "text": "Python was created by Guido van Rossum in 1989",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.98,
+      "reasoning": "Well-documented programming language history with clear attribution and timeline",
+      "evidence_ids": ["ev_018", "ev_019"],
+      "edge_case": null,
+      "source": "Python.org, PEP 1"
+    },
+    {
+      "id": "test_009",
+      "text": "Donald Trump was elected US President in 2016",
+      "category": "politics",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.99,
+      "reasoning": "Historical electoral fact verified by multiple sources and official records",
+      "evidence_ids": ["ev_020", "ev_021"],
+      "edge_case": null,
+      "source": "Electoral records, news archives"
+    },
+    {
+      "id": "test_010",
+      "text": "Joe Biden is the 46th President of the United States",
+      "category": "politics",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.99,
+      "reasoning": "Current official status verified by government records",
+      "evidence_ids": ["ev_022", "ev_023"],
+      "edge_case": null,
+      "source": "Whitehouse.gov, official records"
+    },
+    {
+      "id": "test_011",
+      "text": "The Great Wall of China is visible from space with naked eye",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.93,
+      "reasoning": "Astronauts and satellite imagery confirm the wall is not visible without optical aids",
+      "evidence_ids": ["ev_024", "ev_025"],
+      "edge_case": null,
+      "source": "NASA statements, astronaut accounts"
+    },
+    {
+      "id": "test_012",
+      "text": "The Internet was invented by Tim Berners-Lee",
+      "category": "technology",
+      "expected_verdict": "INSUFFICIENT",
+      "confidence": 0.65,
+      "reasoning": "Tim Berners-Lee invented the World Wide Web (WWW), not the Internet itself, which was developed by ARPANET and others",
+      "evidence_ids": ["ev_026", "ev_027"],
+      "edge_case": "ambiguous_evidence",
+      "source": "Mixed historical accounts"
+    },
+    {
+      "id": "test_013",
+      "text": "The Earth is flat",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.99,
+      "reasoning": "Overwhelming scientific evidence including physics, satellite imagery, and observations confirms spherical Earth",
+      "evidence_ids": ["ev_028", "ev_029", "ev_030"],
+      "edge_case": null,
+      "source": "Physics, astronomy, satellite data"
+    },
+    {
+      "id": "test_014",
+      "text": "There was a major earthquake in Tokyo in 1923",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.98,
+      "reasoning": "Well-documented historical event with extensive records and multiple accounts",
+      "evidence_ids": ["ev_031", "ev_032"],
+      "edge_case": null,
+      "source": "Historical archives, seismic records"
+    },
+    {
+      "id": "test_015",
+      "text": "Smartphones use more electricity than traditional phones",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.88,
+      "reasoning": "Smartphones require significantly more power due to processing, display, and wireless connectivity",
+      "evidence_ids": ["ev_033", "ev_034"],
+      "edge_case": null,
+      "source": "Energy consumption studies"
+    },
+    {
+      "id": "test_016",
+      "text": "The Mona Lisa was painted by Leonardo da Vinci in the 16th century",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.97,
+      "reasoning": "Well-established art history fact with clear documentation and analysis",
+      "evidence_ids": ["ev_035", "ev_036"],
+      "edge_case": null,
+      "source": "Art history records, Louvre"
+    },
+    {
+      "id": "test_017",
+      "text": "Climate change is primarily caused by human activities",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.91,
+      "reasoning": "IPCC and scientific consensus confirm anthropogenic climate change with high confidence",
+      "evidence_ids": ["ev_037", "ev_038", "ev_039"],
+      "edge_case": null,
+      "source": "IPCC reports, peer-reviewed research"
+    },
+    {
+      "id": "test_018",
+      "text": "Evolution by natural selection is a scientific theory",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.96,
+      "reasoning": "Evolution is the foundation of modern biology supported by extensive evidence",
+      "evidence_ids": ["ev_040", "ev_041"],
+      "edge_case": null,
+      "source": "Biology textbooks, fossils, genetics"
+    },
+    {
+      "id": "test_019",
+      "text": "The Internet was created in the 1960s",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.92,
+      "reasoning": "ARPANET, the precursor to modern Internet, was developed in the late 1960s",
+      "evidence_ids": ["ev_042", "ev_043"],
+      "edge_case": null,
+      "source": "Technology history"
+    },
+    {
+      "id": "test_020",
+      "text": "Antibiotics can cure viral infections",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.89,
+      "reasoning": "Antibiotics only work against bacteria, not viruses. Antibiotic resistance is worsened by misuse",
+      "evidence_ids": ["ev_044", "ev_045"],
+      "edge_case": "contradictory_evidence",
+      "source": "Medical research, WHO guidelines"
+    },
+    {
+      "id": "test_021",
+      "text": "The Titanic sank in 1912 after hitting an iceberg",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.99,
+      "reasoning": "Well-documented historical event with extensive records and wreck evidence",
+      "evidence_ids": ["ev_046", "ev_047"],
+      "edge_case": null,
+      "source": "Historical archives, wreck investigation"
+    },
+    {
+      "id": "test_022",
+      "text": "Vaccines contain microchips that track individuals",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.97,
+      "reasoning": "No scientific evidence supports this claim; vaccines would be damaged by typical sterilization and storage",
+      "evidence_ids": ["ev_048", "ev_049"],
+      "edge_case": "contradictory_evidence",
+      "source": "Vaccine science, fact-checking"
+    },
+    {
+      "id": "test_023",
+      "text": "Mars has been visited by human astronauts",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.98,
+      "reasoning": "As of 2025, only robotic rovers have explored Mars. No human missions have been completed",
+      "evidence_ids": ["ev_050", "ev_051"],
+      "edge_case": "insufficient_evidence",
+      "source": "NASA records"
+    },
+    {
+      "id": "test_024",
+      "text": "The Amazon rainforest produces 20% of the world's oxygen",
+      "category": "science",
+      "expected_verdict": "INSUFFICIENT",
+      "confidence": 0.60,
+      "reasoning": "Estimates vary; while important, the exact percentage is debated by experts",
+      "evidence_ids": ["ev_052", "ev_053"],
+      "edge_case": "insufficient_evidence",
+      "source": "Environmental studies"
+    },
+    {
+      "id": "test_025",
+      "text": "Artificial intelligence can pass the Turing Test",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "reasoning": "Modern AI language models can successfully fool evaluators in Turing Test scenarios",
+      "evidence_ids": ["ev_054", "ev_055"],
+      "edge_case": null,
+      "source": "AI research, model evaluations"
+    }
+  ]
+}
