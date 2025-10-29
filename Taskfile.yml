@@ -89,7 +89,7 @@ tasks:
         platforms: [windows]
       - cmd: test -f .env || cp .env.example .env
         platforms: [linux, darwin]
-      - docker-compose build
+      - docker-compose build --build-arg INCLUDE_DEV=1
       - echo "✓ Setup complete! Run task dev to start services"
 
   dev:

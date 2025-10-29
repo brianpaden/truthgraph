@@ -3,8 +3,7 @@
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Get database URL from environment
 # Using postgresql+psycopg to use psycopg3 driver instead of psycopg2

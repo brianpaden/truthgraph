@@ -13,7 +13,7 @@ Performance target: <60s end-to-end for typical claim
 import hashlib
 import time
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from functools import wraps
 from typing import Any, Callable, Optional, TypeVar
@@ -235,7 +235,7 @@ class VerificationPipelineService:
 
         if claim_hash in self._verification_cache:
             result, timestamp = self._verification_cache[claim_hash]
-            age_seconds = (datetime.utcnow() - timestamp).total_seconds()
+            age_seconds = (datetime.now(tz=timezone.utc) - timestamp).total_seconds()
 
             if age_seconds < self.cache_ttl_seconds:
                 logger.info(
@@ -263,7 +263,7 @@ class VerificationPipelineService:
             result: Verification result to cache
         """
         claim_hash = self._compute_claim_hash(claim_text)
-        self._verification_cache[claim_hash] = (result, datetime.utcnow())
+        self._verification_cache[claim_hash] = (result, datetime.now(tz=timezone.utc))
         logger.debug("result_cached", claim_hash=claim_hash[:16])
 
     def clear_cache(self) -> None:
@@ -731,10 +731,7 @@ class VerificationPipelineService:
                     f"(score: {support_score:.2f}), the refuting evidence is more conclusive."
                 )
         else:  # INSUFFICIENT
-            reasoning = (
-                f"Analysis of {total_evidence} evidence items yielded insufficient "
-                f"information to verify this claim. "
-            )
+            reasoning = f"Analysis of {total_evidence} evidence items yielded insufficient information to verify this claim. "
             if total_evidence == 0:
                 reasoning += "No relevant evidence was found in the database."
             else:

@@ -129,7 +129,9 @@ class E2EPerformanceTester:
 
             # Simulate evidence retrieval
             # In real implementation, this would query database
-            simulated_evidence = [f"Evidence item {i} with relevant information" for i in range(evidence_count)]
+            simulated_evidence = [
+                f"Evidence item {i} with relevant information" for i in range(evidence_count)
+            ]
 
             # Generate embeddings for evidence (simulate hybrid search)
             evidence_embeddings = embedding_service.embed_batch(
@@ -150,7 +152,9 @@ class E2EPerformanceTester:
             pairs = [(evidence, claim) for evidence in simulated_evidence]
 
             # Batch verification
-            nli_results = nli_service.verify_batch(pairs, batch_size=cache.get_optimal_batch_size("nli"))
+            nli_results = nli_service.verify_batch(
+                pairs, batch_size=cache.get_optimal_batch_size("nli")
+            )
 
             nli_time = time.perf_counter() - nli_start
             self.log(f"  NLI: {nli_time:.2f}s ({len(nli_results)} pairs)")
@@ -185,7 +189,14 @@ class E2EPerformanceTester:
 
             # Calculate total and overhead
             total_time = time.perf_counter() - total_start
-            overhead_time = total_time - embedding_time - retrieval_time - nli_time - aggregation_time - database_time
+            overhead_time = (
+                total_time
+                - embedding_time
+                - retrieval_time
+                - nli_time
+                - aggregation_time
+                - database_time
+            )
 
             memory_after = self.get_memory_mb()
             memory_used = memory_after - memory_before
@@ -221,7 +232,9 @@ class E2EPerformanceTester:
                 error=str(e),
             )
 
-    def test_multiple_claims(self, claims: list[str], evidence_count: int = 10) -> list[PerformanceBreakdown]:
+    def test_multiple_claims(
+        self, claims: list[str], evidence_count: int = 10
+    ) -> list[PerformanceBreakdown]:
         """Test verification of multiple claims.
 
         Args:
@@ -338,7 +351,9 @@ class E2EPerformanceTester:
             print("OVERALL: FAIL - Some targets not met")
             print("\nRecommendations:")
             if mean(nli_times) > 40:
-                print("  - NLI is bottleneck. Consider: GPU, larger batch size, or model optimization")
+                print(
+                    "  - NLI is bottleneck. Consider: GPU, larger batch size, or model optimization"
+                )
             if mean(retrieval_times) > 3:
                 print("  - Retrieval slow. Consider: index optimization or caching")
             if mean(embedding_times) > 1:
@@ -397,7 +412,9 @@ def main() -> None:
     print(f"  CUDA available: {torch.cuda.is_available()}")
     if torch.cuda.is_available():
         print(f"  CUDA device: {torch.cuda.get_device_name(0)}")
-    print(f"  MPS available: {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}")
+    print(
+        f"  MPS available: {hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()}"
+    )
 
     # Warmup if requested
     if args.warmup:

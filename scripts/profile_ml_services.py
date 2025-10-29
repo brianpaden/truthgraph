@@ -90,7 +90,9 @@ class PerformanceProfiler:
 
         return memory_info
 
-    def profile_embedding_service(self, num_samples: int = 1000, batch_size: int = 32) -> dict[str, Any]:
+    def profile_embedding_service(
+        self, num_samples: int = 1000, batch_size: int = 32
+    ) -> dict[str, Any]:
         """Profile the embedding service.
 
         Args:
@@ -163,7 +165,9 @@ class PerformanceProfiler:
 
         print(f"  Average latency: {results['single_text_avg_latency_ms']:.2f} ms")
 
-        self._save_profile_stats(profiler, "embedding_single_text", "Single text embedding hotspots:")
+        self._save_profile_stats(
+            profiler, "embedding_single_text", "Single text embedding hotspots:"
+        )
 
         # Profile batch processing
         print(f"\nProfiling batch processing ({num_samples} texts)...")
@@ -270,7 +274,9 @@ class PerformanceProfiler:
         profiler.disable()
 
         results["single_pair_avg_latency_ms"] = sum(latencies) / len(latencies)
-        results["single_pair_throughput_pairs_per_sec"] = 1000 / results["single_pair_avg_latency_ms"]
+        results["single_pair_throughput_pairs_per_sec"] = (
+            1000 / results["single_pair_avg_latency_ms"]
+        )
 
         print(f"  Average latency: {results['single_pair_avg_latency_ms']:.1f} ms")
         print(f"  Throughput: {results['single_pair_throughput_pairs_per_sec']:.2f} pairs/sec")
@@ -479,7 +485,9 @@ class PerformanceProfiler:
         if "model_cache" in self.results:
             cache = self.results["model_cache"]
             if cache.get("total_memory_mb", 0) > 4000:
-                bottlenecks.append(f"Total memory ({cache.get('total_memory_mb', 0):.1f} MB) exceeds target (4000 MB)")
+                bottlenecks.append(
+                    f"Total memory ({cache.get('total_memory_mb', 0):.1f} MB) exceeds target (4000 MB)"
+                )
 
         if bottlenecks:
             print("\nIdentified bottlenecks:")

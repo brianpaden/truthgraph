@@ -3,7 +3,7 @@
 These tests verify the pipeline orchestration logic using mocked dependencies.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock
 from uuid import uuid4
 
@@ -182,7 +182,7 @@ class TestCachingMechanism:
 
         # Manually insert expired entry
         claim_hash = service._compute_claim_hash(claim_text)
-        expired_time = datetime.utcnow() - timedelta(seconds=10)
+        expired_time = datetime.now(tz=timezone.utc) - timedelta(seconds=10)
         service._verification_cache[claim_hash] = (result, expired_time)
 
         cached = service._get_cached_result(claim_text)
