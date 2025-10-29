@@ -9,7 +9,8 @@
     "MD022": false,
     "MD031": false,
     "MD032": false,
-    "MD036": false
+    "MD036": false,
+    "MD058": false
   },
   "markdownlint.ignore": [
     ".claude/**"

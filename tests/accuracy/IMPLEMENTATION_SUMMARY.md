@@ -282,7 +282,7 @@ pytest tests/accuracy/test_accuracy_baseline.py::test_baseline_accuracy -v
 ```
 
 ### Expected Output
-```
+```text
 tests/accuracy/test_accuracy_baseline.py::test_real_world_claims_fixture_exists PASSED
 tests/accuracy/test_accuracy_baseline.py::test_real_world_evidence_fixture_exists PASSED
 tests/accuracy/test_accuracy_baseline.py::test_real_world_claims_structure PASSED
@@ -355,7 +355,7 @@ Range: 0.60 (INSUFFICIENT) to 0.99 (REFUTED - flat earth)
 - `tests/accuracy/IMPLEMENTATION_SUMMARY.md` (this file)
 
 ### Directory Structure
-```
+```text
 tests/accuracy/
 ├── real_world_claims.json          # 28 claims
 ├── real_world_evidence.json        # 56 evidence items

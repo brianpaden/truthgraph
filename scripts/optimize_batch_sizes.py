@@ -32,6 +32,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+import torch
+
+from truthgraph.services.ml.embedding_service import EmbeddingService
+from truthgraph.services.ml.nli_service import get_nli_service
+
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
@@ -43,11 +48,6 @@ try:
 except ImportError:
     PSUTIL_AVAILABLE = False
     print("Warning: psutil not installed. Memory monitoring will be limited.")
-
-import torch
-
-from truthgraph.services.ml.embedding_service import EmbeddingService
-from truthgraph.services.ml.nli_service import get_nli_service
 
 
 class BatchSizeOptimizer:
@@ -176,9 +176,7 @@ class BatchSizeOptimizer:
             return {"device": device, "results": results, "optimal": None}
 
         # Filter by memory constraint
-        valid_results = [
-            r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb
-        ]
+        valid_results = [r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb]
 
         if not valid_results:
             print(f"\nWARNING: No batch sizes fit within memory limit ({self.memory_limit_mb} MB)")
@@ -315,9 +313,7 @@ class BatchSizeOptimizer:
             return {"device": device, "results": results, "optimal": None}
 
         # Filter by memory constraint
-        valid_results = [
-            r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb
-        ]
+        valid_results = [r for r in successful_results if r["memory_after_mb"] <= self.memory_limit_mb]
 
         if not valid_results:
             print(f"\nWARNING: No batch sizes fit within memory limit ({self.memory_limit_mb} MB)")

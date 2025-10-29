@@ -13,17 +13,11 @@ import argparse
 import os
 import sys
 import time
-from pathlib import Path
 from statistics import mean, median, stdev
 from uuid import uuid4
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
 
 from truthgraph.db import Base
 from truthgraph.schemas import Embedding, Evidence
@@ -81,9 +75,7 @@ def create_test_corpus(session, size: int, embedding_dim: int = 1536) -> None:
     print("Test corpus created successfully!")
 
 
-def benchmark_queries(
-    session, service: VectorSearchService, num_queries: int, top_k: int = 10
-) -> dict:
+def benchmark_queries(session, service: VectorSearchService, num_queries: int, top_k: int = 10) -> dict:
     """Benchmark vector search queries.
 
     Args:
@@ -135,9 +127,7 @@ def benchmark_queries(
     }
 
 
-def benchmark_batch_queries(
-    session, service: VectorSearchService, batch_size: int = 10, num_batches: int = 10
-) -> dict:
+def benchmark_batch_queries(session, service: VectorSearchService, batch_size: int = 10, num_batches: int = 10) -> dict:
     """Benchmark batch vector search queries.
 
     Args:
@@ -172,9 +162,7 @@ def benchmark_batch_queries(
 
         if (i + 1) % 5 == 0 or i == 0:
             total_results = sum(len(r) for r in results)
-            print(
-                f"  Batch {i + 1}/{num_batches}: {batch_time_ms:.2f}ms, {total_results} total results"
-            )
+            print(f"  Batch {i + 1}/{num_batches}: {batch_time_ms:.2f}ms, {total_results} total results")
 
     return {
         "num_batches": num_batches,
@@ -252,9 +240,7 @@ def main():
         default=10,
         help="Size of each batch query (default: 10)",
     )
-    parser.add_argument(
-        "--top-k", type=int, default=10, help="Number of results per query (default: 10)"
-    )
+    parser.add_argument("--top-k", type=int, default=10, help="Number of results per query (default: 10)")
     parser.add_argument(
         "--embedding-dim",
         type=int,
@@ -314,9 +300,7 @@ def main():
         service = VectorSearchService(embedding_dimension=args.embedding_dim)
 
         # Get corpus stats
-        stats = service.get_embedding_stats(
-            db=session, entity_type="evidence", tenant_id="benchmark"
-        )
+        stats = service.get_embedding_stats(db=session, entity_type="evidence", tenant_id="benchmark")
         print("\nCorpus statistics:")
         print(f"  Total embeddings: {stats['total_embeddings']}")
 
@@ -325,9 +309,7 @@ def main():
         print_results(single_results)
 
         # Benchmark batch queries
-        batch_results = benchmark_batch_queries(
-            session, service, args.batch_size, args.batch_queries
-        )
+        batch_results = benchmark_batch_queries(session, service, args.batch_size, args.batch_queries)
         print_results(batch_results)
 
         # Summary

@@ -326,9 +326,7 @@ class TestNLIAccuracy:
 
         Target: >85% for entailment cases
         """
-        entailment_cases = [
-            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.ENTAILMENT
-        ]
+        entailment_cases = [tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.ENTAILMENT]
 
         assert len(entailment_cases) > 0
         # Would test actual NLI service
@@ -339,9 +337,7 @@ class TestNLIAccuracy:
 
         Target: >85% for contradiction cases
         """
-        contradiction_cases = [
-            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.CONTRADICTION
-        ]
+        contradiction_cases = [tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.CONTRADICTION]
 
         assert len(contradiction_cases) > 0
 
@@ -351,9 +347,7 @@ class TestNLIAccuracy:
 
         Target: >70% for neutral cases (hardest class)
         """
-        neutral_cases = [
-            tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.NEUTRAL
-        ]
+        neutral_cases = [tc for tc in NLI_TEST_DATASET if tc.expected_label == ExpectedLabel.NEUTRAL]
 
         assert len(neutral_cases) > 0
 
@@ -379,9 +373,7 @@ class TestNLIAccuracy:
             "cause temperatures to rise, leading to changes in weather patterns, sea levels, "
             "and ecosystems around the world."
         )
-        long_hypothesis = (
-            "Human activities are causing climate change by increasing greenhouse gases"
-        )
+        long_hypothesis = "Human activities are causing climate change by increasing greenhouse gases"
 
         # Test case structure
         assert len(long_premise) > 100
@@ -460,13 +452,13 @@ class TestVerdictAggregationAccuracy:
 
         # Mixed results should lead to lower confidence or INSUFFICIENT
         entail_avg = (
-            statistics.mean([c for l, c in results if l == NLILabel.ENTAILMENT])
-            if any(l == NLILabel.ENTAILMENT for l, _ in results)
+            statistics.mean([c for ll, c in results if ll == NLILabel.ENTAILMENT])
+            if any(ll == NLILabel.ENTAILMENT for ll, _ in results)
             else 0
         )
         contradict_avg = (
-            statistics.mean([c for l, c in results if l == NLILabel.CONTRADICTION])
-            if any(l == NLILabel.CONTRADICTION for l, _ in results)
+            statistics.mean([c for ll, c in results if ll == NLILabel.CONTRADICTION])
+            if any(ll == NLILabel.CONTRADICTION for ll, _ in results)
             else 0
         )
 
@@ -486,8 +478,8 @@ class TestVerdictAggregationAccuracy:
         ]
 
         # Should lean towards support
-        weighted_support = statistics.mean([c for l, c in results if l == NLILabel.ENTAILMENT])
-        weighted_refute = statistics.mean([c for l, c in results if l == NLILabel.CONTRADICTION])
+        weighted_support = statistics.mean([c for ll, c in results if ll == NLILabel.ENTAILMENT])
+        weighted_refute = statistics.mean([c for ll, c in results if ll == NLILabel.CONTRADICTION])
 
         assert weighted_support > weighted_refute
 
@@ -503,7 +495,7 @@ class TestVerdictAggregationAccuracy:
         ]
 
         # All neutral should produce INSUFFICIENT
-        neutral_count = sum(1 for l, _ in results if l == NLILabel.NEUTRAL)
+        neutral_count = sum(1 for ll, _ in results if ll == NLILabel.NEUTRAL)
         assert neutral_count == len(results)
 
     @pytest.mark.asyncio
@@ -514,9 +506,9 @@ class TestVerdictAggregationAccuracy:
 
         for test_case in VERDICT_AGGREGATION_TEST_CASES:
             # Calculate verdict from NLI results
-            entail_scores = [c for l, c in test_case.nli_results if l == NLILabel.ENTAILMENT]
-            contradict_scores = [c for l, c in test_case.nli_results if l == NLILabel.CONTRADICTION]
-            neutral_scores = [c for l, c in test_case.nli_results if l == NLILabel.NEUTRAL]
+            entail_scores = [c for ll, c in test_case.nli_results if ll == NLILabel.ENTAILMENT]
+            contradict_scores = [c for ll, c in test_case.nli_results if ll == NLILabel.CONTRADICTION]
+            neutral_scores = [c for ll, c in test_case.nli_results if ll == NLILabel.NEUTRAL]
 
             entail_avg = statistics.mean(entail_scores) if entail_scores else 0
             contradict_avg = statistics.mean(contradict_scores) if contradict_scores else 0
@@ -525,11 +517,7 @@ class TestVerdictAggregationAccuracy:
             # Determine verdict based on aggregation
             if entail_avg > 0.5 and entail_avg > contradict_avg and entail_avg > neutral_avg:
                 verdict = "SUPPORTED"
-            elif (
-                contradict_avg > 0.5
-                and contradict_avg > entail_avg
-                and contradict_avg > neutral_avg
-            ):
+            elif contradict_avg > 0.5 and contradict_avg > entail_avg and contradict_avg > neutral_avg:
                 verdict = "REFUTED"
             else:
                 verdict = "INSUFFICIENT"
@@ -726,8 +714,8 @@ class TestIntegrationAccuracy:
 
         Simple claims should have higher accuracy than complex ones.
         """
-        simple_claims = []
-        complex_claims = []
+        # simple_claims = []
+        # complex_claims = []
 
         # Would categorize test dataset by complexity
         # Calculate separate accuracy for each

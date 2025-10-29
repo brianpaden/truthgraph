@@ -255,7 +255,7 @@ def test_fever_specific_claim(fever_claim_by_id):
 
 **Test Results**: ALL 39 TESTS PASSING
 
-```
+```text
 ============================= 39 passed in 0.05s ==============================
 ```
 
@@ -297,7 +297,7 @@ def test_fever_specific_claim(fever_claim_by_id):
 ## Schema Mapping Decisions
 
 ### Verdict Mapping
-```
+```text
 FEVER Label          → TruthGraph Verdict
 SUPPORTS             → SUPPORTED
 REFUTES              → REFUTED
@@ -306,7 +306,7 @@ NOT ENOUGH INFO      → INSUFFICIENT
 
 ### Evidence Strategy
 The FEVER dataset references Wikipedia sentences as:
-```
+```text
 [annotation_id, evidence_id, article_title, sentence_id]
 ```
 
@@ -526,8 +526,8 @@ def test_with_evidence(fever_claims_with_evidence, fever_sample_evidence):
 ## References
 
 ### FEVER Dataset
-- **Homepage**: https://fever.ai/
-- **GitHub**: https://github.com/facebookresearch/FEVER-evidence-retrieval
+- **Homepage**: <https://fever.ai/>
+- **GitHub**: <https://github.com/facebookresearch/FEVER-evidence-retrieval>
 - **Paper**: Thorne et al., "FEVER: a Large-scale Dataset for Fact Extraction and VERification"
 - **License**: Creative Commons Attribution 4.0 International
 

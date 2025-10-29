@@ -112,7 +112,7 @@ Integrated FEVER (Fact Extraction and VERification) dataset samples to enable re
 
 ### Processing Pipeline
 
-```
+```text
 1. Download FEVER dataset (dev set ~19K claims)
    ↓
 2. Parse JSONL format
@@ -141,23 +141,23 @@ Integrated FEVER (Fact Extraction and VERification) dataset samples to enable re
 4. **fever_stats** - Load dataset statistics
 
 ### Factory Pattern Fixtures
-5. **fever_claim_by_id(claim_id)** - Retrieve specific claim
-6. **fever_claims_by_verdict(verdict)** - Filter claims by verdict type
+1. **fever_claim_by_id(claim_id)** - Retrieve specific claim
+2. **fever_claims_by_verdict(verdict)** - Filter claims by verdict type
 
 ### Convenience Fixtures
-7. **fever_supported_claims** - All SUPPORTED claims (11)
-8. **fever_refuted_claims** - All REFUTED claims (7)
-9. **fever_insufficient_claims** - All INSUFFICIENT claims (7)
-10. **fever_claims_with_evidence** - Claims with evidence (17)
-11. **fever_claims_without_evidence** - Claims without evidence (8)
+1. **fever_supported_claims** - All SUPPORTED claims (11)
+2. **fever_refuted_claims** - All REFUTED claims (7)
+3. **fever_insufficient_claims** - All INSUFFICIENT claims (7)
+4. **fever_claims_with_evidence** - Claims with evidence (17)
+5. **fever_claims_without_evidence** - Claims without evidence (8)
 
 ### Metadata & Validation
-12. **fever_fixture_metadata()** - Generate statistics dictionary
-13. **verify_fever_fixture_integrity()** - Validate data integrity
+1. **fever_fixture_metadata()** - Generate statistics dictionary
+2. **verify_fever_fixture_integrity()** - Validate data integrity
 
 ### Sample Fixtures
-14. **sample_fever_supported_claim** - Single SUPPORTED example
-15. **sample_fever_refuted_claim** - Single REFUTED example
+1. **sample_fever_supported_claim** - Single SUPPORTED example
+2. **sample_fever_refuted_claim** - Single REFUTED example
 
 ---
 

@@ -9,7 +9,7 @@ FEVER (Fact Extraction and VERification) is a dataset of 180K factual claims wit
 No download or processing needed! All fixtures are pre-configured in your test directory.
 
 ### Location
-```
+```text
 tests/fixtures/fever/
 ├── fever_sample_claims.json      # 25 test claims
 ├── fever_sample_evidence.json     # 20 evidence items
@@ -130,7 +130,7 @@ def test_with_metadata(fever_fixture_metadata):
 
 ## Dataset Statistics
 
-```
+```text
 Claims:
   Total:       25
   Supported:   11 (44%)
@@ -345,8 +345,8 @@ For detailed information, see:
 
 ## Key Resources
 
-- FEVER Website: https://fever.ai/
-- FEVER GitHub: https://github.com/facebookresearch/FEVER-evidence-retrieval
+- FEVER Website: <https://fever.ai/>
+- FEVER GitHub: <https://github.com/facebookresearch/FEVER-evidence-retrieval>
 - Paper: Thorne et al., "FEVER: a Large-scale Dataset for Fact Extraction and VERification"
 
 ## Next Steps

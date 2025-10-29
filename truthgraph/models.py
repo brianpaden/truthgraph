@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ClaimCreate(BaseModel):
@@ -17,26 +17,24 @@ class ClaimCreate(BaseModel):
 class VerdictResponse(BaseModel):
     """Response model for verdict information."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     verdict: Optional[str] = Field(None, description="SUPPORTED, REFUTED, or INSUFFICIENT")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
     reasoning: Optional[str] = None
 
-    class Config:
-        from_attributes = True
-
 
 class ClaimResponse(BaseModel):
     """Response model for claim information."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: UUID
     text: str
     source_url: Optional[str] = None
     submitted_at: datetime
     verdict: Optional[VerdictResponse] = None
-
-    class Config:
-        from_attributes = True
 
 
 class ClaimListResponse(BaseModel):
@@ -77,8 +75,7 @@ class VectorSearchResultItem(BaseModel):
     source_url: Optional[str] = None
     similarity: float = Field(..., ge=0.0, le=1.0)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class VectorSearchResponse(BaseModel):
@@ -88,8 +85,7 @@ class VectorSearchResponse(BaseModel):
     total: int
     query_time_ms: Optional[float] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Hybrid Search Models
@@ -148,8 +144,7 @@ class HybridSearchResultItem(BaseModel):
         ..., description="How result was found: 'vector', 'keyword', or 'both'"
     )
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class HybridSearchResponse(BaseModel):
@@ -160,8 +155,7 @@ class HybridSearchResponse(BaseModel):
     query_time_ms: float
     search_stats: dict = Field(default_factory=dict, description="Additional search statistics")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SearchStatsResponse(BaseModel):
@@ -172,5 +166,4 @@ class SearchStatsResponse(BaseModel):
     embedding_coverage: float = Field(..., ge=0.0, le=100.0)
     tenant_id: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

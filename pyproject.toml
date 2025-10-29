@@ -1,5 +1,5 @@
 [project]
-name = "truthgraph-v0"
+name = "truthgraph"
 version = "0.1.0"
 description = "Local-first fact-checking system"
 readme = "README.md"
@@ -45,6 +45,7 @@ dev = [
     "pytest-timeout",
     "hypothesis",
     "pytest-sugar",
+    "pytest-benchmark",
 ]
 
 ml = [

@@ -44,12 +44,12 @@ All deliverables are production-ready and fully tested.
 
 ### Test Files
 
-5. **tests/fixtures/test_fixtures.py** (3.7 KB)
+1. **tests/fixtures/test_fixtures.py** (3.7 KB)
    - 12 validation tests for fixture integrity
    - Field validation and type checking
    - Data consistency verification
 
-6. **tests/fixtures/test_fixtures_integration.py** (6.7 KB)
+2. **tests/fixtures/test_fixtures_integration.py** (6.7 KB)
    - 10 integration tests with TruthGraph schemas
    - API schema compatibility checks
    - Verification pipeline readiness validation
@@ -235,7 +235,7 @@ def test_edge_cases(claims_by_edge_case):
 
 ## Files Summary
 
-```
+```text
 tests/fixtures/
 ├── test_claims.json                 # 25 claims with verdicts
 ├── sample_evidence.json             # 55 evidence items

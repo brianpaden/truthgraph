@@ -6,8 +6,8 @@ This directory contains test fixtures derived from the FEVER (Fact Extraction an
 
 FEVER is a large-scale dataset for fact extraction and verification that contains fact claims with Wikipedia-based evidence. The dataset has been adapted to TruthGraph's schema for comprehensive testing of the verification pipeline.
 
-**Source**: https://fever.ai/dataset/fever.html
-**Paper**: https://arxiv.org/abs/1803.05355
+**Source**: <https://fever.ai/dataset/fever.html>
+**Paper**: <https://arxiv.org/abs/1803.05355>
 **License**: Creative Commons Attribution 4.0 International
 
 ## Files
@@ -85,7 +85,7 @@ The sample fixtures cover diverse topics including:
 ## Evidence Strategy
 
 The FEVER dataset originally references specific Wikipedia sentences in the format:
-```
+```text
 [annotation_id, evidence_id, article_title, sentence_id]
 ```
 
@@ -283,7 +283,7 @@ def test_fever_benchmark_performance(fever_sample_claims, benchmark):
 
 The distribution is intentionally balanced to test all verdict types equally.
 
-### Evidence Coverage
+### Statistics Evidence Coverage
 
 - **With Evidence**: 17 claims (68%)
 - **Without Evidence**: 8 claims (32%)
@@ -336,16 +336,16 @@ python scripts/load_fever_sample.py \
 
 ### FEVER Dataset
 
-- **Homepage**: https://fever.ai/
-- **GitHub**: https://github.com/facebookresearch/FEVER-evidence-retrieval
+- **Homepage**: <https://fever.ai/>
+- **GitHub**: <https://github.com/facebookresearch/FEVER-evidence-retrieval>
 - **Paper**: Thorne et al., "FEVER: a Large-scale Dataset for Fact Extraction and VERification"
-- **Download**: https://fever.ai/dataset/fever.html
+- **Download**: <https://fever.ai/dataset/fever.html>
 
 ### Related Resources
 
 - **Wikipedia API**: For real evidence retrieval
-- **FEVER Leaderboard**: https://fever.ai/leaderboard
-- **FEVER Evaluation Scripts**: https://github.com/facebookresearch/FEVER-evidence-retrieval
+- **FEVER Leaderboard**: <https://fever.ai/leaderboard>
+- **FEVER Evaluation Scripts**: <https://github.com/facebookresearch/FEVER-evidence-retrieval>
 
 ## Notes
 

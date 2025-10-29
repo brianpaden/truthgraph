@@ -45,14 +45,14 @@ Successfully completed Feature 1.1: Test Claims Dataset Fixture for TruthGraph v
 
 ### Validation Files
 
-5. **`tests/fixtures/test_fixtures.py`** (3.7 KB, 12 tests)
+1. **`tests/fixtures/test_fixtures.py`** (3.7 KB, 12 tests)
    - Fixture loading and structure validation
    - Field completeness and type checking
    - Verdict and confidence value validation
    - NLI label validation
    - Evidence reference integrity checks
 
-6. **`tests/fixtures/test_fixtures_integration.py`** (6.7 KB, 10 tests)
+2. **`tests/fixtures/test_fixtures_integration.py`** (6.7 KB, 10 tests)
    - API schema compatibility tests
    - TruthGraph schema alignment validation
    - Verification pipeline readiness checks
@@ -61,7 +61,7 @@ Successfully completed Feature 1.1: Test Claims Dataset Fixture for TruthGraph v
 
 ### Summary Documentation
 
-7. **`FEATURE_1_1_SUMMARY.md`**
+1. **`FEATURE_1_1_SUMMARY.md`**
    - High-level feature completion summary
    - Statistics and metrics overview
    - Test results and success criteria
@@ -153,7 +153,7 @@ Successfully completed Feature 1.1: Test Claims Dataset Fixture for TruthGraph v
 ### Validation Test Suite (12 tests)
 All validation tests verify fixture integrity and data quality.
 
-```
+```text
 test_claims_fixture_loads                    PASSED
 test_evidence_fixture_loads                  PASSED
 test_claim_by_id_factory                     PASSED
@@ -171,7 +171,7 @@ test_claim_evidence_references_valid         PASSED
 ### Integration Test Suite (10 tests)
 All integration tests verify compatibility with TruthGraph systems.
 
-```
+```text
 test_claims_compatible_with_api_schema                    PASSED
 test_evidence_compatible_with_schema                      PASSED
 test_verdict_compatible_with_schema                       PASSED
@@ -291,7 +291,7 @@ test_complete_verification_scenario                      PASSED
 
 ## File Manifest
 
-```
+```text
 tests/fixtures/
 ├── test_claims.json                    (12 KB) - 25 test claims
 ├── sample_evidence.json                (26 KB) - 55 evidence items

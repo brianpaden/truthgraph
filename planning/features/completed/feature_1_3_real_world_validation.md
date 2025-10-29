@@ -197,18 +197,18 @@ def test_baseline_accuracy(real_world_claims, accuracy_results):
 2. **real_world_evidence** - Load all 56 evidence items
 
 ### Factory Pattern Fixtures
-3. **real_world_claims_by_category(category)** - Filter claims by category
-4. **real_world_claims_by_verdict(verdict)** - Filter claims by verdict
-5. **real_world_claims_by_source(source)** - Filter claims by fact-checker
+1. **real_world_claims_by_category(category)** - Filter claims by category
+2. **real_world_claims_by_verdict(verdict)** - Filter claims by verdict
+3. **real_world_claims_by_source(source)** - Filter claims by fact-checker
 
 ### Analysis Fixtures
-6. **accuracy_results** - AccuracyResults tracker instance
-7. **real_world_claims_metadata** - Statistics dictionary
+1. **accuracy_results** - AccuracyResults tracker instance
+2. **real_world_claims_metadata** - Statistics dictionary
 
 ### Sample Fixtures
-8. **sample_supported_claim** - Single SUPPORTED example
-9. **sample_refuted_claim** - Single REFUTED example
-10. **sample_insufficient_claim** - Single INSUFFICIENT example
+1. **sample_supported_claim** - Single SUPPORTED example
+2. **sample_refuted_claim** - Single REFUTED example
+3. **sample_insufficient_claim** - Single INSUFFICIENT example
 
 ---
 

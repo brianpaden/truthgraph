@@ -109,7 +109,7 @@ The implementation exceeds all success criteria and is ready for integration wit
 ## Test Results
 
 ### Test Execution
-```
+```text
 Command: pytest tests/accuracy/test_accuracy_baseline.py -v
 
 Results:
@@ -169,18 +169,18 @@ All validation checks PASSED:
 
 | Source | Count | URL |
 |--------|-------|-----|
-| Snopes | 6 | https://www.snopes.com |
-| FactCheck.org | 5 | https://www.factcheck.org |
-| AP Fact Check | 5 | https://apnews.com/APFactCheck |
-| Full Fact | 4 | https://fullfact.org |
-| PolitiFact | 4 | https://www.politifact.com |
-| Reuters Fact Check | 4 | https://www.reuters.com/fact-check |
+| Snopes | 6 | <https://www.snopes.com> |
+| FactCheck.org | 5 | <https://www.factcheck.org> |
+| AP Fact Check | 5 | <https://apnews.com/APFactCheck> |
+| Full Fact | 4 | <https://fullfact.org> |
+| PolitiFact | 4 | <https://www.politifact.com> |
+| Reuters Fact Check | 4 | <https://www.reuters.com/fact-check> |
 
 ## Fact-Checker Verdict Mapping
 
 All fact-checker verdicts properly mapped to TruthGraph format:
 
-```
+```text
 Snopes:        TRUE → SUPPORTED, FALSE → REFUTED, MIXTURE/UNPROVEN → INSUFFICIENT
 FactCheck.org: TRUE → SUPPORTED, FALSE → REFUTED, MIXTURE → INSUFFICIENT
 PolitiFact:    TRUE/MOSTLY_TRUE → SUPPORTED, FALSE/PANTS_ON_FIRE → REFUTED, HALF_TRUE → INSUFFICIENT
@@ -191,7 +191,7 @@ Full Fact:     CORRECT → SUPPORTED, INCORRECT → REFUTED, UNVERIFIABLE → IN
 
 ## File Structure
 
-```
+```text
 tests/accuracy/
 ├── real_world_claims.json              (28 fact-checked claims)
 ├── real_world_evidence.json            (56 evidence items)

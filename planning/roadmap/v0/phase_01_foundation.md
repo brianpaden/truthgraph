@@ -769,7 +769,7 @@ CREATE INDEX IF NOT EXISTS idx_verdict_evidence_verdict_id ON verdict_evidence(v
 
 ```toml
 [project]
-name = "truthgraph-v0"
+name = "truthgraph"
 version = "0.1.0"
 description = "Local-first fact-checking system"
 requires-python = ">=3.12"

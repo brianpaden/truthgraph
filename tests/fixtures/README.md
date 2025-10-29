@@ -14,7 +14,7 @@ This directory contains curated test data designed to support comprehensive test
 
 ## Directory Structure
 
-```
+```text
 tests/fixtures/
 ├── test_claims.json          # Main test claims dataset (25 claims)
 ├── sample_evidence.json       # Evidence corpus (55 evidence items)

@@ -38,6 +38,12 @@ from pathlib import Path
 from pstats import SortKey
 from typing import Any
 
+import torch
+
+from truthgraph.services.ml.embedding_service import EmbeddingService
+from truthgraph.services.ml.model_cache import ModelCache
+from truthgraph.services.ml.nli_service import get_nli_service
+
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
@@ -49,20 +55,6 @@ try:
 except ImportError:
     PSUTIL_AVAILABLE = False
     print("Warning: psutil not installed. Install with: pip install psutil")
-
-try:
-    from memory_profiler import profile as memory_profile
-
-    MEMORY_PROFILER_AVAILABLE = True
-except ImportError:
-    MEMORY_PROFILER_AVAILABLE = False
-    print("Warning: memory_profiler not installed. Install with: pip install memory-profiler")
-
-import torch
-
-from truthgraph.services.ml.embedding_service import EmbeddingService
-from truthgraph.services.ml.model_cache import ModelCache
-from truthgraph.services.ml.nli_service import get_nli_service
 
 
 class PerformanceProfiler:
@@ -98,9 +90,7 @@ class PerformanceProfiler:
 
         return memory_info
 
-    def profile_embedding_service(
-        self, num_samples: int = 1000, batch_size: int = 32
-    ) -> dict[str, Any]:
+    def profile_embedding_service(self, num_samples: int = 1000, batch_size: int = 32) -> dict[str, Any]:
         """Profile the embedding service.
 
         Args:
@@ -173,9 +163,7 @@ class PerformanceProfiler:
 
         print(f"  Average latency: {results['single_text_avg_latency_ms']:.2f} ms")
 
-        self._save_profile_stats(
-            profiler, "embedding_single_text", "Single text embedding hotspots:"
-        )
+        self._save_profile_stats(profiler, "embedding_single_text", "Single text embedding hotspots:")
 
         # Profile batch processing
         print(f"\nProfiling batch processing ({num_samples} texts)...")
@@ -187,7 +175,7 @@ class PerformanceProfiler:
         start_time = time.perf_counter()
         embeddings = service.embed_batch(test_texts, batch_size=batch_size)
         elapsed = time.perf_counter() - start_time
-
+        assert embeddings
         profiler.disable()
 
         throughput = num_samples / elapsed
@@ -282,9 +270,7 @@ class PerformanceProfiler:
         profiler.disable()
 
         results["single_pair_avg_latency_ms"] = sum(latencies) / len(latencies)
-        results["single_pair_throughput_pairs_per_sec"] = (
-            1000 / results["single_pair_avg_latency_ms"]
-        )
+        results["single_pair_throughput_pairs_per_sec"] = 1000 / results["single_pair_avg_latency_ms"]
 
         print(f"  Average latency: {results['single_pair_avg_latency_ms']:.1f} ms")
         print(f"  Throughput: {results['single_pair_throughput_pairs_per_sec']:.2f} pairs/sec")
@@ -307,6 +293,7 @@ class PerformanceProfiler:
         start_time = time.perf_counter()
         results_list = service.verify_batch(test_pairs, batch_size=batch_size)
         elapsed = time.perf_counter() - start_time
+        assert results_list
 
         profiler.disable()
 
@@ -492,9 +479,7 @@ class PerformanceProfiler:
         if "model_cache" in self.results:
             cache = self.results["model_cache"]
             if cache.get("total_memory_mb", 0) > 4000:
-                bottlenecks.append(
-                    f"Total memory ({cache.get('total_memory_mb', 0):.1f} MB) exceeds target (4000 MB)"
-                )
+                bottlenecks.append(f"Total memory ({cache.get('total_memory_mb', 0):.1f} MB) exceeds target (4000 MB)")
 
         if bottlenecks:
             print("\nIdentified bottlenecks:")
@@ -561,10 +546,6 @@ def main() -> None:
     print(f"  Samples: {args.num_samples}")
     print(f"  Output directory: {args.output_dir}")
     print(f"  Memory profiling: {args.memory_profile}")
-
-    if args.memory_profile and not MEMORY_PROFILER_AVAILABLE:
-        print("\nWarning: memory_profiler not available")
-        print("Install with: pip install memory-profiler")
 
     profiler = PerformanceProfiler(output_dir=args.output_dir)
 

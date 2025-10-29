@@ -18,9 +18,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -88,9 +86,9 @@ class FEVERSampleLoader:
                 data = json.load(f)
             return data
         except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid JSON in {filepath}: {e}")
+            raise ValueError(f"Invalid JSON in {filepath}: {e}") from None
         except Exception as e:
-            raise ValueError(f"Failed to load {filepath}: {e}")
+            raise ValueError(f"Failed to load {filepath}: {e}") from None
 
     def validate_claims(self, claims_data: Dict) -> bool:
         """Validate claims data structure.
@@ -301,9 +299,7 @@ class FEVERSampleLoader:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Load processed FEVER data into test fixtures")
-    parser.add_argument(
-        "--input-dir", type=Path, required=True, help="Directory with processed FEVER data"
-    )
+    parser.add_argument("--input-dir", type=Path, required=True, help="Directory with processed FEVER data")
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -316,12 +312,8 @@ def main():
         default=True,
         help="Validate data structure (default: True)",
     )
-    parser.add_argument(
-        "--no-validate", dest="validate", action="store_false", help="Skip validation"
-    )
-    parser.add_argument(
-        "--info", action="store_true", help="Show fixture information after loading"
-    )
+    parser.add_argument("--no-validate", dest="validate", action="store_false", help="Skip validation")
+    parser.add_argument("--info", action="store_true", help="Show fixture information after loading")
 
     args = parser.parse_args()
 

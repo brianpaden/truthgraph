@@ -276,7 +276,7 @@ results_dict = results.to_dict()
 
 Tracks prediction accuracy by verdict type:
 
-```
+```text
 Expected vs Actual:
                 SUPPORTED  REFUTED  INSUFFICIENT
 SUPPORTED           8         1           1
@@ -430,12 +430,12 @@ Example addition:
 ## References
 
 - Fact-checking sources:
-  - https://www.snopes.com
-  - https://www.factcheck.org
-  - https://www.politifact.com
-  - https://www.reuters.com/fact-check
-  - https://apnews.com/APFactCheck
-  - https://fullfact.org
+  - <https://www.snopes.com>
+  - <https://www.factcheck.org>
+  - <https://www.politifact.com>
+  - <https://www.reuters.com/fact-check>
+  - <https://apnews.com/APFactCheck>
+  - <https://fullfact.org>
 
 - Related datasets:
   - FEVER dataset (Feature 1.2)
