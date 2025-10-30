@@ -40,7 +40,11 @@
       "Bash(wc:*)",
       "Bash(ls:*)",
       "Bash(tee:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(python scripts/generate_corpus_data.py:*)",
+      "Bash(python scripts/embed_corpus.py:*)",
+      "Bash(python scripts/generate_sample_corpus.py:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

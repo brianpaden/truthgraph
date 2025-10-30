@@ -1,0 +1,122 @@
+[
+  {
+    "id": "json_001",
+    "content": "The theory of evolution by natural selection was proposed by Charles Darwin in his 1859 book 'On the Origin of Species'.",
+    "source": "Evolutionary Biology",
+    "url": "https://example.com/evolution"
+  },
+  {
+    "id": "json_002",
+    "content": "The Hubble Space Telescope has been in operation since 1990, providing unprecedented views of distant galaxies and nebulae.",
+    "source": "Space Technology",
+    "url": "https://example.com/hubble"
+  },
+  {
+    "id": "json_003",
+    "content": "Plate tectonics explains the movement of Earth's lithosphere, causing earthquakes, volcanic activity, and mountain formation.",
+    "source": "Geology Textbook",
+    "url": "https://example.com/tectonics"
+  },
+  {
+    "id": "json_004",
+    "content": "The Rosetta Stone, discovered in 1799, was key to deciphering ancient Egyptian hieroglyphics.",
+    "source": "Archaeology",
+    "url": "https://example.com/rosetta"
+  },
+  {
+    "id": "json_005",
+    "content": "Quantum mechanics describes the behavior of matter and energy at the atomic and subatomic scale.",
+    "source": "Quantum Physics",
+    "url": "https://example.com/quantum"
+  },
+  {
+    "id": "json_006",
+    "content": "The Wright brothers achieved the first powered flight on December 17, 1903, at Kitty Hawk, North Carolina.",
+    "source": "Aviation History",
+    "url": "https://example.com/wright"
+  },
+  {
+    "id": "json_007",
+    "content": "DNA replication is semiconservative, meaning each new DNA molecule contains one original strand and one newly synthesized strand.",
+    "source": "Molecular Biology",
+    "url": "https://example.com/dna-replication"
+  },
+  {
+    "id": "json_008",
+    "content": "The Industrial Revolution began in Britain in the late 18th century, transforming manufacturing and society.",
+    "source": "Economic History",
+    "url": "https://example.com/industrial-revolution"
+  },
+  {
+    "id": "json_009",
+    "content": "Photons are particles of light that exhibit both wave and particle properties, a concept known as wave-particle duality.",
+    "source": "Optics",
+    "url": "https://example.com/photons"
+  },
+  {
+    "id": "json_010",
+    "content": "The Krebs cycle is a series of chemical reactions used by aerobic organisms to generate energy through oxidation of acetyl-CoA.",
+    "source": "Biochemistry",
+    "url": "https://example.com/krebs"
+  },
+  {
+    "id": "json_011",
+    "content": "The Roman Empire reached its greatest extent under Emperor Trajan in 117 AD, spanning three continents.",
+    "source": "Ancient History",
+    "url": "https://example.com/roman-empire"
+  },
+  {
+    "id": "json_012",
+    "content": "Newton's laws of motion describe the relationship between force, mass, and acceleration in classical mechanics.",
+    "source": "Classical Physics",
+    "url": "https://example.com/newton"
+  },
+  {
+    "id": "json_013",
+    "content": "The human genome contains approximately 3 billion base pairs and about 20,000-25,000 protein-coding genes.",
+    "source": "Genomics",
+    "url": "https://example.com/genome"
+  },
+  {
+    "id": "json_014",
+    "content": "The Renaissance period in Europe, spanning the 14th to 17th centuries, saw a revival of art, culture, and learning.",
+    "source": "Cultural History",
+    "url": "https://example.com/renaissance"
+  },
+  {
+    "id": "json_015",
+    "content": "Superconductors exhibit zero electrical resistance and perfect diamagnetism when cooled below a critical temperature.",
+    "source": "Condensed Matter Physics",
+    "url": "https://example.com/superconductors"
+  },
+  {
+    "id": "json_016",
+    "content": "The immune system uses specialized cells like T-cells and B-cells to identify and destroy pathogens.",
+    "source": "Immunology",
+    "url": "https://example.com/immune"
+  },
+  {
+    "id": "json_017",
+    "content": "The French Revolution began in 1789 with the storming of the Bastille, leading to major political and social changes.",
+    "source": "European History",
+    "url": "https://example.com/french-revolution"
+  },
+  {
+    "id": "json_018",
+    "content": "Enzymes are biological catalysts that speed up chemical reactions in living organisms without being consumed.",
+    "source": "Biochemistry Fundamentals",
+    "url": "https://example.com/enzymes"
+  },
+  {
+    "id": "json_019",
+    "content": "The Big Bang theory describes the universe's origin from an extremely hot, dense state approximately 13.8 billion years ago.",
+    "source": "Cosmology",
+    "url": "https://example.com/big-bang"
+  },
+  {
+    "id": "json_020",
+    "content": "Chlorophyll is the green pigment in plants that absorbs light energy for photosynthesis, primarily in the red and blue wavelengths.",
+    "source": "Plant Physiology",
+    "url": "https://example.com/chlorophyll"
+  }
+]

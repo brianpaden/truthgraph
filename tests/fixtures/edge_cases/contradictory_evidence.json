@@ -1,0 +1,125 @@
+{
+  "category": "contradictory_evidence",
+  "description": "Claims with equal supporting and refuting evidence, sources that conflict directly, or competing interpretations of the same data",
+  "expected_behavior": "System should handle conflicting evidence appropriately, typically returning CONFLICTING or requiring confidence thresholds",
+  "claims": [
+    {
+      "id": "edge_contra_001",
+      "text": "Coffee consumption leads to health benefits",
+      "expected_verdict": "CONFLICTING",
+      "edge_case_type": "contradictory_evidence",
+      "reason": "Multiple studies show both positive effects (antioxidants) and negative effects (anxiety, sleep disruption)",
+      "expected_behavior": "Should recognize conflicting evidence - some studies support, others refute",
+      "evidence_ids": ["ev_contra_001a", "ev_contra_001b"],
+      "metadata": {
+        "challenge": "Competing scientific interpretations",
+        "test_purpose": "Verify system handles evidence conflicts",
+        "competing_claims": true,
+        "evidence_quality": "both_high"
+      }
+    },
+    {
+      "id": "edge_contra_002",
+      "text": "The economic impact of remote work on productivity is positive",
+      "expected_verdict": "CONFLICTING",
+      "edge_case_type": "contradictory_evidence",
+      "reason": "Some studies show increased productivity, others show decreased collaboration and engagement",
+      "expected_behavior": "Should handle competing evidence with different study conditions",
+      "evidence_ids": ["ev_contra_002a", "ev_contra_002b"],
+      "metadata": {
+        "challenge": "Context-dependent evidence with conflicting conclusions",
+        "test_purpose": "Verify system understands conditional truth",
+        "competing_claims": true,
+        "evidence_quality": "both_medium"
+      }
+    },
+    {
+      "id": "edge_contra_003",
+      "text": "Artificial intelligence will create more jobs than it eliminates",
+      "expected_verdict": "CONFLICTING",
+      "edge_case_type": "contradictory_evidence",
+      "reason": "Economists and experts present contradictory predictions based on different assumptions",
+      "expected_behavior": "Should identify competing expert opinions",
+      "evidence_ids": ["ev_contra_003a", "ev_contra_003b"],
+      "metadata": {
+        "challenge": "Expert disagreement on future outcomes",
+        "test_purpose": "Verify system handles predictive disagreement",
+        "competing_claims": true,
+        "evidence_quality": "both_high"
+      }
+    },
+    {
+      "id": "edge_contra_004",
+      "text": "The historical impact of Napoleon's reign on Europe was primarily beneficial",
+      "expected_verdict": "CONFLICTING",
+      "edge_case_type": "contradictory_evidence",
+      "reason": "Historians debate whether modernization benefits outweigh military casualties and imperial expansion",
+      "expected_behavior": "Should recognize value-based disagreement in historical interpretation",
+      "evidence_ids": ["ev_contra_004a", "ev_contra_004b"],
+      "metadata": {
+        "challenge": "Normative disagreement on interpretations",
+        "test_purpose": "Verify system handles value-based conflicts",
+        "competing_claims": true,
+        "evidence_quality": "both_high"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_contra_001a",
+      "text": "A 2023 meta-analysis of 50+ studies shows coffee consumption associated with reduced risk of certain cancers and cardiovascular disease due to polyphenol compounds.",
+      "source": "Journal of Medical Studies",
+      "reliability": "high",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_contra_001b",
+      "text": "Clinical studies show that caffeine increases cortisol levels, disrupts sleep patterns, and contributes to anxiety disorders in 40% of regular consumers.",
+      "source": "Sleep Medicine Reviews",
+      "reliability": "high",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_contra_002a",
+      "text": "Stanford study of 16,000 remote workers found 13% productivity increase and 50% reduction in unplanned absences",
+      "source": "Stanford WFH Research",
+      "reliability": "high",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_contra_002b",
+      "text": "Microsoft research indicates 25% decline in cross-team collaboration and 40% decrease in innovation metrics among fully remote teams",
+      "source": "Microsoft Workplace Trends",
+      "reliability": "high",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_contra_003a",
+      "text": "World Economic Forum predicts AI will create 97 million new roles while displacing 85 million by 2025, net positive of 12 million jobs",
+      "source": "WEF Future of Jobs Report",
+      "reliability": "high",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_contra_003b",
+      "text": "MIT economists project AI automation will eliminate 300 million jobs globally by 2030, with insufficient new role creation in affected sectors",
+      "source": "MIT Technology Review Economic Analysis",
+      "reliability": "high",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_contra_004a",
+      "text": "Napoleon introduced Napoleonic Code, standardized legal systems, and modernized education across Europe, establishing principles that underpin modern legal systems",
+      "source": "European History Reviews",
+      "reliability": "high",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_contra_004b",
+      "text": "Napoleon's campaigns resulted in approximately 3-6 million deaths, destabilized existing order, and created economic devastation requiring decades of recovery",
+      "source": "Military History Archives",
+      "reliability": "high",
+      "supports_claim": false
+    }
+  ]
+}

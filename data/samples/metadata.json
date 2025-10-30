@@ -1,0 +1,33 @@
+{
+  "name": "TruthGraph Sample Evidence Corpus",
+  "version": "1.0",
+  "date_created": "2025-10-29",
+  "total_items": 250,
+  "categories": {
+    "science": 55,
+    "health": 45,
+    "history": 55,
+    "technology": 45,
+    "politics": 25,
+    "geography": 25
+  },
+  "sources": [
+    "Wikipedia",
+    "CDC",
+    "WHO",
+    "NASA",
+    "NIST",
+    "NOAA",
+    "NIH",
+    "Various Educational Sources"
+  ],
+  "languages": [
+    "en"
+  ],
+  "statistics": {
+    "avg_length": 128,
+    "min_length": 82,
+    "max_length": 185
+  },
+  "description": "Comprehensive evidence corpus for TruthGraph testing and demonstrations, covering science, health, history, technology, politics, and geography."
+}

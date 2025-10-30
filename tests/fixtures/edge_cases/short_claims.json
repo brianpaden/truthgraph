@@ -1,0 +1,108 @@
+{
+  "category": "short_claims",
+  "description": "Claims with minimal word count (less than 10 words), including single-word or very terse statements",
+  "expected_behavior": "System should process minimal context and may return INSUFFICIENT or require extensive inference from knowledge base",
+  "claims": [
+    {
+      "id": "edge_short_001",
+      "text": "Water boils at 100C.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "short_claims",
+      "reason": "Extremely terse claim with minimal context - needs baseline knowledge",
+      "expected_behavior": "Should recognize from physical properties knowledge",
+      "evidence_ids": ["ev_short_001a"],
+      "metadata": {
+        "word_count": 5,
+        "character_count": 23,
+        "test_purpose": "Verify system handles minimal text",
+        "domain": "physics"
+      }
+    },
+    {
+      "id": "edge_short_002",
+      "text": "Paris capital France.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "short_claims",
+      "reason": "Minimal grammatical structure - telegram-style brevity",
+      "expected_behavior": "Should recognize despite non-standard grammar",
+      "evidence_ids": ["ev_short_002a"],
+      "metadata": {
+        "word_count": 3,
+        "character_count": 18,
+        "test_purpose": "Verify system handles non-standard grammar",
+        "domain": "geography"
+      }
+    },
+    {
+      "id": "edge_short_003",
+      "text": "Gravity exists.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "short_claims",
+      "reason": "Two-word claim with implicit meaning - existential assertion",
+      "expected_behavior": "Should handle basic existential claims",
+      "evidence_ids": ["ev_short_003a"],
+      "metadata": {
+        "word_count": 2,
+        "character_count": 14,
+        "test_purpose": "Verify system handles existential claims",
+        "domain": "physics"
+      }
+    },
+    {
+      "id": "edge_short_004",
+      "text": "Ice melts.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "short_claims",
+      "reason": "Minimal subject-verb claim - property assertion",
+      "expected_behavior": "Should recognize basic physical process",
+      "evidence_ids": ["ev_short_004a"],
+      "metadata": {
+        "word_count": 2,
+        "character_count": 10,
+        "test_purpose": "Verify system handles simple processes",
+        "domain": "physics"
+      }
+    },
+    {
+      "id": "edge_short_005",
+      "text": "Oxygen.",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "short_claims",
+      "reason": "Single word without propositional content - unclear assertion",
+      "expected_behavior": "Should return INSUFFICIENT due to lack of claim structure",
+      "evidence_ids": [],
+      "metadata": {
+        "word_count": 1,
+        "character_count": 6,
+        "test_purpose": "Verify system handles non-propositional inputs",
+        "domain": "chemistry"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_short_001a",
+      "text": "Water's boiling point at standard atmospheric pressure (1 atm) is 100 degrees Celsius or 212 degrees Fahrenheit",
+      "source": "Physics and Chemistry Reference",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_short_002a",
+      "text": "Paris is the capital city of France, located on the Seine River in the north-central part of the country",
+      "source": "Geography Reference",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_short_003a",
+      "text": "Gravity is a fundamental force of nature that attracts objects with mass toward each other",
+      "source": "Physics Reference",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_short_004a",
+      "text": "Ice (solid water) melts when heated to its melting point of 0 degrees Celsius, transitioning to liquid water",
+      "source": "Physics and Chemistry Reference",
+      "reliability": "high"
+    }
+  ]
+}

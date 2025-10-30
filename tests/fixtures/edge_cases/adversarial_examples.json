@@ -1,0 +1,147 @@
+{
+  "category": "adversarial_examples",
+  "description": "Near-false claims (technically true but misleading), claims with subtle logical fallacies, claims designed to confuse NLI models, and cherry-picked statistics",
+  "expected_behavior": "System should maintain robustness against misleading framing while recognizing technical truth or falsehood",
+  "claims": [
+    {
+      "id": "edge_adv_001",
+      "text": "More people die from shark attacks than from COVID-19 vaccines",
+      "expected_verdict": "REFUTED",
+      "edge_case_type": "adversarial_examples",
+      "reason": "Technically true but extremely misleading due to comparing rare events (shark deaths: ~10/year) to larger population scale vaccine adverse events. Implies vaccines are unsafe by relative comparison.",
+      "expected_behavior": "Should recognize statistical manipulation and context importance",
+      "evidence_ids": ["ev_adv_001a", "ev_adv_001b"],
+      "metadata": {
+        "fallacy_type": "cherry_picked_statistics",
+        "misleading_frame": true,
+        "test_purpose": "Verify system resists misleading statistical framing",
+        "technical_truth": "partially"
+      }
+    },
+    {
+      "id": "edge_adv_002",
+      "text": "99% of people who took parachutes survived falling from airplanes",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "adversarial_examples",
+      "reason": "Technically true but implies parachutes cause 99% survival when actually the comparison is misleading (people who use parachutes are safe because they use parachutes)",
+      "expected_behavior": "Should recognize technically true but causally misleading claim",
+      "evidence_ids": ["ev_adv_002a"],
+      "metadata": {
+        "fallacy_type": "selection_bias_in_framing",
+        "misleading_frame": true,
+        "test_purpose": "Verify system identifies causal confusion",
+        "technical_truth": "true"
+      }
+    },
+    {
+      "id": "edge_adv_003",
+      "text": "Stock markets rise 75% of the time, making them a guaranteed investment",
+      "expected_verdict": "REFUTED",
+      "edge_case_type": "adversarial_examples",
+      "reason": "Cherry-picked timeframe (long-term) is technically true but false for short-term investing. Misleads by suggesting guaranteed returns despite market volatility.",
+      "expected_behavior": "Should recognize temporal scope importance in investment claims",
+      "evidence_ids": ["ev_adv_003a", "ev_adv_003b"],
+      "metadata": {
+        "fallacy_type": "temporal_cherry_picking",
+        "misleading_frame": true,
+        "test_purpose": "Verify system recognizes scope-dependent claims",
+        "technical_truth": "partially"
+      }
+    },
+    {
+      "id": "edge_adv_004",
+      "text": "Drug X reduced symptoms by 25% in clinical trial",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "adversarial_examples",
+      "reason": "Technically true statement but could imply effectiveness while 25% reduction might be equivalent to placebo effect. Adversarial framing without context.",
+      "expected_behavior": "Should recognize need for comparative baseline (placebo) information",
+      "evidence_ids": ["ev_adv_004a", "ev_adv_004b"],
+      "metadata": {
+        "fallacy_type": "missing_baseline_comparison",
+        "misleading_frame": true,
+        "test_purpose": "Verify system requires comparative context",
+        "technical_truth": "true"
+      }
+    },
+    {
+      "id": "edge_adv_005",
+      "text": "Countries with high coffee consumption rank among the richest in the world",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "adversarial_examples",
+      "reason": "True observation but implies causation (coffee consumption causes wealth) when both correlate with development level. Confuses correlation with causation.",
+      "expected_behavior": "Should recognize correlation doesn't establish causation",
+      "evidence_ids": ["ev_adv_005a", "ev_adv_005b"],
+      "metadata": {
+        "fallacy_type": "correlation_causation_confusion",
+        "misleading_frame": true,
+        "test_purpose": "Verify system identifies confounding variables",
+        "technical_truth": "true"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_adv_001a",
+      "text": "Shark attack deaths average approximately 10 per year worldwide, representing 0.0000001% of annual deaths",
+      "source": "International Shark Attack File",
+      "reliability": "high",
+      "context": "Shark death rate for context"
+    },
+    {
+      "id": "ev_adv_001b",
+      "text": "Serious adverse events from COVID-19 vaccines occur in approximately 1-2 per million doses, with deaths from vaccine extremely rare (2-3 per billion doses), substantially lower than COVID-19 death rate (0.5-2% of infected)",
+      "source": "CDC, WHO, Medical Literature",
+      "reliability": "high",
+      "context": "Vaccine safety in appropriate comparative scale"
+    },
+    {
+      "id": "ev_adv_002a",
+      "text": "Among people using parachutes when jumping from airplanes, approximately 99%+ survive with minimal injuries, making parachutes highly protective devices",
+      "source": "Aviation Safety Statistics",
+      "reliability": "high",
+      "context": "Parachute effectiveness in appropriate context"
+    },
+    {
+      "id": "ev_adv_003a",
+      "text": "Stock markets show positive returns approximately 75% of years over long-term horizons (20+ years), supporting long-term investment strategy",
+      "source": "Historical Market Data",
+      "reliability": "high",
+      "context": "Long-term market performance"
+    },
+    {
+      "id": "ev_adv_003b",
+      "text": "Short-term stock market movements are highly volatile with frequent multi-year downturns, making claims of guaranteed returns misleading regardless of long-term trends",
+      "source": "Financial Economics",
+      "reliability": "high",
+      "context": "Short-term volatility concerns"
+    },
+    {
+      "id": "ev_adv_004a",
+      "text": "Drug X demonstrated 25% symptom reduction in clinical trial participants compared to baseline",
+      "source": "Clinical Trial Report",
+      "reliability": "medium",
+      "context": "Raw efficacy claim without control comparison"
+    },
+    {
+      "id": "ev_adv_004b",
+      "text": "Placebo effect in clinical trials typically produces 20-30% symptom improvement, suggesting Drug X's 25% reduction may be equivalent to placebo effect without distinguishing active benefit",
+      "source": "Placebo Research Literature",
+      "reliability": "high",
+      "context": "Important comparative baseline"
+    },
+    {
+      "id": "ev_adv_005a",
+      "text": "Wealthy developed nations in Northern Europe, Canada, and Australia show high coffee consumption rates (3-4 cups per capita daily)",
+      "source": "International Coffee Organization",
+      "reliability": "high",
+      "context": "Correlation observation"
+    },
+    {
+      "id": "ev_adv_005b",
+      "text": "Wealth and coffee consumption both correlate with climate (developed nations tend to be colder) and GDP (wealth enables specialty food consumption), suggesting confounding variables rather than causal relationship between coffee and wealth",
+      "source": "Econometric Analysis",
+      "reliability": "medium",
+      "context": "Alternative explanation for correlation"
+    }
+  ]
+}

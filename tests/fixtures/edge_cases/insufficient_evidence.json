@@ -1,0 +1,78 @@
+{
+  "category": "insufficient_evidence",
+  "description": "Claims where no relevant evidence exists, claims too obscure or recent to verify, or claims about private/non-public information",
+  "expected_behavior": "System should return INSUFFICIENT verdict due to lack of verifiable evidence",
+  "claims": [
+    {
+      "id": "edge_insuf_001",
+      "text": "John Smith's favorite color is blue",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "insufficient_evidence",
+      "reason": "Private personal information not available in public sources",
+      "expected_behavior": "Should return INSUFFICIENT - private/non-public information",
+      "evidence_ids": [],
+      "metadata": {
+        "challenge": "Personal information about private individual",
+        "test_purpose": "Verify system handles private data appropriately",
+        "source_availability": "none"
+      }
+    },
+    {
+      "id": "edge_insuf_002",
+      "text": "Dr. Elena Rodriguez conducted an unpublished experiment on quantum entanglement in 2024",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "insufficient_evidence",
+      "reason": "Claim about unpublished research with no public sources",
+      "expected_behavior": "Should return INSUFFICIENT - unpublished work",
+      "evidence_ids": [],
+      "metadata": {
+        "challenge": "Unpublished or proprietary research",
+        "test_purpose": "Verify system handles unverifiable research claims",
+        "source_availability": "none"
+      }
+    },
+    {
+      "id": "edge_insuf_003",
+      "text": "The next breakthrough in nuclear fusion will occur in 2028",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "insufficient_evidence",
+      "reason": "Claim about future event - no current evidence available",
+      "expected_behavior": "Should return INSUFFICIENT - predictive claim",
+      "evidence_ids": [],
+      "metadata": {
+        "challenge": "Future predictions with no evidence",
+        "test_purpose": "Verify system handles future-oriented claims",
+        "source_availability": "none"
+      }
+    },
+    {
+      "id": "edge_insuf_004",
+      "text": "The true number of species in the Amazon rainforest remains largely unknown to science",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "insufficient_evidence",
+      "reason": "Claim about unknowable information - evidence would be inherently incomplete",
+      "expected_behavior": "Should return INSUFFICIENT - unknowable information",
+      "evidence_ids": [],
+      "metadata": {
+        "challenge": "Claims about unknowns or gaps in human knowledge",
+        "test_purpose": "Verify system handles epistemically limited claims",
+        "source_availability": "partial"
+      }
+    },
+    {
+      "id": "edge_insuf_005",
+      "text": "Marcus Chen's thoughts during his morning commute on October 15, 2024",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "insufficient_evidence",
+      "reason": "Claim about private thoughts without external evidence",
+      "expected_behavior": "Should return INSUFFICIENT - internal mental states",
+      "evidence_ids": [],
+      "metadata": {
+        "challenge": "Claims about internal mental states",
+        "test_purpose": "Verify system handles verifiability limits",
+        "source_availability": "none"
+      }
+    }
+  ],
+  "evidence": []
+}

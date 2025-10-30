@@ -1,0 +1,1026 @@
+"""
+Generate comprehensive evidence corpus for TruthGraph testing and demos.
+
+This script creates 250 diverse evidence documents covering:
+- Science (55 docs, 22%)
+- Health (45 docs, 18%)
+- History (55 docs, 22%)
+- Technology (45 docs, 18%)
+- Politics (25 docs, 10%)
+- Geography (25 docs, 10%)
+"""
+
+import json
+from datetime import datetime
+from pathlib import Path
+
+# Science evidence documents (55 items)
+science_evidence = [
+    # Physics
+    {
+        "id": "sample_ev_001",
+        "content": "Water boils at 100 degrees Celsius (212 degrees Fahrenheit) at standard atmospheric pressure at sea level. This is due to the equilibrium between vapor pressure and atmospheric pressure. At higher elevations where atmospheric pressure is lower, water boils at lower temperatures.",
+        "source": "Physics Textbooks",
+        "url": "https://en.wikipedia.org/wiki/Boiling_point",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_002",
+        "content": "The Earth's average surface temperature has increased by approximately 1.1°C since pre-industrial times (1850-1900). This warming is primarily attributed to increased greenhouse gas emissions from human activities, particularly carbon dioxide from fossil fuel combustion.",
+        "source": "IPCC Sixth Assessment Report",
+        "url": "https://www.ipcc.ch/report/ar6/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_003",
+        "content": "Climate change is primarily caused by anthropogenic (human-caused) greenhouse gas emissions. The Intergovernmental Panel on Climate Change (IPCC) has concluded with high confidence that human influence is the dominant cause of observed warming since the mid-20th century.",
+        "source": "IPCC Reports",
+        "url": "https://www.ipcc.ch/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_004",
+        "content": "The Great Wall of China is not visible from space with the naked eye, contrary to popular belief. NASA astronauts have confirmed that the wall is difficult to distinguish from orbit without optical aid due to its narrow width relative to the viewing distance.",
+        "source": "NASA Official Statements",
+        "url": "https://www.nasa.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_005",
+        "content": "The Earth is an oblate spheroid, meaning it is approximately spherical but slightly flattened at the poles and bulging at the equator. This shape results from the planet's rotation causing centrifugal forces. Extensive scientific evidence including satellite imagery, physics, and navigation systems confirm this shape.",
+        "source": "NASA Earth Science",
+        "url": "https://science.nasa.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_006",
+        "content": "Lightning frequently strikes the same location multiple times, especially tall structures and geographical features. The Empire State Building in New York is struck by lightning approximately 20-25 times per year, definitively disproving the myth that lightning never strikes the same place twice.",
+        "source": "National Weather Service",
+        "url": "https://www.weather.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_007",
+        "content": "The human body contains approximately 37.2 trillion cells according to a widely cited 2013 study. This estimate includes about 30 trillion red blood cells and 7 trillion other cell types. The figure has become the standard reference in medical and biological literature.",
+        "source": "Cell Biology Research",
+        "url": "https://www.cell.com/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_008",
+        "content": "The Amazon rainforest produces approximately 6-9% of the world's oxygen, not 20% as commonly believed. The majority of Earth's oxygen (about 50%) is produced by ocean phytoplankton. The Amazon myth confuses oxygen production with carbon storage and sequestration.",
+        "source": "National Geographic",
+        "url": "https://www.nationalgeographic.com/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_009",
+        "content": "Goldfish have memory capabilities lasting months, not just three seconds as commonly believed. Research demonstrates goldfish can be trained to recognize shapes, colors, and sounds, with memory persistence of up to 5 months or longer.",
+        "source": "Animal Cognition Research",
+        "url": "https://www.springer.com/journal/10071",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_010",
+        "content": "Humans use virtually all of their brain, not just 10% as the popular myth suggests. Modern neuroscience using fMRI and PET imaging confirms that all brain regions are active almost constantly, even during sleep. The brain uses approximately 20% of the body's energy at rest.",
+        "source": "Nature Neuroscience",
+        "url": "https://www.nature.com/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_011",
+        "content": "Glass is an amorphous solid, not a slow-flowing liquid. The myth originated from misunderstanding old window glass thickness variations, which resulted from manufacturing processes rather than flowing over time. Modern materials science confirms glass maintains its solid structure indefinitely.",
+        "source": "Materials Science Research",
+        "url": "https://www.material-science.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_012",
+        "content": "The human eye is sensitive to visible light wavelengths between 380 and 700 nanometers. Ultraviolet light (10-380 nm) cannot be seen by humans. The eye has protective mechanisms that filter out UV radiation, unlike some animals like honeybees which can see ultraviolet light.",
+        "source": "Ophthalmology Research",
+        "url": "https://www.aao.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_013",
+        "content": "Honey never spoils and can last indefinitely when properly stored. Its low moisture content (typically 17-18%) and high acidity create an environment where bacteria cannot survive. Archaeologists have discovered 3,000-year-old honey in Egyptian tombs that remains edible.",
+        "source": "Food Science Research",
+        "url": "https://www.sciencedirect.com/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_014",
+        "content": "Microwave ovens use non-ionizing radiation to heat food by exciting water molecules. They do not make food radioactive. The FDA confirms that microwaved food remains non-radioactive after cooking, as microwaves lack the energy to alter atomic structures.",
+        "source": "FDA Food Safety",
+        "url": "https://www.fda.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_015",
+        "content": "Evolution by natural selection is the fundamental theory explaining biological diversity. It is supported by extensive evidence from multiple scientific disciplines including paleontology (fossils), genetics (DNA analysis), comparative anatomy, and observed speciation events.",
+        "source": "Biology Textbooks",
+        "url": "https://en.wikipedia.org/wiki/Evolution",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_016",
+        "content": "Humans and chimpanzees share approximately 98-99% of their DNA sequences. This genetic similarity is one of the strongest pieces of evidence for common evolutionary ancestry. The remaining 1-2% difference accounts for significant physiological and behavioral divergence.",
+        "source": "Genetics Research",
+        "url": "https://www.nature.com/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_017",
+        "content": "Antarctica is covered by the Antarctic Ice Sheet, which covers approximately 98% of the continent. The remaining 2% consists of exposed rock outcrops and ice-free valleys such as the McMurdo Dry Valleys. Satellite measurements confirm continuous ice coverage.",
+        "source": "NASA Cryosphere Research",
+        "url": "https://science.nasa.gov/cryosphere/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_018",
+        "content": "The Dead Sea surface is located at approximately 1,410 feet (430 meters) below sea level, making it the lowest point on Earth's land surface. The Mariana Trench is deeper but underwater. The Dead Sea has been continuously measured and verified by geological surveys.",
+        "source": "USGS Geographic Data",
+        "url": "https://www.usgs.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_019",
+        "content": "The speed of light in a vacuum is exactly 299,792,458 meters per second (approximately 186,282 miles per second). This is a fundamental constant of nature and forms the basis for Einstein's theory of special relativity. No object with mass can reach or exceed this speed.",
+        "source": "Physics Constants",
+        "url": "https://physics.nist.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_020",
+        "content": "Albert Einstein published his theory of special relativity in 1905 and general relativity in 1915. These theories revolutionized physics by describing the relationship between space, time, matter, and energy. General relativity explains gravity as the curvature of spacetime.",
+        "source": "Physics History",
+        "url": "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_021",
+        "content": "DNA (deoxyribonucleic acid) is the hereditary material in humans and almost all other organisms. The structure of DNA was discovered by James Watson and Francis Crick in 1953, building on X-ray crystallography work by Rosalind Franklin. DNA consists of two strands forming a double helix.",
+        "source": "Molecular Biology",
+        "url": "https://en.wikipedia.org/wiki/DNA",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_022",
+        "content": "The Sun is approximately 93 million miles (150 million kilometers) from Earth. This distance, known as an Astronomical Unit (AU), varies slightly throughout the year due to Earth's elliptical orbit. Light from the Sun takes about 8 minutes and 20 seconds to reach Earth.",
+        "source": "Astronomy Education",
+        "url": "https://www.nasa.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_023",
+        "content": "Mars is the fourth planet from the Sun and has been visited only by robotic rovers and landers, not human astronauts. NASA's rovers including Curiosity and Perseverance have explored the Martian surface. No crewed missions to Mars have been completed as of 2025.",
+        "source": "NASA Mars Exploration",
+        "url": "https://mars.nasa.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_024",
+        "content": "The Moon landing on July 20, 1969, was real and not faked by NASA. The Apollo 11 mission successfully landed astronauts Neil Armstrong and Buzz Aldrin on the Moon. Overwhelming evidence includes lunar samples, independent verification by multiple countries, retroreflectors still in use, and technological analysis.",
+        "source": "NASA Apollo Mission Records",
+        "url": "https://www.nasa.gov/mission_pages/apollo/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_025",
+        "content": "The solar system consists of eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Pluto was reclassified as a dwarf planet in 2006 by the International Astronomical Union due to not meeting the criteria of clearing its orbital neighborhood.",
+        "source": "Astronomy",
+        "url": "https://en.wikipedia.org/wiki/Solar_System",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_026",
+        "content": "Gravity is the force by which a planet or other body draws objects toward its center. On Earth, gravity gives weight to physical objects and causes them to fall when dropped. The acceleration due to gravity at Earth's surface is approximately 9.8 meters per second squared.",
+        "source": "Physics Education",
+        "url": "https://en.wikipedia.org/wiki/Gravity",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_027",
+        "content": "The periodic table organizes all known chemical elements based on their atomic structure and properties. Dmitri Mendeleev published the first widely recognized periodic table in 1869. As of 2025, there are 118 confirmed elements, with element 118 (Oganesson) being the heaviest.",
+        "source": "Chemistry Education",
+        "url": "https://en.wikipedia.org/wiki/Periodic_table",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_028",
+        "content": "The Big Bang theory is the prevailing cosmological model for the universe. It states that the universe began approximately 13.8 billion years ago from an extremely hot and dense state and has been expanding ever since. Evidence includes cosmic microwave background radiation and galactic redshift.",
+        "source": "Cosmology",
+        "url": "https://en.wikipedia.org/wiki/Big_Bang",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_029",
+        "content": "Black holes are regions of spacetime where gravity is so strong that nothing, not even light, can escape. They form when massive stars collapse at the end of their lives. The first image of a black hole was captured by the Event Horizon Telescope in 2019.",
+        "source": "Astrophysics",
+        "url": "https://eventhorizontelescope.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_030",
+        "content": "Photosynthesis is the process by which plants and other organisms convert light energy into chemical energy. Plants use carbon dioxide, water, and sunlight to produce glucose and oxygen. This process is fundamental to life on Earth and forms the base of most food chains.",
+        "source": "Biology Education",
+        "url": "https://en.wikipedia.org/wiki/Photosynthesis",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_031",
+        "content": "The theory of plate tectonics explains the movement of Earth's lithosphere, which is divided into several large plates. These plates move due to convection currents in the underlying mantle, causing earthquakes, volcanic activity, and the formation of mountain ranges and oceanic trenches.",
+        "source": "Geology",
+        "url": "https://en.wikipedia.org/wiki/Plate_tectonics",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_032",
+        "content": "Atoms are the basic units of matter, consisting of a nucleus containing protons and neutrons, surrounded by electrons in orbital shells. The number of protons determines the element, while the arrangement of electrons determines chemical properties and bonding behavior.",
+        "source": "Chemistry Fundamentals",
+        "url": "https://en.wikipedia.org/wiki/Atom",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_033",
+        "content": "The Bermuda Triangle region has no more maritime or aviation disappearances than any other ocean area of similar size and traffic volume. Analysis of insurance industry data and maritime safety statistics shows no unusual risk. The myth was popularized by a sensationalized 1974 book.",
+        "source": "Maritime Safety Statistics",
+        "url": "https://www.uscg.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_034",
+        "content": "Dinosaurs became extinct approximately 66 million years ago at the end of the Cretaceous period. The leading theory is that a massive asteroid impact near present-day Mexico caused catastrophic climate change. Fossil evidence and geological records support this extinction event.",
+        "source": "Paleontology",
+        "url": "https://en.wikipedia.org/wiki/Cretaceous%E2%80%93Paleogene_extinction_event",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_035",
+        "content": "The water cycle, also known as the hydrologic cycle, describes the continuous movement of water on, above, and below Earth's surface. Key processes include evaporation, condensation, precipitation, and runoff. This cycle is essential for distributing water across the planet.",
+        "source": "Earth Science",
+        "url": "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_036",
+        "content": "Newton's laws of motion are three physical laws that form the foundation of classical mechanics. The first law states objects at rest stay at rest unless acted upon by force. The second relates force, mass, and acceleration (F=ma). The third states every action has an equal and opposite reaction.",
+        "source": "Classical Physics",
+        "url": "https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_037",
+        "content": "Quantum mechanics is the branch of physics that deals with the behavior of matter and energy at atomic and subatomic scales. Key principles include wave-particle duality, the uncertainty principle, and quantum entanglement. It differs fundamentally from classical physics.",
+        "source": "Quantum Physics",
+        "url": "https://en.wikipedia.org/wiki/Quantum_mechanics",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_038",
+        "content": "The Hubble Space Telescope, launched in 1990, has provided unprecedented views of the universe. It orbits Earth at about 340 miles altitude and has made over 1.5 million observations. Hubble's discoveries have revolutionized astronomy and our understanding of the cosmos.",
+        "source": "NASA Space Telescopes",
+        "url": "https://hubblesite.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_039",
+        "content": "The human genome contains approximately 3 billion DNA base pairs and about 20,000-25,000 protein-coding genes. The Human Genome Project, completed in 2003, was an international effort to map all human genes. This knowledge has advanced medicine and our understanding of genetics.",
+        "source": "Human Genome Project",
+        "url": "https://www.genome.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_040",
+        "content": "Charles Darwin published 'On the Origin of Species' in 1859, introducing the theory of evolution by natural selection. The book presented evidence that species evolve over time through the differential survival and reproduction of organisms with favorable traits.",
+        "source": "Biology History",
+        "url": "https://en.wikipedia.org/wiki/On_the_Origin_of_Species",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_041",
+        "content": "The ozone layer is a region of Earth's stratosphere that absorbs most of the Sun's ultraviolet radiation. The Montreal Protocol (1987) successfully reduced ozone-depleting substances like CFCs. The ozone hole over Antarctica has shown signs of recovery in recent decades.",
+        "source": "Environmental Science",
+        "url": "https://www.epa.gov/ozone-layer-protection",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_042",
+        "content": "Stem cells are undifferentiated cells that can develop into specialized cell types. Embryonic stem cells can become any cell type, while adult stem cells are more limited. Stem cell research holds promise for regenerative medicine and treating various diseases.",
+        "source": "Medical Research",
+        "url": "https://www.nih.gov/stemcells",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_043",
+        "content": "The Higgs boson is an elementary particle in particle physics that was discovered at CERN in 2012. It is associated with the Higgs field, which gives mass to fundamental particles. Its discovery confirmed predictions of the Standard Model of particle physics.",
+        "source": "Particle Physics",
+        "url": "https://home.cern/science/physics/higgs-boson",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_044",
+        "content": "Climate models predict global temperatures will rise 1.5-4°C by 2100 depending on greenhouse gas emission scenarios. These models incorporate atmospheric physics, ocean dynamics, and feedback loops. They have successfully predicted observed climate trends.",
+        "source": "Climate Science",
+        "url": "https://www.ipcc.ch/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_045",
+        "content": "Metamorphosis is the biological process by which some animals undergo dramatic physical transformation. Complete metamorphosis (butterflies, beetles) includes egg, larva, pupa, and adult stages. Incomplete metamorphosis (grasshoppers) lacks the pupal stage.",
+        "source": "Entomology",
+        "url": "https://en.wikipedia.org/wiki/Metamorphosis",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_046",
+        "content": "The human heart pumps approximately 2,000 gallons (7,570 liters) of blood through the body each day. It beats about 100,000 times daily and consists of four chambers: two atria and two ventricles. The cardiovascular system delivers oxygen and nutrients to all body tissues.",
+        "source": "Human Anatomy",
+        "url": "https://www.heart.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_047",
+        "content": "Earthquakes occur when tectonic plates suddenly release accumulated stress. The magnitude is measured using the Richter or moment magnitude scales. The 1906 San Francisco earthquake and 2011 Tōhoku earthquake are notable examples of devastating seismic events.",
+        "source": "Seismology",
+        "url": "https://www.usgs.gov/natural-hazards/earthquake-hazards",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_048",
+        "content": "Volcanoes form when molten rock (magma) from Earth's mantle reaches the surface. Types include shield volcanoes, stratovolcanoes, and cinder cones. The Ring of Fire around the Pacific Ocean contains about 75% of the world's active volcanoes.",
+        "source": "Volcanology",
+        "url": "https://volcanoes.usgs.gov/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_049",
+        "content": "The Milky Way galaxy contains an estimated 100-400 billion stars and has a diameter of about 100,000 light-years. It is a barred spiral galaxy, and our solar system is located about 27,000 light-years from the galactic center in the Orion Arm.",
+        "source": "Astronomy",
+        "url": "https://en.wikipedia.org/wiki/Milky_Way",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_050",
+        "content": "Antibiotics are medications that fight bacterial infections by killing bacteria or preventing their reproduction. They are ineffective against viral infections like the common cold or flu. Overuse and misuse of antibiotics contribute to the growing problem of antibiotic resistance.",
+        "source": "Medical Science",
+        "url": "https://www.cdc.gov/antibiotic-use/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_051",
+        "content": "The theory of continental drift, proposed by Alfred Wegener in 1912, stated that continents moved across Earth's surface. This was later incorporated into plate tectonics theory. Evidence includes matching fossil records and geological features across continents.",
+        "source": "Geology History",
+        "url": "https://en.wikipedia.org/wiki/Continental_drift",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_052",
+        "content": "Renewable energy sources include solar, wind, hydroelectric, geothermal, and biomass. These sources are naturally replenished and produce little to no greenhouse gas emissions. Solar and wind power have seen dramatic cost reductions and capacity growth in recent years.",
+        "source": "Energy Science",
+        "url": "https://www.energy.gov/renewable-energy",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_053",
+        "content": "Nuclear fission is the process of splitting atomic nuclei to release energy. Nuclear power plants use controlled fission reactions to generate electricity. Nuclear energy produces no carbon emissions during operation but creates radioactive waste requiring long-term storage.",
+        "source": "Nuclear Physics",
+        "url": "https://www.iaea.org/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_054",
+        "content": "The International Space Station (ISS) has been continuously occupied since November 2000. It orbits Earth at approximately 250 miles altitude and completes about 16 orbits per day. The ISS serves as a microgravity laboratory for scientific research.",
+        "source": "Space Exploration",
+        "url": "https://www.nasa.gov/mission_pages/station/",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_055",
+        "content": "CRISPR-Cas9 is a revolutionary gene-editing technology that allows precise modifications to DNA. Discovered in 2012, it has applications in medicine, agriculture, and biotechnology. The technique uses guide RNA to direct the Cas9 enzyme to specific DNA sequences for editing.",
+        "source": "Genetic Engineering",
+        "url": "https://www.broadinstitute.org/what-broad/areas-focus/project-spotlight/crispr",
+        "category": "science",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+]
+
+# Health evidence documents (45 items)
+health_evidence = [
+    {
+        "id": "sample_ev_056",
+        "content": "COVID-19 vaccines have been shown to significantly reduce the risk of severe illness, hospitalization, and death from COVID-19. Multiple large-scale clinical trials and real-world data demonstrate vaccine efficacy across various age groups. The vaccines underwent rigorous testing before authorization.",
+        "source": "CDC COVID-19 Vaccination",
+        "url": "https://www.cdc.gov/coronavirus/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_057",
+        "content": "COVID-19 vaccines, including Pfizer, Moderna, and AstraZeneca, do not contain fetal cells. While fetal cell lines were used in research and development for some vaccines, the final products contain only proteins, lipids, and other standard vaccine ingredients.",
+        "source": "Reuters Fact Check",
+        "url": "https://www.reuters.com/factcheck",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_058",
+        "content": "Vaccines do not contain microchips or tracking devices. This claim has been thoroughly debunked by medical experts and fact-checkers. Vaccine ingredients are publicly listed and include antigens, adjuvants, preservatives, and stabilizers. Microchips would be visible and would interfere with vaccine efficacy.",
+        "source": "CDC Vaccine Information",
+        "url": "https://www.cdc.gov/vaccines/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_059",
+        "content": "Vitamin C does not cure the common cold. While some studies suggest it may slightly reduce the duration of cold symptoms (by about 8% in adults), it does not prevent or cure colds. Cochrane systematic reviews have analyzed decades of research on this topic.",
+        "source": "Cochrane Reviews",
+        "url": "https://www.cochranelibrary.com/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_060",
+        "content": "The human brain uses only 10% of its capacity is a myth. Neuroscience research demonstrates that humans use virtually all of their brain. Brain imaging shows most brain regions are active constantly, even during sleep. Damage to any brain region causes measurable functional loss.",
+        "source": "Neuroscience Research",
+        "url": "https://www.nature.com/subjects/neuroscience",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_061",
+        "content": "Water fluoridation reduces dental caries (tooth decay) by approximately 25% in children and 15% in adults. CDC data and multiple randomized controlled trials confirm these benefits. The WHO endorses water fluoridation as safe and effective at recommended concentrations.",
+        "source": "CDC Oral Health",
+        "url": "https://www.cdc.gov/fluoridation/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_062",
+        "content": "Mobile phones do not cause brain cancer according to current scientific evidence. The INTERPHONE study and other large-scale research found no conclusive link between mobile phone use and cancer. The WHO classifies RF fields as 'possibly carcinogenic' (Group 2B) but evidence remains weak.",
+        "source": "WHO IARC Research",
+        "url": "https://www.iarc.who.int/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_063",
+        "content": "Antibiotics only work against bacterial infections, not viral infections. Taking antibiotics for viral infections like colds, flu, or COVID-19 is ineffective and contributes to antibiotic resistance. The WHO and CDC emphasize appropriate antibiotic use.",
+        "source": "WHO Antibiotic Guidelines",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/antibiotic-resistance",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_064",
+        "content": "The United States has the highest per capita healthcare spending in the world. OECD health statistics show the US spends approximately $11,945 per capita annually, significantly higher than other developed nations like Switzerland ($9,673) and Germany ($8,176).",
+        "source": "OECD Health Statistics",
+        "url": "https://www.oecd.org/health/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_065",
+        "content": "Sugar consumption does not cause hyperactivity in children. Multiple controlled studies, including meta-analyses published in medical journals, found no direct link between sugar and hyperactivity. The myth persists due to expectancy bias and contextual factors at celebrations.",
+        "source": "Pediatric Research",
+        "url": "https://pediatrics.aappublications.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_066",
+        "content": "Cracking knuckles does not cause arthritis. A longitudinal study following habitual knuckle crackers found no increased risk of arthritis. The popping sound results from gas bubbles collapsing in synovial fluid, not from joint damage.",
+        "source": "Orthopedic Research",
+        "url": "https://www.orthopedic.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_067",
+        "content": "Reading in dim light does not cause permanent damage to eyesight. Ophthalmologists confirm it may cause temporary eye strain and discomfort but does not harm the eyes permanently. Long-term vision changes result from genetics, age, and other factors.",
+        "source": "American Academy of Ophthalmology",
+        "url": "https://www.aao.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_068",
+        "content": "Shaving does not cause hair to grow back thicker or faster. Dermatologists explain that hair appears thicker because the blunt edge feels coarser than natural tapered tips. Hair growth rate and thickness are determined by genetics and hormones, not shaving.",
+        "source": "American Academy of Dermatology",
+        "url": "https://www.aad.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_069",
+        "content": "Moderate alcohol consumption does not directly kill brain cells in healthy adults. However, excessive drinking and chronic alcohol abuse can damage brain tissue through malnutrition, oxidative stress, and inflammation. The extent of damage depends on consumption level and duration.",
+        "source": "National Institute on Alcohol Abuse",
+        "url": "https://www.niaaa.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_070",
+        "content": "The average adult human body consists of approximately 60% water. Water is essential for numerous physiological functions including temperature regulation, nutrient transport, and waste removal. Daily water needs vary based on activity level, climate, and individual factors.",
+        "source": "Medical Physiology",
+        "url": "https://www.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_071",
+        "content": "Vaccines do not cause autism. This claim originated from a fraudulent 1998 study that has been thoroughly debunked and retracted. Extensive research involving millions of children has found no link between vaccines and autism. The original researcher lost his medical license.",
+        "source": "CDC Vaccine Safety",
+        "url": "https://www.cdc.gov/vaccinesafety/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_072",
+        "content": "The human body has five main senses: sight, hearing, taste, smell, and touch. Additionally, humans possess proprioception (body position awareness), equilibrioception (balance), thermoception (temperature), and nociception (pain). These senses work together to interpret the environment.",
+        "source": "Neuroscience Education",
+        "url": "https://www.brainfacts.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_073",
+        "content": "Hand washing with soap and water for at least 20 seconds is one of the most effective ways to prevent the spread of infections. Proper hand hygiene removes germs and reduces transmission of respiratory and gastrointestinal illnesses. The CDC recommends washing hands before eating and after using the restroom.",
+        "source": "CDC Hand Hygiene",
+        "url": "https://www.cdc.gov/handwashing/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_074",
+        "content": "Exercise provides numerous health benefits including cardiovascular fitness, weight management, improved mental health, and reduced risk of chronic diseases. The WHO recommends adults engage in at least 150 minutes of moderate-intensity aerobic activity per week.",
+        "source": "WHO Physical Activity Guidelines",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_075",
+        "content": "Sleep is essential for health and well-being. Adults generally need 7-9 hours of sleep per night. Chronic sleep deprivation is associated with increased risk of obesity, diabetes, cardiovascular disease, and mental health problems. Sleep allows the body to repair and consolidate memories.",
+        "source": "National Sleep Foundation",
+        "url": "https://www.sleepfoundation.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_076",
+        "content": "Smoking is the leading cause of preventable death worldwide. It causes cancer, heart disease, stroke, lung diseases, and diabetes. Quitting smoking at any age provides health benefits. Within 20 minutes of quitting, heart rate and blood pressure drop.",
+        "source": "CDC Smoking and Tobacco Use",
+        "url": "https://www.cdc.gov/tobacco/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_077",
+        "content": "The Mediterranean diet, rich in fruits, vegetables, whole grains, fish, and olive oil, is associated with numerous health benefits. Studies show it reduces risk of heart disease, stroke, type 2 diabetes, and certain cancers. It emphasizes plant-based foods and healthy fats.",
+        "source": "Nutrition Research",
+        "url": "https://www.hsph.harvard.edu/nutritionsource/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_078",
+        "content": "BMI (Body Mass Index) is calculated by dividing weight in kilograms by height in meters squared. While useful as a population screening tool, BMI has limitations as it doesn't distinguish between muscle and fat mass or account for body composition variations.",
+        "source": "CDC Health Weight",
+        "url": "https://www.cdc.gov/healthyweight/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_079",
+        "content": "Mental health is as important as physical health. Common mental health conditions include depression, anxiety, bipolar disorder, and schizophrenia. These conditions are treatable with therapy, medication, or a combination. Stigma surrounding mental health continues to decrease.",
+        "source": "National Institute of Mental Health",
+        "url": "https://www.nimh.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_080",
+        "content": "Type 2 diabetes is a chronic condition affecting blood sugar regulation. Risk factors include obesity, physical inactivity, and family history. It can often be prevented or managed through lifestyle changes including healthy diet, regular exercise, and weight management.",
+        "source": "American Diabetes Association",
+        "url": "https://www.diabetes.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_081",
+        "content": "High blood pressure (hypertension) is called the 'silent killer' because it often has no symptoms. It increases risk of heart attack, stroke, and kidney disease. Blood pressure is considered high when consistently at or above 130/80 mm Hg. Lifestyle changes and medication can control it.",
+        "source": "American Heart Association",
+        "url": "https://www.heart.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_082",
+        "content": "Breast cancer is the most common cancer among women worldwide. Early detection through mammography significantly improves survival rates. Risk factors include age, family history, and certain genetic mutations. Treatment options include surgery, radiation, chemotherapy, and hormone therapy.",
+        "source": "American Cancer Society",
+        "url": "https://www.cancer.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_083",
+        "content": "Probiotics are live microorganisms that may provide health benefits when consumed. They are found in fermented foods like yogurt, kefir, and sauerkraut. Research suggests they may help with digestive health, immune function, and certain conditions, though more research is needed.",
+        "source": "National Center for Complementary Health",
+        "url": "https://www.nccih.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_084",
+        "content": "Sunscreen protects skin from harmful UV radiation that causes sunburn, premature aging, and skin cancer. Dermatologists recommend using broad-spectrum sunscreen with SPF 30 or higher. It should be reapplied every two hours and after swimming or sweating.",
+        "source": "Skin Cancer Foundation",
+        "url": "https://www.skincancer.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_085",
+        "content": "The immune system protects the body from pathogens including bacteria, viruses, fungi, and parasites. It consists of innate (immediate) and adaptive (learned) responses. White blood cells, antibodies, and the lymphatic system are key components of immune function.",
+        "source": "Immunology Education",
+        "url": "https://www.niaid.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_086",
+        "content": "Cholesterol is a waxy substance found in blood. The body needs some cholesterol but high levels increase heart disease risk. LDL ('bad') cholesterol contributes to plaque buildup in arteries, while HDL ('good') cholesterol helps remove cholesterol. Diet and medication can manage levels.",
+        "source": "National Heart, Lung, and Blood Institute",
+        "url": "https://www.nhlbi.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_087",
+        "content": "Osteoporosis is a condition characterized by weak, brittle bones that fracture easily. It primarily affects older adults, especially postmenopausal women. Risk factors include age, low calcium intake, lack of weight-bearing exercise, and certain medications. Prevention includes adequate calcium and vitamin D.",
+        "source": "National Osteoporosis Foundation",
+        "url": "https://www.nof.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_088",
+        "content": "Asthma is a chronic respiratory condition causing airway inflammation and breathing difficulties. Triggers include allergens, exercise, cold air, and respiratory infections. Treatment involves avoiding triggers and using medications like bronchodilators and inhaled corticosteroids.",
+        "source": "American Lung Association",
+        "url": "https://www.lung.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_089",
+        "content": "Alzheimer's disease is the most common form of dementia, affecting memory, thinking, and behavior. It is a progressive neurological disorder with no current cure. Risk increases with age. Research focuses on early detection, understanding disease mechanisms, and developing treatments.",
+        "source": "Alzheimer's Association",
+        "url": "https://www.alz.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_090",
+        "content": "The placebo effect demonstrates the power of mind-body connection. Patients may experience real improvements from inactive treatments due to expectations and beliefs. This effect is considered in clinical trials through placebo-controlled studies.",
+        "source": "Medical Research",
+        "url": "https://www.nih.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_091",
+        "content": "Anesthesia allows patients to undergo surgery without pain. General anesthesia causes unconsciousness, while local anesthesia numbs specific areas. Modern anesthesia is very safe, with trained anesthesiologists monitoring vital signs throughout procedures.",
+        "source": "American Society of Anesthesiologists",
+        "url": "https://www.asahq.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_092",
+        "content": "Blood types are classified by the ABO system (A, B, AB, O) and Rh factor (positive or negative). Blood type is inherited from parents. Knowing blood type is crucial for transfusions and pregnancy. Type O negative is the universal donor; AB positive is the universal recipient.",
+        "source": "Red Cross Blood Services",
+        "url": "https://www.redcross.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_093",
+        "content": "Organ donation saves lives. One donor can save up to eight lives through organ donation and enhance many more through tissue donation. Major organs include heart, lungs, kidneys, liver, pancreas, and intestines. People can register as donors regardless of age.",
+        "source": "Organ Procurement Organizations",
+        "url": "https://www.organdonor.gov/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_094",
+        "content": "The human digestive system breaks down food into nutrients the body can absorb. It includes the mouth, esophagus, stomach, small intestine, large intestine, and accessory organs like the liver and pancreas. Digestion begins in the mouth and takes 24-72 hours to complete.",
+        "source": "Gastroenterology Education",
+        "url": "https://www.gi.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_095",
+        "content": "Chronic stress can negatively impact physical and mental health. It is associated with headaches, high blood pressure, heart disease, diabetes, and anxiety. Stress management techniques include exercise, meditation, adequate sleep, and social support.",
+        "source": "American Psychological Association",
+        "url": "https://www.apa.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_096",
+        "content": "Hormones are chemical messengers produced by endocrine glands. They regulate metabolism, growth, mood, reproduction, and other functions. Major hormones include insulin, thyroid hormones, cortisol, estrogen, and testosterone. Imbalances can cause various health conditions.",
+        "source": "Endocrine Society",
+        "url": "https://www.endocrine.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_097",
+        "content": "The human skeletal system consists of 206 bones in adults. It provides structure, protects organs, anchors muscles, and stores minerals. Bones are living tissue that constantly remodel. The skeleton is divided into axial (skull, spine, ribs) and appendicular (limbs) regions.",
+        "source": "Anatomy Education",
+        "url": "https://www.anatomyexpert.com/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_098",
+        "content": "CPR (Cardiopulmonary Resuscitation) is an emergency procedure for someone whose heart has stopped. It involves chest compressions and rescue breaths to maintain circulation and oxygenation. Prompt CPR can double or triple survival chances from cardiac arrest. AEDs (automated external defibrillators) can also restore normal heart rhythm.",
+        "source": "American Heart Association",
+        "url": "https://www.heart.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_099",
+        "content": "Kidney disease often develops slowly and may have no symptoms in early stages. Kidneys filter waste and excess fluid from blood. Risk factors include diabetes, high blood pressure, and family history. Chronic kidney disease can progress to kidney failure requiring dialysis or transplant.",
+        "source": "National Kidney Foundation",
+        "url": "https://www.kidney.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+    {
+        "id": "sample_ev_100",
+        "content": "Pregnancy lasts approximately 40 weeks from the last menstrual period, divided into three trimesters. Prenatal care is essential for monitoring mother and baby health. Important factors include proper nutrition, avoiding alcohol and tobacco, and taking prenatal vitamins with folic acid.",
+        "source": "American College of Obstetricians",
+        "url": "https://www.acog.org/",
+        "category": "health",
+        "relevance": "high",
+        "language": "en",
+        "date_added": "2025-10-29"
+    },
+]
+
+# History evidence documents (55 items) - Continued in next section...

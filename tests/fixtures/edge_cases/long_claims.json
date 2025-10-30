@@ -1,0 +1,179 @@
+{
+  "category": "long_claims",
+  "description": "Claims exceeding 500 words (paragraph-length), containing multiple sub-claims, or representing complex compound statements",
+  "expected_behavior": "System should process without truncation or errors, ideally decomposing compound claims for individual verification",
+  "claims": [
+    {
+      "id": "edge_long_001",
+      "text": "Climate change represents one of the most significant challenges facing humanity in the 21st century, characterized by rising global temperatures driven primarily by anthropogenic greenhouse gas emissions including carbon dioxide from fossil fuel combustion and methane from agricultural and industrial processes. The scientific consensus, supported by organizations including NASA, NOAA, and the Intergovernmental Panel on Climate Change (IPCC), affirms that global temperatures have increased approximately 1.1 degrees Celsius since pre-industrial times, with observed effects including sea level rise averaging 3.2 millimeters annually, accelerating ice sheet melting in Greenland and Antarctica, shifting weather patterns with more intense hurricanes and droughts, and documented impacts on biodiversity with species extinction rates exceeding background rates by orders of magnitude. The economic implications are substantial, with estimates suggesting climate change could reduce global GDP by 10-23% by 2100 if current trends continue, while simultaneous renewable energy cost reductions present opportunities for economically viable climate mitigation strategies that could create substantial employment and economic growth.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "long_claims",
+      "reason": "Paragraph-length claim with multiple interconnected sub-claims",
+      "expected_behavior": "Should process full text without truncation and verify multiple premises",
+      "evidence_ids": ["ev_long_001a", "ev_long_001b", "ev_long_001c"],
+      "metadata": {
+        "word_count": 238,
+        "sentence_count": 4,
+        "sub_claims": 8,
+        "test_purpose": "Verify system handles complex multi-premise claims",
+        "compound_claim": true
+      }
+    },
+    {
+      "id": "edge_long_002",
+      "text": "The history of artificial intelligence encompasses multiple development phases beginning with the foundational Dartmouth Summer Research Project on Artificial Intelligence in 1956, where pioneers including John McCarthy, Marvin Minsky, and others established the field's core research objectives. The subsequent decades witnessed the development of expert systems in the 1970s-1980s that demonstrated AI's practical applications in specialized domains, followed by the AI winter periods when progress slowed due to computational limitations and overstated expectations. The modern deep learning revolution, catalyzed by increases in computational power from graphics processing units (GPUs), availability of large-scale datasets, and algorithmic innovations including convolutional neural networks and transformer architectures, has driven recent advances in natural language processing, computer vision, and reinforcement learning. Contemporary challenges include concerns regarding AI bias in training data, interpretability and explainability of deep learning models, energy consumption of large language models, and potential risks from increasingly capable AI systems that may exceed human capabilities in specific domains while remaining unreliable in others.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "long_claims",
+      "reason": "Extended historical and technical narrative with multiple factual claims",
+      "expected_behavior": "Should decompose and verify individual historical and technical assertions",
+      "evidence_ids": ["ev_long_002a", "ev_long_002b", "ev_long_002c"],
+      "metadata": {
+        "word_count": 234,
+        "sentence_count": 5,
+        "sub_claims": 6,
+        "test_purpose": "Verify system handles multi-generational historical claims",
+        "compound_claim": true
+      }
+    },
+    {
+      "id": "edge_long_003",
+      "text": "The pathophysiology of COVID-19 involves SARS-CoV-2 viral particles binding to angiotensin-converting enzyme 2 (ACE2) receptors on human cells, with viral replication leading to direct cellular damage and subsequent immune response activation including interferon release and complement activation. In severe cases, a dysregulated immune response characterized by elevated cytokine levels (IL-6, TNF-alpha, IL-8) creates a cytokine storm leading to systemic inflammation, endothelial dysfunction, and multi-organ complications including acute respiratory distress syndrome (ARDS), thromboembolism from hypercoagulability, acute kidney injury, and myocardial injury. COVID-19 vaccines including mRNA-based (Pfizer, Moderna) and viral vector platforms (AstraZeneca, Johnson & Johnson) induce adaptive immune responses creating protective antibody and T-cell responses against viral spike protein, with clinical efficacy demonstrated across multiple randomized controlled trials showing 70-95% effectiveness in preventing severe illness and death, though variant emergence has reduced efficacy against infection while maintaining strong protection against severe disease. The public health response has involved vaccination campaigns achieving 70%+ population immunity in developed nations, testing and isolation protocols, and pharmacological interventions including monoclonal antibodies and antiviral medications, collectively reducing mortality and hospitalization rates substantially compared to pre-vaccine pandemic baseline.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "long_claims",
+      "reason": "Technical medical/scientific claim exceeding 500 words with multiple specialized domains",
+      "expected_behavior": "Should process technical terminology and multi-domain claims accurately",
+      "evidence_ids": ["ev_long_003a", "ev_long_003b", "ev_long_003c"],
+      "metadata": {
+        "word_count": 278,
+        "sentence_count": 4,
+        "sub_claims": 12,
+        "test_purpose": "Verify system handles technical scientific claims",
+        "compound_claim": true
+      }
+    },
+    {
+      "id": "edge_long_004",
+      "text": "Quantum mechanics, established through work by Planck, Heisenberg, Schrödinger, and others in the early 20th century, fundamentally transformed our understanding of physical reality at subatomic scales through principles including wave-particle duality where particles exhibit both particle and wave-like properties, the uncertainty principle constraining simultaneous measurement precision of complementary observables, quantum superposition enabling particles to exist in multiple states simultaneously until measurement, and quantum entanglement creating correlated states between separated particles. The mathematical formalism includes the Schrödinger equation describing wave function evolution, Born rule relating wave function amplitudes to measurement probabilities, and Hilbert space representation of quantum states. Experimental validation spans quantum mechanics' entire history including the photoelectric effect demonstrating photons, double-slit experiments showing wave-particle duality, quantum tunneling in electron microscopy and nuclear decay, Bell test experiments ruling out local hidden variable theories, and recent quantum computing implementations exploiting superposition and entanglement for computational advantages. Interpretational questions persist including the Copenhagen interpretation's wave function collapse, many-worlds interpretation's parallel universes, pilot-wave theory, and objective collapse models, reflecting genuine unresolved questions about quantum mechanics' fundamental nature despite its empirical success across chemistry, materials science, condensed matter physics, and quantum technologies.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "long_claims",
+      "reason": "Extended technical physics claim with multiple interconnected concepts",
+      "expected_behavior": "Should process and verify interconnected technical assertions",
+      "evidence_ids": ["ev_long_004a", "ev_long_004b", "ev_long_004c"],
+      "metadata": {
+        "word_count": 256,
+        "sentence_count": 5,
+        "sub_claims": 10,
+        "test_purpose": "Verify system handles physics fundamentals claims",
+        "compound_claim": true
+      }
+    },
+    {
+      "id": "edge_long_005",
+      "text": "The Industrial Revolution, originating in 18th-century Britain before spreading globally through the 19th and 20th centuries, fundamentally restructured human civilization through mechanization of production processes, replacement of artisanal manufacturing with factory systems, development of transportation infrastructure including railroads and steamships enabling global trade, and technological innovations in textile production, iron manufacturing, and fossil fuel utilization. This transformation generated unprecedented productivity increases and wealth creation, enabling population growth from approximately 750 million to 1.6 billion between 1750-1900, urbanization concentrating populations in factory towns, and the emergence of capitalism as the dominant economic system. Simultaneously, the Industrial Revolution created severe social disruptions including harsh working conditions for factory workers, exploitation of child labor, environmental pollution from coal combustion, and widening inequality between industrial owners and laborers, catalyzing social movements including trade unionism, socialism, and labor reforms. The environmental consequences included deforestation, water pollution from industrial discharge, air quality degradation from coal smoke, and initiated anthropogenic climate change through fossil fuel dependence that continues accelerating to present day. Economic historians debate whether Industrial Revolution benefits in per-capita productivity and life expectancy for eventual descendants outweigh immediate suffering and environmental costs borne by contemporary populations, with ongoing scholarly disagreement regarding optimal characterization as progress or disaster.",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "long_claims",
+      "reason": "Complex historical narrative with normative interpretation and conflicting perspectives",
+      "expected_behavior": "Should recognize multiple valid interpretations of historical complex phenomena",
+      "evidence_ids": ["ev_long_005a", "ev_long_005b", "ev_long_005c"],
+      "metadata": {
+        "word_count": 271,
+        "sentence_count": 5,
+        "sub_claims": 11,
+        "test_purpose": "Verify system handles historical interpretation claims",
+        "compound_claim": true
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_long_001a",
+      "text": "IPCC Sixth Assessment Report (2021) confirms global temperature increase of 1.1°C since pre-industrial times with 97%+ scientific consensus on anthropogenic drivers",
+      "source": "IPCC AR6",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_001b",
+      "text": "NASA GISS and NOAA climate monitoring confirm sea level rise averaging 3.2-3.4 millimeters annually and accelerating ice sheet loss in Greenland and Antarctica",
+      "source": "NASA GISS, NOAA",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_001c",
+      "text": "Economic analyses estimate 10-23% GDP reduction by 2100 under high emission scenarios while noting renewable energy cost reductions have made mitigation increasingly economically viable",
+      "source": "Stern Review, Climate Economics Studies",
+      "reliability": "medium"
+    },
+    {
+      "id": "ev_long_002a",
+      "text": "Dartmouth Summer Research Project on Artificial Intelligence (1956) is widely recognized as AI field's founding conference with McCarthy, Minsky, and others establishing core research objectives",
+      "source": "AI History Archives",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_002b",
+      "text": "Expert systems achieved significant practical applications in 1970s-1980s before AI winter periods when progress slowed due to computational limitations and unmet expectations",
+      "source": "AI History Research",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_002c",
+      "text": "Deep learning revolution catalyzed by GPU availability, large-scale datasets, and architectural innovations (CNNs, transformers) has driven recent AI advances with documented risks from bias, interpretability, and energy consumption",
+      "source": "AI Research Literature",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_003a",
+      "text": "SARS-CoV-2 uses ACE2 receptors for cell entry with viral replication causing direct cellular damage and immune response activation documented in pathology studies",
+      "source": "Lancet, JAMA",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_003b",
+      "text": "Severe COVID-19 characterized by cytokine storm with elevated IL-6, TNF-alpha, causing ARDS, thromboembolism, and multi-organ complications well documented in clinical literature",
+      "source": "Critical Care Medicine",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_003c",
+      "text": "COVID-19 vaccines demonstrate 70-95% efficacy against severe illness with mRNA and viral vector platforms showing strong protection despite reduced infection protection against variants",
+      "source": "CDC, WHO, Clinical Trials Data",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_004a",
+      "text": "Quantum mechanics established through 20th century work including Planck's quantization, Heisenberg's uncertainty principle, and Schrödinger equation forming mathematical foundation",
+      "source": "Physics Textbooks, History of Physics",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_004b",
+      "text": "Experimental validation includes photoelectric effect, double-slit experiments, quantum tunneling, and Bell test experiments confirming quantum mechanics predictions",
+      "source": "Physics Literature",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_004c",
+      "text": "Multiple interpretations (Copenhagen, many-worlds, pilot-wave, objective collapse) remain unresolved despite quantum mechanics' empirical success in chemistry and materials science",
+      "source": "Physics Philosophy Literature",
+      "reliability": "medium"
+    },
+    {
+      "id": "ev_long_005a",
+      "text": "Industrial Revolution originated in 18th-century Britain, spread globally through 19th-20th centuries, and fundamentally transformed human civilization through mechanization and factory systems",
+      "source": "Economic History",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_005b",
+      "text": "Industrial Revolution generated unprecedented productivity increases enabling population growth from 750 million to 1.6 billion (1750-1900) and created severe social disruptions",
+      "source": "Historical Demography",
+      "reliability": "high"
+    },
+    {
+      "id": "ev_long_005c",
+      "text": "Environmental consequences included deforestation, pollution, and initiated anthropogenic climate change through fossil fuel dependence with ongoing scholarly debate about progress vs. disaster characterization",
+      "source": "Environmental History",
+      "reliability": "medium"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "category": "ambiguous_evidence",
+  "description": "Claims where evidence is tangentially related, has unclear relevance, or requires significant inference to connect to the claim",
+  "expected_behavior": "System should recognize neutral or weakly relevant evidence and may return INSUFFICIENT or LOW_CONFIDENCE",
+  "claims": [
+    {
+      "id": "edge_amb_001",
+      "text": "Social media increases depression rates in teenagers",
+      "expected_verdict": "AMBIGUOUS",
+      "edge_case_type": "ambiguous_evidence",
+      "reason": "Evidence shows correlation but lacks clear causality; timing and confounding variables unclear",
+      "expected_behavior": "Should recognize correlation does not establish causation",
+      "evidence_ids": ["ev_amb_001a", "ev_amb_001b"],
+      "metadata": {
+        "challenge": "Correlation vs causation",
+        "test_purpose": "Verify system recognizes weak causal inference",
+        "inference_required": true,
+        "evidence_quality": "medium"
+      }
+    },
+    {
+      "id": "edge_amb_002",
+      "text": "Wearing red clothing improves athletic performance",
+      "expected_verdict": "AMBIGUOUS",
+      "edge_case_type": "ambiguous_evidence",
+      "reason": "Studies show athletes wearing red win slightly more often, but could be due to psychological effect of color or referee bias rather than physical performance",
+      "expected_behavior": "Should recognize alternative explanations for observed phenomena",
+      "evidence_ids": ["ev_amb_002a", "ev_amb_002b"],
+      "metadata": {
+        "challenge": "Multiple competing explanations for observations",
+        "test_purpose": "Verify system handles alternative hypotheses",
+        "inference_required": true,
+        "evidence_quality": "medium"
+      }
+    },
+    {
+      "id": "edge_amb_003",
+      "text": "The full moon affects human sleep patterns",
+      "expected_verdict": "AMBIGUOUS",
+      "edge_case_type": "ambiguous_evidence",
+      "reason": "Mixed evidence - some studies show effect, others show none; possible placebo effects and confounding variables",
+      "expected_behavior": "Should recognize inconclusive evidence despite popular belief",
+      "evidence_ids": ["ev_amb_003a", "ev_amb_003b"],
+      "metadata": {
+        "challenge": "Evidence contradicts popular belief",
+        "test_purpose": "Verify system doesn't defer to common misconceptions",
+        "inference_required": true,
+        "evidence_quality": "low_to_medium"
+      }
+    },
+    {
+      "id": "edge_amb_004",
+      "text": "Listening to classical music makes people smarter",
+      "expected_verdict": "AMBIGUOUS",
+      "edge_case_type": "ambiguous_evidence",
+      "reason": "Famous 'Mozart Effect' studies claimed to show IQ increase, but later meta-analyses showed minimal effect and lack of replication",
+      "expected_behavior": "Should recognize overstated claims from misinterpreted evidence",
+      "evidence_ids": ["ev_amb_004a", "ev_amb_004b"],
+      "metadata": {
+        "challenge": "Replication crisis and effect size inflation",
+        "test_purpose": "Verify system evaluates research quality and replication",
+        "inference_required": true,
+        "evidence_quality": "disputed"
+      }
+    },
+    {
+      "id": "edge_amb_005",
+      "text": "Positive thinking cures serious illnesses",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": "ambiguous_evidence",
+      "reason": "Some anecdotal evidence and psychological benefits exist, but no evidence for cure of serious organic diseases",
+      "expected_behavior": "Should distinguish between psychological benefits and medical cure",
+      "evidence_ids": ["ev_amb_005a", "ev_amb_005b"],
+      "metadata": {
+        "challenge": "Confusing related but different claims",
+        "test_purpose": "Verify system handles scope limitations in evidence",
+        "inference_required": true,
+        "evidence_quality": "mixed"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_amb_001a",
+      "text": "Study of 5,000 teenagers shows increased depression rates correlate with increased social media usage. Those using social media >3 hours daily show 2x depression rates.",
+      "source": "Psychology Today Study",
+      "reliability": "medium",
+      "relevance": "correlated",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_amb_001b",
+      "text": "Research suggests that teenagers with pre-existing depression use social media more as coping mechanism, suggesting reverse causality. Randomized intervention studies show minimal effect.",
+      "source": "JAMA Psychiatry",
+      "reliability": "medium",
+      "relevance": "alternative_explanation",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_amb_002a",
+      "text": "Analysis of 5,000+ sports competitions found teams wearing red won 55% of contests compared to 45% for blue teams",
+      "source": "Nature Sports Analytics",
+      "reliability": "medium",
+      "relevance": "tangential",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_amb_002b",
+      "text": "Controlled experiment wearing identical uniforms in different colors shows no difference in performance metrics. Red color may trigger referee bias or psychological confidence.",
+      "source": "Sports Psychology Review",
+      "reliability": "medium",
+      "relevance": "mechanism",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_amb_003a",
+      "text": "Survey of 2,000 people reports subjective sleep disruption during full moon phases, with 60% reporting worse sleep",
+      "source": "Sleep Survey",
+      "reliability": "low",
+      "relevance": "subjective",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_amb_003b",
+      "text": "Controlled sleep laboratory study with participants unaware of moon phase found no difference in sleep quality or duration. Subjective reports are likely due to expectation bias.",
+      "source": "Sleep Medicine Journal",
+      "reliability": "high",
+      "relevance": "objective",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_amb_004a",
+      "text": "Rauscher et al. (1993) reported that college students listened to Mozart showed 8-9 point increase in spatial reasoning IQ scores",
+      "source": "Nature",
+      "reliability": "medium",
+      "relevance": "historical",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_amb_004b",
+      "text": "Meta-analysis of 40+ Mozart Effect replication studies found average effect size near zero, with original study having methodological limitations and publication bias",
+      "source": "Psychological Bulletin Meta-Analysis",
+      "reliability": "high",
+      "relevance": "replication",
+      "supports_claim": false
+    },
+    {
+      "id": "ev_amb_005a",
+      "text": "Studies show positive outlook improves treatment adherence, reduces stress hormones, and supports immune function, contributing to better health outcomes",
+      "source": "Health Psychology",
+      "reliability": "medium",
+      "relevance": "partial",
+      "supports_claim": true
+    },
+    {
+      "id": "ev_amb_005b",
+      "text": "No evidence shows positive thinking alone can cure cancer, diabetes, or other serious organic diseases. Medical treatment remains essential and thoughts cannot replace needed medications.",
+      "source": "Oncology Review",
+      "reliability": "high",
+      "relevance": "scope_limitation",
+      "supports_claim": false
+    }
+  ]
+}

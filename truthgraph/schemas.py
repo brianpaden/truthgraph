@@ -92,11 +92,10 @@ class Embedding(Base):
     """Embeddings table - stores vector embeddings for evidence and claims.
 
     Uses pgvector extension for efficient similarity search.
-    Dimension: 1536 for text-embedding-3-small model (OpenAI).
+    Dimension: 384 for sentence-transformers/all-MiniLM-L6-v2 model.
 
-    Note: The implementation plan specifies 384 dimensions for all-MiniLM-L6-v2,
-    but this design supports both by using 1536 (larger model).
-    The actual dimension should match your embedding model choice.
+    This matches the EmbeddingService configuration. For different models,
+    update both the schema dimension and the Alembic migration to match.
     """
 
     __tablename__ = "embeddings"
@@ -107,12 +106,13 @@ class Embedding(Base):
     entity_type = Column(String(20), nullable=False)  # 'evidence' or 'claim'
     entity_id = Column(UUID(as_uuid=True), nullable=False)
 
-    # Vector embedding (1536 dimensions for text-embedding-3-small)
-    # Note: Change to 384 if using all-MiniLM-L6-v2 as per implementation plan
-    embedding = Column(Vector(1536), nullable=False)
+    # Vector embedding (384 dimensions for all-MiniLM-L6-v2)
+    # Note: This matches the migration dimension. For other models, update both
+    # the schema and migration to match the model's embedding dimension.
+    embedding = Column(Vector(384), nullable=False)
 
     # Model metadata
-    model_name = Column(String(100), nullable=False, default="text-embedding-3-small")
+    model_name = Column(String(100), nullable=False, default="sentence-transformers/all-MiniLM-L6-v2")
     model_version = Column(String(50), nullable=True)
 
     # Tenant isolation for multi-tenancy support

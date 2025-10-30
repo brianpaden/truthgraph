@@ -1,0 +1,119 @@
+{
+  "category": "special_characters",
+  "description": "Claims containing special characters (@#$%^&*), emojis, non-Latin scripts (Chinese, Arabic, Russian, etc.), and mixed-language content",
+  "expected_behavior": "System should handle Unicode correctly without encoding errors and process claims in non-Latin scripts",
+  "claims": [
+    {
+      "id": "edge_special_001",
+      "text": "The @username tweeted that #ClimateChange is real & requires immediate action!!! So important...",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "special_characters",
+      "reason": "Contains social media conventions: @mention, #hashtag, ampersand, multiple punctuation",
+      "expected_behavior": "Should normalize special characters and extract claim content",
+      "evidence_ids": ["ev_special_001a"],
+      "metadata": {
+        "special_chars": ["@", "#", "&", "!"],
+        "test_purpose": "Verify system handles social media conventions",
+        "language": "English"
+      }
+    },
+    {
+      "id": "edge_special_002",
+      "text": "COVID-19疫苗 (vaccine) efficacy: 95% protection against severe illness 保护 & mortality reduction 减少死亡",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "special_characters",
+      "reason": "Mixed English-Chinese with parenthetical translations",
+      "expected_behavior": "Should handle mixed-language text and parenthetical clarifications",
+      "evidence_ids": ["ev_special_002a"],
+      "metadata": {
+        "languages": ["English", "Chinese"],
+        "script_types": ["Latin", "CJK"],
+        "test_purpose": "Verify system handles multilingual claims",
+        "language": "English+Chinese"
+      }
+    },
+    {
+      "id": "edge_special_003",
+      "text": "الاحتباس الحراري (global warming) يؤثر على المناخ العالمي - climate change affects ecosystems worldwide",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "special_characters",
+      "reason": "Arabic text mixed with English, with parenthetical explanation",
+      "expected_behavior": "Should process right-to-left text correctly",
+      "evidence_ids": ["ev_special_003a"],
+      "metadata": {
+        "languages": ["Arabic", "English"],
+        "script_types": ["Arabic", "Latin"],
+        "test_purpose": "Verify system handles RTL language scripts",
+        "language": "Arabic+English"
+      }
+    },
+    {
+      "id": "edge_special_004",
+      "text": "Изменение климата (climate change) is driven by greenhouse gases including CO₂, CH₄, & N₂O",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "special_characters",
+      "reason": "Russian text with chemical formulas and subscript notation",
+      "expected_behavior": "Should handle Cyrillic script and chemical notation",
+      "evidence_ids": ["ev_special_004a"],
+      "metadata": {
+        "languages": ["Russian", "English"],
+        "script_types": ["Cyrillic", "Latin"],
+        "special_chars": ["₂", "₄", "₀"],
+        "test_purpose": "Verify system handles Cyrillic and subscripts",
+        "language": "Russian+English"
+      }
+    },
+    {
+      "id": "edge_special_005",
+      "text": "Ocean acidification (pH ↓ from 8.2 → 8.1) threatens marine 🐚 & 🐠 ecosystems!!! Real & urgent!",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": "special_characters",
+      "reason": "Contains emojis, mathematical symbols, and emphasis punctuation",
+      "expected_behavior": "Should process emojis and mathematical notation without errors",
+      "evidence_ids": ["ev_special_005a"],
+      "metadata": {
+        "special_chars": ["↓", "→", "!!!"],
+        "emojis": ["🐚", "🐠"],
+        "test_purpose": "Verify system handles emojis and mathematical symbols",
+        "language": "English"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_special_001a",
+      "text": "Climate change is supported by scientific consensus from organizations including NASA, NOAA, and IPCC with overwhelming evidence from multiple independent studies",
+      "source": "IPCC Reports",
+      "reliability": "high",
+      "note": "Supporting the normalized claim about climate change reality"
+    },
+    {
+      "id": "ev_special_002a",
+      "text": "COVID-19 vaccines including Pfizer, Moderna, and others demonstrate 95% efficacy against severe illness and death in clinical trials and real-world data",
+      "source": "CDC, WHO, Clinical Trials",
+      "reliability": "high",
+      "note": "Supporting vaccine efficacy claim in multiple languages"
+    },
+    {
+      "id": "ev_special_003a",
+      "text": "Global warming (الاحتباس الحراري) is confirmed by multiple scientific organizations and affects climate systems worldwide including precipitation patterns and temperature",
+      "source": "IPCC, NASA, Global Climate Studies",
+      "reliability": "high",
+      "note": "Supporting climate change claim in Arabic and English"
+    },
+    {
+      "id": "ev_special_004a",
+      "text": "Greenhouse gases including CO₂ (carbon dioxide), CH₄ (methane), and N₂O (nitrous oxide) are primary drivers of climate change as documented in scientific literature",
+      "source": "Atmospheric Chemistry Research",
+      "reliability": "high",
+      "note": "Supporting greenhouse gas mechanism with chemical notation"
+    },
+    {
+      "id": "ev_special_005a",
+      "text": "Ocean acidification (pH decrease from 8.2 to 8.1 in recent decades) is documented phenomenon threatening marine organisms including shellfish and fish species",
+      "source": "Oceanography Research",
+      "reliability": "high",
+      "note": "Supporting ocean acidification threat to marine ecosystems"
+    }
+  ]
+}
