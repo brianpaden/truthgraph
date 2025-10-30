@@ -13,7 +13,7 @@ Performance target: <60s end-to-end for typical claim
 import hashlib
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from enum import Enum
 from functools import wraps
 from typing import Any, Callable, Optional, TypeVar
@@ -92,9 +92,7 @@ def retry_on_failure(
                         )
 
             # All retries exhausted
-            raise RuntimeError(
-                f"{func_name} failed after {max_attempts} attempts"
-            ) from last_exception
+            raise RuntimeError(f"{func_name} failed after {max_attempts} attempts") from last_exception
 
         return wrapper
 
@@ -375,9 +373,7 @@ class VerificationPipelineService:
                 )
 
                 if store_result:
-                    insufficient_result = await self._store_verification_result(
-                        db=db, result=insufficient_result
-                    )
+                    insufficient_result = await self._store_verification_result(db=db, result=insufficient_result)
 
                 if use_cache:
                     self._cache_result(claim_text, insufficient_result)
@@ -731,7 +727,9 @@ class VerificationPipelineService:
                     f"(score: {support_score:.2f}), the refuting evidence is more conclusive."
                 )
         else:  # INSUFFICIENT
-            reasoning = f"Analysis of {total_evidence} evidence items yielded insufficient information to verify this claim. "
+            reasoning = (
+                f"Analysis of {total_evidence} evidence items yielded insufficient information to verify this claim. "
+            )
             if total_evidence == 0:
                 reasoning += "No relevant evidence was found in the database."
             else:
@@ -774,13 +772,11 @@ class VerificationPipelineService:
                 refuting_evidence_count=sum(
                     1 for item in result.evidence_items if item.nli_label == NLILabel.CONTRADICTION
                 ),
-                neutral_evidence_count=sum(
-                    1 for item in result.evidence_items if item.nli_label == NLILabel.NEUTRAL
-                ),
+                neutral_evidence_count=sum(1 for item in result.evidence_items if item.nli_label == NLILabel.NEUTRAL),
                 reasoning=result.reasoning,
                 retrieval_method=result.retrieval_method,
                 pipeline_version="1.0.0",
-                created_at=datetime.utcnow(),
+                created_at=datetime.now(UTC),
             )
 
             db.add(verification_record)
@@ -799,7 +795,7 @@ class VerificationPipelineService:
                     model_name="cross-encoder/nli-deberta-v3-base",
                     premise_text=item.content,
                     hypothesis_text=result.claim_text,
-                    created_at=datetime.utcnow(),
+                    created_at=datetime.now(UTC),
                 )
                 db.add(nli_record)
 

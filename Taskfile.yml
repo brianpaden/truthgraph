@@ -259,10 +259,10 @@ tasks:
     cmds:
       - task: ml:benchmark:embedding
       - task: ml:benchmark:nli
-      - task: ml:benchmark:vector
-      - task: ml:benchmark:hybrid
+      - task: ml:benchmark:vector  # TODO: failing
+      - task: ml:benchmark:hybrid  # TODO: failing
       - task: ml:benchmark:verdict
-      - task: ml:benchmark:pipeline
+      - task: ml:benchmark:pipeline  # TODO: failing
 
   ml:benchmark:embedding:
     desc: Benchmark embedding service
@@ -277,7 +277,7 @@ tasks:
   ml:benchmark:vector:
     desc: Benchmark vector search
     cmds:
-      - docker-compose exec api python scripts/benchmark_vector_search.py
+      - docker-compose exec api python scripts/benchmark_vector_search.py --embedding-dim 384
 
   ml:benchmark:hybrid:
     desc: Benchmark hybrid search (vector + keyword)

@@ -3,7 +3,7 @@
 import logging
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, UTC
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -145,9 +145,7 @@ async def health_check():
         services["database"] = ServiceStatus(status="healthy", message="Database connection OK")
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
-        services["database"] = ServiceStatus(
-            status="unhealthy", message=f"Database error: {str(e)}"
-        )
+        services["database"] = ServiceStatus(status="unhealthy", message=f"Database error: {str(e)}")
 
     # Check embedding service
     try:
@@ -163,9 +161,7 @@ async def health_check():
         )
     except Exception as e:
         logger.error(f"Embedding service health check failed: {e}")
-        services["embedding_service"] = ServiceStatus(
-            status="unhealthy", message=f"Service error: {str(e)}"
-        )
+        services["embedding_service"] = ServiceStatus(status="unhealthy", message=f"Service error: {str(e)}")
 
     # Check NLI service
     try:
@@ -181,9 +177,7 @@ async def health_check():
         )
     except Exception as e:
         logger.error(f"NLI service health check failed: {e}")
-        services["nli_service"] = ServiceStatus(
-            status="unhealthy", message=f"Service error: {str(e)}"
-        )
+        services["nli_service"] = ServiceStatus(status="unhealthy", message=f"Service error: {str(e)}")
 
     # Determine overall status
     if all(s.status == "healthy" for s in services.values()):
@@ -193,9 +187,7 @@ async def health_check():
     else:
         overall_status = "healthy"
 
-    return HealthResponse(
-        status=overall_status, timestamp=datetime.utcnow(), services=services, version="2.0.0"
-    )
+    return HealthResponse(status=overall_status, timestamp=datetime.now(UTC), services=services, version="2.0.0")
 
 
 @app.get(

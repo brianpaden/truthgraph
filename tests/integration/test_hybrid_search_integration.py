@@ -5,7 +5,7 @@ Run with: pytest tests/integration/test_hybrid_search_integration.py -v
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from uuid import uuid4
 
 import pytest
@@ -68,35 +68,35 @@ def sample_evidence_data(db_session):
             "content": "Climate change is caused by greenhouse gas emissions from human activities. "
             "Rising temperatures affect weather patterns globally.",
             "source_url": "https://climate-science.org/article1",
-            "created_at": datetime.utcnow(),
+            "created_at": datetime.now(UTC),
         },
         {
             "id": uuid4(),
             "content": "Global warming leads to melting ice caps and rising sea levels. "
             "Climate scientists warn of severe environmental impacts.",
             "source_url": "https://climate-science.org/article2",
-            "created_at": datetime.utcnow(),
+            "created_at": datetime.now(UTC),
         },
         {
             "id": uuid4(),
             "content": "Python is a high-level programming language known for simplicity. "
             "It is widely used in machine learning and data science.",
             "source_url": "https://programming-guide.com/python",
-            "created_at": datetime.utcnow() - timedelta(days=30),
+            "created_at": datetime.now(UTC) - timedelta(days=30),
         },
         {
             "id": uuid4(),
             "content": "Machine learning algorithms can classify data and make predictions. "
             "Neural networks are a popular approach in artificial intelligence.",
             "source_url": "https://ml-tutorials.com/intro",
-            "created_at": datetime.utcnow() - timedelta(days=60),
+            "created_at": datetime.now(UTC) - timedelta(days=60),
         },
         {
             "id": uuid4(),
             "content": "The Earth orbits the Sun in approximately 365.25 days. "
             "This orbital period defines our calendar year.",
             "source_url": "https://astronomy-facts.org/earth",
-            "created_at": datetime.utcnow(),
+            "created_at": datetime.now(UTC),
         },
     ]
 
@@ -230,9 +230,7 @@ class TestHybridSearchIntegration:
         # With heavy keyword weight, should find ML content
         assert len(results) > 0
         # Keywords should dominate rankings
-        assert any(
-            "machine" in r.content.lower() or "learning" in r.content.lower() for r in results[:2]
-        )
+        assert any("machine" in r.content.lower() or "learning" in r.content.lower() for r in results[:2])
 
     def test_hybrid_search_with_source_filter(self, db_session, sample_evidence_data):
         """Test hybrid search with source URL filter."""
@@ -258,7 +256,7 @@ class TestHybridSearchIntegration:
         query_embedding = [0.1 for i in range(1536)]
 
         # Filter to recent content only (last 7 days)
-        date_from = datetime.utcnow() - timedelta(days=7)
+        date_from = datetime.now(UTC) - timedelta(days=7)
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -269,10 +267,7 @@ class TestHybridSearchIntegration:
         )
 
         # Should not include old programming/ML articles
-        assert all(
-            "python" not in r.content.lower() and "machine learning" not in r.content.lower()
-            for r in results
-        )
+        assert all("python" not in r.content.lower() and "machine learning" not in r.content.lower() for r in results)
 
     def test_hybrid_search_matched_via_both(self, db_session, sample_evidence_data):
         """Test that results show correct matched_via field."""
@@ -290,11 +285,7 @@ class TestHybridSearchIntegration:
 
         # Should have results matched via both methods
         matched_via_values = [r.matched_via for r in results]
-        assert (
-            "both" in matched_via_values
-            or "vector" in matched_via_values
-            or "keyword" in matched_via_values
-        )
+        assert "both" in matched_via_values or "vector" in matched_via_values or "keyword" in matched_via_values
 
     def test_hybrid_search_empty_results(self, db_session, sample_evidence_data):
         """Test hybrid search with query that matches nothing."""
@@ -363,7 +354,7 @@ class TestKeywordOnlySearchIntegration:
         """Test keyword-only search with filters."""
         service = HybridSearchService(embedding_dimension=1536)
 
-        date_from = datetime.utcnow() - timedelta(days=7)
+        date_from = datetime.now(UTC) - timedelta(days=7)
 
         results, query_time = service.keyword_only_search(
             db=db_session,
@@ -399,7 +390,7 @@ class TestSearchStatsIntegration:
             id=uuid4(),
             content="New evidence without embedding",
             source_url="https://example.com",
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
         )
         db_session.add(new_evidence)
         db_session.commit()
