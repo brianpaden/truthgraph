@@ -26,6 +26,20 @@ tasks:
       - echo "✓ Dependencies installed in .venv"
 
   # ============================================================================
+  # Monitor Tasks
+  # ============================================================================
+
+  monitor:
+    desc: Start all monitoring tools
+    cmds:
+      - task: monitor:claude
+      
+  monitor:claude:
+    desc: Start claude code monitoring
+    cmds:
+      - wt -d . claude-code-monitor.exe
+
+  # ============================================================================
   # Linting Tasks
   # ============================================================================
 
@@ -259,8 +273,8 @@ tasks:
     cmds:
       - task: ml:benchmark:embedding
       - task: ml:benchmark:nli
-      - task: ml:benchmark:vector  # TODO: failing
-      - task: ml:benchmark:hybrid  # TODO: failing
+      - task: ml:benchmark:vector  # TODO: forced to 384
+      - task: ml:benchmark:hybrid  # TODO: failing looking for 1536
       - task: ml:benchmark:verdict
       - task: ml:benchmark:pipeline  # TODO: failing
 
