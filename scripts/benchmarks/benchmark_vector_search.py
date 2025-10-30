@@ -370,9 +370,10 @@ def main() -> int:
     # Parse corpus sizes
     corpus_sizes = [int(x.strip()) for x in args.corpus_sizes.split(",")]
 
-    # Database URL
+    # Database URL from env var or use default
+    # Default uses 'postgres' host for Docker container, change to 'localhost' for local dev
     database_url = args.database_url or os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph"
+        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
     )
 
     print("=" * 80)

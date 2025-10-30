@@ -406,9 +406,10 @@ async def main_async() -> int:
 
     args = parser.parse_args()
 
-    # Database URL
+    # Database URL from env var or use default
+    # Default uses 'postgres' host for Docker container, change to 'localhost' for local dev
     database_url = args.database_url or os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph"
+        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
     )
 
     print("=" * 80)

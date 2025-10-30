@@ -12,6 +12,7 @@ Performance target: <60s end-to-end for typical claim
 
 import argparse
 import asyncio
+import os
 import statistics
 import sys
 import time
@@ -305,8 +306,11 @@ def main():
     )
     parser.add_argument(
         "--db-url",
-        default="postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph_test",
-        help="Database URL for testing",
+        default=os.getenv(
+            "DATABASE_URL",
+            "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
+        ),
+        help="Database URL (default: from DATABASE_URL env var or postgres:5432)",
     )
     parser.add_argument(
         "--iterations",

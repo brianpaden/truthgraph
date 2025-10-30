@@ -44,7 +44,13 @@
       "Bash(python scripts/generate_corpus_data.py:*)",
       "Bash(python scripts/embed_corpus.py:*)",
       "Bash(python scripts/generate_sample_corpus.py:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(task ml:benchmark:*)",
+      "Bash(MSYS_NO_PATHCONV=1 docker exec:*)",
+      "Bash(MSYS_NO_PATHCONV=1 docker-compose exec:*)",
+      "Bash(git checkout:*)",
+      "Bash(task ml:benchmark:pipeline:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []
