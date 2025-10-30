@@ -1,0 +1,9 @@
+Component,Metric,Target,Baseline,Status,Notes
+Embeddings,Single Text Latency (ms),<100,6.66,PASS,15x better than target
+Embeddings,Batch Throughput (texts/sec),>500,1184.9,PASS,137% above target
+Embeddings,Peak Memory (MB),<2048,537.9,PASS,Only 26% of target
+NLI,Single Pair Latency (ms),<500,57.4,PASS,8.7x better than target
+NLI,Batch Throughput (pairs/sec),>2,67.3,PASS,3265% above target
+NLI,Peak Memory (MB),<2048,931.4,PASS,45% of target
+Vector Search,Query Latency (sec),<3,TBD,PENDING,Requires database setup
+Pipeline,End-to-End Latency (sec),<60,TBD,PENDING,Requires integration

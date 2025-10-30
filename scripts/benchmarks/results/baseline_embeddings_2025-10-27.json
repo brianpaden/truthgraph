@@ -1,0 +1,94 @@
+{
+  "timestamp": "2025-10-30T01:25:17.613214",
+  "system": {
+    "python_version": "3.13.7",
+    "pytorch_version": "2.9.0+cpu",
+    "cuda_available": false,
+    "device": "cpu",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dimension": 384
+  },
+  "benchmarks": {
+    "single_text": {
+      "iterations": 50,
+      "avg_latency_ms": 6.6605839998373995,
+      "min_latency_ms": 6.1280999980226625,
+      "max_latency_ms": 7.2725999998510815,
+      "p50_latency_ms": 6.662899999355432,
+      "p95_latency_ms": 7.247000001370907,
+      "p99_latency_ms": 7.2725999998510815,
+      "embedding_dimension": 384,
+      "target_ms": 100.0,
+      "passed": true
+    },
+    "batch_sizes": {
+      "num_texts": 500,
+      "device": "cpu",
+      "batch_results": [
+        {
+          "batch_size": 8,
+          "elapsed_time_s": 0.8774294999966514,
+          "throughput_texts_per_sec": 569.8463523301965,
+          "num_embeddings": 500,
+          "memory_rss_mb": 448.71484375
+        },
+        {
+          "batch_size": 16,
+          "elapsed_time_s": 0.7235903999971924,
+          "throughput_texts_per_sec": 690.9986644404624,
+          "num_embeddings": 500,
+          "memory_rss_mb": 470.41015625
+        },
+        {
+          "batch_size": 32,
+          "elapsed_time_s": 0.5281226999977662,
+          "throughput_texts_per_sec": 946.7496852570716,
+          "num_embeddings": 500,
+          "memory_rss_mb": 484.82421875
+        },
+        {
+          "batch_size": 64,
+          "elapsed_time_s": 0.4219684999989113,
+          "throughput_texts_per_sec": 1184.9225712376399,
+          "num_embeddings": 500,
+          "memory_rss_mb": 506.89453125
+        }
+      ],
+      "best_batch_size": 64,
+      "best_throughput": 1184.9225712376399,
+      "target_throughput": 500,
+      "passed": true
+    },
+    "text_lengths": {
+      "num_texts_per_category": 500,
+      "length_results": [
+        {
+          "category": "short",
+          "sample_length_chars": 16,
+          "elapsed_time_s": 0.25428000000101747,
+          "throughput_texts_per_sec": 1966.336322156675
+        },
+        {
+          "category": "medium",
+          "sample_length_chars": 90,
+          "elapsed_time_s": 0.5241298000000825,
+          "throughput_texts_per_sec": 953.9621673866308
+        },
+        {
+          "category": "long",
+          "sample_length_chars": 344,
+          "elapsed_time_s": 1.0500742999975046,
+          "throughput_texts_per_sec": 476.1567824307177
+        }
+      ]
+    },
+    "memory": {
+      "baseline_mb": 535.703125,
+      "loaded_mb": 535.71484375,
+      "peak_mb": 537.890625,
+      "model_memory_mb": 0.01171875,
+      "target_mb": 2048,
+      "passed": true
+    }
+  }
+}
