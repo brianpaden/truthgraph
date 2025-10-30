@@ -11,8 +11,7 @@ Run with: pytest tests/benchmarks/test_hybrid_search_performance.py -v -s
 import os
 import statistics
 import time
-from datetime import datetime
-from datetime import UTC
+from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
@@ -390,7 +389,9 @@ class TestRRFPerformance:
 
         for vec_size, kw_size in result_sizes:
             # Create mock results
-            vector_results = [(uuid4(), f"content {i}", None, 0.9 - i * 0.01) for i in range(vec_size)]
+            vector_results = [
+                (uuid4(), f"content {i}", None, 0.9 - i * 0.01) for i in range(vec_size)
+            ]
 
             keyword_results = [(uuid4(), f"content {i}", None, i + 1) for i in range(kw_size)]
 

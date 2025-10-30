@@ -112,7 +112,9 @@ class Embedding(Base):
     embedding = Column(Vector(384), nullable=False)
 
     # Model metadata
-    model_name = Column(String(100), nullable=False, default="sentence-transformers/all-MiniLM-L6-v2")
+    model_name = Column(
+        String(100), nullable=False, default="sentence-transformers/all-MiniLM-L6-v2"
+    )
     model_version = Column(String(50), nullable=True)
 
     # Tenant isolation for multi-tenancy support

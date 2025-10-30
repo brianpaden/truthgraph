@@ -53,7 +53,7 @@ class JSONCorpusLoader(BaseCorpusLoader):
         self,
         file_path: Path | str,
         is_jsonl: bool | None = None,
-        encoding: str = 'utf-8',
+        encoding: str = "utf-8",
     ) -> None:
         """Initialize JSON loader.
 
@@ -67,7 +67,7 @@ class JSONCorpusLoader(BaseCorpusLoader):
 
         # Auto-detect JSONL format
         if is_jsonl is None:
-            self.is_jsonl = self.file_path.suffix.lower() in ['.jsonl', '.ndjson']
+            self.is_jsonl = self.file_path.suffix.lower() in [".jsonl", ".ndjson"]
         else:
             self.is_jsonl = is_jsonl
 
@@ -91,8 +91,7 @@ class JSONCorpusLoader(BaseCorpusLoader):
                         self.total_count = 1  # Single object
 
             logger.info(
-                f"JSON{'L' if self.is_jsonl else ''} file contains "
-                f"{self.total_count} items"
+                f"JSON{'L' if self.is_jsonl else ''} file contains {self.total_count} items"
             )
         except Exception as e:
             logger.warning(f"Could not count JSON items: {e}")
@@ -115,9 +114,7 @@ class JSONCorpusLoader(BaseCorpusLoader):
         Raises:
             ValueError: If JSON is malformed or missing required fields
         """
-        logger.info(
-            f"Loading {'JSONL' if self.is_jsonl else 'JSON'} corpus from {self.file_path}"
-        )
+        logger.info(f"Loading {'JSONL' if self.is_jsonl else 'JSON'} corpus from {self.file_path}")
 
         try:
             if self.is_jsonl:
@@ -157,8 +154,8 @@ class JSONCorpusLoader(BaseCorpusLoader):
             normalized_item = self._normalize_fields(item)
 
             # Generate ID if missing
-            if 'id' not in normalized_item or not normalized_item['id']:
-                normalized_item['id'] = f"json_{idx:06d}"
+            if "id" not in normalized_item or not normalized_item["id"]:
+                normalized_item["id"] = f"json_{idx:06d}"
 
             yield normalized_item
 
@@ -182,17 +179,15 @@ class JSONCorpusLoader(BaseCorpusLoader):
                     item = json.loads(line)
 
                     if not isinstance(item, dict):
-                        logger.warning(
-                            f"Skipping non-dict item at line {line_num}: {type(item)}"
-                        )
+                        logger.warning(f"Skipping non-dict item at line {line_num}: {type(item)}")
                         continue
 
                     # Normalize field names
                     normalized_item = self._normalize_fields(item)
 
                     # Generate ID if missing
-                    if 'id' not in normalized_item or not normalized_item['id']:
-                        normalized_item['id'] = f"jsonl_{line_num:06d}"
+                    if "id" not in normalized_item or not normalized_item["id"]:
+                        normalized_item["id"] = f"jsonl_{line_num:06d}"
 
                     yield normalized_item
 
@@ -216,11 +211,11 @@ class JSONCorpusLoader(BaseCorpusLoader):
             return False
 
         # Ensure ID is present (should be generated during load)
-        if 'id' not in item or not item['id']:
+        if "id" not in item or not item["id"]:
             return False
 
         # Optional fields should be strings if present
-        for field in ['source', 'url']:
+        for field in ["source", "url"]:
             if field in item and item[field] is not None:
                 if not isinstance(item[field], str):
                     return False
@@ -241,35 +236,50 @@ class JSONCorpusLoader(BaseCorpusLoader):
         normalized: dict[str, Any] = {}
 
         # Map content field (required)
-        for content_key in ['content', 'text', 'evidence', 'evidence_text', 'body']:
+        for content_key in ["content", "text", "evidence", "evidence_text", "body"]:
             if content_key in item:
-                normalized['content'] = item[content_key]
+                normalized["content"] = item[content_key]
                 break
 
         # Map ID field
-        for id_key in ['id', 'evidence_id', 'doc_id', 'identifier', '_id']:
+        for id_key in ["id", "evidence_id", "doc_id", "identifier", "_id"]:
             if id_key in item:
-                normalized['id'] = str(item[id_key])  # Ensure string
+                normalized["id"] = str(item[id_key])  # Ensure string
                 break
 
         # Map source field
-        for source_key in ['source', 'source_name', 'origin', 'publisher']:
+        for source_key in ["source", "source_name", "origin", "publisher"]:
             if source_key in item:
-                normalized['source'] = item[source_key]
+                normalized["source"] = item[source_key]
                 break
 
         # Map URL field
-        for url_key in ['url', 'source_url', 'link', 'uri', 'href']:
+        for url_key in ["url", "source_url", "link", "uri", "href"]:
             if url_key in item:
-                normalized['url'] = item[url_key]
+                normalized["url"] = item[url_key]
                 break
 
         # Include any additional fields as metadata
         known_keys = {
-            'content', 'text', 'evidence', 'evidence_text', 'body',
-            'id', 'evidence_id', 'doc_id', 'identifier', '_id',
-            'source', 'source_name', 'origin', 'publisher',
-            'url', 'source_url', 'link', 'uri', 'href'
+            "content",
+            "text",
+            "evidence",
+            "evidence_text",
+            "body",
+            "id",
+            "evidence_id",
+            "doc_id",
+            "identifier",
+            "_id",
+            "source",
+            "source_name",
+            "origin",
+            "publisher",
+            "url",
+            "source_url",
+            "link",
+            "uri",
+            "href",
         }
 
         for key, value in item.items():

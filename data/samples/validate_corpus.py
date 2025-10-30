@@ -11,8 +11,8 @@ This script validates the evidence corpus for:
 - Statistical analysis
 """
 
-import json
 import csv
+import json
 import re
 from pathlib import Path
 from typing import Dict, List, Set
@@ -22,10 +22,19 @@ from urllib.parse import urlparse
 class CorpusValidator:
     """Validator for evidence corpus."""
 
-    REQUIRED_FIELDS = ['id', 'content', 'source', 'url', 'category', 'relevance', 'language', 'date_added']
-    VALID_CATEGORIES = ['science', 'health', 'history', 'technology', 'politics', 'geography']
-    VALID_RELEVANCE = ['high', 'medium', 'low']
-    VALID_LANGUAGES = ['en']
+    REQUIRED_FIELDS = [
+        "id",
+        "content",
+        "source",
+        "url",
+        "category",
+        "relevance",
+        "language",
+        "date_added",
+    ]
+    VALID_CATEGORIES = ["science", "health", "history", "technology", "politics", "geography"]
+    VALID_RELEVANCE = ["high", "medium", "low"]
+    VALID_LANGUAGES = ["en"]
 
     MIN_CONTENT_LENGTH = 50
     MAX_CONTENT_LENGTH = 2000
@@ -46,7 +55,7 @@ class CorpusValidator:
 
     def validate_document(self, doc: Dict, index: int) -> bool:
         """Validate a single evidence document."""
-        doc_id = doc.get('id', f'document_{index}')
+        doc_id = doc.get("id", f"document_{index}")
         has_error = False
 
         # Check required fields
@@ -59,24 +68,28 @@ class CorpusValidator:
             return False
 
         # Validate ID uniqueness
-        if doc['id'] in self.seen_ids:
+        if doc["id"] in self.seen_ids:
             self.errors.append(f"{doc_id}: Duplicate ID found")
             has_error = True
         else:
-            self.seen_ids.add(doc['id'])
+            self.seen_ids.add(doc["id"])
 
         # Validate ID format (sample_ev_NNN)
-        if not re.match(r'^sample_ev_\d{3}$', doc['id']):
+        if not re.match(r"^sample_ev_\d{3}$", doc["id"]):
             self.warnings.append(f"{doc_id}: ID doesn't match expected format 'sample_ev_NNN'")
 
         # Validate content
-        content = doc.get('content', '')
+        content = doc.get("content", "")
         content_length = len(content)
 
         if content_length < self.MIN_CONTENT_LENGTH:
-            self.warnings.append(f"{doc_id}: Content too short ({content_length} chars, min {self.MIN_CONTENT_LENGTH})")
+            self.warnings.append(
+                f"{doc_id}: Content too short ({content_length} chars, min {self.MIN_CONTENT_LENGTH})"
+            )
         elif content_length > self.MAX_CONTENT_LENGTH:
-            self.warnings.append(f"{doc_id}: Content too long ({content_length} chars, max {self.MAX_CONTENT_LENGTH})")
+            self.warnings.append(
+                f"{doc_id}: Content too long ({content_length} chars, max {self.MAX_CONTENT_LENGTH})"
+            )
 
         # Check for duplicate content
         if content in self.seen_content:
@@ -86,25 +99,31 @@ class CorpusValidator:
             self.seen_content.add(content)
 
         # Validate URL
-        if not self.validate_url(doc.get('url', '')):
+        if not self.validate_url(doc.get("url", "")):
             self.errors.append(f"{doc_id}: Invalid URL format '{doc.get('url', '')}'")
             has_error = True
 
         # Validate category
-        if doc.get('category') not in self.VALID_CATEGORIES:
-            self.errors.append(f"{doc_id}: Invalid category '{doc.get('category')}'. Must be one of {self.VALID_CATEGORIES}")
+        if doc.get("category") not in self.VALID_CATEGORIES:
+            self.errors.append(
+                f"{doc_id}: Invalid category '{doc.get('category')}'. Must be one of {self.VALID_CATEGORIES}"
+            )
             has_error = True
 
         # Validate relevance
-        if doc.get('relevance') not in self.VALID_RELEVANCE:
-            self.warnings.append(f"{doc_id}: Invalid relevance '{doc.get('relevance')}'. Should be one of {self.VALID_RELEVANCE}")
+        if doc.get("relevance") not in self.VALID_RELEVANCE:
+            self.warnings.append(
+                f"{doc_id}: Invalid relevance '{doc.get('relevance')}'. Should be one of {self.VALID_RELEVANCE}"
+            )
 
         # Validate language
-        if doc.get('language') not in self.VALID_LANGUAGES:
-            self.warnings.append(f"{doc_id}: Invalid language '{doc.get('language')}'. Should be one of {self.VALID_LANGUAGES}")
+        if doc.get("language") not in self.VALID_LANGUAGES:
+            self.warnings.append(
+                f"{doc_id}: Invalid language '{doc.get('language')}'. Should be one of {self.VALID_LANGUAGES}"
+            )
 
         # Validate source is not empty
-        if not doc.get('source', '').strip():
+        if not doc.get("source", "").strip():
             self.warnings.append(f"{doc_id}: Empty source field")
 
         return not has_error
@@ -115,7 +134,7 @@ class CorpusValidator:
         print("-" * 60)
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 evidence_list = json.load(f)
 
             if not isinstance(evidence_list, list):
@@ -148,12 +167,14 @@ class CorpusValidator:
         self.seen_content.clear()
 
         try:
-            with open(file_path, 'r', encoding='utf-8', newline='') as f:
+            with open(file_path, "r", encoding="utf-8", newline="") as f:
                 reader = csv.DictReader(f)
 
                 # Check header
                 if reader.fieldnames != self.REQUIRED_FIELDS:
-                    self.errors.append(f"CSV header mismatch. Expected {self.REQUIRED_FIELDS}, got {reader.fieldnames}")
+                    self.errors.append(
+                        f"CSV header mismatch. Expected {self.REQUIRED_FIELDS}, got {reader.fieldnames}"
+                    )
                     return False
 
                 documents = list(reader)
@@ -176,24 +197,37 @@ class CorpusValidator:
         print("-" * 60)
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 metadata = json.load(f)
 
-            required_meta_fields = ['name', 'version', 'date_created', 'total_items', 'categories', 'sources', 'languages', 'statistics']
+            required_meta_fields = [
+                "name",
+                "version",
+                "date_created",
+                "total_items",
+                "categories",
+                "sources",
+                "languages",
+                "statistics",
+            ]
 
             for field in required_meta_fields:
                 if field not in metadata:
                     self.errors.append(f"Metadata missing required field '{field}'")
 
             # Validate total_items matches actual count
-            if metadata.get('total_items') != expected_count:
-                self.errors.append(f"Metadata total_items ({metadata.get('total_items')}) doesn't match actual count ({expected_count})")
+            if metadata.get("total_items") != expected_count:
+                self.errors.append(
+                    f"Metadata total_items ({metadata.get('total_items')}) doesn't match actual count ({expected_count})"
+                )
 
             # Validate categories sum
-            if 'categories' in metadata:
-                category_sum = sum(metadata['categories'].values())
+            if "categories" in metadata:
+                category_sum = sum(metadata["categories"].values())
                 if category_sum != expected_count:
-                    self.errors.append(f"Category counts ({category_sum}) don't sum to total_items ({expected_count})")
+                    self.errors.append(
+                        f"Category counts ({category_sum}) don't sum to total_items ({expected_count})"
+                    )
 
             print(f"Metadata total items: {metadata.get('total_items')}")
             print(f"Categories: {metadata.get('categories')}")
@@ -246,19 +280,21 @@ def main():
     validator = CorpusValidator()
 
     # Validate JSON
-    json_valid = validator.validate_json_corpus(json_file)
+    _json_valid = validator.validate_json_corpus(json_file)
     json_count = len(validator.seen_ids)
 
     # Validate CSV
-    csv_valid = validator.validate_csv_corpus(csv_file)
+    _csv_valid = validator.validate_csv_corpus(csv_file)
     csv_count = len(validator.seen_ids)
 
     # Validate metadata
-    metadata_valid = validator.validate_metadata(metadata_file, json_count)
+    _metadata_valid = validator.validate_metadata(metadata_file, json_count)
 
     # Check JSON and CSV have same count
     if json_count != csv_count:
-        validator.errors.append(f"JSON and CSV have different document counts (JSON: {json_count}, CSV: {csv_count})")
+        validator.errors.append(
+            f"JSON and CSV have different document counts (JSON: {json_count}, CSV: {csv_count})"
+        )
 
     # Print statistics
     validator.print_statistics()

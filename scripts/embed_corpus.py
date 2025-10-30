@@ -41,22 +41,20 @@ from pathlib import Path
 from typing import Any
 
 import structlog
-from sqlalchemy import select
 from tqdm import tqdm
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from truthgraph.db_async import async_engine, AsyncSessionLocal
+from corpus_loaders import get_loader
+
+from truthgraph.db_async import AsyncSessionLocal
 from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.ml.embedding_service import EmbeddingService
 
-from corpus_loaders import get_loader
-
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = structlog.get_logger()
 
@@ -129,14 +127,14 @@ class CheckpointManager:
             batch_size: Batch size used
         """
         self.checkpoint = {
-            'file_path': file_path,
-            'format': format_type,
-            'last_processed_idx': last_idx,
-            'last_processed_id': last_id,
-            'total_processed': total_processed,
-            'total_errors': total_errors,
-            'timestamp': time.strftime('%Y-%m-%dT%H:%M:%S'),
-            'batch_size': batch_size,
+            "file_path": file_path,
+            "format": format_type,
+            "last_processed_idx": last_idx,
+            "last_processed_id": last_id,
+            "total_processed": total_processed,
+            "total_errors": total_errors,
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "batch_size": batch_size,
         }
 
         try:
@@ -144,8 +142,8 @@ class CheckpointManager:
             self.checkpoint_file.parent.mkdir(parents=True, exist_ok=True)
 
             # Write atomically using temp file
-            temp_file = self.checkpoint_file.with_suffix('.tmp')
-            with open(temp_file, 'w') as f:
+            temp_file = self.checkpoint_file.with_suffix(".tmp")
+            with open(temp_file, "w") as f:
                 json.dump(self.checkpoint, f, indent=2)
 
             # Atomic rename
@@ -189,13 +187,13 @@ async def process_batch(
 
     try:
         # Extract content for batch embedding
-        contents = [item['content'] for item in batch]
+        contents = [item["content"] for item in batch]
 
         # Generate embeddings in batch
         embeddings = embedding_service.embed_batch(contents, show_progress=False)
 
         # Process each item
-        for item, embedding_vector in zip(batch, embeddings):
+        for item, embedding_vector in zip(batch, embeddings, strict=None):
             try:
                 if dry_run:
                     # Just validate, don't insert
@@ -205,16 +203,16 @@ async def process_batch(
 
                 # Create Evidence record
                 evidence = Evidence(
-                    content=item['content'],
-                    source_url=item.get('url'),
-                    source_type=item.get('source'),
+                    content=item["content"],
+                    source_url=item.get("url"),
+                    source_type=item.get("source"),
                 )
                 session.add(evidence)
                 await session.flush()  # Get evidence.id
 
                 # Create Embedding record
                 embedding = Embedding(
-                    entity_type='evidence',
+                    entity_type="evidence",
                     entity_id=evidence.id,
                     embedding=embedding_vector,
                     model_name=embedding_service.MODEL_NAME,
@@ -271,10 +269,10 @@ async def embed_corpus(
 
     # Load checkpoint if resuming
     checkpoint = checkpoint_mgr.load() if resume else {}
-    start_idx = checkpoint.get('last_processed_idx', 0) if checkpoint else 0
+    start_idx = checkpoint.get("last_processed_idx", 0) if checkpoint else 0
 
     # Validate checkpoint matches current file
-    if checkpoint and checkpoint.get('file_path') != str(input_file):
+    if checkpoint and checkpoint.get("file_path") != str(input_file):
         logger.warning(
             f"Checkpoint file mismatch. Expected {checkpoint.get('file_path')}, "
             f"got {input_file}. Starting from beginning."
@@ -282,7 +280,7 @@ async def embed_corpus(
         start_idx = 0
 
     # Initialize services
-    logger.info(f"Initializing embedding service...")
+    logger.info("Initializing embedding service...")
     embedding_service = EmbeddingService.get_instance()
 
     # Load corpus
@@ -292,11 +290,11 @@ async def embed_corpus(
 
     # Statistics
     stats = {
-        'total_items': 0,
-        'processed': 0,
-        'errors': 0,
-        'skipped': 0,
-        'start_time': time.time(),
+        "total_items": 0,
+        "processed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "start_time": time.time(),
     }
 
     # Process with progress bar
@@ -305,24 +303,21 @@ async def embed_corpus(
         current_idx = 0
 
         with tqdm(
-            total=total_count,
-            initial=start_idx,
-            desc="Processing corpus",
-            unit="items"
+            total=total_count, initial=start_idx, desc="Processing corpus", unit="items"
         ) as pbar:
             for item in loader.load():
                 current_idx += 1
-                stats['total_items'] += 1
+                stats["total_items"] += 1
 
                 # Skip already processed items
                 if current_idx <= start_idx:
-                    stats['skipped'] += 1
+                    stats["skipped"] += 1
                     continue
 
                 # Validate item
                 if not loader.validate(item):
                     logger.warning(f"Invalid item at index {current_idx}: {item.get('id')}")
-                    stats['errors'] += 1
+                    stats["errors"] += 1
                     pbar.update(1)
                     continue
 
@@ -333,8 +328,8 @@ async def embed_corpus(
                     success, errors = await process_batch(
                         session, batch, embedding_service, tenant_id, dry_run
                     )
-                    stats['processed'] += success
-                    stats['errors'] += errors
+                    stats["processed"] += success
+                    stats["errors"] += errors
                     pbar.update(len(batch))
                     batch = []
 
@@ -344,9 +339,9 @@ async def embed_corpus(
                         file_path=str(input_file),
                         format_type=format_type,
                         last_idx=current_idx,
-                        last_id=item.get('id', 'unknown'),
-                        total_processed=stats['processed'],
-                        total_errors=stats['errors'],
+                        last_id=item.get("id", "unknown"),
+                        total_processed=stats["processed"],
+                        total_errors=stats["errors"],
                         batch_size=batch_size,
                     )
 
@@ -355,20 +350,19 @@ async def embed_corpus(
                 success, errors = await process_batch(
                     session, batch, embedding_service, tenant_id, dry_run
                 )
-                stats['processed'] += success
-                stats['errors'] += errors
+                stats["processed"] += success
+                stats["errors"] += errors
                 pbar.update(len(batch))
 
     # Calculate final statistics
-    stats['end_time'] = time.time()
-    stats['duration_seconds'] = stats['end_time'] - stats['start_time']
-    stats['items_per_second'] = (
-        stats['processed'] / stats['duration_seconds']
-        if stats['duration_seconds'] > 0 else 0
+    stats["end_time"] = time.time()
+    stats["duration_seconds"] = stats["end_time"] - stats["start_time"]
+    stats["items_per_second"] = (
+        stats["processed"] / stats["duration_seconds"] if stats["duration_seconds"] > 0 else 0
     )
 
     # Clear checkpoint on successful completion
-    if not dry_run and stats['errors'] == 0:
+    if not dry_run and stats["errors"] == 0:
         checkpoint_mgr.clear()
 
     return stats
@@ -379,59 +373,40 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Load evidence corpus and generate embeddings",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
+        epilog=__doc__,
+    )
+
+    parser.add_argument("input_file", type=Path, help="Path to corpus file (CSV or JSON/JSONL)")
+
+    parser.add_argument(
+        "--format", choices=["csv", "json", "jsonl"], required=True, help="Corpus file format"
     )
 
     parser.add_argument(
-        'input_file',
-        type=Path,
-        help='Path to corpus file (CSV or JSON/JSONL)'
-    )
-
-    parser.add_argument(
-        '--format',
-        choices=['csv', 'json', 'jsonl'],
-        required=True,
-        help='Corpus file format'
-    )
-
-    parser.add_argument(
-        '--batch-size',
+        "--batch-size",
         type=int,
         default=32,
-        help='Batch size for embedding generation (default: 32)'
+        help="Batch size for embedding generation (default: 32)",
     )
 
     parser.add_argument(
-        '--checkpoint-interval',
+        "--checkpoint-interval",
         type=int,
         default=100,
-        help='Save checkpoint every N items (default: 100)'
+        help="Save checkpoint every N items (default: 100)",
+    )
+
+    parser.add_argument("--resume", action="store_true", help="Resume from last checkpoint")
+
+    parser.add_argument(
+        "--tenant-id", default="default", help='Tenant identifier (default: "default")'
     )
 
     parser.add_argument(
-        '--resume',
-        action='store_true',
-        help='Resume from last checkpoint'
+        "--dry-run", action="store_true", help="Validate corpus without inserting into database"
     )
 
-    parser.add_argument(
-        '--tenant-id',
-        default='default',
-        help='Tenant identifier (default: "default")'
-    )
-
-    parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Validate corpus without inserting into database'
-    )
-
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Enable verbose logging'
-    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
@@ -481,7 +456,7 @@ def main() -> int:
         logger.info(f"Throughput: {stats['items_per_second']:.2f} items/sec")
         logger.info("=" * 60)
 
-        return 0 if stats['errors'] == 0 else 1
+        return 0 if stats["errors"] == 0 else 1
 
     except KeyboardInterrupt:
         logger.warning("\nInterrupted by user. Checkpoint saved for resume.")
@@ -491,5 +466,5 @@ def main() -> int:
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

@@ -9,17 +9,17 @@ Tests cover:
 """
 
 import json
+
+# Import loaders - adjust path as needed
+import sys
 import tempfile
 from pathlib import Path
 
 import pytest
 
-# Import loaders - adjust path as needed
-import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
 from corpus_loaders import get_loader
-from corpus_loaders.base_loader import BaseCorpusLoader
 from corpus_loaders.csv_loader import CSVCorpusLoader
 from corpus_loaders.json_loader import JSONCorpusLoader
 
@@ -34,7 +34,7 @@ class TestBaseCorpusLoader:
 
     def test_validate_required_fields(self):
         """Test base validation logic."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
             f.write("id,content\n")
             f.write("1,test\n")
             temp_file = f.name
@@ -65,7 +65,7 @@ class TestCSVCorpusLoader:
 ev_001,Earth orbits the Sun,Wikipedia,https://example.com
 ev_002,Water boils at 100C,Chemistry,https://example.com/chem
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -76,13 +76,13 @@ ev_002,Water boils at 100C,Chemistry,https://example.com/chem
             assert len(items) == 2
 
             # Check first item
-            assert items[0]['id'] == 'ev_001'
-            assert 'Earth orbits' in items[0]['content']
-            assert items[0]['source'] == 'Wikipedia'
-            assert items[0]['url'] == 'https://example.com'
+            assert items[0]["id"] == "ev_001"
+            assert "Earth orbits" in items[0]["content"]
+            assert items[0]["source"] == "Wikipedia"
+            assert items[0]["url"] == "https://example.com"
 
             # Check second item
-            assert items[1]['id'] == 'ev_002'
+            assert items[1]["id"] == "ev_002"
 
         finally:
             Path(temp_file).unlink()
@@ -92,7 +92,7 @@ ev_002,Water boils at 100C,Chemistry,https://example.com/chem
         csv_content = """doc_id,text,source_name,source_url
 1,Content here,Source,http://example.com
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -101,8 +101,8 @@ ev_002,Water boils at 100C,Chemistry,https://example.com/chem
             items = list(loader.load())
 
             assert len(items) == 1
-            assert items[0]['content'] == 'Content here'
-            assert items[0]['source'] == 'Source'
+            assert items[0]["content"] == "Content here"
+            assert items[0]["source"] == "Source"
 
         finally:
             Path(temp_file).unlink()
@@ -113,7 +113,7 @@ ev_002,Water boils at 100C,Chemistry,https://example.com/chem
 Text 1,Source 1
 Text 2,Source 2
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -122,8 +122,8 @@ Text 2,Source 2
             items = list(loader.load())
 
             assert len(items) == 2
-            assert items[0]['id'] == 'csv_000001'
-            assert items[1]['id'] == 'csv_000002'
+            assert items[0]["id"] == "csv_000001"
+            assert items[1]["id"] == "csv_000002"
 
         finally:
             Path(temp_file).unlink()
@@ -133,7 +133,7 @@ Text 2,Source 2
         csv_content = """id,source
 1,Wikipedia
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -151,7 +151,7 @@ Text 2,Source 2
         csv_content = """id,content
 1,Valid content
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -159,13 +159,13 @@ Text 2,Source 2
             loader = CSVCorpusLoader(temp_file)
 
             # Valid item
-            assert loader.validate({'id': '1', 'content': 'test'})
+            assert loader.validate({"id": "1", "content": "test"})
 
             # Missing content
-            assert not loader.validate({'id': '1'})
+            assert not loader.validate({"id": "1"})
 
             # Missing ID
-            assert not loader.validate({'content': 'test'})
+            assert not loader.validate({"content": "test"})
 
         finally:
             Path(temp_file).unlink()
@@ -177,7 +177,7 @@ Text 2,Source 2
 2,Text 2
 3,Text 3
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -199,16 +199,12 @@ class TestJSONCorpusLoader:
                 "id": "json_001",
                 "content": "Content 1",
                 "source": "Source 1",
-                "url": "http://example.com"
+                "url": "http://example.com",
             },
-            {
-                "id": "json_002",
-                "content": "Content 2",
-                "source": "Source 2"
-            }
+            {"id": "json_002", "content": "Content 2", "source": "Source 2"},
         ]
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(json_data, f)
             temp_file = f.name
 
@@ -217,9 +213,9 @@ class TestJSONCorpusLoader:
             items = list(loader.load())
 
             assert len(items) == 2
-            assert items[0]['id'] == 'json_001'
-            assert items[0]['content'] == 'Content 1'
-            assert items[1]['id'] == 'json_002'
+            assert items[0]["id"] == "json_001"
+            assert items[0]["content"] == "Content 1"
+            assert items[1]["id"] == "json_002"
 
         finally:
             Path(temp_file).unlink()
@@ -230,7 +226,7 @@ class TestJSONCorpusLoader:
 {"id": "jsonl_002", "content": "Line 2"}
 {"id": "jsonl_003", "content": "Line 3"}
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             f.write(jsonl_content)
             temp_file = f.name
 
@@ -239,20 +235,17 @@ class TestJSONCorpusLoader:
             items = list(loader.load())
 
             assert len(items) == 3
-            assert items[0]['id'] == 'jsonl_001'
-            assert items[1]['content'] == 'Line 2'
+            assert items[0]["id"] == "jsonl_001"
+            assert items[1]["content"] == "Line 2"
 
         finally:
             Path(temp_file).unlink()
 
     def test_json_auto_id_generation(self):
         """Test automatic ID generation for JSON items."""
-        json_data = [
-            {"content": "Content without ID"},
-            {"content": "Another one"}
-        ]
+        json_data = [{"content": "Content without ID"}, {"content": "Another one"}]
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(json_data, f)
             temp_file = f.name
 
@@ -261,8 +254,8 @@ class TestJSONCorpusLoader:
             items = list(loader.load())
 
             assert len(items) == 2
-            assert items[0]['id'] == 'json_000001'
-            assert items[1]['id'] == 'json_000002'
+            assert items[0]["id"] == "json_000001"
+            assert items[1]["id"] == "json_000002"
 
         finally:
             Path(temp_file).unlink()
@@ -272,7 +265,7 @@ class TestJSONCorpusLoader:
         jsonl_content = """{"content": "Line 1"}
 {"content": "Line 2"}
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             f.write(jsonl_content)
             temp_file = f.name
 
@@ -280,8 +273,8 @@ class TestJSONCorpusLoader:
             loader = JSONCorpusLoader(temp_file)
             items = list(loader.load())
 
-            assert items[0]['id'] == 'jsonl_000001'
-            assert items[1]['id'] == 'jsonl_000002'
+            assert items[0]["id"] == "jsonl_000001"
+            assert items[1]["id"] == "jsonl_000002"
 
         finally:
             Path(temp_file).unlink()
@@ -293,11 +286,11 @@ class TestJSONCorpusLoader:
                 "doc_id": "123",
                 "text": "Alternative field names",
                 "source_name": "Source",
-                "source_url": "http://example.com"
+                "source_url": "http://example.com",
             }
         ]
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(json_data, f)
             temp_file = f.name
 
@@ -306,8 +299,8 @@ class TestJSONCorpusLoader:
             items = list(loader.load())
 
             assert len(items) == 1
-            assert items[0]['content'] == 'Alternative field names'
-            assert items[0]['source'] == 'Source'
+            assert items[0]["content"] == "Alternative field names"
+            assert items[0]["source"] == "Source"
 
         finally:
             Path(temp_file).unlink()
@@ -321,7 +314,7 @@ class TestJSONCorpusLoader:
 
 {"id": "3", "content": "Line 3"}
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             f.write(jsonl_content)
             temp_file = f.name
 
@@ -338,7 +331,7 @@ class TestJSONCorpusLoader:
         """Test total count for JSON."""
         json_data = [{"content": f"Item {i}"} for i in range(10)]
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(json_data, f)
             temp_file = f.name
 
@@ -351,11 +344,9 @@ class TestJSONCorpusLoader:
 
     def test_jsonl_total_count(self):
         """Test total count for JSONL."""
-        jsonl_content = "\n".join(
-            [json.dumps({"content": f"Line {i}"}) for i in range(5)]
-        )
+        jsonl_content = "\n".join([json.dumps({"content": f"Line {i}"}) for i in range(5)])
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             f.write(jsonl_content)
             temp_file = f.name
 
@@ -372,12 +363,12 @@ class TestLoaderFactory:
 
     def test_get_loader_csv(self):
         """Test factory returns CSV loader."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
             f.write("id,content\n1,test\n")
             temp_file = f.name
 
         try:
-            loader = get_loader('csv', temp_file)
+            loader = get_loader("csv", temp_file)
             assert isinstance(loader, CSVCorpusLoader)
 
         finally:
@@ -385,12 +376,12 @@ class TestLoaderFactory:
 
     def test_get_loader_json(self):
         """Test factory returns JSON loader."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write('[{"content": "test"}]')
             temp_file = f.name
 
         try:
-            loader = get_loader('json', temp_file)
+            loader = get_loader("json", temp_file)
             assert isinstance(loader, JSONCorpusLoader)
 
         finally:
@@ -398,12 +389,12 @@ class TestLoaderFactory:
 
     def test_get_loader_jsonl(self):
         """Test factory returns JSON loader for JSONL."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.jsonl', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".jsonl", delete=False) as f:
             f.write('{"content": "test"}')
             temp_file = f.name
 
         try:
-            loader = get_loader('jsonl', temp_file)
+            loader = get_loader("jsonl", temp_file)
             assert isinstance(loader, JSONCorpusLoader)
 
         finally:
@@ -411,13 +402,13 @@ class TestLoaderFactory:
 
     def test_get_loader_unsupported_format(self):
         """Test factory raises error for unsupported format."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("test")
             temp_file = f.name
 
         try:
             with pytest.raises(ValueError, match="Unsupported format"):
-                get_loader('txt', temp_file)
+                get_loader("txt", temp_file)
 
         finally:
             Path(temp_file).unlink()
@@ -430,7 +421,7 @@ class TestEdgeCases:
         """Test empty CSV file."""
         csv_content = """id,content
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='') as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, newline="") as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -444,7 +435,7 @@ class TestEdgeCases:
 
     def test_empty_json_array(self):
         """Test empty JSON array."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump([], f)
             temp_file = f.name
 
@@ -458,7 +449,7 @@ class TestEdgeCases:
 
     def test_malformed_json(self):
         """Test malformed JSON raises error."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write("{invalid json")
             temp_file = f.name
 
@@ -476,7 +467,9 @@ class TestEdgeCases:
         csv_content = """id,content
 1,"Unicode test: 你好世界 مرحبا العالم"
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='', encoding='utf-8') as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".csv", delete=False, newline="", encoding="utf-8"
+        ) as f:
             f.write(csv_content)
             temp_file = f.name
 
@@ -485,7 +478,7 @@ class TestEdgeCases:
             items = list(loader.load())
 
             assert len(items) == 1
-            assert '你好世界' in items[0]['content']
+            assert "你好世界" in items[0]["content"]
 
         finally:
             Path(temp_file).unlink()

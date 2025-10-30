@@ -117,11 +117,11 @@ class BaseCorpusLoader(ABC):
             True if item has required fields, False otherwise
         """
         # Content is the only truly required field
-        if 'content' not in item:
+        if "content" not in item:
             return False
 
         # Content must be non-empty string
-        if not isinstance(item['content'], str) or not item['content'].strip():
+        if not isinstance(item["content"], str) or not item["content"].strip():
             return False
 
         return True

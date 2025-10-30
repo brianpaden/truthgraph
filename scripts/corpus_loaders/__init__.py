@@ -51,15 +51,14 @@ def get_loader(format_type: str, file_path: Path | str) -> "BaseCorpusLoader":
     file_path = Path(file_path)
 
     loaders = {
-        'csv': CSVCorpusLoader,
-        'json': JSONCorpusLoader,
-        'jsonl': JSONCorpusLoader,
+        "csv": CSVCorpusLoader,
+        "json": JSONCorpusLoader,
+        "jsonl": JSONCorpusLoader,
     }
 
     if format_type not in loaders:
         raise ValueError(
-            f"Unsupported format: {format_type}. "
-            f"Supported formats: {', '.join(loaders.keys())}"
+            f"Unsupported format: {format_type}. Supported formats: {', '.join(loaders.keys())}"
         )
 
     return loaders[format_type](file_path)

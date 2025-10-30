@@ -7,7 +7,7 @@ and that edge cases meet specified criteria.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -92,7 +92,9 @@ class TestEdgeCaseContent:
             assert category in all_edge_cases, f"Missing edge case category: {category}"
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_category_has_required_fields(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_category_has_required_fields(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that each category has required root fields."""
         data = all_edge_cases[category]
         required_root_fields = {"category", "description", "expected_behavior", "claims"}
@@ -101,23 +103,26 @@ class TestEdgeCaseContent:
             assert field in data, f"{category}: Missing required field '{field}'"
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_category_label_matches_filename(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_category_label_matches_filename(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that category label matches filename."""
         data = all_edge_cases[category]
-        assert (
-            data["category"] == category
-        ), f"Category mismatch: filename={category}, content={data['category']}"
+        assert data["category"] == category, (
+            f"Category mismatch: filename={category}, content={data['category']}"
+        )
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_minimum_claims_per_category(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_minimum_claims_per_category(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that each category has minimum required number of claims."""
         data = all_edge_cases[category]
         claims = data.get("claims", [])
         min_claims = EDGE_CASE_CATEGORIES[category]
 
         assert len(claims) >= min_claims, (
-            f"{category}: Expected at least {min_claims} claims, "
-            f"but found {len(claims)}"
+            f"{category}: Expected at least {min_claims} claims, but found {len(claims)}"
         )
 
     def test_total_claims_coverage(self, all_edge_cases: Dict[str, Dict[str, Any]]):
@@ -129,7 +134,9 @@ class TestEdgeCaseContent:
         )
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_claims_have_required_fields(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_claims_have_required_fields(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that all claims have required fields."""
         data = all_edge_cases[category]
         claims = data.get("claims", [])
@@ -155,7 +162,9 @@ class TestEdgeCaseContent:
             ids.append(claim_id)
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_claims_have_non_empty_text(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_claims_have_non_empty_text(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that all claims have non-empty text."""
         data = all_edge_cases[category]
         claims = data.get("claims", [])
@@ -165,7 +174,9 @@ class TestEdgeCaseContent:
             assert text, f"{category}: Claim {claim.get('id')} has empty text"
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_claims_have_valid_verdicts(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_claims_have_valid_verdicts(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that all claims have valid expected verdicts."""
         data = all_edge_cases[category]
         claims = data.get("claims", [])
@@ -196,9 +207,7 @@ class TestEdgeCaseContent:
         for claim in claims:
             edge_case_type = claim.get("edge_case_type", "")
             # Normalize comparison (e.g., "contradictory_evidence" -> "contradictory_evidence")
-            assert (
-                edge_case_type == category
-            ), (
+            assert edge_case_type == category, (
                 f"{category}: Claim {claim.get('id')} has edge_case_type "
                 f"'{edge_case_type}' (expected '{category}')"
             )
@@ -211,15 +220,15 @@ class TestEdgeCaseContent:
 
         for claim in claims:
             metadata = claim.get("metadata")
-            assert metadata is not None, (
-                f"{category}: Claim {claim.get('id')} has missing metadata"
-            )
+            assert metadata is not None, f"{category}: Claim {claim.get('id')} has missing metadata"
             assert isinstance(metadata, dict), (
                 f"{category}: Claim {claim.get('id')} metadata is not a dict"
             )
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_evidence_has_required_fields(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_evidence_has_required_fields(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that all evidence items have required fields."""
         data = all_edge_cases[category]
         evidence_items = data.get("evidence", [])
@@ -329,9 +338,7 @@ class TestEdgeCaseSpecifications:
 
         for claim in claims:
             evidence_refs = claim.get("evidence_ids", [])
-            assert (
-                len(evidence_refs) >= 2
-            ), (
+            assert len(evidence_refs) >= 2, (
                 f"Contradictory claim {claim.get('id')} should reference "
                 f"multiple evidence items for conflict"
             )
@@ -394,11 +401,8 @@ class TestEdgeCaseUsage:
     def test_all_edge_cases_fixture(self, all_edge_cases: Dict[str, Dict[str, Any]]):
         """Test that combined all_edge_cases fixture works correctly."""
         assert isinstance(all_edge_cases, dict), "all_edge_cases should be a dictionary"
-        assert (
-            len(all_edge_cases) == 7
-        ), (
-            f"all_edge_cases should have 7 categories, "
-            f"found {len(all_edge_cases)}"
+        assert len(all_edge_cases) == 7, (
+            f"all_edge_cases should have 7 categories, found {len(all_edge_cases)}"
         )
 
         for category in EDGE_CASE_CATEGORIES.keys():
@@ -449,13 +453,14 @@ class TestEdgeCaseDocumentation:
         return all_data
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())
-    def test_category_has_description(self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]):
+    def test_category_has_description(
+        self, category: str, all_edge_cases: Dict[str, Dict[str, Any]]
+    ):
         """Test that each category has a meaningful description."""
         data = all_edge_cases[category]
         description = data.get("description", "").strip()
         assert len(description) > 20, (
-            f"{category}: Description too short or missing. "
-            f"Should explain the edge case category."
+            f"{category}: Description too short or missing. Should explain the edge case category."
         )
 
     @pytest.mark.parametrize("category", EDGE_CASE_CATEGORIES.keys())

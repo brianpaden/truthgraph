@@ -45,8 +45,8 @@ class CSVCorpusLoader(BaseCorpusLoader):
     def __init__(
         self,
         file_path: Path | str,
-        delimiter: str = ',',
-        encoding: str = 'utf-8',
+        delimiter: str = ",",
+        encoding: str = "utf-8",
     ) -> None:
         """Initialize CSV loader.
 
@@ -88,7 +88,7 @@ class CSVCorpusLoader(BaseCorpusLoader):
         logger.info(f"Loading CSV corpus from {self.file_path}")
 
         try:
-            with open(self.file_path, encoding=self.encoding, newline='') as csvfile:
+            with open(self.file_path, encoding=self.encoding, newline="") as csvfile:
                 reader = csv.DictReader(csvfile, delimiter=self.delimiter)
 
                 # Validate header
@@ -100,10 +100,9 @@ class CSVCorpusLoader(BaseCorpusLoader):
                 logger.info(f"Column mapping: {column_map}")
 
                 # Check for required content column
-                if 'content' not in column_map:
+                if "content" not in column_map:
                     raise ValueError(
-                        f"CSV must have a content/text column. "
-                        f"Found columns: {reader.fieldnames}"
+                        f"CSV must have a content/text column. Found columns: {reader.fieldnames}"
                     )
 
                 row_num = 0
@@ -114,8 +113,8 @@ class CSVCorpusLoader(BaseCorpusLoader):
                     item = self._map_row(row, column_map)
 
                     # Generate ID if missing
-                    if 'id' not in item or not item['id']:
-                        item['id'] = f"csv_{row_num:06d}"
+                    if "id" not in item or not item["id"]:
+                        item["id"] = f"csv_{row_num:06d}"
 
                     yield item
 
@@ -140,11 +139,11 @@ class CSVCorpusLoader(BaseCorpusLoader):
             return False
 
         # Ensure ID is present (should be generated during load)
-        if 'id' not in item or not item['id']:
+        if "id" not in item or not item["id"]:
             return False
 
         # Optional fields should be strings if present
-        for field in ['source', 'url']:
+        for field in ["source", "url"]:
             if field in item and item[field] is not None:
                 if not isinstance(item[field], str):
                     return False
@@ -168,27 +167,27 @@ class CSVCorpusLoader(BaseCorpusLoader):
         normalized = {name.lower().strip(): name for name in fieldnames}
 
         # Map content/text column
-        for content_variant in ['content', 'text', 'evidence', 'evidence_text']:
+        for content_variant in ["content", "text", "evidence", "evidence_text"]:
             if content_variant in normalized:
-                mapping['content'] = normalized[content_variant]
+                mapping["content"] = normalized[content_variant]
                 break
 
         # Map ID column
-        for id_variant in ['id', 'evidence_id', 'doc_id', 'identifier']:
+        for id_variant in ["id", "evidence_id", "doc_id", "identifier"]:
             if id_variant in normalized:
-                mapping['id'] = normalized[id_variant]
+                mapping["id"] = normalized[id_variant]
                 break
 
         # Map source column
-        for source_variant in ['source', 'source_name', 'origin']:
+        for source_variant in ["source", "source_name", "origin"]:
             if source_variant in normalized:
-                mapping['source'] = normalized[source_variant]
+                mapping["source"] = normalized[source_variant]
                 break
 
         # Map URL column
-        for url_variant in ['url', 'source_url', 'link', 'uri']:
+        for url_variant in ["url", "source_url", "link", "uri"]:
             if url_variant in normalized:
-                mapping['url'] = normalized[url_variant]
+                mapping["url"] = normalized[url_variant]
                 break
 
         return mapping
@@ -207,7 +206,7 @@ class CSVCorpusLoader(BaseCorpusLoader):
 
         # Map known fields
         for std_field, csv_field in column_map.items():
-            value = row.get(csv_field, '').strip()
+            value = row.get(csv_field, "").strip()
             if value:
                 item[std_field] = value
 
