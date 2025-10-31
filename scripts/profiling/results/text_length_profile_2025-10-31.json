@@ -1,0 +1,173 @@
+{
+  "metadata": {
+    "timestamp": "2025-10-31T01:55:29.367237",
+    "device": "cpu",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "batch_size": 32,
+    "num_texts_per_test": 500,
+    "iterations": 3,
+    "text_lengths_tested": [
+      10,
+      50,
+      100,
+      256,
+      512,
+      1024
+    ]
+  },
+  "length_results": [
+    {
+      "text_length_chars": 10,
+      "actual_avg_length": 10.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 1219.0870489861188,
+      "avg_latency_ms_per_text": 1.6047899333449702,
+      "avg_memory_delta_mb": 27.197916666666668,
+      "throughputs": [
+        275.36471092183046,
+        1702.380915822636,
+        1679.5155202138894
+      ],
+      "latencies": [
+        3.6315474000002723,
+        0.5874126000271644,
+        0.5954098000074737
+      ]
+    },
+    {
+      "text_length_chars": 50,
+      "actual_avg_length": 50.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 1063.5845602987145,
+      "avg_latency_ms_per_text": 0.940338333331359,
+      "avg_memory_delta_mb": 7.860677083333333,
+      "throughputs": [
+        1068.3952446957715,
+        1047.011222716064,
+        1075.3472134843075
+      ],
+      "latencies": [
+        0.9359832000045571,
+        0.9550995999888983,
+        0.9299322000006214
+      ]
+    },
+    {
+      "text_length_chars": 100,
+      "actual_avg_length": 100.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 812.817776658204,
+      "avg_latency_ms_per_text": 1.2303513999989566,
+      "avg_memory_delta_mb": 2.2200520833333335,
+      "throughputs": [
+        821.0390939482568,
+        809.4671391130082,
+        807.9470969133471
+      ],
+      "latencies": [
+        1.2179687999887392,
+        1.2353806000028271,
+        1.2377048000053037
+      ]
+    },
+    {
+      "text_length_chars": 256,
+      "actual_avg_length": 256.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 482.21178925378155,
+      "avg_latency_ms_per_text": 2.074040600001657,
+      "avg_memory_delta_mb": 13.884114583333334,
+      "throughputs": [
+        489.8239083062939,
+        479.4485344560168,
+        477.3629249990339
+      ],
+      "latencies": [
+        2.0415499999944586,
+        2.0857296000176575,
+        2.094842199992854
+      ]
+    },
+    {
+      "text_length_chars": 512,
+      "actual_avg_length": 512.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 273.1469043110373,
+      "avg_latency_ms_per_text": 3.661149066669168,
+      "avg_memory_delta_mb": 19.173177083333332,
+      "throughputs": [
+        271.6102041546811,
+        272.58568676628465,
+        275.2448220121461
+      ],
+      "latencies": [
+        3.6817468000226654,
+        3.6685711999889463,
+        3.633129199995892
+      ]
+    },
+    {
+      "text_length_chars": 1024,
+      "actual_avg_length": 1024.0,
+      "num_texts": 500,
+      "batch_size": 32,
+      "iterations": 3,
+      "avg_throughput_texts_per_sec": 132.49582680601952,
+      "avg_latency_ms_per_text": 7.5475315999938175,
+      "avg_memory_delta_mb": 33.076822916666664,
+      "throughputs": [
+        133.24229154049397,
+        132.24918624432115,
+        131.99600263324348
+      ],
+      "latencies": [
+        7.505124599992996,
+        7.561483199999202,
+        7.575986999989254
+      ]
+    }
+  ],
+  "analysis": {
+    "best_performance": {
+      "text_length": 10,
+      "throughput": 1219.0870489861188,
+      "latency": 1.6047899333449702
+    },
+    "worst_performance": {
+      "text_length": 1024,
+      "throughput": 132.49582680601952,
+      "latency": 7.5475315999938175
+    },
+    "performance_drop_percent": 89.13155324583157,
+    "length_throughput_correlation": -0.8827968828487479,
+    "relationship": "strong_negative"
+  },
+  "recommendations": [
+    {
+      "optimization": "Text Truncation",
+      "description": "Truncate texts to 10 characters for optimal performance",
+      "expected_improvement": "89.1% throughput improvement for long texts",
+      "effort": "low",
+      "priority": "high",
+      "implementation": "Add text[:10] preprocessing step"
+    },
+    {
+      "optimization": "Optimal Text Length Range",
+      "description": "Process texts up to 10 characters without significant performance impact",
+      "expected_improvement": "Maintains >90% of peak performance",
+      "effort": "low",
+      "priority": "medium",
+      "implementation": "Set max_length=10 in preprocessing"
+    }
+  ]
+}

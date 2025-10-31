@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "timestamp": "2025-10-31T01:54:01.763608",
+    "device": "cpu",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dimension": 384,
+    "num_test_texts": 1000,
+    "batch_sizes_tested": [
+      8,
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "python_version": "3.13.7",
+    "pytorch_version": "2.9.0+cpu",
+    "cuda_available": false
+  },
+  "batch_results": [
+    {
+      "batch_size": 8,
+      "num_texts": 1000,
+      "elapsed_time_s": 1.8961050000070827,
+      "throughput_texts_per_sec": 527.3969532258311,
+      "latency_ms_per_text": 1.8961050000070827,
+      "baseline_memory_mb": 429.3828125,
+      "peak_memory_mb": 456.01953125,
+      "memory_delta_mb": 26.63671875,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         394639 function calls (357502 primitive calls) in 1.895 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    1.892    1.892 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.006    0.006    1.892    1.892 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n      125    0.002    0.000    1.727    0.014 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n14500/375    0.028    0.000    1.723    0.005 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n14500/375    0.045    0.000    1.722    0.005 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n      125    0.002    0.000    1.674    0.013 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    },
+    {
+      "batch_size": 16,
+      "num_texts": 1000,
+      "elapsed_time_s": 1.2784274000005098,
+      "throughput_texts_per_sec": 782.2110195695127,
+      "latency_ms_per_text": 1.2784274000005098,
+      "baseline_memory_mb": 447.25390625,
+      "peak_memory_mb": 473.88671875,
+      "memory_delta_mb": 26.6328125,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         275792 function calls (255333 primitive calls) in 1.278 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    1.275    1.275 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.004    0.004    1.274    1.274 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n       63    0.001    0.000    1.157    0.018 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n 7308/189    0.015    0.000    1.155    0.006 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n 7308/189    0.024    0.000    1.154    0.006 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n       63    0.001    0.000    1.125    0.018 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    },
+    {
+      "batch_size": 32,
+      "num_texts": 1000,
+      "elapsed_time_s": 0.9821401000081096,
+      "throughput_texts_per_sec": 1018.1846764954846,
+      "latency_ms_per_text": 0.9821401000081095,
+      "baseline_memory_mb": 467.11328125,
+      "peak_memory_mb": 485.6015625,
+      "memory_delta_mb": 18.48828125,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         218124 function calls (206004 primitive calls) in 0.982 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.979    0.979 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.002    0.002    0.978    0.978 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n       32    0.001    0.000    0.887    0.028 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n  3712/96    0.008    0.000    0.886    0.009 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n  3712/96    0.013    0.000    0.885    0.009 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n       32    0.000    0.000    0.869    0.027 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    },
+    {
+      "batch_size": 64,
+      "num_texts": 1000,
+      "elapsed_time_s": 0.745968899995205,
+      "throughput_texts_per_sec": 1340.538459453776,
+      "latency_ms_per_text": 0.745968899995205,
+      "baseline_memory_mb": 479.8125,
+      "peak_memory_mb": 509.7578125,
+      "memory_delta_mb": 29.9453125,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         190404 function calls (182588 primitive calls) in 0.746 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.743    0.743 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.002    0.002    0.742    0.742 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n       16    0.000    0.000    0.674    0.042 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n  1856/48    0.004    0.000    0.673    0.014 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n  1856/48    0.007    0.000    0.673    0.014 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n       16    0.000    0.000    0.664    0.041 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    },
+    {
+      "batch_size": 128,
+      "num_texts": 1000,
+      "elapsed_time_s": 0.6764652999991085,
+      "throughput_texts_per_sec": 1478.2724258011724,
+      "latency_ms_per_text": 0.6764652999991085,
+      "baseline_memory_mb": 505.9609375,
+      "peak_memory_mb": 554.7265625,
+      "memory_delta_mb": 48.765625,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         181227 function calls (175563 primitive calls) in 0.676 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.673    0.673 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.001    0.001    0.673    0.673 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n        8    0.000    0.000    0.614    0.077 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n   928/24    0.003    0.000    0.614    0.026 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n   928/24    0.004    0.000    0.614    0.026 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n        8    0.000    0.000    0.606    0.076 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    },
+    {
+      "batch_size": 256,
+      "num_texts": 1000,
+      "elapsed_time_s": 0.6696094999933848,
+      "throughput_texts_per_sec": 1493.4077249648924,
+      "latency_ms_per_text": 0.6696094999933848,
+      "baseline_memory_mb": 552.85546875,
+      "peak_memory_mb": 626.19140625,
+      "memory_delta_mb": 73.3359375,
+      "num_embeddings": 1000,
+      "embedding_dimension": 384,
+      "profiling_summary": "         183307 function calls (178719 primitive calls) in 0.670 seconds\n\n   Ordered by: cumulative time\n   List reduced from 347 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.667    0.667 C:\\python313\\Lib\\site-packages\\torch\\autograd\\grad_mode.py:287(__exit__)\n        1    0.001    0.001    0.666    0.666 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:856(encode)\n        4    0.000    0.000    0.614    0.154 C:\\python313\\Lib\\site-packages\\sentence_transformers\\SentenceTransformer.py:1161(forward)\n   464/12    0.002    0.000    0.614    0.051 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n   464/12    0.002    0.000    0.614    0.051 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n        4    0.000    0.000    0.609    0.152 C:\\python313\\Lib\\site-packages\\sentence_transformers\\models\\Transformer.py:237(for"
+    }
+  ],
+  "profiling_stats": {},
+  "bottlenecks": [
+    {
+      "type": "optimal_batch_size",
+      "finding": "Best throughput at batch_size=256",
+      "metric": "1493.41 texts/sec",
+      "recommendation": "Use batch_size=256 for optimal performance",
+      "priority": "high"
+    },
+    {
+      "type": "baseline_comparison",
+      "finding": "Current performance vs Feature 1.7 baseline",
+      "metric": "+13.13% variance at batch_size=64",
+      "recommendation": "Investigate performance deviation",
+      "priority": "high"
+    },
+    {
+      "type": "small_batch_inefficiency",
+      "finding": "Small batches (size=8) are 64.7% slower",
+      "metric": "35.3% efficiency vs optimal",
+      "recommendation": "Avoid small batch sizes in production",
+      "priority": "medium"
+    }
+  ],
+  "recommendations": [
+    {
+      "optimization": "Batch Size Configuration",
+      "description": "Set DEFAULT_BATCH_SIZE to 256",
+      "expected_improvement": "Baseline (already optimal)",
+      "effort": "low",
+      "priority": "high",
+      "implementation": "Update EmbeddingService.DEFAULT_BATCH_SIZE = 256"
+    },
+    {
+      "optimization": "GPU Acceleration",
+      "description": "Test with CUDA GPU if available",
+      "expected_improvement": "2-5x throughput improvement",
+      "effort": "medium",
+      "priority": "medium",
+      "implementation": "Ensure torch with CUDA support is installed"
+    },
+    {
+      "optimization": "Adaptive Batch Sizing",
+      "description": "Adjust batch size based on input text count",
+      "expected_improvement": "5-10% improvement for variable workloads",
+      "effort": "medium",
+      "priority": "low",
+      "implementation": "Add logic to select batch_size based on len(texts)"
+    }
+  ]
+}

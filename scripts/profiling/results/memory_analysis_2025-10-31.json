@@ -1,0 +1,313 @@
+{
+  "metadata": {
+    "timestamp": "2025-10-31T01:54:50.687185",
+    "device": "cpu",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "num_test_texts": 1000,
+    "batch_sizes_tested": [
+      8,
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "cuda_available": false
+  },
+  "memory_measurements": [],
+  "batch_memory_analysis": [
+    {
+      "batch_size": 8,
+      "num_iterations": 3,
+      "baseline_memory_mb": 430.27734375,
+      "peak_memory_mb": 467.11328125,
+      "avg_delta_mb": 12.278645833333334,
+      "max_delta_mb": 26.90625,
+      "min_delta_mb": 1.578125,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 430.27734375,
+          "after_rss_mb": 457.18359375,
+          "delta_rss_mb": 26.90625,
+          "elapsed_time_s": 1.7158177999954205
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 457.18359375,
+          "after_rss_mb": 465.53515625,
+          "delta_rss_mb": 8.3515625,
+          "elapsed_time_s": 1.72771219999413
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 465.53515625,
+          "after_rss_mb": 467.11328125,
+          "delta_rss_mb": 1.578125,
+          "elapsed_time_s": 1.7286934000003384
+        }
+      ]
+    },
+    {
+      "batch_size": 16,
+      "num_iterations": 3,
+      "baseline_memory_mb": 456.48828125,
+      "peak_memory_mb": 487.125,
+      "avg_delta_mb": 9.401041666666666,
+      "max_delta_mb": 21.99609375,
+      "min_delta_mb": -2.43359375,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 456.48828125,
+          "after_rss_mb": 478.484375,
+          "delta_rss_mb": 21.99609375,
+          "elapsed_time_s": 1.1858635999960825
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 478.484375,
+          "after_rss_mb": 487.125,
+          "delta_rss_mb": 8.640625,
+          "elapsed_time_s": 1.1731274999910966
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 487.125,
+          "after_rss_mb": 484.69140625,
+          "delta_rss_mb": -2.43359375,
+          "elapsed_time_s": 1.1687933999928646
+        }
+      ]
+    },
+    {
+      "batch_size": 32,
+      "num_iterations": 3,
+      "baseline_memory_mb": 476.12890625,
+      "peak_memory_mb": 500.1171875,
+      "avg_delta_mb": 6.938802083333333,
+      "max_delta_mb": 14.703125,
+      "min_delta_mb": -3.171875,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 476.12890625,
+          "after_rss_mb": 490.83203125,
+          "delta_rss_mb": 14.703125,
+          "elapsed_time_s": 0.9180372999981046
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 490.83203125,
+          "after_rss_mb": 500.1171875,
+          "delta_rss_mb": 9.28515625,
+          "elapsed_time_s": 0.9126417000079527
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 500.1171875,
+          "after_rss_mb": 496.9453125,
+          "delta_rss_mb": -3.171875,
+          "elapsed_time_s": 0.9272094999905676
+        }
+      ]
+    },
+    {
+      "batch_size": 64,
+      "num_iterations": 3,
+      "baseline_memory_mb": 491.3828125,
+      "peak_memory_mb": 527.171875,
+      "avg_delta_mb": 10.122395833333334,
+      "max_delta_mb": 24.6640625,
+      "min_delta_mb": -5.421875,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 491.3828125,
+          "after_rss_mb": 516.046875,
+          "delta_rss_mb": 24.6640625,
+          "elapsed_time_s": 0.6988178000028711
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 516.046875,
+          "after_rss_mb": 527.171875,
+          "delta_rss_mb": 11.125,
+          "elapsed_time_s": 0.6996522999979788
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 527.171875,
+          "after_rss_mb": 521.75,
+          "delta_rss_mb": -5.421875,
+          "elapsed_time_s": 0.716084999992745
+        }
+      ]
+    },
+    {
+      "batch_size": 128,
+      "num_iterations": 3,
+      "baseline_memory_mb": 517.1875,
+      "peak_memory_mb": 592.92578125,
+      "avg_delta_mb": 22.608072916666668,
+      "max_delta_mb": 63.77734375,
+      "min_delta_mb": -7.9140625,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 517.1875,
+          "after_rss_mb": 580.96484375,
+          "delta_rss_mb": 63.77734375,
+          "elapsed_time_s": 0.6475274999975227
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 580.96484375,
+          "after_rss_mb": 592.92578125,
+          "delta_rss_mb": 11.9609375,
+          "elapsed_time_s": 0.6317247000115458
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 592.92578125,
+          "after_rss_mb": 585.01171875,
+          "delta_rss_mb": -7.9140625,
+          "elapsed_time_s": 0.6513789000018733
+        }
+      ]
+    },
+    {
+      "batch_size": 256,
+      "num_iterations": 3,
+      "baseline_memory_mb": 583.44921875,
+      "peak_memory_mb": 657.70703125,
+      "avg_delta_mb": 23.954427083333332,
+      "max_delta_mb": 58.0,
+      "min_delta_mb": -2.39453125,
+      "memory_samples": [
+        {
+          "iteration": 1,
+          "before_rss_mb": 583.44921875,
+          "after_rss_mb": 641.44921875,
+          "delta_rss_mb": 58.0,
+          "elapsed_time_s": 0.6645071000093594
+        },
+        {
+          "iteration": 2,
+          "before_rss_mb": 641.44921875,
+          "after_rss_mb": 657.70703125,
+          "delta_rss_mb": 16.2578125,
+          "elapsed_time_s": 0.6668903000099817
+        },
+        {
+          "iteration": 3,
+          "before_rss_mb": 657.70703125,
+          "after_rss_mb": 655.3125,
+          "delta_rss_mb": -2.39453125,
+          "elapsed_time_s": 0.6498415000096429
+        }
+      ]
+    }
+  ],
+  "memory_leak_check": {
+    "num_iterations": 10,
+    "initial_memory_mb": 655.3125,
+    "final_memory_mb": 647.23046875,
+    "total_growth_mb": -8.08203125,
+    "growth_rate_mb_per_iteration": -0.808203125,
+    "linear_trend_slope": -0.40994318181818185,
+    "leak_detected": false,
+    "memory_over_time": [
+      {
+        "iteration": 1,
+        "memory_mb": 656.74609375,
+        "delta_from_initial_mb": 1.43359375
+      },
+      {
+        "iteration": 2,
+        "memory_mb": 645.73046875,
+        "delta_from_initial_mb": -9.58203125
+      },
+      {
+        "iteration": 3,
+        "memory_mb": 645.73046875,
+        "delta_from_initial_mb": -9.58203125
+      },
+      {
+        "iteration": 4,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 5,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 6,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 7,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 8,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 9,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      },
+      {
+        "iteration": 10,
+        "memory_mb": 647.23046875,
+        "delta_from_initial_mb": -8.08203125
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "optimization": "Memory-Constrained Batch Size",
+      "description": "Use batch_size=8 for minimal memory footprint",
+      "expected_improvement": "Reduces memory to 467.1 MB",
+      "effort": "low",
+      "priority": "medium"
+    },
+    {
+      "optimization": "Periodic Garbage Collection",
+      "description": "Current GC strategy is working well",
+      "expected_improvement": "No change needed",
+      "effort": "none",
+      "priority": "low"
+    }
+  ],
+  "baseline_memory": {
+    "rss_mb": 430.27734375,
+    "vms_mb": 1976.50390625
+  },
+  "memory_patterns": [
+    {
+      "type": "memory_scaling",
+      "finding": "Memory grows at 0.77 MB per batch size unit",
+      "severity": "low",
+      "recommendation": "Memory scaling is approximately linear"
+    },
+    {
+      "type": "memory_stability",
+      "finding": "No memory leaks detected over multiple iterations",
+      "severity": "none",
+      "recommendation": "Memory management is working correctly"
+    },
+    {
+      "type": "memory_efficiency",
+      "finding": "Batch size 8 offers best memory efficiency",
+      "severity": "info",
+      "recommendation": "Consider batch_size=8 for memory-constrained deployments"
+    }
+  ]
+}
