@@ -10,15 +10,8 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ PHASE 2A: DATASET INFRASTRUCTURE (Complete)                 │
-│ Features 1.1-1.6 already done                               │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│ PHASE 2B: BASELINE ESTABLISHMENT (1 feature, 6h)            │
-│ Feature 1.7: Benchmark Baseline (CRITICAL PATH)            │
-│ No blockers - START IMMEDIATELY                             │
-│ Blocks: All Features 2.1-2.6, Features 3.1-3.5             │
+│ PHASE 2A: DATASET INFRASTRUCTURE ✓ COMPLETE                │
+│ Features 1.1-1.7 all done (2025-10-31)                     │
 └─────────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -54,16 +47,16 @@
 | 1.2 | 1.1 | 3.1, 3.2 | Yes | FEVER dataset |
 | 1.3 | 1.1 | 3.1, 3.2, 3.4 | Yes | Real-world validation |
 | 1.4 | None | 3.3 | No | Edge case data |
-| 1.5 | ML services | - | Yes | Corpus loader |
-| 1.6 | None | 1.5 | No | Sample corpus |
-| **1.7** | **All services** | **2.1-2.6, 3.1-3.5** | **Yes** | **CRITICAL BLOCKER** |
-| 2.1 | 1.7 | - | No | Embedding profiling |
-| 2.2 | 1.7 | - | No | NLI optimization |
-| 2.3 | 1.7 | - | No | Vector search optimization |
+| 1.5 | ML services | - | Yes | ✓ Complete (2025-10-29) |
+| 1.6 | None | 1.5 | No | ✓ Complete (2025-10-29) |
+| **1.7** | **All services** | **2.1-2.6, 3.1-3.5** | **Yes** | **✓ COMPLETE (2025-10-31) - UNBLOCKED!** |
+| 2.1 | 1.7 | - | No | 🟢 READY - Embedding profiling |
+| 2.2 | 1.7 | - | No | 🟢 READY - NLI optimization |
+| 2.3 | 1.7 | - | No | 🟢 READY - Vector search optimization |
 | 2.4 | 2.1-2.3 | - | Yes | E2E optimization |
-| 2.5 | 1.7 | - | No | Memory optimization |
+| 2.5 | 1.7 | - | No | 🟢 READY - Memory optimization |
 | 2.6 | Services | - | No | Database optimization |
-| 3.1 | 1.1, 1.3, 1.7 | 3.2-3.5 | Yes | Accuracy framework |
+| 3.1 | 1.1, 1.3, 1.7 | 3.2-3.5 | Yes | 🟢 READY - Accuracy framework |
 | 3.2 | 3.1 | - | Yes | Category evaluation |
 | 3.3 | 1.4, 3.1 | - | No | Edge case validation |
 | 3.4 | 3.1 | - | No | Robustness testing |
@@ -82,45 +75,51 @@
 
 ## Critical Path Items
 
-### Must Complete First (Highest Priority)
+### ✓ COMPLETE (Phase 2A)
 
-1. **Feature 1.7: Benchmark Baseline** (6h)
-   - No blockers, start immediately
-   - Blocks 12 other features (2.1-2.6, 3.1-3.5)
-   - Must complete before any optimization work
+1. **Feature 1.7: Benchmark Baseline** (6h) - ✓ COMPLETE (2025-10-31)
+   - Previously blocked 12 features (2.1-2.6, 3.1-3.5)
+   - **ALL FEATURES NOW UNBLOCKED!**
+   - Baselines: Embeddings 1,185 texts/sec, NLI 67.3 pairs/sec
 
-2. **Feature 3.1: Accuracy Framework** (8h)
-   - Depends on 1.7 and test data (1.1-1.4, already done)
+### Must Complete Next (Current Highest Priority)
+
+2. **Feature 3.1: Accuracy Framework** (8h) - 🟢 READY TO START
+   - All dependencies complete (1.7, 1.1-1.4)
    - Blocks 4 other features (3.2-3.5)
    - Must complete before validation work
 
-3. **Features 2.1-2.3: Performance Profiling** (24h parallel)
-   - Depend on 1.7
+3. **Features 2.1-2.3: Performance Profiling** (24h parallel) - 🟢 READY TO START
+   - Dependency 1.7 complete
    - Block 2.4 (end-to-end optimization)
-   - Must complete before pipeline optimization
+   - Can start immediately in parallel
 
-### Critical Sequence
-
-```
-Day 1: Feature 1.7 (6h) ──┐
-                          ├─→ Day 2: Features 2.1-2.3 (24h parallel) ──┐
-Day 1: Feature 3.1 (8h) ──┐                                            ├─→ Days 3-4: E2E + Validation
-                                                                        ├─→ Feature 2.4 (10h)
-Days 2-3: Features 4.1-4.5 (44h parallel, no dependencies) ────────────┘
-Days 2-3: Features 5.1-5.3 (28h parallel, mostly independent) ─────────→ Day 5
-```
-
-### Sequential Dependencies (Must Wait For)
+### Critical Sequence (UPDATED - Feature 1.7 Complete)
 
 ```
-1.7 → 2.1, 2.2, 2.3, 2.5
-1.7 → 3.1
+✓ DONE: Feature 1.7 (6h) ──┐
+                           ├─→ Day 1-2: Features 2.1-2.3 (24h parallel) ──┐
+Day 1: Feature 3.1 (8h) ───┐                                              ├─→ Days 3-4: E2E + Validation
+                                                                           ├─→ Feature 2.4 (10h)
+Days 1-2: Features 4.1-4.5 (44h parallel, no dependencies) ───────────────┘
+Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ────────────→ Day 4
+```
+
+**Status**: Phase 2A complete, Phase 2C ready to start immediately!
+
+### Sequential Dependencies (UPDATED)
+
+```
+✓ 1.7 COMPLETE → 2.1, 2.2, 2.3, 2.5 (NOW READY)
+✓ 1.7 COMPLETE → 3.1 (NOW READY)
 2.1-2.3 → 2.4
 3.1 → 3.2, 3.3, 3.4, 3.5
 4.2 → 4.1
 4.1 → 4.3
 2.x → 5.4
 ```
+
+**Major Milestone**: Feature 1.7 completion unblocked 7 features (2.1, 2.2, 2.3, 2.5, 2.6, 3.1, 3.5)!
 
 ---
 

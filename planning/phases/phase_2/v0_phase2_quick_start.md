@@ -48,16 +48,17 @@ Are you responsible for...?
 4. [2_performance_optimization_handoff.md](./2_performance_optimization_handoff.md) - Features 2.1-2.6 (15 min)
 
 **Your Features**:
-- Feature 1.5: Corpus Loading Script (8h)
-- Feature 1.6: Sample Corpus Creation (4h)
-- Feature 1.7: Benchmark Baseline (6h)
-- Features 2.1-2.6: Performance Optimization (56h)
-- **Total**: 68 hours, 9 features
+- Feature 1.5: Corpus Loading Script (8h) - ✓ Complete
+- Feature 1.6: Sample Corpus Creation (4h) - ✓ Complete
+- Feature 1.7: Benchmark Baseline (6h) - ✓ Complete (2025-10-31)
+- Features 2.1-2.6: Performance Optimization (56h) - Ready to start!
+- **Total**: 68 hours, 9 features (3 complete, 6 remaining)
 
 **Before You Start**:
 - Check dependencies in [dependencies_and_timeline.md](./dependencies_and_timeline.md)
-- Feature 1.7 is your first priority (no blockers)
-- Features 2.1-2.6 depend on Feature 1.7 completion
+- Features 1.5-1.7 are complete! ✓
+- **Next Priority**: Feature 2.1 (Embedding Service Profiling) - NO BLOCKERS
+- All Features 2.1-2.6 are now unblocked
 
 ---
 
@@ -143,16 +144,17 @@ Are you responsible for...?
 
 **Key Responsibilities**:
 - Daily standups (15 min each)
-- Track Feature 1.7 completion (blocker for all optimization)
 - Monitor accuracy baseline (Feature 3.1 target: >70%)
 - Watch performance targets (E2E <60 sec, throughput >500 texts/sec)
 - Manage cross-agent dependencies
 - Escalate blockers immediately
 
-**Critical Path** (things that block everything else):
-1. Feature 1.7: Benchmark Baseline (6h) → unblocks Features 2.1-2.6
+**Critical Path Updates** (things that block everything else):
+1. ✓ Feature 1.7: Benchmark Baseline (6h) → COMPLETE (2025-10-31) → Features 2.1-2.6 UNBLOCKED
 2. Features 2.1-2.3: Performance profiling (24h) → unblocks Feature 2.4
 3. Feature 3.1: Accuracy framework (8h) → unblocks Features 3.2-3.5
+
+**Next Priority**: Kick off Features 2.1-2.6 (Performance Optimization) - now unblocked!
 
 ---
 
@@ -160,7 +162,7 @@ Are you responsible for...?
 
 ### "I just started, what's Phase 2 about?"
 
-Phase 2 is the ML Core implementation of TruthGraph. We're 75% done with 6 of 27 features completed. The remaining work is split into 5 categories:
+Phase 2 is the ML Core implementation of TruthGraph. We're 26% done with 7 of 27 features completed. The remaining work is split into 5 categories:
 
 1. **Dataset & Testing** - Test data for validation
 2. **Performance Optimization** - Speed and efficiency

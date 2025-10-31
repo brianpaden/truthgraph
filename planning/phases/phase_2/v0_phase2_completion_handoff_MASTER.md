@@ -1,11 +1,11 @@
 # Phase 2 v0 Completion Handoff - Master Index
 
 **Status**: 🚧 In Progress
-**Version**: 2.0 (Reorganized)
+**Version**: 2.1 (Feature 1.7 Complete)
 **Created**: 2025-10-27
 **Last Updated**: 2025-10-31
 **Target Completion**: ~2 weeks (60-80 hours)
-**Project Progress**: ~75% complete (6 of 27 features done, 42h invested)
+**Project Progress**: 26% complete (7 of 27 features done, 48h invested)
 
 ---
 
@@ -59,7 +59,7 @@ TruthGraph v0 Phase 2 (ML Core) is 70-75% complete with core implementation fini
 
 ## Progress Tracking Dashboard
 
-### Completed Features (6/27) - 22.2%
+### Completed Features (7/27) - 26%
 
 | Feature | Status | Agent | Effort | Completed |
 |---------|--------|-------|--------|-----------|
@@ -69,14 +69,16 @@ TruthGraph v0 Phase 2 (ML Core) is 70-75% complete with core implementation fini
 | 1.4 Edge Case Corpus | ✓ | test-automator | 6h | 2025-10-29 |
 | 1.5 Corpus Loading Script | ✓ | python-pro | 8h | 2025-10-29 |
 | 1.6 Sample Corpus Creation | ✓ | python-pro | 4h | 2025-10-29 |
+| 1.7 Benchmark Baseline Establishment | ✓ | python-pro + context-manager | 6h | 2025-10-31 |
 
 ### In Progress Features (0/27)
 
 None currently in progress.
 
-### Remaining Features (21/27)
+### Remaining Features (20/27)
 
-**Next Priority**: Feature 1.7 (Benchmark Baseline) - No blockers, ready to start immediately.
+**Next Priority**: Feature 2.1 (Embedding Service Profiling) - No blockers, ready to start immediately.
+**Major Milestone**: All Dataset & Testing features (1.1-1.7) are now COMPLETE! ✓
 
 ---
 
