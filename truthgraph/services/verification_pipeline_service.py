@@ -507,6 +507,10 @@ class VerificationPipelineService:
         Returns:
             List of EvidenceItem objects with NLI results
         """
+        # Handle empty search results
+        if not search_results:
+            return []
+
         # Prepare pairs for batch NLI
         pairs = [
             (result.content, claim_text)  # (premise, hypothesis)

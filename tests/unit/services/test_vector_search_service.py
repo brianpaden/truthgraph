@@ -220,14 +220,20 @@ class TestVectorSearchService:
         service = VectorSearchService(embedding_dimension=384)
         db_mock = Mock()
 
-        # Mock database responses
-        mock_result_1 = MagicMock()
-        mock_result_1.fetchall.return_value = [(uuid4(), "Evidence 1", None, 0.9)]
+        # Mock database connection and cursor
+        mock_cursor = MagicMock()
+        mock_cursor.__enter__ = Mock(return_value=mock_cursor)
+        mock_cursor.__exit__ = Mock(return_value=False)
 
-        mock_result_2 = MagicMock()
-        mock_result_2.fetchall.return_value = [(uuid4(), "Evidence 2", None, 0.85)]
+        # Mock database responses for two queries
+        mock_cursor.fetchall.side_effect = [
+            [(uuid4(), "Evidence 1", None, 0.9)],
+            [(uuid4(), "Evidence 2", None, 0.85)]
+        ]
 
-        db_mock.execute.side_effect = [mock_result_1, mock_result_2]
+        mock_connection = MagicMock()
+        mock_connection.cursor.return_value = mock_cursor
+        db_mock.connection.return_value.connection = mock_connection
 
         # Execute batch search
         query_embeddings = [[0.1] * 384, [0.2] * 384]
@@ -247,14 +253,20 @@ class TestVectorSearchService:
         service = VectorSearchService(embedding_dimension=384)
         db_mock = Mock()
 
-        # First query succeeds, second fails
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = [(uuid4(), "Evidence 1", None, 0.9)]
+        # Mock database connection and cursor
+        mock_cursor = MagicMock()
+        mock_cursor.__enter__ = Mock(return_value=mock_cursor)
+        mock_cursor.__exit__ = Mock(return_value=False)
 
-        db_mock.execute.side_effect = [
-            mock_result,
+        # First query succeeds, second query fails
+        mock_cursor.fetchall.side_effect = [
+            [(uuid4(), "Evidence 1", None, 0.9)],
             Exception("Query failed"),
         ]
+
+        mock_connection = MagicMock()
+        mock_connection.cursor.return_value = mock_cursor
+        db_mock.connection.return_value.connection = mock_connection
 
         # Execute batch search
         query_embeddings = [[0.1] * 384, [0.2] * 384]
@@ -325,9 +337,15 @@ class TestVectorSearchService:
         service = VectorSearchService(embedding_dimension=384)
         db_mock = Mock()
 
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = []
-        db_mock.execute.return_value = mock_result
+        # Mock database connection and cursor
+        mock_cursor = MagicMock()
+        mock_cursor.__enter__ = Mock(return_value=mock_cursor)
+        mock_cursor.__exit__ = Mock(return_value=False)
+        mock_cursor.fetchall.return_value = []
+
+        mock_connection = MagicMock()
+        mock_connection.cursor.return_value = mock_cursor
+        db_mock.connection.return_value.connection = mock_connection
 
         # Search with min_similarity=0.8
         query_embedding = [0.1] * 384
@@ -336,7 +354,7 @@ class TestVectorSearchService:
         )
 
         # Verify max_distance = 1 - 0.8 = 0.2
-        call_args = db_mock.execute.call_args
+        call_args = mock_cursor.execute.call_args
         params = call_args.args[1] if len(call_args.args) > 1 else {}
         assert params.get("max_distance") == pytest.approx(0.2, abs=0.001)
 
@@ -345,22 +363,28 @@ class TestVectorSearchService:
         service = VectorSearchService(embedding_dimension=384)
         db_mock = Mock()
 
-        mock_result = MagicMock()
-        mock_result.fetchall.return_value = []
-        db_mock.execute.return_value = mock_result
+        # Mock database connection and cursor
+        mock_cursor = MagicMock()
+        mock_cursor.__enter__ = Mock(return_value=mock_cursor)
+        mock_cursor.__exit__ = Mock(return_value=False)
+        mock_cursor.fetchall.return_value = []
+
+        mock_connection = MagicMock()
+        mock_connection.cursor.return_value = mock_cursor
+        db_mock.connection.return_value.connection = mock_connection
 
         # Search with top_k=5
         query_embedding = [0.1] * 384
         service.search_similar_evidence(db=db_mock, query_embedding=query_embedding, top_k=5)
 
         # Verify top_k was passed
-        call_args = db_mock.execute.call_args
+        call_args = mock_cursor.execute.call_args
         params = call_args.args[1] if len(call_args.args) > 1 else {}
         assert params.get("top_k") == 5
 
         # Verify LIMIT clause in SQL
-        sql = call_args[0][0].text
-        assert "LIMIT :top_k" in sql
+        sql = call_args[0][0]
+        assert "LIMIT %(top_k)s" in sql
 
 
 class TestSearchResult:

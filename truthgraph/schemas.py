@@ -1,14 +1,58 @@
 """SQLAlchemy ORM schemas for database tables."""
 
+import json
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text, TypeDecorator
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import relationship
 
 from .db import Base
+
+
+def utc_now():
+    """Return current UTC timestamp.
+
+    Replacement for deprecated datetime.utcnow().
+    Use this as default for timestamp columns.
+    """
+    return datetime.now(UTC)
+
+
+class UUIDArray(TypeDecorator):
+    """Custom type to handle UUID arrays for both PostgreSQL and SQLite.
+
+    PostgreSQL uses native ARRAY type, SQLite uses JSON serialization.
+    """
+
+    impl = Text
+    cache_ok = True
+
+    def load_dialect_impl(self, dialect):
+        if dialect.name == 'postgresql':
+            return dialect.type_descriptor(ARRAY(UUID(as_uuid=True)))
+        else:
+            return dialect.type_descriptor(Text())
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return value
+        if dialect.name == 'postgresql':
+            return value
+        else:
+            # Convert UUIDs to strings and store as JSON for SQLite
+            return json.dumps([str(uid) for uid in value])
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return value
+        if dialect.name == 'postgresql':
+            return value
+        else:
+            # Deserialize JSON and convert back to UUIDs for SQLite
+            return [uuid.UUID(uid) for uid in json.loads(value)]
 
 
 class Claim(Base):
@@ -19,9 +63,9 @@ class Claim(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     text = Column(Text, nullable=False)
     source_url = Column(String, nullable=True)
-    submitted_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    submitted_at = Column(DateTime, default=utc_now, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     # Relationships
     verdicts = relationship("Verdict", back_populates="claim", cascade="all, delete-orphan")
@@ -38,7 +82,7 @@ class Evidence(Base):
     content = Column(Text, nullable=False)
     source_url = Column(String, nullable=True)
     source_type = Column(String(50), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
 
     __table_args__ = (Index("idx_evidence_created_at", created_at.desc()),)
 
@@ -55,8 +99,8 @@ class Verdict(Base):
     verdict = Column(String(20), nullable=True)  # SUPPORTED, REFUTED, INSUFFICIENT
     confidence = Column(Float, nullable=True)
     reasoning = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     # Relationships
     claim = relationship("Claim", back_populates="verdicts")
@@ -121,8 +165,8 @@ class Embedding(Base):
     tenant_id = Column(String(255), nullable=False, default="default")
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     __table_args__ = (
         # Index for tenant isolation
@@ -176,7 +220,7 @@ class NLIResult(Base):
     hypothesis_text = Column(Text, nullable=False)  # Claim text
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
 
     __table_args__ = (
         # Index for claim-based lookups
@@ -225,15 +269,15 @@ class VerificationResult(Base):
     reasoning = Column(Text, nullable=True)
 
     # NLI result IDs used in this verification (for traceability)
-    nli_result_ids = Column(ARRAY(UUID(as_uuid=True)), nullable=True)
+    nli_result_ids = Column(UUIDArray, nullable=True)
 
     # Pipeline metadata
     pipeline_version = Column(String(50), nullable=True)
     retrieval_method = Column(String(50), nullable=True)  # 'vector', 'hybrid', 'keyword'
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     __table_args__ = (
         # Index for claim-based lookups

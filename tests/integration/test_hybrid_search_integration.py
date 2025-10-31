@@ -12,6 +12,10 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from truthgraph.config.embedding_config import (
+    DEFAULT_EMBEDDING_DIMENSION,
+    DEFAULT_EMBEDDING_MODEL,
+)
 from truthgraph.db import Base
 from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.hybrid_search_service import HybridSearchService
@@ -109,47 +113,47 @@ def sample_evidence_data(db_session):
 
     # Create embeddings (using simple patterns for testing)
     # In production, these would be from a real embedding model
-    # Using 1536 dimensions for text-embedding-3-small
+    # Using DEFAULT_EMBEDDING_DIMENSION from config
     embeddings_data = [
         {
             "entity_type": "evidence",
             "entity_id": evidence_data[0]["id"],
             # Climate change themed embedding
-            "embedding": [0.1 if i % 3 == 0 else 0.05 for i in range(1536)],
+            "embedding": [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)],
             "tenant_id": "default",
-            "model_name": "text-embedding-3-small",
+            "model_name": DEFAULT_EMBEDDING_MODEL.value,
         },
         {
             "entity_type": "evidence",
             "entity_id": evidence_data[1]["id"],
             # Similar climate/warming themed embedding
-            "embedding": [0.11 if i % 3 == 0 else 0.06 for i in range(1536)],
+            "embedding": [0.11 if i % 3 == 0 else 0.06 for i in range(DEFAULT_EMBEDDING_DIMENSION)],
             "tenant_id": "default",
-            "model_name": "text-embedding-3-small",
+            "model_name": DEFAULT_EMBEDDING_MODEL.value,
         },
         {
             "entity_type": "evidence",
             "entity_id": evidence_data[2]["id"],
             # Programming themed embedding
-            "embedding": [0.2 if i % 5 == 0 else 0.03 for i in range(1536)],
+            "embedding": [0.2 if i % 5 == 0 else 0.03 for i in range(DEFAULT_EMBEDDING_DIMENSION)],
             "tenant_id": "default",
-            "model_name": "text-embedding-3-small",
+            "model_name": DEFAULT_EMBEDDING_MODEL.value,
         },
         {
             "entity_type": "evidence",
             "entity_id": evidence_data[3]["id"],
             # ML themed embedding
-            "embedding": [0.22 if i % 5 == 0 else 0.04 for i in range(1536)],
+            "embedding": [0.22 if i % 5 == 0 else 0.04 for i in range(DEFAULT_EMBEDDING_DIMENSION)],
             "tenant_id": "default",
-            "model_name": "text-embedding-3-small",
+            "model_name": DEFAULT_EMBEDDING_MODEL.value,
         },
         {
             "entity_type": "evidence",
             "entity_id": evidence_data[4]["id"],
             # Astronomy themed embedding
-            "embedding": [0.15 if i % 7 == 0 else 0.02 for i in range(1536)],
+            "embedding": [0.15 if i % 7 == 0 else 0.02 for i in range(DEFAULT_EMBEDDING_DIMENSION)],
             "tenant_id": "default",
-            "model_name": "text-embedding-3-small",
+            "model_name": DEFAULT_EMBEDDING_MODEL.value,
         },
     ]
 
@@ -168,11 +172,11 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_basic(self, db_session, sample_evidence_data):
         """Test basic hybrid search with both vector and keyword components."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Search for climate-related content
         # Use climate-themed embedding similar to our test data
-        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(1536)]
+        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -192,10 +196,10 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_vector_heavy(self, db_session, sample_evidence_data):
         """Test hybrid search with heavy vector weighting."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use programming-themed embedding
-        query_embedding = [0.2 if i % 5 == 0 else 0.03 for i in range(1536)]
+        query_embedding = [0.2 if i % 5 == 0 else 0.03 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -213,10 +217,10 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_keyword_heavy(self, db_session, sample_evidence_data):
         """Test hybrid search with heavy keyword weighting."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use astronomy-themed embedding
-        query_embedding = [0.15 if i % 7 == 0 else 0.02 for i in range(1536)]
+        query_embedding = [0.15 if i % 7 == 0 else 0.02 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -236,9 +240,9 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_with_source_filter(self, db_session, sample_evidence_data):
         """Test hybrid search with source URL filter."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(1536)]
+        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -253,9 +257,9 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_with_date_range(self, db_session, sample_evidence_data):
         """Test hybrid search with date range filter."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.1 for i in range(1536)]
+        query_embedding = [0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         # Filter to recent content only (last 7 days)
         date_from = datetime.now(UTC) - timedelta(days=7)
@@ -276,10 +280,10 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_matched_via_both(self, db_session, sample_evidence_data):
         """Test that results show correct matched_via field."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use climate embedding and climate keywords
-        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(1536)]
+        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -298,10 +302,10 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_empty_results(self, db_session, sample_evidence_data):
         """Test hybrid search with query that matches nothing."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use very different embedding and unrelated keywords
-        query_embedding = [0.99 if i % 100 == 0 else 0.001 for i in range(1536)]
+        query_embedding = [0.99 if i % 100 == 0 else 0.001 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         results, query_time = service.hybrid_search(
             db=db_session,
@@ -317,9 +321,9 @@ class TestHybridSearchIntegration:
 
     def test_hybrid_search_performance_target(self, db_session, sample_evidence_data):
         """Test that hybrid search meets <150ms performance target."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.1 for i in range(1536)]
+        query_embedding = [0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         # Run multiple queries to check consistency
         times = []
@@ -345,7 +349,7 @@ class TestKeywordOnlySearchIntegration:
 
     def test_keyword_only_search_basic(self, db_session, sample_evidence_data):
         """Test keyword-only search."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         results, query_time = service.keyword_only_search(
             db=db_session,
@@ -361,7 +365,7 @@ class TestKeywordOnlySearchIntegration:
 
     def test_keyword_only_search_with_filters(self, db_session, sample_evidence_data):
         """Test keyword-only search with filters."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         date_from = datetime.now(UTC) - timedelta(days=7)
 
@@ -381,7 +385,7 @@ class TestSearchStatsIntegration:
 
     def test_get_search_stats(self, db_session, sample_evidence_data):
         """Test getting search statistics."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         stats = service.get_search_stats(db=db_session)
 
@@ -392,7 +396,7 @@ class TestSearchStatsIntegration:
 
     def test_get_search_stats_partial_coverage(self, db_session, sample_evidence_data):
         """Test search stats with partial embedding coverage."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Add evidence without embedding
         new_evidence = Evidence(
@@ -416,10 +420,10 @@ class TestRRFAlgorithmIntegration:
 
     def test_rrf_fusion_integration(self, db_session, sample_evidence_data):
         """Test that RRF properly fuses vector and keyword results."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use climate embedding
-        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(1536)]
+        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         # Query with both vector and keyword relevance
         results, _ = service.hybrid_search(
@@ -440,9 +444,9 @@ class TestRRFAlgorithmIntegration:
 
     def test_rrf_different_weights_integration(self, db_session, sample_evidence_data):
         """Test that different weights produce different rankings."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(1536)]
+        query_embedding = [0.1 if i % 3 == 0 else 0.05 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
         query_text = "climate warming"
 
         # Vector-heavy search

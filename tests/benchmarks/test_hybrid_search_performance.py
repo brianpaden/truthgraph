@@ -18,6 +18,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from truthgraph.config import DEFAULT_EMBEDDING_DIMENSION, DEFAULT_EMBEDDING_MODEL
 from truthgraph.db import Base
 from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.hybrid_search_service import HybridSearchService
@@ -93,15 +94,15 @@ def create_test_dataset(db_session, size=100):
         evidence_list.append(evidence)
 
         # Create embedding (simple pattern based on document index)
-        # Using 1536 dimensions
-        embedding_pattern = [(i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01 for j in range(1536)]
+        # Using DEFAULT_EMBEDDING_DIMENSION
+        embedding_pattern = [(i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01 for j in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         embedding = Embedding(
             entity_type="evidence",
             entity_id=evidence_id,
             embedding=embedding_pattern,
             tenant_id="default",
-            model_name="text-embedding-3-small",
+            model_name=DEFAULT_EMBEDDING_MODEL.value,
         )
         embedding_list.append(embedding)
 
@@ -120,9 +121,9 @@ class TestHybridSearchPerformance:
     def test_hybrid_search_100_documents_performance(self, db_session):
         """Benchmark hybrid search with 100 documents."""
         create_test_dataset(db_session, size=100)
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(1536)]
+        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         # Warm-up query
         service.hybrid_search(
@@ -170,9 +171,9 @@ class TestHybridSearchPerformance:
     def test_hybrid_search_500_documents_performance(self, db_session):
         """Benchmark hybrid search with 500 documents."""
         create_test_dataset(db_session, size=500)
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(1536)]
+        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         # Warm-up query
         service.hybrid_search(
@@ -212,7 +213,7 @@ class TestHybridSearchPerformance:
     def test_keyword_only_search_performance(self, db_session):
         """Benchmark keyword-only search performance."""
         create_test_dataset(db_session, size=200)
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Warm-up
         service.keyword_only_search(
@@ -248,9 +249,9 @@ class TestHybridSearchPerformance:
     def test_hybrid_search_weight_variations(self, db_session):
         """Benchmark hybrid search with different weight configurations."""
         create_test_dataset(db_session, size=100)
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(1536)]
+        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
         query_text = "machine learning neural networks"
 
         weight_configs = [
@@ -290,9 +291,9 @@ class TestHybridSearchPerformance:
     def test_hybrid_search_top_k_variations(self, db_session):
         """Benchmark hybrid search with different top_k values."""
         create_test_dataset(db_session, size=200)
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
-        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(1536)]
+        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         top_k_values = [5, 10, 20, 50, 100]
 
@@ -327,8 +328,8 @@ class TestHybridSearchScalability:
     @pytest.mark.benchmark
     def test_scalability_comparison(self, db_session):
         """Compare performance across different dataset sizes."""
-        service = HybridSearchService(embedding_dimension=1536)
-        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(1536)]
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
+        query_embedding = [0.5 if i % 3 == 0 else 0.1 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
 
         sizes = [50, 100, 200]
         results_summary = []
@@ -381,7 +382,7 @@ class TestRRFPerformance:
     @pytest.mark.benchmark
     def test_rrf_fusion_performance(self, db_session):
         """Benchmark RRF fusion with varying result set sizes."""
-        service = HybridSearchService(embedding_dimension=1536)
+        service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         print("\n=== RRF Fusion Performance ===")
 

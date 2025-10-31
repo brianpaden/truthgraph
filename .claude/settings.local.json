@@ -50,7 +50,10 @@
       "Bash(MSYS_NO_PATHCONV=1 docker-compose exec:*)",
       "Bash(git checkout:*)",
       "Bash(task ml:benchmark:pipeline:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(task ml:benchmark:hybrid)",
+      "Bash(MSYS_NO_PATHCONV=1 docker cp:*)",
+      "Bash(task test:integration:*)"
     ],
     "deny": [],
     "ask": []

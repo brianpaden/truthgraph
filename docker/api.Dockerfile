@@ -99,9 +99,11 @@ COPY alembic.ini ./alembic.ini
 COPY alembic ./alembic
 
 # Copy tests for development/testing
+# Updated: 2025-10-30 - Fixed SQL assertion in test_top_k_parameter
 COPY tests ./tests
 
 # Copy performance scripts for benchmarking and optimization
+# Updated: 2025-10-30 - Fixed database connection issues
 COPY scripts ./scripts
 
 # Install the application package without touching dependencies

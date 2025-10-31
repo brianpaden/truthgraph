@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, Mock, patch
 import numpy as np
 import pytest
 
+from truthgraph.config import DEFAULT_EMBEDDING_MODEL
 from truthgraph.services.ml.embedding_service import EmbeddingService, get_embedding_service
 
 
@@ -123,7 +124,7 @@ class TestModelLoading:
         assert service._device == "cpu"
         assert service._model is mock_model
         mock_transformer.assert_called_once_with(
-            "sentence-transformers/all-mpnet-base-v2",
+            DEFAULT_EMBEDDING_MODEL.value,
             device="cpu",
         )
         mock_model.eval.assert_called_once()
