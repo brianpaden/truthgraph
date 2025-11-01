@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accuracy Testing Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header .timestamp {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .metric-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-unit {
+            font-size: 0.5em;
+            color: #999;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.5em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .verdict-name {
+            font-weight: 600;
+            color: #333;
+        }
+        .number {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .matrix {
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .matrix-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .matrix-label {
+            width: 100px;
+            text-align: right;
+            font-weight: 600;
+        }
+        .matrix-cell {
+            width: 100px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+        .matrix-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            margin-left: 100px;
+        }
+        .matrix-col-header {
+            width: 100px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .category-subsection {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        .category-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .footer {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Accuracy Testing Report</h1>
+            <div class="timestamp">Generated: 2025-11-01T03:35:24.672902</div>
+            <div class="timestamp">Total Samples: 78</div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Overall Accuracy</h3>
+                <div class="metric-value">
+                    73.1%
+                    <span class="metric-unit"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3>Macro F1 Score</h3>
+                <div class="metric-value">
+                    0.712
+                    <span class="metric-unit"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3>Weighted F1 Score</h3>
+                <div class="metric-value">
+                    0.733
+                    <span class="metric-unit"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <h3>Sample Size</h3>
+                <div class="metric-value">
+                    78
+                    <span class="metric-unit">claims</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Per-Verdict Metrics</h2>
+            <table>
+  <thead>
+    <tr>
+      <th>Verdict</th>
+      <th class="number">Precision</th>
+      <th class="number">Recall</th>
+      <th class="number">F1 Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="verdict-name">SUPPORTED</td>
+      <td class="number">0.8846</td>
+      <td class="number">0.6571</td>
+      <td class="number">0.7541</td>
+    </tr>
+    <tr>
+      <td class="verdict-name">REFUTED</td>
+      <td class="number">0.6842</td>
+      <td class="number">0.8125</td>
+      <td class="number">0.7429</td>
+    </tr>
+    <tr>
+      <td class="verdict-name">INSUFFICIENT</td>
+      <td class="number">0.5714</td>
+      <td class="number">0.7273</td>
+      <td class="number">0.6400</td>
+    </tr>
+  </tbody>
+</table>
+
+        </div>
+
+        <div class="section">
+            <h2>Confusion Matrix</h2>
+            <p>Rows: Actual verdicts, Columns: Predicted verdicts</p>
+            <div class="matrix">
+  <div class="matrix-header">
+    <div style="width: 100px;"></div>
+    <div class="matrix-col-header">SUPPORTED</div>
+    <div class="matrix-col-header">REFUTED</div>
+    <div class="matrix-col-header">INSUFFICIENT</div>
+  </div>
+  <div class="matrix-row">
+    <div class="matrix-label">SUPPORTED</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 1.0);">23</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 1.0);">12</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.0);">0</div>
+  </div>
+  <div class="matrix-row">
+    <div class="matrix-label">REFUTED</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.0);">0</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 1.0);">26</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.6);">6</div>
+  </div>
+  <div class="matrix-row">
+    <div class="matrix-label">INSUFFICIENT</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.3);">3</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.0);">0</div>
+    <div class="matrix-cell" style="background-color: rgba(102, 126, 234, 0.8);">8</div>
+  </div>
+</div>
+
+        </div>
+
+        <div class="section">
+  <h2>Per-Category Analysis</h2>
+  <div class="category-subsection">
+    <div class="category-name">Fever_Dataset</div>
+    <div>Samples: <strong>25</strong></div>
+    <div>Accuracy: <strong>72.0%</strong></div>
+    <div>F1 Score: <strong>0.7250</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">Geography</div>
+    <div>Samples: <strong>1</strong></div>
+    <div>Accuracy: <strong>0.0%</strong></div>
+    <div>F1 Score: <strong>0.0000</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">Health</div>
+    <div>Samples: <strong>15</strong></div>
+    <div>Accuracy: <strong>80.0%</strong></div>
+    <div>F1 Score: <strong>0.6889</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">History</div>
+    <div>Samples: <strong>8</strong></div>
+    <div>Accuracy: <strong>50.0%</strong></div>
+    <div>F1 Score: <strong>0.3611</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">Politics</div>
+    <div>Samples: <strong>2</strong></div>
+    <div>Accuracy: <strong>50.0%</strong></div>
+    <div>F1 Score: <strong>0.2222</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">Science</div>
+    <div>Samples: <strong>21</strong></div>
+    <div>Accuracy: <strong>81.0%</strong></div>
+    <div>F1 Score: <strong>0.7302</strong></div>
+  </div>
+  <div class="category-subsection">
+    <div class="category-name">Technology</div>
+    <div>Samples: <strong>6</strong></div>
+    <div>Accuracy: <strong>83.3%</strong></div>
+    <div>F1 Score: <strong>0.6296</strong></div>
+  </div>
+</div>
+
+
+        <div class="footer">
+            <p>Accuracy Testing Framework for TruthGraph Fact Verification Pipeline</p>
+        </div>
+    </div>
+</body>
+</html>

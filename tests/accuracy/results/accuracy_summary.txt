@@ -1,0 +1,70 @@
+
+============================================================
+ACCURACY TESTING REPORT
+============================================================
+
+Generated: 2025-11-01T03:35:24.672902
+Total Samples: 78
+
+OVERALL METRICS
+============================================================
+Accuracy:           73.1%
+Macro F1 Score:     0.7123
+Weighted F1 Score:  0.7334
+
+PER-VERDICT METRICS
+============================================================
+Verdict          Precision    Recall      F1 Score
+------------------------------------------------------------
+SUPPORTED            0.8846      0.6571      0.7541
+REFUTED              0.6842      0.8125      0.7429
+INSUFFICIENT         0.5714      0.7273      0.6400
+
+CONFUSION MATRIX
+============================================================
+Predicted >>
+Actual v    SUPPORTED   REFUTED   INSUFFICIENT
+------------------------------------------------------------
+SUPPORTED           23          12           0
+REFUTED              0          26           6
+INSUFFICIENT          3           0           8
+
+PER-CATEGORY BREAKDOWN
+============================================================
+
+TECHNOLOGY
+  Samples:  6
+  Accuracy: 83.3%
+  F1 Score: 0.6296
+
+FEVER_DATASET
+  Samples:  25
+  Accuracy: 72.0%
+  F1 Score: 0.7250
+
+HISTORY
+  Samples:  8
+  Accuracy: 50.0%
+  F1 Score: 0.3611
+
+HEALTH
+  Samples:  15
+  Accuracy: 80.0%
+  F1 Score: 0.6889
+
+POLITICS
+  Samples:  2
+  Accuracy: 50.0%
+  F1 Score: 0.2222
+
+GEOGRAPHY
+  Samples:  1
+  Accuracy: 0.0%
+  F1 Score: 0.0000
+
+SCIENCE
+  Samples:  21
+  Accuracy: 81.0%
+  F1 Score: 0.7302
+
+============================================================
