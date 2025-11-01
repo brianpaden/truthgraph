@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "timestamp": "2025-11-01T04:04:42.831799",
+    "script_version": "1.0.0",
+    "target_memory_gb": 4.0
+  },
+  "tests": {
+    "baseline": {
+      "initial_memory_mb": 366.26953125,
+      "available_system_mb": 40472.68359375,
+      "total_system_mb": 65277.29296875,
+      "python_allocated_mb": 0.0055904388427734375,
+      "components": {}
+    },
+    "model_loading": {
+      "embedding_model": {
+        "error": "Insufficient markers for component"
+      },
+      "nli_model": {
+        "error": "'NLIService' object has no attribute 'predict'"
+      },
+      "total_after_models_mb": 438.27734375
+    },
+    "batch_processing": {
+      "batch_size": 64,
+      "num_texts": 1000,
+      "elapsed_seconds": 1.54,
+      "throughput_texts_per_sec": 650.16,
+      "memory_before_mb": 438.2890625,
+      "memory_after_mb": 472.58203125,
+      "memory_delta_mb": 34.29296875,
+      "peak_memory_mb": 472.58203125
+    },
+    "concurrent_load": {
+      "num_items": 100,
+      "elapsed_seconds": 0.15,
+      "items_per_second": 654.81,
+      "memory_before_mb": 472.58203125,
+      "memory_after_mb": 472.58203125,
+      "memory_delta_mb": 0.0,
+      "peak_memory_mb": 472.58203125,
+      "num_embeddings": 100,
+      "alerts_triggered": 0,
+      "alert_details": []
+    },
+    "leak_detection": {
+      "duration_seconds": 2.28,
+      "num_iterations": 8,
+      "num_snapshots": 10,
+      "leak_detected": true,
+      "growth_rate_mb_per_hour": 5394.56,
+      "total_growth_mb": 4.9,
+      "initial_memory_mb": 472.6875,
+      "final_memory_mb": 477.58984375,
+      "peak_memory_mb": 477.58984375,
+      "mean_memory_mb": 476.324609375,
+      "std_dev_mb": 1.4176635884612498,
+      "leak_alert": {
+        "level": "critical",
+        "alert_type": "memory_leak",
+        "message": "Potential memory leak detected: 5396.68 MB/hour growth",
+        "timestamp": "2025-11-01T04:04:50.570940",
+        "snapshot": null,
+        "metadata": {
+          "growth_mb_per_hour": 5396.679996886615,
+          "threshold_mb_per_hour": 100,
+          "duration_minutes": 0.04,
+          "total_growth_mb": 4.9
+        }
+      }
+    },
+    "feature_2_1_comparison": {
+      "feature_2_1_baseline_mb": 430.27734375,
+      "feature_2_1_peak_mb": 647.23046875,
+      "feature_2_1_leak_detected": false,
+      "feature_2_5_baseline_mb": 366.26953125,
+      "feature_2_5_peak_mb": 477.58984375,
+      "comparison_notes": []
+    }
+  },
+  "summary": {
+    "peak_memory_mb": 477.59,
+    "peak_memory_gb": 0.47,
+    "target_memory_gb": 4.0,
+    "under_target": true,
+    "margin_mb": 3618.41,
+    "margin_percent": 88.34,
+    "leak_detected": true,
+    "all_tests_passed": false
+  }
+}

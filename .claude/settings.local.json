@@ -55,7 +55,8 @@
       "Bash(MSYS_NO_PATHCONV=1 docker cp:*)",
       "Bash(task test:integration:*)",
       "Bash(move v0_phase2_completion_handoff.md v0_phase2_completion_handoff_ORIGINAL_2290_LINES.md)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(psql:*)"
     ],
     "deny": [],
     "ask": []

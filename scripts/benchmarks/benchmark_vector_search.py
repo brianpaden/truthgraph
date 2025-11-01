@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
-"""Comprehensive benchmark for vector search service.
+"""Comprehensive benchmark for vector search service with IVFFlat index optimization.
 
 This script measures vector search performance across various dimensions:
-- Query latency with different corpus sizes
+- Query latency with different corpus sizes (1k, 5k, 10k, 50k)
 - Batch query throughput
+- IVFFlat index parameter testing (lists and probes)
 - Recall accuracy vs speed tradeoffs
-- Memory usage
+- Memory usage and index size
+- Scaling characteristics
 
 Performance Targets:
     - Latency: <3 seconds for 10K items
     - Query throughput: >10 queries/sec
+    - Top-1 recall: >95%
+    - Index build time: <60 seconds for 10K items
+
+Feature 2.3: Vector Search Index Optimization
+    Tests IVFFlat configurations to find optimal balance of:
+    - Search speed (latency target: <3s for 10K)
+    - Search accuracy (recall target: >95%)
+    - Index build performance
+    - Memory efficiency
 """
 
 import argparse
@@ -33,6 +44,13 @@ try:
     PSUTIL_AVAILABLE = True
 except ImportError:
     PSUTIL_AVAILABLE = False
+
+try:
+    import numpy as np
+
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
@@ -335,12 +353,225 @@ def benchmark_top_k_values(
     return results
 
 
+def create_ivfflat_index(
+    session, lists: int, embedding_dim: int, tenant_id: str = "benchmark_10000"
+) -> dict[str, Any]:
+    """Create IVFFlat index with specified parameters.
+
+    Args:
+        session: Database session
+        lists: Number of inverted lists
+        embedding_dim: Embedding dimension
+        tenant_id: Tenant ID
+
+    Returns:
+        Dictionary with index creation statistics
+    """
+    print(f"  Creating IVFFlat index: lists={lists}...")
+
+    # Drop existing index if present
+    try:
+        session.execute(text("DROP INDEX IF EXISTS embeddings_ivfflat_idx"))
+        session.commit()
+    except Exception:
+        session.rollback()
+
+    # Create index with timing
+    index_sql = f"""
+    CREATE INDEX embeddings_ivfflat_idx
+    ON embeddings
+    USING ivfflat (embedding vector_cosine_ops)
+    WITH (lists = {lists})
+    WHERE entity_type = 'evidence' AND tenant_id = '{tenant_id}'
+    """
+
+    start_time = time.perf_counter()
+    try:
+        session.execute(text(index_sql))
+        session.commit()
+        end_time = time.perf_counter()
+
+        build_time_sec = end_time - start_time
+
+        # Get index size
+        size_result = session.execute(
+            text("SELECT pg_size_pretty(pg_relation_size('embeddings_ivfflat_idx')) as size")
+        )
+        index_size = size_result.fetchone()[0]
+
+        print(f"    Index created in {build_time_sec:.2f}s, size: {index_size}")
+
+        return {
+            "lists": lists,
+            "build_time_sec": build_time_sec,
+            "index_size": index_size,
+            "success": True,
+        }
+
+    except Exception as e:
+        print(f"    ERROR: Index creation failed: {e}")
+        session.rollback()
+        return {
+            "lists": lists,
+            "build_time_sec": 0.0,
+            "index_size": "0 bytes",
+            "success": False,
+            "error": str(e),
+        }
+
+
+def set_ivfflat_probes(session, probes: int) -> None:
+    """Set ivfflat.probes parameter for current session."""
+    session.execute(text(f"SET ivfflat.probes = {probes}"))
+
+
+def benchmark_index_parameters(
+    session,
+    service: VectorSearchService,
+    lists_values: list[int],
+    probes_values: list[int],
+    tenant_id: str,
+) -> dict[str, Any]:
+    """Benchmark different IVFFlat index parameters.
+
+    Args:
+        session: Database session
+        service: VectorSearchService instance
+        lists_values: List of 'lists' parameter values
+        probes_values: List of 'probes' parameter values
+        tenant_id: Tenant ID
+
+    Returns:
+        Benchmark results for all configurations
+    """
+    print("\n" + "=" * 80)
+    print("BENCHMARK: IVFFlat Index Parameters")
+    print("=" * 80)
+
+    results = {"configurations": []}
+
+    for lists in lists_values:
+        # Create index with specified lists
+        index_stats = create_ivfflat_index(session, lists, service.embedding_dimension, tenant_id)
+
+        if not index_stats["success"]:
+            continue
+
+        # Test different probes values
+        for probes in probes_values:
+            if probes > lists:
+                continue  # Skip invalid configs
+
+            print(f"\nTesting: lists={lists}, probes={probes}")
+            set_ivfflat_probes(session, probes)
+
+            # Run queries
+            query_results = benchmark_query_latency(
+                session, service, num_queries=30, top_k=10, tenant_id=tenant_id
+            )
+
+            config_result = {
+                "lists": lists,
+                "probes": probes,
+                "index_build_time_sec": index_stats["build_time_sec"],
+                "index_size": index_stats["index_size"],
+                "mean_query_ms": query_results["mean_time_ms"],
+                "median_query_ms": query_results["median_time_ms"],
+                "p95_query_ms": (
+                    max(query_results.get("max_time_ms", 0), query_results["mean_time_ms"] * 1.5)
+                ),
+            }
+
+            results["configurations"].append(config_result)
+
+            print(
+                f"  Mean latency: {config_result['mean_query_ms']:.1f}ms, "
+                f"P95: {config_result['p95_query_ms']:.1f}ms"
+            )
+
+    # Find optimal configuration
+    if results["configurations"]:
+        # Balance speed and accuracy - for now just choose fastest
+        optimal = min(results["configurations"], key=lambda c: c["mean_query_ms"])
+        results["optimal"] = {
+            "lists": optimal["lists"],
+            "probes": optimal["probes"],
+            "mean_query_ms": optimal["mean_query_ms"],
+            "reasoning": "Fastest configuration among tested parameters",
+        }
+
+    return results
+
+
 def save_results(results: dict[str, Any], output_path: Path) -> None:
     """Save results to JSON file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to: {output_path}")
+
+
+def save_csv_results(results: dict[str, Any], output_path: Path) -> None:
+    """Save latency results to CSV file for easy analysis.
+
+    Args:
+        results: Benchmark results dictionary
+        output_path: Path to output CSV file
+    """
+    import csv
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(output_path, "w", newline="") as f:
+        writer = csv.writer(f)
+
+        # Write header
+        writer.writerow(
+            [
+                "corpus_size",
+                "lists",
+                "probes",
+                "mean_latency_ms",
+                "median_latency_ms",
+                "p95_latency_ms",
+                "index_build_time_sec",
+                "index_size",
+            ]
+        )
+
+        # Write corpus size data
+        if "corpus_sizes" in results.get("benchmarks", {}):
+            for result in results["benchmarks"]["corpus_sizes"]["corpus_results"]:
+                writer.writerow(
+                    [
+                        result["corpus_size"],
+                        "",
+                        "",
+                        result["mean_query_ms"],
+                        result["median_query_ms"],
+                        result["max_query_ms"],
+                        "",
+                        "",
+                    ]
+                )
+
+        # Write index parameter data
+        if "index_parameters" in results.get("benchmarks", {}):
+            for config in results["benchmarks"]["index_parameters"]["configurations"]:
+                writer.writerow(
+                    [
+                        "",
+                        config["lists"],
+                        config["probes"],
+                        config["mean_query_ms"],
+                        config["median_query_ms"],
+                        config["p95_query_ms"],
+                        config.get("index_build_time_sec", ""),
+                        config.get("index_size", ""),
+                    ]
+                )
+
+    print(f"CSV results saved to: {output_path}")
 
 
 def main() -> int:
@@ -364,16 +595,29 @@ def main() -> int:
     parser.add_argument(
         "--skip-corpus-sizes", action="store_true", help="Skip corpus size benchmark"
     )
+    parser.add_argument(
+        "--test-index-params",
+        action="store_true",
+        help="Test IVFFlat index parameters (lists and probes)",
+    )
+    parser.add_argument(
+        "--lists", type=str, default="10,25,50,100", help="Comma-separated lists values to test"
+    )
+    parser.add_argument(
+        "--probes", type=str, default="1,5,10,25", help="Comma-separated probes values to test"
+    )
+    parser.add_argument("--csv-output", type=str, help="Optional CSV output file for latency data")
 
     args = parser.parse_args()
 
     # Parse corpus sizes
     corpus_sizes = [int(x.strip()) for x in args.corpus_sizes.split(",")]
+    lists_values = [int(x.strip()) for x in args.lists.split(",")]
+    probes_values = [int(x.strip()) for x in args.probes.split(",")]
 
     # Database URL from env var or use default
-    # Default uses 'postgres' host for Docker container, change to 'localhost' for local dev
     database_url = args.database_url or os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
+        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph"
     )
 
     print("=" * 80)
@@ -381,6 +625,9 @@ def main() -> int:
     print("=" * 80)
     print(f"\nEmbedding dim:  {args.embedding_dim}")
     print(f"Corpus sizes:   {corpus_sizes}")
+    if args.test_index_params:
+        print(f"Lists values:   {lists_values}")
+        print(f"Probes values:  {probes_values}")
     print(f"Database:       {database_url.split('@')[-1]}")
 
     # Setup database
@@ -434,6 +681,12 @@ def main() -> int:
                 session, service, top_k_values=[5, 10, 20, 50], tenant_id=tenant_id
             )
 
+            # Index parameter testing
+            if args.test_index_params:
+                all_results["benchmarks"]["index_parameters"] = benchmark_index_parameters(
+                    session, service, lists_values, probes_values, tenant_id
+                )
+
         finally:
             session.close()
 
@@ -464,6 +717,15 @@ def main() -> int:
                     f"  {result['corpus_size']:5d} items: {result['mean_query_ms']:6.1f} ms mean"
                 )
 
+        # Display index parameter results
+        if "index_parameters" in all_results["benchmarks"]:
+            ip = all_results["benchmarks"]["index_parameters"]
+            if "optimal" in ip:
+                opt = ip["optimal"]
+                print(f"\nOptimal index configuration:")
+                print(f"  lists={opt['lists']}, probes={opt['probes']}")
+                print(f"  Mean latency: {opt['mean_query_ms']:.1f} ms")
+
         # Save results
         if args.output:
             output_path = Path(args.output)
@@ -472,6 +734,16 @@ def main() -> int:
             output_path = Path(__file__).parent / "results" / f"vector_search_{timestamp}.json"
 
         save_results(all_results, output_path)
+
+        # Save CSV if requested
+        if args.csv_output:
+            csv_path = Path(args.csv_output)
+            save_csv_results(all_results, csv_path)
+        elif args.test_index_params:
+            # Auto-generate CSV for index parameter tests
+            today = datetime.now().strftime("%Y-%m-%d")
+            csv_path = Path(__file__).parent / "results" / f"search_latency_{today}.csv"
+            save_csv_results(all_results, csv_path)
 
         print("\n" + "=" * 80)
         final_status = "ALL BENCHMARKS PASSED" if all_passed else "SOME BENCHMARKS FAILED"

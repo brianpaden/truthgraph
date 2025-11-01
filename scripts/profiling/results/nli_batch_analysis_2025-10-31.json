@@ -1,0 +1,218 @@
+{
+  "timestamp": "2025-10-31T21:03:00.963251",
+  "batch_analyses": [
+    {
+      "batch_size": 1,
+      "num_pairs": 100,
+      "elapsed_time_s": 6.627393900009338,
+      "throughput_pairs_per_sec": 15.088887352818897,
+      "latency_ms_per_pair": 66.27393900009338,
+      "memory_before_mb": 818.65234375,
+      "memory_after_mb": 821.265625,
+      "memory_delta_mb": 2.61328125,
+      "accuracy_metrics": {
+        "accuracy": 0.69,
+        "correct": 69,
+        "total": 100,
+        "avg_confidence": 0.9574010312557221,
+        "confusion_matrix": {
+          "entailment": {
+            "entailment": 28,
+            "contradiction": 0,
+            "neutral": 7
+          },
+          "contradiction": {
+            "entailment": 0,
+            "contradiction": 35,
+            "neutral": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "contradiction": 24,
+            "neutral": 6
+          }
+        }
+      }
+    },
+    {
+      "batch_size": 4,
+      "num_pairs": 100,
+      "elapsed_time_s": 2.7107745000103023,
+      "throughput_pairs_per_sec": 36.88982613626473,
+      "latency_ms_per_pair": 27.107745000103023,
+      "memory_before_mb": 821.265625,
+      "memory_after_mb": 837.2109375,
+      "memory_delta_mb": 15.9453125,
+      "accuracy_metrics": {
+        "accuracy": 0.69,
+        "correct": 69,
+        "total": 100,
+        "avg_confidence": 0.9574012213945389,
+        "confusion_matrix": {
+          "entailment": {
+            "entailment": 28,
+            "contradiction": 0,
+            "neutral": 7
+          },
+          "contradiction": {
+            "entailment": 0,
+            "contradiction": 35,
+            "neutral": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "contradiction": 24,
+            "neutral": 6
+          }
+        }
+      }
+    },
+    {
+      "batch_size": 8,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.933744600013597,
+      "throughput_pairs_per_sec": 51.713137298119335,
+      "latency_ms_per_pair": 19.33744600013597,
+      "memory_before_mb": 837.2109375,
+      "memory_after_mb": 872.30859375,
+      "memory_delta_mb": 35.09765625,
+      "accuracy_metrics": {
+        "accuracy": 0.69,
+        "correct": 69,
+        "total": 100,
+        "avg_confidence": 0.9574010914564133,
+        "confusion_matrix": {
+          "entailment": {
+            "entailment": 28,
+            "contradiction": 0,
+            "neutral": 7
+          },
+          "contradiction": {
+            "entailment": 0,
+            "contradiction": 35,
+            "neutral": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "contradiction": 24,
+            "neutral": 6
+          }
+        }
+      }
+    },
+    {
+      "batch_size": 16,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.5445327000052202,
+      "throughput_pairs_per_sec": 64.74450168627833,
+      "latency_ms_per_pair": 15.445327000052202,
+      "memory_before_mb": 872.30859375,
+      "memory_after_mb": 923.796875,
+      "memory_delta_mb": 51.48828125,
+      "accuracy_metrics": {
+        "accuracy": 0.69,
+        "correct": 69,
+        "total": 100,
+        "avg_confidence": 0.95740120947361,
+        "confusion_matrix": {
+          "entailment": {
+            "entailment": 28,
+            "contradiction": 0,
+            "neutral": 7
+          },
+          "contradiction": {
+            "entailment": 0,
+            "contradiction": 35,
+            "neutral": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "contradiction": 24,
+            "neutral": 6
+          }
+        }
+      }
+    },
+    {
+      "batch_size": 32,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.2906496999785304,
+      "throughput_pairs_per_sec": 77.48035737478843,
+      "latency_ms_per_pair": 12.906496999785304,
+      "memory_before_mb": 923.796875,
+      "memory_after_mb": 1014.21875,
+      "memory_delta_mb": 90.421875,
+      "accuracy_metrics": {
+        "accuracy": 0.69,
+        "correct": 69,
+        "total": 100,
+        "avg_confidence": 0.95740120947361,
+        "confusion_matrix": {
+          "entailment": {
+            "entailment": 28,
+            "contradiction": 0,
+            "neutral": 7
+          },
+          "contradiction": {
+            "entailment": 0,
+            "contradiction": 35,
+            "neutral": 0
+          },
+          "neutral": {
+            "entailment": 0,
+            "contradiction": 24,
+            "neutral": 6
+          }
+        }
+      }
+    }
+  ],
+  "accuracy_validation": {
+    "batch_1": {
+      "accuracy": 0.69,
+      "avg_confidence": 0.9574010312557221
+    },
+    "batch_4": {
+      "accuracy": 0.69,
+      "avg_confidence": 0.9574012213945389
+    },
+    "batch_8": {
+      "accuracy": 0.69,
+      "avg_confidence": 0.9574010914564133
+    },
+    "batch_16": {
+      "accuracy": 0.69,
+      "avg_confidence": 0.95740120947361
+    },
+    "batch_32": {
+      "accuracy": 0.69,
+      "avg_confidence": 0.95740120947361
+    }
+  },
+  "optimal_configs": {
+    "maximum_throughput": {
+      "batch_size": 32,
+      "throughput_pairs_per_sec": 77.48035737478843,
+      "latency_ms": 12.906496999785304,
+      "memory_mb": 90.421875
+    },
+    "minimum_latency": {
+      "batch_size": 32,
+      "throughput_pairs_per_sec": 77.48035737478843,
+      "latency_ms": 12.906496999785304,
+      "memory_mb": 90.421875
+    },
+    "memory_efficient": {
+      "batch_size": 1,
+      "throughput_pairs_per_sec": 15.088887352818897,
+      "latency_ms": 66.27393900009338,
+      "memory_mb": 2.61328125
+    },
+    "balanced": {
+      "batch_size": 16,
+      "throughput_pairs_per_sec": 64.74450168627833,
+      "latency_ms": 15.445327000052202,
+      "memory_mb": 51.48828125
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "timestamp": "2025-10-31T21:02:29.502807",
+  "system": {
+    "python_version": "3.13.7",
+    "pytorch_version": "2.9.0+cpu",
+    "cuda_available": false,
+    "device": "not_loaded",
+    "model": "cross-encoder/nli-deberta-v3-base",
+    "initialized": false
+  },
+  "batch_profiles": [
+    {
+      "batch_size": 1,
+      "num_pairs": 100,
+      "elapsed_time_s": 6.968774100008886,
+      "throughput_pairs_per_sec": 14.349726159135002,
+      "latency_ms_per_pair": 69.68774100008886,
+      "memory_before_mb": 819.35546875,
+      "memory_after_mb": 821.89453125,
+      "memory_final_mb": 821.89453125,
+      "memory_delta_mb": 2.5390625,
+      "label_distribution": {
+        "entailment": 26,
+        "contradiction": 46,
+        "neutral": 28
+      },
+      "avg_confidence": 0.984447546005249,
+      "profile_stats": "         389617 function calls (335317 primitive calls) in 6.967 seconds\n\n   Ordered by: cumulative time\n   List reduced from 214 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n      100    0.006    0.000    6.968    0.070 C:\\repos\\truthgraph\\truthgraph\\services\\ml\\nli_service.py:157(verify_single)\n26600/100    0.055    0.000    6.890    0.069 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n26600/100    0.101    0.000    6.890    0.069 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n      100    0.002    0.000    6.889    0.069 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:1055(forward)\n      100    0.002    0.000    6.842    0.068 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:741(forward)\n      100    0.010    0.000    6.786    0.068 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_"
+    },
+    {
+      "batch_size": 4,
+      "num_pairs": 100,
+      "elapsed_time_s": 2.719049699982861,
+      "throughput_pairs_per_sec": 36.77755504087708,
+      "latency_ms_per_pair": 27.19049699982861,
+      "memory_before_mb": 822.01953125,
+      "memory_after_mb": 841.46484375,
+      "memory_final_mb": 841.46484375,
+      "memory_delta_mb": 19.4453125,
+      "label_distribution": {
+        "entailment": 26,
+        "contradiction": 46,
+        "neutral": 28
+      },
+      "avg_confidence": 0.9844475662708283,
+      "profile_stats": "         106743 function calls (92943 primitive calls) in 2.719 seconds\n\n   Ordered by: cumulative time\n   List reduced from 214 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.002    0.002    2.719    2.719 C:\\repos\\truthgraph\\truthgraph\\services\\ml\\nli_service.py:244(verify_batch)\n  6650/25    0.017    0.000    2.593    0.104 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n  6650/25    0.028    0.000    2.593    0.104 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n       25    0.000    0.000    2.592    0.104 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:1055(forward)\n       25    0.000    0.000    2.580    0.103 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:741(forward)\n       25    0.003    0.000    2.566    0.103 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2"
+    },
+    {
+      "batch_size": 8,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.9911752000043634,
+      "throughput_pairs_per_sec": 50.22159777792575,
+      "latency_ms_per_pair": 19.911752000043634,
+      "memory_before_mb": 841.5,
+      "memory_after_mb": 872.63671875,
+      "memory_final_mb": 872.63671875,
+      "memory_delta_mb": 31.13671875,
+      "label_distribution": {
+        "entailment": 26,
+        "contradiction": 46,
+        "neutral": 28
+      },
+      "avg_confidence": 0.984447568655014,
+      "profile_stats": "         64047 function calls (56727 primitive calls) in 1.991 seconds\n\n   Ordered by: cumulative time\n   List reduced from 214 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.001    0.001    1.991    1.991 C:\\repos\\truthgraph\\truthgraph\\services\\ml\\nli_service.py:244(verify_batch)\n  3458/13    0.010    0.000    1.865    0.143 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n  3458/13    0.016    0.000    1.865    0.143 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n       13    0.000    0.000    1.864    0.143 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:1055(forward)\n       13    0.000    0.000    1.857    0.143 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:741(forward)\n       13    0.002    0.000    1.849    0.142 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\"
+    },
+    {
+      "batch_size": 16,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.5612664000072982,
+      "throughput_pairs_per_sec": 64.0505681794808,
+      "latency_ms_per_pair": 15.612664000072982,
+      "memory_before_mb": 872.64453125,
+      "memory_after_mb": 924.375,
+      "memory_final_mb": 924.375,
+      "memory_delta_mb": 51.73046875,
+      "label_distribution": {
+        "entailment": 26,
+        "contradiction": 46,
+        "neutral": 28
+      },
+      "avg_confidence": 0.9844474220275878,
+      "profile_stats": "         42987 function calls (38907 primitive calls) in 1.561 seconds\n\n   Ordered by: cumulative time\n   List reduced from 214 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.001    0.001    1.561    1.561 C:\\repos\\truthgraph\\truthgraph\\services\\ml\\nli_service.py:244(verify_batch)\n   1862/7    0.006    0.000    1.453    0.208 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n   1862/7    0.010    0.000    1.453    0.208 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n        7    0.000    0.000    1.453    0.208 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:1055(forward)\n        7    0.000    0.000    1.448    0.207 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:741(forward)\n        7    0.001    0.000    1.443    0.206 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\"
+    },
+    {
+      "batch_size": 32,
+      "num_pairs": 100,
+      "elapsed_time_s": 1.4593666000000667,
+      "throughput_pairs_per_sec": 68.52287835009753,
+      "latency_ms_per_pair": 14.593666000000667,
+      "memory_before_mb": 924.39453125,
+      "memory_after_mb": 992.0390625,
+      "memory_final_mb": 992.0390625,
+      "memory_delta_mb": 67.64453125,
+      "label_distribution": {
+        "entailment": 26,
+        "contradiction": 46,
+        "neutral": 28
+      },
+      "avg_confidence": 0.9844474595785141,
+      "profile_stats": "         33489 function calls (31029 primitive calls) in 1.459 seconds\n\n   Ordered by: cumulative time\n   List reduced from 214 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.001    0.001    1.459    1.459 C:\\repos\\truthgraph\\truthgraph\\services\\ml\\nli_service.py:244(verify_batch)\n   1064/4    0.003    0.000    1.355    0.339 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1771(_wrapped_call_impl)\n   1064/4    0.029    0.000    1.355    0.339 C:\\python313\\Lib\\site-packages\\torch\\nn\\modules\\module.py:1779(_call_impl)\n        4    0.000    0.000    1.355    0.339 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:1055(forward)\n        4    0.000    0.000    1.352    0.338 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\modeling_deberta_v2.py:741(forward)\n        4    0.001    0.000    1.349    0.337 C:\\python313\\Lib\\site-packages\\transformers\\models\\deberta_v2\\"
+    }
+  ],
+  "bottlenecks": [
+    {
+      "type": "small_batch_overhead",
+      "severity": "high",
+      "description": "Single-pair processing is 377.5% slower than optimal batch size",
+      "evidence": {
+        "batch_1_throughput": 14.349726159135002,
+        "optimal_throughput": 68.52287835009753,
+        "optimal_batch_size": 32
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "title": "Use Optimal Batch Size",
+      "description": "Use batch_size=32 for maximum throughput",
+      "expected_impact": "68.52 pairs/sec",
+      "implementation": "Set batch_size=32 in verify_batch() calls"
+    },
+    {
+      "priority": "medium",
+      "title": "Memory-Efficient Batch Size",
+      "description": "For memory-constrained environments, use batch_size=1",
+      "expected_impact": "14.35 pairs/sec with 2.5 MB memory",
+      "implementation": "Set batch_size=1 when memory is limited"
+    },
+    {
+      "priority": "medium",
+      "title": "Truncate Long Inputs",
+      "description": "Truncate premises and hypotheses to 256 tokens to reduce processing time",
+      "expected_impact": "10-30% improvement for long texts",
+      "implementation": "Add max_length=256 to preprocessing step"
+    }
+  ]
+}
