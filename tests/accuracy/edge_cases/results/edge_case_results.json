@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "test_suite": "edge_case_validation",
+    "version": "1.0.0",
+    "timestamp": null,
+    "description": "Results from edge case validation tests",
+    "framework_version": "Feature 3.3"
+  },
+  "summary": {
+    "total_categories": 6,
+    "total_tests_run": 0,
+    "total_passed": 0,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "overall_pass_rate": 0.0
+  },
+  "categories": {
+    "insufficient_evidence": {
+      "description": "Tests for insufficient evidence handling",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Return INSUFFICIENT verdict with confidence < 0.6",
+      "test_results": []
+    },
+    "contradictory_evidence": {
+      "description": "Tests for contradictory evidence handling",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Recognize conflicting evidence appropriately",
+      "test_results": []
+    },
+    "ambiguous_evidence": {
+      "description": "Tests for ambiguous evidence handling",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Reflect uncertainty with lower confidence scores",
+      "test_results": []
+    },
+    "long_claims": {
+      "description": "Tests for long claim processing (>500 words)",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Process without truncation or errors",
+      "test_results": []
+    },
+    "short_claims": {
+      "description": "Tests for short claim processing (<10 words)",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Handle minimal claims without rejection",
+      "test_results": []
+    },
+    "special_characters": {
+      "description": "Tests for special character and Unicode handling",
+      "tests_run": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 0.0,
+      "expected_behavior": "Handle Unicode correctly without encoding errors",
+      "test_results": []
+    }
+  },
+  "detailed_results": {
+    "notes": "This file will be populated when edge case tests are run with the verification pipeline",
+    "pending_integration": "Verification pipeline integration required for full test execution"
+  },
+  "recommendations": [
+    "Implement confidence score thresholding for insufficient evidence cases",
+    "Add explicit conflict detection for contradictory evidence",
+    "Ensure graceful degradation for ambiguous evidence",
+    "Verify no truncation occurs for long claims (>500 words)",
+    "Handle short claims (<10 words) without rejection errors",
+    "Implement robust Unicode normalization and encoding handling",
+    "Add error recovery mechanisms for malformed input",
+    "Document edge case behavior patterns in system documentation"
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-02",
+    "description": "Comprehensive edge case claims for testing validation robustness",
+    "total_claims": 30,
+    "edge_case_categories": [
+      "insufficient_evidence",
+      "contradictory_evidence",
+      "ambiguous_phrasing",
+      "long_claims",
+      "short_claims",
+      "special_characters",
+      "multilingual",
+      "complex_technical"
+    ]
+  },
+  "claims": [
+    {
+      "id": "edge_001",
+      "text": "The newly discovered exoplanet Kepler-452c has a surface temperature of exactly 287 Kelvin",
+      "category": "science",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["insufficient_evidence"],
+      "reasoning": "Specific temperature data for newly discovered exoplanets is often unavailable or highly speculative",
+      "complexity_score": 0.7
+    },
+    {
+      "id": "edge_002",
+      "text": "Coffee is both beneficial and harmful to health",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["contradictory_evidence", "ambiguous_phrasing"],
+      "reasoning": "Studies show conflicting results; claim is too vague to verify definitively",
+      "complexity_score": 0.6
+    },
+    {
+      "id": "edge_003",
+      "text": "The concept of time dilation in special relativity suggests that astronauts traveling at significant fractions of the speed of light would experience time passing more slowly relative to observers on Earth, which has been experimentally verified through atomic clock experiments on aircraft and satellites, demonstrating that time is not absolute but relative to the observer's frame of reference, and this phenomenon becomes more pronounced as velocity approaches the speed of light, with the Lorentz factor governing the degree of time dilation, ultimately implying that interstellar travel at relativistic speeds could theoretically allow travelers to reach distant stars within their lifetimes while centuries pass on Earth, though the practical challenges of achieving such velocities remain formidable.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["long_claims", "complex_technical"],
+      "reasoning": "Claim is accurate but extremely verbose and contains multiple sub-claims",
+      "complexity_score": 0.95,
+      "word_count": 125
+    },
+    {
+      "id": "edge_004",
+      "text": "Water is wet.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["short_claims"],
+      "reasoning": "Extremely short claim with obvious truth value",
+      "complexity_score": 0.1,
+      "word_count": 3
+    },
+    {
+      "id": "edge_005",
+      "text": "The chemical formula H₂O represents water, which exists in three states: solid (ice), liquid (water), and gas (steam/vapor) at different temperatures and pressures.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["special_characters"],
+      "reasoning": "Contains subscript characters and special symbols",
+      "complexity_score": 0.4
+    },
+    {
+      "id": "edge_006",
+      "text": "La Tour Eiffel a été construite en 1889 pour l'Exposition Universelle à Paris.",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["multilingual"],
+      "reasoning": "Claim in French about Eiffel Tower construction",
+      "complexity_score": 0.5,
+      "language": "fr"
+    },
+    {
+      "id": "edge_007",
+      "text": "Quantum entanglement allows for faster-than-light communication",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "edge_case_type": ["contradictory_evidence", "complex_technical"],
+      "reasoning": "Common misconception; entanglement cannot transmit information FTL due to no-communication theorem",
+      "complexity_score": 0.8
+    },
+    {
+      "id": "edge_008",
+      "text": "The population of Luxembourg in 2023 was approximately 650,000 people",
+      "category": "current_events",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["insufficient_evidence"],
+      "reasoning": "Specific population figures for small countries may have limited sources",
+      "complexity_score": 0.3
+    },
+    {
+      "id": "edge_009",
+      "text": "Exercise is good",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["short_claims", "ambiguous_phrasing"],
+      "reasoning": "Too vague; 'good' for what? In what context? How much?",
+      "complexity_score": 0.2,
+      "word_count": 3
+    },
+    {
+      "id": "edge_010",
+      "text": "The mitochondria, often referred to as the powerhouse of the cell, are membrane-bound organelles found in most eukaryotic cells that generate adenosine triphosphate (ATP) through oxidative phosphorylation in the electron transport chain located in their inner membrane, while also playing crucial roles in cellular signaling, apoptosis, calcium homeostasis, and the regulation of cellular metabolism, and interestingly, they contain their own circular DNA genome inherited maternally, supporting the endosymbiotic theory which proposes that mitochondria evolved from ancient aerobic bacteria that were engulfed by ancestral eukaryotic cells approximately 1.5 to 2 billion years ago, establishing a mutually beneficial relationship that became permanent over evolutionary time.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["long_claims", "complex_technical"],
+      "reasoning": "Very long, technically complex but accurate description of mitochondria",
+      "complexity_score": 0.92,
+      "word_count": 118
+    },
+    {
+      "id": "edge_011",
+      "text": "π ≈ 3.14159265359",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["special_characters", "short_claims"],
+      "reasoning": "Mathematical constant with special symbols",
+      "complexity_score": 0.2,
+      "word_count": 2
+    },
+    {
+      "id": "edge_012",
+      "text": "Die Berliner Mauer wurde 1989 abgerissen, was das Ende des Kalten Krieges symbolisierte.",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["multilingual"],
+      "reasoning": "German claim about Berlin Wall falling in 1989",
+      "complexity_score": 0.5,
+      "language": "de"
+    },
+    {
+      "id": "edge_013",
+      "text": "Some studies suggest vitamin D is beneficial while others show no effect",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["contradictory_evidence", "ambiguous_phrasing"],
+      "reasoning": "Explicitly states contradictory evidence; cannot reach definitive verdict",
+      "complexity_score": 0.6
+    },
+    {
+      "id": "edge_014",
+      "text": "Bitcoin was invented by Satoshi Nakamoto in 2009, though the true identity of Satoshi Nakamoto remains unknown and is subject to speculation",
+      "category": "technology",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["ambiguous_phrasing", "contradictory_evidence"],
+      "reasoning": "First part is verifiable, second part acknowledges uncertainty",
+      "complexity_score": 0.65
+    },
+    {
+      "id": "edge_015",
+      "text": "2 + 2 = 4",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["short_claims", "special_characters"],
+      "reasoning": "Basic mathematical fact, extremely short",
+      "complexity_score": 0.05,
+      "word_count": 3
+    },
+    {
+      "id": "edge_016",
+      "text": "The implementation of CRISPR-Cas9 gene editing technology has revolutionized molecular biology by enabling precise, targeted modifications to DNA sequences in living organisms, allowing researchers to knock out specific genes, insert new genetic material, or correct mutations with unprecedented accuracy, which has profound implications for treating genetic disorders, developing disease-resistant crops, and understanding gene function, though ethical concerns remain regarding germline editing in humans and potential off-target effects that could introduce unintended mutations, necessitating careful regulation and ongoing research to ensure safety and efficacy in therapeutic applications while balancing innovation with responsible use of this powerful biotechnology tool.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["long_claims", "complex_technical"],
+      "reasoning": "Lengthy technical description of CRISPR technology, mostly accurate",
+      "complexity_score": 0.93,
+      "word_count": 110
+    },
+    {
+      "id": "edge_017",
+      "text": "El español es el segundo idioma más hablado del mundo por número de hablantes nativos.",
+      "category": "current_events",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["multilingual"],
+      "reasoning": "Spanish claim about Spanish being 2nd most spoken language",
+      "complexity_score": 0.4,
+      "language": "es"
+    },
+    {
+      "id": "edge_018",
+      "text": "The effectiveness of homeopathy is debated",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["ambiguous_phrasing", "contradictory_evidence"],
+      "reasoning": "Acknowledges debate without taking position; too vague to verify",
+      "complexity_score": 0.5
+    },
+    {
+      "id": "edge_019",
+      "text": "Schrödinger's equation: iℏ ∂/∂t |ψ⟩ = Ĥ|ψ⟩ describes quantum state evolution",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["special_characters", "complex_technical"],
+      "reasoning": "Contains mathematical symbols and quantum mechanics notation",
+      "complexity_score": 0.85
+    },
+    {
+      "id": "edge_020",
+      "text": "Elephants exist",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["short_claims"],
+      "reasoning": "Extremely short, obviously true claim",
+      "complexity_score": 0.05,
+      "word_count": 2
+    },
+    {
+      "id": "edge_021",
+      "text": "The discovery of the Higgs boson at CERN's Large Hadron Collider in 2012 confirmed the existence of the Higgs field, a fundamental field of the Standard Model of particle physics that permeates all of space and gives mass to elementary particles through their interaction with it via the Higgs mechanism, representing the culmination of nearly 50 years of theoretical predictions and experimental searches, with the particle detected through its decay products in proton-proton collisions at energies of approximately 125 GeV, earning Peter Higgs and François Englert the Nobel Prize in Physics in 2013, though many questions remain about the nature of the Higgs field, its role in the early universe, and whether additional Higgs bosons exist beyond the Standard Model as predicted by supersymmetric theories.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["long_claims", "complex_technical"],
+      "reasoning": "Very long, highly technical but accurate description of Higgs boson discovery",
+      "complexity_score": 0.96,
+      "word_count": 142
+    },
+    {
+      "id": "edge_022",
+      "text": "GMOs are controversial and opinions vary on their safety",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["ambiguous_phrasing", "contradictory_evidence"],
+      "reasoning": "Describes controversy rather than making verifiable claim",
+      "complexity_score": 0.5
+    },
+    {
+      "id": "edge_023",
+      "text": "Δx·Δp ≥ ℏ/2 (Heisenberg Uncertainty Principle)",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["special_characters", "complex_technical"],
+      "reasoning": "Physics equation with Greek letters and special symbols",
+      "complexity_score": 0.8
+    },
+    {
+      "id": "edge_024",
+      "text": "人工智能正在改变世界",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["multilingual"],
+      "reasoning": "Chinese claim: 'Artificial intelligence is changing the world'",
+      "complexity_score": 0.4,
+      "language": "zh"
+    },
+    {
+      "id": "edge_025",
+      "text": "The Emperor penguin Aptenodytes forsteri can dive to depths exceeding 500 meters and hold its breath for over 20 minutes",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["complex_technical"],
+      "reasoning": "Specific scientific claim with Latin taxonomy",
+      "complexity_score": 0.6
+    },
+    {
+      "id": "edge_026",
+      "text": "Climate models predict future temperatures with varying degrees of uncertainty depending on emission scenarios",
+      "category": "science",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["ambiguous_phrasing", "contradictory_evidence"],
+      "reasoning": "Acknowledges uncertainty; too vague to verify specific claims",
+      "complexity_score": 0.6
+    },
+    {
+      "id": "edge_027",
+      "text": "E = mc²",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["short_claims", "special_characters"],
+      "reasoning": "Einstein's mass-energy equivalence, extremely short",
+      "complexity_score": 0.15,
+      "word_count": 1
+    },
+    {
+      "id": "edge_028",
+      "text": "The neuroplasticity of the human brain allows for the formation of new neural pathways and synaptic connections throughout life in response to learning, experience, and environmental stimuli, challenging earlier beliefs that brain structure was fixed after critical developmental periods, with research demonstrating that adult neurogenesis occurs in specific brain regions such as the hippocampus, and that cognitive training, physical exercise, and novel experiences can promote synaptic plasticity through mechanisms involving long-term potentiation and depression, neurotrophic factors like BDNF, and epigenetic modifications, though the extent and functional significance of adult neuroplasticity varies across brain regions and individuals, with implications for recovery from brain injury, treatment of neurological disorders, and understanding of learning and memory processes across the lifespan.",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["long_claims", "complex_technical"],
+      "reasoning": "Extremely long neuroscience claim with technical accuracy",
+      "complexity_score": 0.94,
+      "word_count": 135
+    },
+    {
+      "id": "edge_029",
+      "text": "某些研究表明巧克力有益健康，而其他研究显示可能有害",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "edge_case_type": ["multilingual", "contradictory_evidence"],
+      "reasoning": "Chinese: 'Some studies show chocolate is healthy, others show harm'",
+      "complexity_score": 0.6,
+      "language": "zh"
+    },
+    {
+      "id": "edge_030",
+      "text": "∫₀^∞ e^(-x²) dx = √π/2",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "edge_case_type": ["special_characters", "complex_technical"],
+      "reasoning": "Gaussian integral with mathematical symbols",
+      "complexity_score": 0.8
+    }
+  ]
+}

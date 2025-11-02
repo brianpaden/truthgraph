@@ -1,8 +1,8 @@
 # API Completion Handoff
 
-**Features**: 4.1-4.5
-**Agent**: fastapi-pro
-**Total Effort**: 44 hours
+**Features**: 4.1-4.6
+**Agent**: fastapi-pro, python-pro (4.6)
+**Total Effort**: 58 hours
 **Status**: Planned (can start in parallel with validation)
 **Priority**: High (required for Phase 2 completion)
 
@@ -22,7 +22,7 @@
 
 ## Category Overview
 
-API completion implements the HTTP endpoints for the verification pipeline. All 5 features can run in parallel with no cross-dependencies (only depend on verification pipeline service being complete).
+API completion implements the HTTP endpoints for the verification pipeline. Features 4.1-4.5 focus on API implementation, while Feature 4.6 adds comprehensive input validation.
 
 ### Execution Order
 
@@ -30,10 +30,11 @@ API completion implements the HTTP endpoints for the verification pipeline. All 
 
 **Phase 1 (Day 1-2)**:
 - Feature 4.2: Request/Response Models (6h) - Foundation
-- Feature 4.1: Verification Endpoints (10h) - Uses models from 4.2
+- Feature 4.6: Input Validation Layer (14h) - Can start immediately, complements 4.2
+- Feature 4.1: Verification Endpoints (10h) - Uses models from 4.2, validation from 4.6
 - Feature 4.5: Rate Limiting (8h) - Can run in parallel
 
-**Phase 2 (Day 3)**:
+**Phase 2 (Day 3-4)**:
 - Feature 4.3: Async Background Processing (12h)
 - Feature 4.4: API Documentation (8h) - Documents complete API
 
@@ -795,30 +796,320 @@ rate_limits:
 
 ---
 
+## Feature 4.6: Input Validation Layer
+
+**Status**: 📋 Planned
+**Assigned To**: python-pro
+**Estimated Effort**: 14 hours
+**Complexity**: Medium
+**Blocker Status**: No blockers (can start immediately, complements Feature 4.2)
+**Priority**: High (foundational for edge case handling)
+
+### Description
+
+Implement a comprehensive input validation layer that provides encoding validation, length constraints, Unicode normalization, and special character handling before claims enter the verification pipeline. This layer complements the basic Pydantic API validation (Feature 4.2) by adding deep input sanitization and edge case detection at the application layer.
+
+**Key Distinction from Feature 4.2:**
+- Feature 4.2: API-level schema validation (required fields, basic types, length limits)
+- Feature 4.6: Application-level input validation (encoding, Unicode, special characters, pipeline safety)
+
+### Requirements
+
+**Functional Requirements**:
+1. **Encoding Validation**: UTF-8 validation, invalid Unicode detection, encoding error recovery
+2. **Length Validation**: Word count (min 2, max 500), token estimation (512 token limit), truncation warnings
+3. **Unicode Normalization**: NFC normalization, combining characters, emoji preservation, math notation
+4. **Special Character Validation**: Non-ASCII ratio detection, RTL text support, Greek/mathematical symbols
+5. **Structure Validation**: Non-empty verification, alphanumeric presence, whitespace-only rejection
+6. **Error Recovery**: Structured validation results (VALID, WARNING, INVALID), clear error messages, actionable suggestions
+
+**Non-Functional Requirements**:
+- Performance: <10ms validation overhead per claim
+- Reliability: 100% Unicode-safe operation
+- Compatibility: No breaking changes to existing API
+- Testability: >90% test coverage
+- Observability: Structured logging of validation events
+
+### Architecture
+
+```text
+truthgraph/
+├── validation/
+│   ├── __init__.py
+│   ├── claim_validator.py       # Main validator class
+│   ├── validators.py            # Individual validator functions
+│   ├── normalizers.py           # Text normalization utilities
+│   ├── error_codes.py           # Validation error code definitions
+│   └── models.py                # ValidationResult models
+│
+├── api/
+│   └── ml_routes.py             # MODIFIED: Add validation integration
+│
+└── services/
+    └── verification_pipeline_service.py  # MODIFIED: Add validation calls
+
+tests/
+├── unit/validation/
+│   ├── test_claim_validator.py
+│   ├── test_encoding_validation.py
+│   ├── test_length_validation.py
+│   ├── test_unicode_normalization.py
+│   └── test_special_characters.py
+└── integration/
+    ├── test_validation_integration.py
+    └── test_validation_edge_cases.py
+```
+
+### Implementation Steps
+
+**Phase 1: Core Validation Infrastructure** (4 hours)
+1. Create validation models and error codes (1h)
+2. Implement error code definitions (0.5h)
+3. Create individual validator functions (1.5h)
+4. Implement Unicode normalizer (1h)
+
+**Phase 2: Main Validator Class** (3 hours)
+5. Implement ClaimValidator orchestrator (2h)
+6. Create validation package initialization (0.5h)
+7. Add validation configuration (0.5h)
+
+**Phase 3: Integration** (3 hours)
+8. Integrate with API layer (1.5h)
+9. Integrate with verification pipeline (1h)
+10. Add validation error responses to API models (0.5h)
+
+**Phase 4: Testing** (4 hours)
+11. Unit tests for validators (2h)
+12. Integration tests (1.5h)
+13. Edge case corpus integration tests (0.5h)
+
+### Core Components
+
+**ClaimValidator Class**:
+```python
+class ClaimValidator:
+    """Orchestrates all claim validation checks."""
+
+    def __init__(
+        self,
+        min_words: int = 2,
+        max_words: int = 500,
+        max_tokens_estimate: int = 450
+    ):
+        self.min_words = min_words
+        self.max_words = max_words
+        self.max_tokens_estimate = max_tokens_estimate
+
+    def validate(self, claim_text: str) -> ValidationResult:
+        """Run all validation checks on claim text.
+
+        Validation order:
+        1. Encoding validation (must pass)
+        2. Structure validation (must pass)
+        3. Length validation (may warn)
+        4. Special character validation (may warn)
+        5. Unicode normalization (always applied)
+        """
+        # Implementation steps...
+
+    def validate_batch(self, claim_texts: List[str]) -> List[ValidationResult]:
+        """Validate multiple claims in batch."""
+```
+
+**ValidationResult Model**:
+```python
+@dataclass
+class ValidationResult:
+    """Result of input validation."""
+    status: ValidationStatus  # VALID, WARNING, INVALID
+    error_type: Optional[str] = None
+    error_code: Optional[str] = None
+    message: Optional[str] = None
+    suggestion: Optional[str] = None
+    metadata: Optional[dict] = None
+    normalized_text: Optional[str] = None
+```
+
+### Validation Error Codes
+
+| Code | Type | Description | Action |
+|------|------|-------------|--------|
+| `EMPTY_TEXT` | INVALID | Empty or whitespace-only | Reject |
+| `SINGLE_WORD` | INVALID | Single word claim | Reject |
+| `ENCODING_MISMATCH` | INVALID | UTF-8 encoding failure | Reject |
+| `REPLACEMENT_CHAR` | INVALID | Invalid Unicode (U+FFFD) | Reject |
+| `NO_ALPHANUMERIC` | INVALID | No meaningful content | Reject |
+| `MINIMAL_CONTEXT` | WARNING | Very short (<3 words) | Warn + Process |
+| `POTENTIAL_TRUNCATION` | WARNING | Very long (>450 tokens) | Warn + Process |
+| `HIGH_NON_ASCII_RATIO` | WARNING | >50% non-ASCII characters | Warn + Process |
+
+### Integration with Existing Features
+
+**Feature 4.2 (Request/Response Models)**:
+- Complementary validation layers
+- Feature 4.2: Schema validation (Pydantic)
+- Feature 4.6: Content validation (ClaimValidator)
+- Sequential: Request → Pydantic (4.2) → ClaimValidator (4.6) → Pipeline
+
+**Feature 4.1 (Verification Endpoints)**:
+```python
+@router.post("/api/v1/claims/verify")
+async def verify_claim(request: VerifyRequest):
+    # Pydantic validates (4.2)
+    validation_result = claim_validator.validate(request.claim_text)
+
+    if validation_result.status == ValidationStatus.INVALID:
+        raise HTTPException(400, detail=validation_result.message)
+
+    # Use normalized text
+    normalized = validation_result.normalized_text
+    result = await verification_service.verify_claim(
+        claim_text=normalized,
+        validation_metadata=validation_result.metadata
+    )
+```
+
+**Feature 3.3 (Edge Case Validation)**:
+- ClaimValidator detects input-level edge cases
+- EdgeCaseDetector handles pipeline-level cases
+- Validation metadata flows from ClaimValidator → Pipeline → EdgeCaseDetector
+
+### Success Criteria
+
+**Functional**:
+- ✅ All encoding errors detected and rejected with clear messages
+- ✅ Length validation prevents single-word claims and warns on edge cases
+- ✅ Unicode normalization applied to all claims (NFC form)
+- ✅ Special characters (Greek, emoji, RTL) handled without errors
+- ✅ Validation errors include error codes, messages, and suggestions
+- ✅ ValidationResult includes normalized text for pipeline
+- ✅ Integration with API endpoints complete (4.1)
+- ✅ All 34 edge case corpus claims processed without crashes
+
+**Non-Functional**:
+- ✅ Validation overhead <10ms per claim (measured)
+- ✅ Unit test coverage >90% for validation module
+- ✅ No breaking changes to existing API
+- ✅ Documentation complete and clear
+- ✅ Monitoring dashboard operational
+
+### Test Requirements
+
+```python
+def test_validator_rejects_empty():
+    """Test validator rejects empty claims."""
+    validator = ClaimValidator()
+    result = validator.validate("")
+    assert result.status == ValidationStatus.INVALID
+    assert result.error_code == "EMPTY_TEXT"
+
+def test_validator_handles_unicode():
+    """Test validator handles multilingual Unicode."""
+    validator = ClaimValidator()
+    result = validator.validate("Η Γη είναι στρογγυλή")  # Greek
+    assert result.status == ValidationStatus.VALID
+    assert result.normalized_text is not None
+
+def test_api_rejects_invalid_input(client):
+    """Test API rejects invalid claims."""
+    response = client.post("/api/v1/claims/verify", json={
+        "claim_text": "",
+        "options": {}
+    })
+    assert response.status_code == 400
+    assert response.json()["error_code"] == "EMPTY_TEXT"
+
+def test_validation_edge_cases(edge_case_corpus):
+    """Test validation handles all edge case categories."""
+    validator = ClaimValidator()
+    for category, data in edge_case_corpus.items():
+        for claim in data["claims"]:
+            result = validator.validate(claim["text"])
+            assert result is not None  # Should not crash
+```
+
+### Documentation
+
+**Full implementation guide**: [planning/features/feature_4_6_input_validation_layer.md](../features/feature_4_6_input_validation_layer.md)
+
+The complete 3,000-line implementation guide includes:
+- Detailed module specifications
+- Complete code examples (7 examples)
+- Validation rules reference (30+ error codes)
+- Testing strategy with 50+ test cases
+- Performance optimization guidance
+- Configuration management
+- Migration path (4-phase rollout)
+- Monitoring and metrics
+- 40+ task implementation checklist
+
+### Performance Targets
+
+| Operation | Target | Measured |
+|-----------|--------|----------|
+| Encoding validation | <2ms | TBD |
+| Length validation | <1ms | TBD |
+| Unicode normalization | <5ms | TBD |
+| Structure validation | <1ms | TBD |
+| **Total validation** | **<10ms** | **TBD** |
+
+### Risk Assessment
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Validation too strict | Medium | High | Conservative thresholds, extensive testing |
+| Unicode changes semantics | Low | Medium | Use NFC (canonical), test with multilingual corpus |
+| Performance overhead >10ms | Low | Medium | Profile and optimize, cache validator instance |
+| Breaking changes | Low | High | Additive changes only, feature flag for rollout |
+
+### Dependencies
+
+**Upstream Dependencies**: None (can start immediately)
+
+**Downstream Dependencies**:
+- Feature 4.1 (Verification Endpoints): Uses validation in request handling
+- Feature 3.3 (Edge Case Validation): Receives validation metadata
+- Feature 4.3 (Async Processing): Background jobs validate inputs
+- Feature 4.4 (API Documentation): Documents validation error codes
+
+**Parallel Dependencies**:
+- Feature 4.2 (Request/Response Models): Different validation layers
+- Feature 4.5 (Rate Limiting): Independent concerns
+
+---
+
 ## Timeline & Dependencies
 
-### Week 1 (Days 1-3)
+### Week 1-2 (Days 1-4)
 
 **Day 1-2**:
 - Feature 4.2: Models (6h)
-- Feature 4.1: Endpoints (10h)
+- Feature 4.6: Input Validation Layer (14h) - Can start immediately
+- Feature 4.1: Endpoints (10h) - Uses models from 4.2, validation from 4.6
 - Feature 4.5: Rate limiting (8h)
 
-**Day 3**:
+**Day 3-4**:
 - Feature 4.3: Async processing (12h)
 - Feature 4.4: Documentation (8h)
 
+**Total**: 58 hours (vs. 44 hours original plan)
+
 ### Critical Path
 
-1. Models must be complete before endpoints
-2. Endpoints must be complete before async processing
-3. Documentation can happen in parallel
+1. Feature 4.2 (Models) must be complete before Feature 4.1 (Endpoints)
+2. Feature 4.6 (Validation) should be complete before Feature 4.1 (Endpoints) for full integration
+3. Feature 4.1 (Endpoints) must be complete before Feature 4.3 (Async processing)
+4. Feature 4.4 (Documentation) can happen in parallel
+5. Feature 4.5 (Rate limiting) can happen in parallel
 
-### Integration Points
+### Feature Integration Points
 
-- Works with verification pipeline (core service)
-- Works with validation tests (Feature 3.x)
-- Documentation used by DX (Feature 5.4)
+- **Feature 4.6 (Validation)** → Feature 4.1 (Endpoints): Endpoints call validation
+- **Feature 4.6 (Validation)** → Feature 3.3 (Edge Case): Validation metadata flows to edge case detection
+- **Feature 4.1 (Endpoints)** → Feature 4.3 (Async): Background tasks use endpoints
+- **All Features** → Feature 4.4 (Documentation): API docs cover all features
+- **Works with**: Verification pipeline (core service), validation tests (Feature 3.x)
+- **Documentation used by**: DX (Feature 5.4)
 
 ---
 
@@ -826,16 +1117,18 @@ rate_limits:
 
 ### Completion Checklist
 
-- [ ] Feature 4.2 complete
-- [ ] Feature 4.1 complete
-- [ ] Feature 4.5 complete
-- [ ] Feature 4.3 complete
-- [ ] Feature 4.4 complete
+- [ ] Feature 4.2 complete (Request/Response Models)
+- [ ] Feature 4.6 complete (Input Validation Layer)
+- [ ] Feature 4.1 complete (Verification Endpoints)
+- [ ] Feature 4.5 complete (Rate Limiting)
+- [ ] Feature 4.3 complete (Async Background Processing)
+- [ ] Feature 4.4 complete (API Documentation)
 - [ ] All endpoints tested
+- [ ] Input validation tested with edge cases
 - [ ] Rate limiting verified
 - [ ] Async processing validated
 - [ ] Documentation complete
-- [ ] All tests passing
+- [ ] All unit tests passing (>90% coverage for validation)
 - [ ] Integration tests passing
 
 ---

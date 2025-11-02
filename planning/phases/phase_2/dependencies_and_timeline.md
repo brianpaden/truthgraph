@@ -61,11 +61,12 @@
 | 3.3 | 1.4, 3.1 | - | No | Edge case validation |
 | 3.4 | 3.1 | - | No | Robustness testing |
 | 3.5 | 1.7, 3.1 | - | Yes | Regression tests |
-| 4.1 | Pipeline | - | Yes | Endpoints |
+| 4.1 | Pipeline, 4.2, 4.6 | - | Yes | Endpoints (uses validation from 4.6) |
 | 4.2 | None | 4.1 | Yes | Models |
-| 4.3 | 4.1 | - | Yes | Async processing |
-| 4.4 | 4.1 | - | No | API documentation |
+| 4.3 | 4.1, 4.6 | - | Yes | Async processing (validates inputs) |
+| 4.4 | 4.1, 4.6 | - | No | API documentation (documents validation) |
 | 4.5 | 4.1 | - | Yes | Rate limiting |
+| 4.6 | None | 4.1, 4.3, 4.4, 3.3 | Yes | 🟢 READY - Input validation layer |
 | 5.1 | All code | - | No | Code docstrings |
 | 5.2 | Testing | - | No | Troubleshooting |
 | 5.3 | All code | - | No | Usage examples |
@@ -128,14 +129,16 @@ Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ──────
 ### Week 1: Foundation & Optimization
 
 **Day 1 (Monday)**
-- Start Feature 1.7 (6h) - Benchmark baseline
-- Start Feature 3.1 (8h) - Accuracy framework
-- Start Features 4.2 (6h) - API models
-- Start Features 5.1 (10h) - Code docstrings
+- Start Feature 1.7 (6h) - Benchmark baseline [COMPLETE ✓]
+- Start Feature 3.1 (8h) - Accuracy framework [READY]
+- Start Feature 4.2 (6h) - API models [READY]
+- Start Feature 4.6 (14h) - Input validation layer [READY, NEW]
+- Start Feature 5.1 (10h) - Code docstrings [READY]
 
 **Days 2-3 (Tuesday-Wednesday)**
-- Features 2.1-2.3 (24h parallel) - Performance profiling
-- Features 4.1, 4.5 (18h parallel) - API endpoints
+- Features 2.1-2.3 (24h parallel) - Performance profiling [READY]
+- Feature 4.1 (10h) - API endpoints (after 4.2, 4.6 complete)
+- Feature 4.5 (8h) - Rate limiting
 - Feature 5.2 (8h) - Troubleshooting
 - Feature 5.3 (10h) - Usage examples
 
@@ -146,8 +149,8 @@ Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ──────
 - Features 4.3, 4.4 (20h parallel) - Async & docs
 
 **Week 1 Totals**:
-- 242 hours of work
-- ~40 hours per agent per week (6 agents)
+- 256 hours of work (+14h for Feature 4.6)
+- ~43 hours per agent per week (6 agents)
 - All core work complete by Friday EOD
 
 ### Week 2: Buffer & Hardening
@@ -170,10 +173,11 @@ Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ──────
 
 ### Wall-Clock Timeline
 
-- **Total Hours**: 242h of work + 40h buffer = 282h
+- **Total Hours**: 256h of work + 40h buffer = 296h
 - **Team Capacity**: 6 agents × 40h/week = 240h/week
-- **Duration**: ~1.2 weeks optimal, 2 weeks comfortable
-- **Recommended**: Use 2-week timeline with 1 week buffer for unknowns
+- **Duration**: ~1.3 weeks optimal, 2 weeks comfortable
+- **Recommended**: Use 2-week timeline with buffer for unknowns
+- **Change**: +14h for Feature 4.6 (Input Validation Layer)
 
 ---
 
@@ -209,12 +213,15 @@ test-automator: 3.1 (8h), 3.2 (10h), 3.3 (8h), 3.4 (10h), 3.5 (6h)
 
 ### Phase 2E: API & Docs (Days 3-6)
 
-**Can run in parallel** - different agents, no blockers
+**Can run in parallel** - different agents, limited dependencies
 
 ```
-fastapi-pro: 4.1 (10h), 4.2 (6h), 4.3 (12h), 4.4 (8h), 4.5 (8h)
+python-pro: 4.6 (14h) - Input validation (Day 1-2, no dependencies)
+fastapi-pro: 4.2 (6h) → 4.1 (10h, after 4.6) → 4.3 (12h), 4.4 (8h), 4.5 (8h)
 dx-optimizer: 5.1 (10h), 5.2 (8h), 5.3 (10h)
 ```
+
+**Note**: Feature 4.6 should complete before 4.1 for full integration
 
 ---
 
@@ -224,7 +231,7 @@ dx-optimizer: 5.1 (10h), 5.2 (8h), 5.3 (10h)
 
 | Agent | Hours/Week | Features | Priority |
 |-------|-----------|----------|----------|
-| python-pro | 40h | 1.5-1.7, 2.1-2.6 | **Critical** |
+| python-pro | 45h | 1.5-1.7 (done), 2.1-2.6, 4.6 | **Critical** |
 | test-automator | 40h | 1.1-1.4 (done), 3.1-3.5 | **Critical** |
 | fastapi-pro | 40h | 4.1-4.5 | **High** |
 | dx-optimizer | 40h | 5.1-5.4 | **Medium** |
@@ -233,11 +240,11 @@ dx-optimizer: 5.1 (10h), 5.2 (8h), 5.3 (10h)
 
 ```
 Week 1:
-- python-pro: 56h (6h baseline + 24h profiling + 10h E2E + 8h DB) = Over capacity, needs split
+- python-pro: 70h (6h baseline + 24h profiling + 10h E2E + 8h DB + 14h validation + 8h misc) = Over capacity, needs split
 - test-automator: 52h (8h framework + 34h validation) = Over capacity, needs split
 
 Adjusted (2 agents per role):
-- 2x python-pro: 28h each
+- 2x python-pro: 35h each (includes 4.6 validation layer)
 - 2x test-automator: 26h each
 - 1x fastapi-pro: 44h
 - 1x dx-optimizer: 28h (spread over 2 weeks)

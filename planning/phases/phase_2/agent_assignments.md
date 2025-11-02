@@ -10,7 +10,7 @@
 
 ### python-pro (ML & Optimization Expert)
 
-**Total Hours**: 68h | **Features**: 9 (3 complete, 6 remaining) | **Priority**: **Critical**
+**Total Hours**: 82h | **Features**: 10 (3 complete, 7 remaining) | **Priority**: **Critical**
 
 | Feature | Hours | Status | Depends On | Completion |
 |---------|-------|--------|-----------|------------|
@@ -23,22 +23,27 @@
 | 2.4 | 10h | 📋 Planned | 2.1-2.3 | - |
 | 2.5 | 6h | 🟢 Ready | 1.7 ✓ | - |
 | 2.6 | 8h | 🟢 Ready | Services | - |
+| **4.6** | **14h** | **🟢 Ready** | **None** | **-** |
 
 **Key Deliverables**:
 - ✓ Benchmark baseline (1.7) - COMPLETE
 - 6 performance optimization features (2.1-2.6) - READY TO START
+- **NEW**: Input Validation Layer (4.6) - READY TO START
 - Performance targets validation
 
-**Progress**: 18h complete (3 features), 50h remaining (6 features)
+**Progress**: 18h complete (3 features), 64h remaining (7 features)
 
 **Timeline**:
-- Week 1: Profiling (24h) + E2E (10h) + DB (8h) = 42h
+- Week 1: Validation (14h) + Profiling (24h) + E2E (10h) + DB (8h) = 56h
 - Week 2: Integration, validation, documentation
 
 **Quick Start**:
 1. ✓ Features 1.5-1.7 complete!
-2. **NEXT**: Read [2_performance_optimization_handoff.md](./2_performance_optimization_handoff.md)
-3. Start with Feature 2.1 (Embedding Service Profiling) immediately - NO BLOCKERS
+2. **NEXT OPTIONS**:
+   - Read [4_api_completion_handoff.md](./4_api_completion_handoff.md) (Feature 4.6)
+   - OR Read [2_performance_optimization_handoff.md](./2_performance_optimization_handoff.md)
+3. Feature 4.6 (Input Validation) recommended first - NO BLOCKERS, high impact
+4. Then proceed with Feature 2.1 (Embedding Service Profiling)
 
 ---
 
@@ -84,30 +89,32 @@
 
 | Feature | Hours | Status | Depends On |
 |---------|-------|--------|-----------|
-| 4.1 | 10h | 📋 Planned | Pipeline service |
-| 4.2 | 6h | 📋 Planned | - |
-| 4.3 | 12h | 📋 Planned | 4.1 |
-| 4.4 | 8h | 📋 Planned | 4.1 |
+| 4.1 | 10h | 📋 Planned | Pipeline, 4.2, 4.6 |
+| 4.2 | 6h | 🟢 Ready | - |
+| 4.3 | 12h | 📋 Planned | 4.1, 4.6 |
+| 4.4 | 8h | 📋 Planned | 4.1, 4.6 |
 | 4.5 | 8h | 📋 Planned | 4.1 |
 
 **Key Deliverables**:
 - 5 API completion features
-- Verification endpoints
+- Verification endpoints (integrates with 4.6 validation)
 - Request/response models
-- Async background processing
+- Async background processing (validates inputs via 4.6)
 - Rate limiting
-- API documentation
+- API documentation (documents 4.6 validation)
 
 **Timeline**:
-- Days 1-2: Features 4.2, 4.1, 4.5 (24h)
-- Days 2-3: Features 4.3, 4.4 (20h)
-- No blockers - can start immediately
+- Days 1-2: Features 4.2 (6h), wait for 4.6 from python-pro
+- Days 2-3: Features 4.1, 4.5 (18h) - after 4.6 complete
+- Days 3-4: Features 4.3, 4.4 (20h)
+- Slight dependencies on Feature 4.6 (python-pro)
 
 **Quick Start**:
 1. Read [4_api_completion_handoff.md](./4_api_completion_handoff.md)
-2. Recommended start: Feature 4.2 (models) first
-3. Then 4.1 (endpoints), 4.5 (rate limiting)
-4. Then 4.3 (async), 4.4 (docs)
+2. **Recommended start**: Feature 4.2 (models) first - NO BLOCKERS
+3. Coordinate with python-pro on Feature 4.6 completion
+4. Then 4.1 (endpoints - integrates validation), 4.5 (rate limiting)
+5. Then 4.3 (async), 4.4 (docs)
 
 ---
 
@@ -143,7 +150,7 @@
 
 ### context-manager (Coordinator)
 
-**Total Hours**: ~10h/week | **Scope**: All 27 features | **Priority**: **Critical**
+**Total Hours**: ~10h/week | **Scope**: All 28 features | **Priority**: **Critical**
 
 **Responsibilities**:
 - Daily standups (15 min each)
@@ -160,9 +167,10 @@
 5. Throughput metrics → Performance targets
 
 **Current Status**:
-- ✓ Phase 2A (Dataset Infrastructure) COMPLETE - 7 of 27 features done (26%)
+- ✓ Phase 2A (Dataset Infrastructure) COMPLETE - 7 of 28 features done (25%)
 - 🟢 Phase 2C (Optimization) READY - 6 features unblocked (2.1-2.6)
 - 🟢 Feature 3.1 READY - Can start immediately
+- 🟢 Feature 4.6 (Input Validation) READY - NEW, can start immediately
 
 **Daily Checklist**:
 - [ ] Features 2.1-2.6 progress (performance optimization)
@@ -188,7 +196,7 @@
 ## Quick Reference: Who Needs What
 
 ### If you're **python-pro**:
-→ Read [1_dataset_and_testing_handoff.md](./1_dataset_and_testing_handoff.md) + [2_performance_optimization_handoff.md](./2_performance_optimization_handoff.md)
+→ Read [1_dataset_and_testing_handoff.md](./1_dataset_and_testing_handoff.md) + [2_performance_optimization_handoff.md](./2_performance_optimization_handoff.md) + [4_api_completion_handoff.md](./4_api_completion_handoff.md) (Feature 4.6 only)
 
 ### If you're **test-automator**:
 → Read [1_dataset_and_testing_handoff.md](./1_dataset_and_testing_handoff.md) + [3_validation_framework_handoff.md](./3_validation_framework_handoff.md)
@@ -213,20 +221,20 @@
 | Dataset & Testing | 56h | 7 | ✓ COMPLETE (7/7) | python-pro, test-automator |
 | Performance | 56h | 6 | 🟢 Ready (0/6) | python-pro |
 | Validation | 52h | 5 | 🟢 Ready 3.1, Planned 3.2-3.5 | test-automator |
-| API | 44h | 5 | Planned (0/5) | fastapi-pro |
+| API | 58h | 6 | 🟢 Ready 4.6, Planned 4.1-4.5 | python-pro, fastapi-pro |
 | Documentation | 34h | 4 | Planned (0/4) | dx-optimizer |
-| **Total** | **242h** | **27** | **7 complete, 20 remaining** | **6** |
+| **Total** | **256h** | **28** | **7 complete, 21 remaining** | **6** |
 
 ### By Agent
 
 | Agent | Hours | Percentage |
 |-------|-------|-----------|
-| python-pro | 68h | 28% |
-| test-automator | 72h | 30% |
-| fastapi-pro | 44h | 18% |
-| dx-optimizer | 34h | 14% |
-| (buffer/contingency) | 24h | 10% |
-| **Total** | **242h** | **100%** |
+| python-pro | 82h | 32% |
+| test-automator | 72h | 28% |
+| fastapi-pro | 44h | 17% |
+| dx-optimizer | 34h | 13% |
+| (buffer/contingency) | 24h | 9% |
+| **Total** | **256h** | **100%** |
 
 ### By Week
 
@@ -244,6 +252,10 @@
 - [x] Feature 1.7 complete with baselines ✓ (2025-10-31)
   - Embeddings: 1,185 texts/sec (137% above target)
   - NLI: 67.3 pairs/sec (3,265% above target)
+- [ ] Feature 4.6 complete (Input Validation Layer) - READY TO START
+  - Validation overhead <10ms
+  - >90% test coverage
+  - All edge cases handled
 - [ ] Features 2.1-2.6 complete with optimizations (READY TO START)
 - [ ] Performance targets met:
   - Embedding >500 texts/sec (already met!)

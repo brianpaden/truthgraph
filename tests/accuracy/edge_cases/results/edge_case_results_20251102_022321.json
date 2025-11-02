@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-11-02T02:23:21.929026",
+  "total_tests": 2,
+  "passed_tests": 1,
+  "failed_tests": 1,
+  "error_tests": 0,
+  "pass_rate": 0.5,
+  "results_by_category": {
+    "insufficient_evidence": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "errors": 0,
+      "pass_rate": 0.5
+    }
+  },
+  "results_by_verdict": {
+    "INSUFFICIENT": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "pass_rate": 0.0
+    },
+    "SUPPORTED": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate": 1.0
+    }
+  },
+  "edge_case_handling_metrics": {
+    "avg_confidence": 0.596279,
+    "avg_execution_time_ms": 181.14954,
+    "error_rate": 0.0,
+    "total_valid_predictions": 2,
+    "total_errors": 0
+  },
+  "individual_results": [
+    {
+      "claim_id": "edge_001",
+      "claim_text": "The newly discovered exoplanet Kepler-452c has a surface temperature of exactly 287 Kelvin",
+      "edge_case_types": [
+        "insufficient_evidence"
+      ],
+      "expected_verdict": "INSUFFICIENT",
+      "predicted_verdict": "SUPPORTED",
+      "confidence_score": 0.605487,
+      "passed": false,
+      "error": null,
+      "execution_time_ms": 81.498684,
+      "metadata": {}
+    },
+    {
+      "claim_id": "edge_008",
+      "claim_text": "The population of Luxembourg in 2023 was approximately 650,000 people",
+      "edge_case_types": [
+        "insufficient_evidence"
+      ],
+      "expected_verdict": "SUPPORTED",
+      "predicted_verdict": "SUPPORTED",
+      "confidence_score": 0.587072,
+      "passed": true,
+      "error": null,
+      "execution_time_ms": 280.800397,
+      "metadata": {}
+    }
+  ]
+}
