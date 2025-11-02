@@ -87,8 +87,7 @@ def simulate_predictions(verdicts: List[str]) -> List[str]:
 
 
 def validate_framework_with_test_data(
-    fixture_files: List[str],
-    results_dir: str = "tests/accuracy/results"
+    fixture_files: List[str], results_dir: str = "tests/accuracy/results"
 ) -> Dict[str, any]:
     """Validate framework with test data and generate reports.
 
@@ -127,11 +126,13 @@ def validate_framework_with_test_data(
 
             # Store metadata
             for cid, text in zip(claim_ids, claim_texts):
-                all_metadata.append({
-                    "claim_id": cid,
-                    "claim_text": text,
-                    "source": fixture_file,
-                })
+                all_metadata.append(
+                    {
+                        "claim_id": cid,
+                        "claim_text": text,
+                        "source": fixture_file,
+                    }
+                )
 
             print(f"  Loaded {len(verdicts)} claims")
 
@@ -238,16 +239,16 @@ def main():
         print("Error: No fixture files found")
         return
 
-    print("="*70)
+    print("=" * 70)
     print("ACCURACY FRAMEWORK VALIDATION")
-    print("="*70)
+    print("=" * 70)
 
     try:
         results = validate_framework_with_test_data(existing_files)
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("VALIDATION SUMMARY")
-        print("="*70)
+        print("=" * 70)
         print(f"Framework Validated: {results.get('framework_validated')}")
         print(f"Total Claims Evaluated: {results.get('total_claims')}")
         print(f"Overall Accuracy: {results.get('accuracy'):.1%}")
@@ -257,11 +258,12 @@ def main():
         print("\nGenerated Reports:")
         for report_type, path in results.get("reports", {}).items():
             print(f"  {report_type}: {path}")
-        print("="*70)
+        print("=" * 70)
 
     except Exception as e:
         print(f"Error during validation: {e}")
         import traceback
+
         traceback.print_exc()
 
 

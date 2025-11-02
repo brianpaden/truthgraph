@@ -26,12 +26,11 @@ Usage:
 """
 
 import logging
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from sqlalchemy import and_, func, select, text
-from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +99,7 @@ class OptimizedQueries:
                     ORDER BY e.created_at DESC
                 """)
                 result = session.execute(
-                    query,
-                    {"evidence_ids": [str(eid) for eid in evidence_ids]}
+                    query, {"evidence_ids": [str(eid) for eid in evidence_ids]}
                 )
             else:
                 # Simple evidence-only query
@@ -119,8 +117,7 @@ class OptimizedQueries:
                     ORDER BY created_at DESC
                 """)
                 result = session.execute(
-                    query,
-                    {"evidence_ids": [str(eid) for eid in evidence_ids]}
+                    query, {"evidence_ids": [str(eid) for eid in evidence_ids]}
                 )
 
             rows = result.fetchall()
@@ -211,22 +208,24 @@ class OptimizedQueries:
                     "embedding_vec": embedding_array,
                     "tenant_id": tenant_id,
                     "top_k": top_k,
-                }
+                },
             )
 
             rows = result.fetchall()
 
             evidence_list = []
             for row in rows:
-                evidence_list.append({
-                    "id": row[0],
-                    "content": row[1],
-                    "source_url": row[2],
-                    "source_type": row[3],
-                    "credibility_score": row[4],
-                    "similarity": float(row[5]),
-                    "model_name": row[6],
-                })
+                evidence_list.append(
+                    {
+                        "id": row[0],
+                        "content": row[1],
+                        "source_url": row[2],
+                        "source_type": row[3],
+                        "credibility_score": row[4],
+                        "similarity": float(row[5]),
+                        "model_name": row[6],
+                    }
+                )
 
             logger.info(
                 f"Retrieved {len(evidence_list)} evidence items with similarity scores "
@@ -310,7 +309,7 @@ class OptimizedQueries:
                     model_version,
                     premise_text,
                     hypothesis_text
-                ) VALUES {', '.join(values_clauses)}
+                ) VALUES {", ".join(values_clauses)}
                 RETURNING id
             """)
 
@@ -517,7 +516,7 @@ class OptimizedQueries:
                     "nli_result_ids": [str(nid) for nid in nli_result_ids],
                     "pipeline_version": meta.get("pipeline_version"),
                     "retrieval_method": meta.get("retrieval_method"),
-                }
+                },
             )
 
             result_id = result.fetchone()[0]
@@ -688,7 +687,7 @@ class OptimizedQueries:
                     model_name,
                     model_version,
                     tenant_id
-                ) VALUES {', '.join(values_clauses)}
+                ) VALUES {", ".join(values_clauses)}
                 ON CONFLICT (entity_type, entity_id)
                 DO UPDATE SET
                     embedding = EXCLUDED.embedding,
@@ -763,11 +762,7 @@ class OptimizedQueries:
                 "rows_deleted": row[7],
                 "live_rows": row[8],
                 "dead_rows": row[9],
-                "index_scan_ratio": (
-                    row[3] / (row[1] + row[3])
-                    if (row[1] + row[3]) > 0
-                    else 0.0
-                ),
+                "index_scan_ratio": (row[3] / (row[1] + row[3]) if (row[1] + row[3]) > 0 else 0.0),
             }
 
             return stats

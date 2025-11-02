@@ -301,12 +301,12 @@ Memory Efficient: batch_size=1
 python scripts/profiling/profile_nli.py --batch-sizes 1,4,8,16,32,64
 ```
 
-2. Review results:
+1. Review results:
    - Maximum throughput: Highest pairs/sec (usually largest batch size)
    - Balanced: Good throughput + acceptable memory
    - Memory-efficient: Lowest memory usage
 
-3. Choose based on constraints:
+2. Choose based on constraints:
    - **No memory constraints**: Use maximum throughput batch size
    - **Memory limited**: Use smallest batch size that meets throughput target
    - **Balanced**: Use recommended batch size (typically batch_size=16)
@@ -336,12 +336,12 @@ Decision: Use batch_size=16 (meets throughput, within memory limit)
 logger.info("batch_size_used", size=len(pairs))
 ```
 
-2. Profile current configuration:
+1. Profile current configuration:
 ```bash
 python scripts/profiling/profile_nli.py --batch-sizes 1,8,16
 ```
 
-3. Compare results:
+1. Compare results:
    - If batch_size=1 performance: You're processing one pair at a time
    - If between 1 and optimal: Batch size is too small
    - If same across all sizes: Model or system issue
@@ -362,12 +362,12 @@ python scripts/profiling/profile_nli.py --batch-sizes 1,8,16
 python scripts/profiling/profile_nli.py --batch-sizes 4,8,16,32
 ```
 
-2. Identify memory budget:
+1. Identify memory budget:
    - Total available memory
    - Memory used by other services
    - Memory budget for NLI service
 
-3. Choose appropriate batch size:
+2. Choose appropriate batch size:
    - batch_size=4: ~16 MB
    - batch_size=8: ~35 MB
    - batch_size=16: ~51 MB
@@ -391,12 +391,12 @@ python scripts/profiling/nli_batch_optimization.py \
     --num-pairs 200
 ```
 
-2. Review accuracy metrics:
+1. Review accuracy metrics:
    - Check accuracy across all batch sizes
    - Verify no degradation with larger batches
    - Review confusion matrix for error patterns
 
-3. Compare with baseline:
+2. Compare with baseline:
    - Previous accuracy measurements
    - Expected model accuracy (from model card)
    - Acceptable accuracy threshold
@@ -418,13 +418,13 @@ python scripts/profiling/nli_batch_optimization.py \
 python scripts/profiling/profile_nli.py --batch-sizes 16,32,64 --output cpu_results.json
 ```
 
-2. Profile on GPU:
+1. Profile on GPU:
 ```bash
 # On GPU machine
 python scripts/profiling/profile_nli.py --batch-sizes 16,32,64,128 --output gpu_results.json
 ```
 
-3. Compare results:
+1. Compare results:
    - Throughput improvement
    - Memory usage
    - Cost/benefit analysis

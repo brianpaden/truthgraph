@@ -222,9 +222,7 @@ class EdgeCaseResultsHandler:
             summary_parts.append(f"  {category}:")
             summary_parts.append(f"    Tests: {stats.get('total', 0)}")
             summary_parts.append(f"    Passed: {stats.get('passed', 0)}")
-            summary_parts.append(
-                f"    Pass Rate: {stats.get('pass_rate', 0) * 100:.2f}%"
-            )
+            summary_parts.append(f"    Pass Rate: {stats.get('pass_rate', 0) * 100:.2f}%")
 
         summary_parts.append("")
 
@@ -235,24 +233,18 @@ class EdgeCaseResultsHandler:
             summary_parts.append(f"  {verdict}:")
             summary_parts.append(f"    Tests: {stats.get('total', 0)}")
             summary_parts.append(f"    Passed: {stats.get('passed', 0)}")
-            summary_parts.append(
-                f"    Pass Rate: {stats.get('pass_rate', 0) * 100:.2f}%"
-            )
+            summary_parts.append(f"    Pass Rate: {stats.get('pass_rate', 0) * 100:.2f}%")
 
         summary_parts.append("")
 
         # Edge case handling metrics
         summary_parts.append("Edge Case Handling Metrics:")
         edge_metrics = results.get("edge_case_handling_metrics", {})
-        summary_parts.append(
-            f"  Avg Confidence: {edge_metrics.get('avg_confidence', 0):.4f}"
-        )
+        summary_parts.append(f"  Avg Confidence: {edge_metrics.get('avg_confidence', 0):.4f}")
         summary_parts.append(
             f"  Avg Execution Time: {edge_metrics.get('avg_execution_time_ms', 0):.2f} ms"
         )
-        summary_parts.append(
-            f"  Error Rate: {edge_metrics.get('error_rate', 0) * 100:.2f}%"
-        )
+        summary_parts.append(f"  Error Rate: {edge_metrics.get('error_rate', 0) * 100:.2f}%")
 
         summary_parts.append("")
         summary_parts.append("=" * 80)
@@ -273,9 +265,7 @@ class EdgeCaseResultsHandler:
 
         # Reconstruct EdgeCaseTestResult objects if present
         if "individual_results" in results:
-            self.results = [
-                EdgeCaseTestResult(**r) for r in results["individual_results"]
-            ]
+            self.results = [EdgeCaseTestResult(**r) for r in results["individual_results"]]
 
         return results
 
@@ -362,17 +352,11 @@ class EdgeCaseResultsHandler:
         valid_results = [r for r in self.results if r.predicted_verdict is not None]
 
         # Calculate average confidence
-        confidences = [
-            r.confidence_score for r in valid_results if r.confidence_score is not None
-        ]
+        confidences = [r.confidence_score for r in valid_results if r.confidence_score is not None]
         avg_confidence = sum(confidences) / len(confidences) if confidences else 0.0
 
         # Calculate average execution time
-        exec_times = [
-            r.execution_time_ms
-            for r in self.results
-            if r.execution_time_ms is not None
-        ]
+        exec_times = [r.execution_time_ms for r in self.results if r.execution_time_ms is not None]
         avg_exec_time = sum(exec_times) / len(exec_times) if exec_times else 0.0
 
         # Calculate error rate

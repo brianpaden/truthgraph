@@ -31,15 +31,15 @@ Example:
     >>> trend = store.analyze_trend("test_run", days=7)
 """
 
-from truthgraph.monitoring.memory_monitor import (
-    MemoryMonitor,
-    MemorySnapshot,
-    MemoryStats,
-)
 from truthgraph.monitoring.memory_alerts import (
     AlertLevel,
     AlertManager,
     MemoryAlert,
+)
+from truthgraph.monitoring.memory_monitor import (
+    MemoryMonitor,
+    MemorySnapshot,
+    MemoryStats,
 )
 from truthgraph.monitoring.memory_profiles import (
     MemoryProfile,

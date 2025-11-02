@@ -29,7 +29,6 @@ from pathlib import Path
 from typing import Any
 
 import psutil
-import torch
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -200,9 +199,9 @@ class TextLengthProfiler:
         Returns:
             Dictionary with analysis findings
         """
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("ANALYZING TEXT LENGTH IMPACT")
-        logger.info("="*60)
+        logger.info("=" * 60)
 
         length_results = self.results["length_results"]
 
@@ -224,7 +223,10 @@ class TextLengthProfiler:
 
         # Calculate performance degradation
         performance_drop = (
-            (best_result["avg_throughput_texts_per_sec"] - worst_result["avg_throughput_texts_per_sec"])
+            (
+                best_result["avg_throughput_texts_per_sec"]
+                - worst_result["avg_throughput_texts_per_sec"]
+            )
             / best_result["avg_throughput_texts_per_sec"]
         ) * 100
 
@@ -233,9 +235,14 @@ class TextLengthProfiler:
         mean_length = sum(lengths) / len(lengths)
         mean_throughput = sum(throughputs) / len(throughputs)
 
-        numerator = sum((lengths[i] - mean_length) * (throughputs[i] - mean_throughput) for i in range(len(lengths)))
+        numerator = sum(
+            (lengths[i] - mean_length) * (throughputs[i] - mean_throughput)
+            for i in range(len(lengths))
+        )
         denominator_x = sum((lengths[i] - mean_length) ** 2 for i in range(len(lengths)))
-        denominator_y = sum((throughputs[i] - mean_throughput) ** 2 for i in range(len(throughputs)))
+        denominator_y = sum(
+            (throughputs[i] - mean_throughput) ** 2 for i in range(len(throughputs))
+        )
 
         if denominator_x > 0 and denominator_y > 0:
             correlation = numerator / ((denominator_x * denominator_y) ** 0.5)
@@ -255,7 +262,11 @@ class TextLengthProfiler:
             },
             "performance_drop_percent": performance_drop,
             "length_throughput_correlation": correlation,
-            "relationship": "strong_negative" if correlation < -0.7 else "moderate_negative" if correlation < -0.3 else "weak",
+            "relationship": "strong_negative"
+            if correlation < -0.7
+            else "moderate_negative"
+            if correlation < -0.3
+            else "weak",
         }
 
         logger.info(f"\nBest performance: {best_result['text_length_chars']} chars")
@@ -288,45 +299,55 @@ class TextLengthProfiler:
         # Recommend text truncation if long texts are slow
         if perf_drop > 30:
             optimal_length = best_perf.get("text_length", 256)
-            recommendations.append({
-                "optimization": "Text Truncation",
-                "description": f"Truncate texts to {optimal_length} characters for optimal performance",
-                "expected_improvement": f"{perf_drop:.1f}% throughput improvement for long texts",
-                "effort": "low",
-                "priority": "high",
-                "implementation": f"Add text[:{optimal_length}] preprocessing step",
-            })
+            recommendations.append(
+                {
+                    "optimization": "Text Truncation",
+                    "description": f"Truncate texts to {optimal_length} characters for optimal performance",
+                    "expected_improvement": f"{perf_drop:.1f}% throughput improvement for long texts",
+                    "effort": "low",
+                    "priority": "high",
+                    "implementation": f"Add text[:{optimal_length}] preprocessing step",
+                }
+            )
 
         # Recommend optimal range
         length_results = self.results["length_results"]
         good_performers = [
-            r for r in length_results
+            r
+            for r in length_results
             if r["avg_throughput_texts_per_sec"] >= best_perf.get("throughput", 0) * 0.9
         ]
 
         if good_performers:
             max_good_length = max(r["text_length_chars"] for r in good_performers)
-            recommendations.append({
-                "optimization": "Optimal Text Length Range",
-                "description": f"Process texts up to {max_good_length} characters without significant performance impact",
-                "expected_improvement": "Maintains >90% of peak performance",
-                "effort": "low",
-                "priority": "medium",
-                "implementation": f"Set max_length={max_good_length} in preprocessing",
-            })
+            recommendations.append(
+                {
+                    "optimization": "Optimal Text Length Range",
+                    "description": f"Process texts up to {max_good_length} characters without significant performance impact",
+                    "expected_improvement": "Maintains >90% of peak performance",
+                    "effort": "low",
+                    "priority": "medium",
+                    "implementation": f"Set max_length={max_good_length} in preprocessing",
+                }
+            )
 
         # Check if very short texts are also inefficient
         if len(length_results) > 0:
             shortest_result = min(length_results, key=lambda x: x["text_length_chars"])
-            if shortest_result["avg_throughput_texts_per_sec"] < best_perf.get("throughput", 0) * 0.8:
-                recommendations.append({
-                    "optimization": "Minimum Text Length",
-                    "description": "Very short texts may have overhead; consider batching or padding",
-                    "expected_improvement": "5-10% improvement for short texts",
-                    "effort": "medium",
-                    "priority": "low",
-                    "implementation": "Batch short texts together or pad to minimum length",
-                })
+            if (
+                shortest_result["avg_throughput_texts_per_sec"]
+                < best_perf.get("throughput", 0) * 0.8
+            ):
+                recommendations.append(
+                    {
+                        "optimization": "Minimum Text Length",
+                        "description": "Very short texts may have overhead; consider batching or padding",
+                        "expected_improvement": "5-10% improvement for short texts",
+                        "effort": "medium",
+                        "priority": "low",
+                        "implementation": "Batch short texts together or pad to minimum length",
+                    }
+                )
 
         return recommendations
 
@@ -405,14 +426,14 @@ class TextLengthProfiler:
 
     def print_summary(self) -> None:
         """Print text length profiling summary to console."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("TEXT LENGTH PROFILING SUMMARY")
-        print("="*60)
+        print("=" * 60)
 
         print(f"\nDevice: {self.results['metadata']['device']}")
         print(f"Batch size: {self.results['metadata']['batch_size']}")
 
-        print(f"\nPerformance by Text Length:")
+        print("\nPerformance by Text Length:")
         print(f"{'Length':>10} {'Throughput':>15} {'Latency':>12} {'Memory Δ':>12}")
         print(f"{'(chars)':>10} {'(texts/sec)':>15} {'(ms/text)':>12} {'(MB)':>12}")
         print("-" * 60)
@@ -428,26 +449,30 @@ class TextLengthProfiler:
         # Analysis summary
         analysis = self.results.get("analysis", {})
         if analysis:
-            print(f"\n\nAnalysis:")
+            print("\n\nAnalysis:")
             best = analysis.get("best_performance", {})
             worst = analysis.get("worst_performance", {})
 
-            print(f"  Best: {best.get('text_length', 0)} chars @ {best.get('throughput', 0):.2f} texts/sec")
-            print(f"  Worst: {worst.get('text_length', 0)} chars @ {worst.get('throughput', 0):.2f} texts/sec")
+            print(
+                f"  Best: {best.get('text_length', 0)} chars @ {best.get('throughput', 0):.2f} texts/sec"
+            )
+            print(
+                f"  Worst: {worst.get('text_length', 0)} chars @ {worst.get('throughput', 0):.2f} texts/sec"
+            )
             print(f"  Performance drop: {analysis.get('performance_drop_percent', 0):.1f}%")
             print(f"  Relationship: {analysis.get('relationship', 'unknown')}")
 
         # Recommendations
         recommendations = self.results.get("recommendations", [])
         if recommendations:
-            print(f"\n\nTop Recommendations:")
+            print("\n\nTop Recommendations:")
             for i, rec in enumerate(recommendations[:3], 1):
                 print(f"\n{i}. {rec['optimization']}")
                 print(f"   {rec['description']}")
                 print(f"   Expected: {rec['expected_improvement']}")
                 print(f"   Effort: {rec['effort']}, Priority: {rec['priority']}")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
 
 
 def main() -> None:

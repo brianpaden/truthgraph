@@ -234,9 +234,7 @@ class TestFrameworkValidation:
 
         # Detect regression
         is_regression, details = framework.detect_regression(
-            current_results,
-            baseline_results,
-            threshold=0.05
+            current_results, baseline_results, threshold=0.05
         )
 
         # With simulated errors, we should detect regression

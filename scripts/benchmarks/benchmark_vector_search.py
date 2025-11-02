@@ -153,9 +153,7 @@ def benchmark_query_latency(
     for i in range(num_queries):
         # Create query embedding
         query_pattern = i / num_queries
-        query_embedding = [
-            query_pattern + (0.001 * k) for k in range(service.embedding_dimension)
-        ]
+        query_embedding = [query_pattern + (0.001 * k) for k in range(service.embedding_dimension)]
 
         # Measure
         start_time = time.perf_counter()
@@ -590,7 +588,9 @@ def main() -> int:
         "--database-url", type=str, help="Database URL (default: from DATABASE_URL env)"
     )
     parser.add_argument(
-        "--output", type=str, help="Output JSON file (default: results/vector_search_TIMESTAMP.json)"
+        "--output",
+        type=str,
+        help="Output JSON file (default: results/vector_search_TIMESTAMP.json)",
     )
     parser.add_argument(
         "--skip-corpus-sizes", action="store_true", help="Skip corpus size benchmark"
@@ -713,16 +713,14 @@ def main() -> int:
             cs = all_results["benchmarks"]["corpus_sizes"]
             print("\nCorpus size impact:")
             for result in cs["corpus_results"]:
-                print(
-                    f"  {result['corpus_size']:5d} items: {result['mean_query_ms']:6.1f} ms mean"
-                )
+                print(f"  {result['corpus_size']:5d} items: {result['mean_query_ms']:6.1f} ms mean")
 
         # Display index parameter results
         if "index_parameters" in all_results["benchmarks"]:
             ip = all_results["benchmarks"]["index_parameters"]
             if "optimal" in ip:
                 opt = ip["optimal"]
-                print(f"\nOptimal index configuration:")
+                print("\nOptimal index configuration:")
                 print(f"  lists={opt['lists']}, probes={opt['probes']}")
                 print(f"  Mean latency: {opt['mean_query_ms']:.1f} ms")
 

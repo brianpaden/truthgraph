@@ -89,6 +89,7 @@ class QueryBuilder:
             if format_type == "json":
                 # PostgreSQL returns JSON as a single row
                 import json
+
                 plan_data = json.loads(rows[0][0])
             else:
                 # Text format: concatenate all rows
@@ -161,16 +162,18 @@ class QueryBuilder:
 
             indices = []
             for row in rows:
-                indices.append({
-                    "schema": row[0],
-                    "table": row[1],
-                    "index_name": row[2],
-                    "scans": row[3],
-                    "tuples_read": row[4],
-                    "tuples_fetched": row[5],
-                    "size": row[6],
-                    "is_used": row[3] > 0,
-                })
+                indices.append(
+                    {
+                        "schema": row[0],
+                        "table": row[1],
+                        "index_name": row[2],
+                        "scans": row[3],
+                        "tuples_read": row[4],
+                        "tuples_fetched": row[5],
+                        "size": row[6],
+                        "is_used": row[3] > 0,
+                    }
+                )
 
             logger.info(f"Analyzed {len(indices)} indices for table {table_name}")
             return indices
@@ -279,8 +282,7 @@ class QueryBuilder:
             """)
 
             result = self.session.execute(
-                query,
-                {"table_name": table_name, "index_name": index_name}
+                query, {"table_name": table_name, "index_name": index_name}
             )
             return result.fetchone() is not None
 
@@ -348,7 +350,8 @@ class QueryBuilder:
         embedding_array = "[" + ",".join(str(x) for x in embedding) + "]"
 
         # Base query
-        query_parts = ["""
+        query_parts = [
+            """
             SELECT
                 e.id,
                 e.content,
@@ -359,7 +362,8 @@ class QueryBuilder:
                 ON e.id = emb.entity_id
                 AND emb.entity_type = :entity_type
             WHERE emb.tenant_id = :tenant_id
-        """]
+        """
+        ]
 
         params: Dict[str, Any] = {
             "embedding_vec": embedding_array,
@@ -372,7 +376,9 @@ class QueryBuilder:
         # Add similarity filter
         if min_similarity > 0:
             max_distance = 1.0 - min_similarity
-            query_parts.append("    AND (emb.embedding <-> :embedding_vec::vector) <= :max_distance")
+            query_parts.append(
+                "    AND (emb.embedding <-> :embedding_vec::vector) <= :max_distance"
+            )
             params["max_distance"] = max_distance
 
         # Add additional filters

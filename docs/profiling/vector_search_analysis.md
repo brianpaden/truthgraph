@@ -525,13 +525,13 @@ WITH (lists = 50)
 WHERE entity_type = 'evidence' AND tenant_id = :tenant_id;
 ```
 
-2. **Query Configuration**:
+1. **Query Configuration**:
 ```python
 # Set at connection level (persists for session)
 session.execute(text("SET ivfflat.probes = 10"))
 ```
 
-3. **Connection Pooling**:
+1. **Connection Pooling**:
 ```python
 # Keep index in cache
 engine = create_engine(

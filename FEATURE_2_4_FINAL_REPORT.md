@@ -566,21 +566,21 @@ configure_database_for_optimization(session, config)
 2. ✅ `pipeline_analysis.py` (300 lines)
 
 ### Optimization Framework (truthgraph/verification/)
-3. ✅ `pipeline_optimizer.py` (400 lines)
-4. ✅ `__init__.py` (20 lines)
+1. ✅ `pipeline_optimizer.py` (400 lines)
+2. ✅ `__init__.py` (20 lines)
 
 ### Documentation (docs/profiling/)
-5. ✅ `pipeline_optimization_analysis.md` (1,200+ lines)
-6. ✅ `pipeline_optimization_recommendations.md` (900+ lines)
+1. ✅ `pipeline_optimization_analysis.md` (1,200+ lines)
+2. ✅ `pipeline_optimization_recommendations.md` (900+ lines)
 
 ### Tests (tests/)
-7. ✅ `test_pipeline_optimization.py` (450 lines, 37 tests)
+1. ✅ `test_pipeline_optimization.py` (450 lines, 37 tests)
 
 ### Results (scripts/profiling/results/)
-8. ✅ Results directory created (ready for profiling data)
+1. ✅ Results directory created (ready for profiling data)
 
 ### Reports (project root/)
-9. ✅ `FEATURE_2_4_FINAL_REPORT.md` (this document)
+1. ✅ `FEATURE_2_4_FINAL_REPORT.md` (this document)
 
 **Total**: 10 deliverables (9 files + results directory), 3,700+ lines of code and documentation
 
@@ -863,20 +863,20 @@ From `baseline_2025-10-27.json`:
    - Priority: High
 
 ### Medium-Term (1-2 Months)
-3. **Parallel Claim Processing** (3 hours)
+1. **Parallel Claim Processing** (3 hours)
    - Expected: 2-4x throughput
    - Priority: Medium
 
-4. **GPU Acceleration** (1 week)
+2. **GPU Acceleration** (1 week)
    - Expected: 2-5x faster inference
    - Priority: Medium
 
 ### Long-Term (3-6 Months)
-5. **Distributed Processing** (2-4 weeks)
+1. **Distributed Processing** (2-4 weeks)
    - Expected: Linear scalability
    - Priority: Low
 
-6. **Model Optimization** (4-8 weeks)
+2. **Model Optimization** (4-8 weeks)
    - Expected: 50% memory reduction
    - Priority: Low
 

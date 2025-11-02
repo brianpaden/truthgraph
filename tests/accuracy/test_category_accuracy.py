@@ -20,7 +20,6 @@ from typing import Any, Dict, List, Optional
 import pytest
 
 from tests.accuracy.accuracy_framework import AccuracyFramework
-from tests.accuracy.metrics import AccuracyMetrics
 from tests.accuracy.reporters import Reporter
 
 
@@ -61,10 +60,10 @@ class CategoryAccuracyEvaluator:
         if not category_file.exists():
             raise FileNotFoundError(f"Category file not found: {category_file}")
 
-        with open(category_file, 'r') as f:
+        with open(category_file, "r") as f:
             data = json.load(f)
 
-        return data.get('claims', [])
+        return data.get("claims", [])
 
     def load_all_categories(self) -> Dict[str, List[Dict[str, Any]]]:
         """Load claims for all categories.
@@ -104,10 +103,7 @@ class CategoryAccuracyEvaluator:
             raise ValueError(f"No claims found for category: {category}")
 
         # Extract expected verdicts
-        expected_verdicts = [
-            claim.get('expected_verdict', 'INSUFFICIENT')
-            for claim in claims
-        ]
+        expected_verdicts = [claim.get("expected_verdict", "INSUFFICIENT") for claim in claims]
 
         # Use provided predictions or expected verdicts (for baseline)
         if predictions is None:
@@ -123,19 +119,19 @@ class CategoryAccuracyEvaluator:
         result = self.framework.evaluate(
             predictions=predictions,
             expected_verdicts=expected_verdicts,
-            categories=[category] * len(predictions)
+            categories=[category] * len(predictions),
         )
 
         # Add category-specific metadata
-        result['category'] = category
-        result['claim_count'] = len(claims)
-        result['claims'] = [
+        result["category"] = category
+        result["claim_count"] = len(claims)
+        result["claims"] = [
             {
-                'id': claim.get('id'),
-                'text': claim.get('text'),
-                'expected': claim.get('expected_verdict'),
-                'predicted': pred,
-                'correct': claim.get('expected_verdict') == pred
+                "id": claim.get("id"),
+                "text": claim.get("text"),
+                "expected": claim.get("expected_verdict"),
+                "predicted": pred,
+                "correct": claim.get("expected_verdict") == pred,
             }
             for claim, pred in zip(claims, predictions)
         ]
@@ -204,22 +200,19 @@ class CategoryAccuracyEvaluator:
 
         for category, result in results.items():
             breakdown["categories"][category] = {
-                "claims": result.get('claim_count', 0),
-                "accuracy": result.get('accuracy', 0),
-                "precision": result.get('precision', {}),
-                "recall": result.get('recall', {}),
-                "f1": result.get('f1', {}),
-                "macro_f1": result.get('macro_f1', 0),
-                "weighted_f1": result.get('weighted_f1', 0),
-                "confusion_matrix": result.get('confusion_matrix', {}),
+                "claims": result.get("claim_count", 0),
+                "accuracy": result.get("accuracy", 0),
+                "precision": result.get("precision", {}),
+                "recall": result.get("recall", {}),
+                "f1": result.get("f1", {}),
+                "macro_f1": result.get("macro_f1", 0),
+                "weighted_f1": result.get("weighted_f1", 0),
+                "confusion_matrix": result.get("confusion_matrix", {}),
             }
 
         return breakdown
 
-    def _calculate_aggregate_metrics(
-        self,
-        results: Dict[str, Dict[str, Any]]
-    ) -> Dict[str, float]:
+    def _calculate_aggregate_metrics(self, results: Dict[str, Dict[str, Any]]) -> Dict[str, float]:
         """Calculate aggregate metrics across all categories.
 
         Args:
@@ -231,25 +224,22 @@ class CategoryAccuracyEvaluator:
         if not results:
             return {}
 
-        total_samples = sum(
-            result.get('claim_count', 0)
-            for result in results.values()
-        )
+        total_samples = sum(result.get("claim_count", 0) for result in results.values())
 
         if total_samples == 0:
             return {}
 
         # Weighted average accuracy
-        weighted_accuracy = sum(
-            result.get('accuracy', 0) * result.get('claim_count', 0)
-            for result in results.values()
-        ) / total_samples
+        weighted_accuracy = (
+            sum(
+                result.get("accuracy", 0) * result.get("claim_count", 0)
+                for result in results.values()
+            )
+            / total_samples
+        )
 
         # Average macro F1
-        avg_macro_f1 = sum(
-            result.get('macro_f1', 0)
-            for result in results.values()
-        ) / len(results)
+        avg_macro_f1 = sum(result.get("macro_f1", 0) for result in results.values()) / len(results)
 
         return {
             "total_samples": total_samples,
@@ -259,8 +249,7 @@ class CategoryAccuracyEvaluator:
         }
 
     def _rank_categories(
-        self,
-        results: Dict[str, Dict[str, Any]]
+        self, results: Dict[str, Dict[str, Any]]
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Rank categories by accuracy metrics.
 
@@ -273,29 +262,20 @@ class CategoryAccuracyEvaluator:
         category_metrics = [
             {
                 "category": category,
-                "accuracy": result.get('accuracy', 0),
-                "macro_f1": result.get('macro_f1', 0),
-                "samples": result.get('claim_count', 0),
+                "accuracy": result.get("accuracy", 0),
+                "macro_f1": result.get("macro_f1", 0),
+                "samples": result.get("claim_count", 0),
             }
             for category, result in results.items()
         ]
 
         return {
-            "by_accuracy": sorted(
-                category_metrics,
-                key=lambda x: x['accuracy'],
-                reverse=True
-            ),
-            "by_f1": sorted(
-                category_metrics,
-                key=lambda x: x['macro_f1'],
-                reverse=True
-            ),
+            "by_accuracy": sorted(category_metrics, key=lambda x: x["accuracy"], reverse=True),
+            "by_f1": sorted(category_metrics, key=lambda x: x["macro_f1"], reverse=True),
         }
 
     def _identify_weaknesses(
-        self,
-        results: Dict[str, Dict[str, Any]]
+        self, results: Dict[str, Dict[str, Any]]
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Identify category-specific weaknesses.
 
@@ -311,38 +291,44 @@ class CategoryAccuracyEvaluator:
             cat_weaknesses = []
 
             # Low accuracy in category
-            accuracy = result.get('accuracy', 0)
+            accuracy = result.get("accuracy", 0)
             if accuracy < 0.70:
-                cat_weaknesses.append({
-                    "type": "low_accuracy",
-                    "severity": "high" if accuracy < 0.50 else "medium",
-                    "value": accuracy,
-                    "message": f"Category accuracy ({accuracy:.1%}) is below target"
-                })
+                cat_weaknesses.append(
+                    {
+                        "type": "low_accuracy",
+                        "severity": "high" if accuracy < 0.50 else "medium",
+                        "value": accuracy,
+                        "message": f"Category accuracy ({accuracy:.1%}) is below target",
+                    }
+                )
 
             # Low precision for specific verdict
-            precision = result.get('precision', {})
+            precision = result.get("precision", {})
             for verdict, score in precision.items():
                 if score < 0.60:
-                    cat_weaknesses.append({
-                        "type": "low_precision",
-                        "verdict": verdict,
-                        "severity": "high" if score < 0.40 else "medium",
-                        "value": score,
-                        "message": f"Low precision for {verdict}: {score:.1%}"
-                    })
+                    cat_weaknesses.append(
+                        {
+                            "type": "low_precision",
+                            "verdict": verdict,
+                            "severity": "high" if score < 0.40 else "medium",
+                            "value": score,
+                            "message": f"Low precision for {verdict}: {score:.1%}",
+                        }
+                    )
 
             # Low recall for specific verdict
-            recall = result.get('recall', {})
+            recall = result.get("recall", {})
             for verdict, score in recall.items():
                 if score < 0.60:
-                    cat_weaknesses.append({
-                        "type": "low_recall",
-                        "verdict": verdict,
-                        "severity": "high" if score < 0.40 else "medium",
-                        "value": score,
-                        "message": f"Low recall for {verdict}: {score:.1%}"
-                    })
+                    cat_weaknesses.append(
+                        {
+                            "type": "low_recall",
+                            "verdict": verdict,
+                            "severity": "high" if score < 0.40 else "medium",
+                            "value": score,
+                            "message": f"Low recall for {verdict}: {score:.1%}",
+                        }
+                    )
 
             if cat_weaknesses:
                 weaknesses[category] = cat_weaknesses
@@ -369,7 +355,7 @@ class CategoryAccuracyEvaluator:
         output_path = Path(output_file)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(breakdown, f, indent=2)
 
         return str(output_path)
@@ -395,11 +381,11 @@ class CategoryAccuracyEvaluator:
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Extract data
-        categories = breakdown.get('categories', {})
-        aggregate = breakdown.get('aggregate', {})
-        rankings = breakdown.get('rankings', {})
-        weaknesses = breakdown.get('weaknesses', {})
-        timestamp = breakdown.get('timestamp', datetime.now().isoformat())
+        categories = breakdown.get("categories", {})
+        aggregate = breakdown.get("aggregate", {})
+        rankings = breakdown.get("rankings", {})
+        weaknesses = breakdown.get("weaknesses", {})
+        timestamp = breakdown.get("timestamp", datetime.now().isoformat())
 
         # Generate category cards
         category_cards = self._generate_category_cards(categories, weaknesses)
@@ -631,25 +617,25 @@ class CategoryAccuracyEvaluator:
             <div class="metric-card">
                 <div class="metric-label">Total Samples</div>
                 <div class="metric-value">
-                    {aggregate.get('total_samples', 0)}
+                    {aggregate.get("total_samples", 0)}
                 </div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Categories</div>
                 <div class="metric-value">
-                    {aggregate.get('total_categories', 0)}
+                    {aggregate.get("total_categories", 0)}
                 </div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Weighted Accuracy</div>
                 <div class="metric-value">
-                    {aggregate.get('weighted_accuracy', 0):.1%}
+                    {aggregate.get("weighted_accuracy", 0):.1%}
                 </div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Avg Macro F1</div>
                 <div class="metric-value">
-                    {aggregate.get('average_macro_f1', 0):.3f}
+                    {aggregate.get("average_macro_f1", 0):.3f}
                 </div>
             </div>
         </div>
@@ -685,7 +671,7 @@ class CategoryAccuracyEvaluator:
 </html>
 """
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             f.write(html_content)
 
         return str(output_path)
@@ -708,9 +694,9 @@ class CategoryAccuracyEvaluator:
 
         for category_name in sorted(categories.keys()):
             cat_data = categories[category_name]
-            accuracy = cat_data.get('accuracy', 0)
-            samples = cat_data.get('claims', 0)
-            macro_f1 = cat_data.get('macro_f1', 0)
+            accuracy = cat_data.get("accuracy", 0)
+            samples = cat_data.get("claims", 0)
+            macro_f1 = cat_data.get("macro_f1", 0)
 
             # Determine status
             if accuracy >= 0.85:
@@ -729,7 +715,11 @@ class CategoryAccuracyEvaluator:
             # Check weaknesses
             cat_weaknesses = weaknesses.get(category_name, [])
             weakness_count = len(cat_weaknesses)
-            weakness_indicator = f" ({weakness_count} weakness{'es' if weakness_count != 1 else ''})" if weakness_count else ""
+            weakness_indicator = (
+                f" ({weakness_count} weakness{'es' if weakness_count != 1 else ''})"
+                if weakness_count
+                else ""
+            )
 
             html += f"""
             <div class="category-card">
@@ -755,17 +745,14 @@ class CategoryAccuracyEvaluator:
                 </div>
                 <div class="category-stat">
                     <span class="category-stat-label">Issues</span>
-                    <span class="category-stat-value">{weakness_indicator or 'None'}</span>
+                    <span class="category-stat-value">{weakness_indicator or "None"}</span>
                 </div>
             </div>
             """
 
         return html
 
-    def _generate_ranking_tables(
-        self,
-        rankings: Dict[str, List[Dict[str, Any]]]
-    ) -> str:
+    def _generate_ranking_tables(self, rankings: Dict[str, List[Dict[str, Any]]]) -> str:
         """Generate HTML tables for category rankings.
 
         Args:
@@ -775,67 +762,64 @@ class CategoryAccuracyEvaluator:
             HTML string for ranking tables
         """
         html = '<div class="section">\n'
-        html += '  <h2>Category Rankings</h2>\n'
+        html += "  <h2>Category Rankings</h2>\n"
 
         # Accuracy ranking
-        by_accuracy = rankings.get('by_accuracy', [])
+        by_accuracy = rankings.get("by_accuracy", [])
         if by_accuracy:
             html += '  <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">By Accuracy</h3>\n'
-            html += '  <table>\n'
-            html += '    <thead>\n'
-            html += '      <tr>\n'
-            html += '        <th>Rank</th>\n'
-            html += '        <th>Category</th>\n'
+            html += "  <table>\n"
+            html += "    <thead>\n"
+            html += "      <tr>\n"
+            html += "        <th>Rank</th>\n"
+            html += "        <th>Category</th>\n"
             html += '        <th class="number">Accuracy</th>\n'
             html += '        <th class="number">Samples</th>\n'
-            html += '      </tr>\n'
-            html += '    </thead>\n'
-            html += '    <tbody>\n'
+            html += "      </tr>\n"
+            html += "    </thead>\n"
+            html += "    <tbody>\n"
 
             for rank, item in enumerate(by_accuracy, 1):
-                html += '      <tr>\n'
-                html += f'        <td>{rank}</td>\n'
-                html += f'        <td>{item["category"].title()}</td>\n'
+                html += "      <tr>\n"
+                html += f"        <td>{rank}</td>\n"
+                html += f"        <td>{item['category'].title()}</td>\n"
                 html += f'        <td class="number">{item["accuracy"]:.1%}</td>\n'
                 html += f'        <td class="number">{item["samples"]}</td>\n'
-                html += '      </tr>\n'
+                html += "      </tr>\n"
 
-            html += '    </tbody>\n'
-            html += '  </table>\n'
+            html += "    </tbody>\n"
+            html += "  </table>\n"
 
         # F1 ranking
-        by_f1 = rankings.get('by_f1', [])
+        by_f1 = rankings.get("by_f1", [])
         if by_f1:
             html += '  <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">By F1 Score</h3>\n'
-            html += '  <table>\n'
-            html += '    <thead>\n'
-            html += '      <tr>\n'
-            html += '        <th>Rank</th>\n'
-            html += '        <th>Category</th>\n'
+            html += "  <table>\n"
+            html += "    <thead>\n"
+            html += "      <tr>\n"
+            html += "        <th>Rank</th>\n"
+            html += "        <th>Category</th>\n"
             html += '        <th class="number">F1 Score</th>\n'
             html += '        <th class="number">Samples</th>\n'
-            html += '      </tr>\n'
-            html += '    </thead>\n'
-            html += '    <tbody>\n'
+            html += "      </tr>\n"
+            html += "    </thead>\n"
+            html += "    <tbody>\n"
 
             for rank, item in enumerate(by_f1, 1):
-                html += '      <tr>\n'
-                html += f'        <td>{rank}</td>\n'
-                html += f'        <td>{item["category"].title()}</td>\n'
+                html += "      <tr>\n"
+                html += f"        <td>{rank}</td>\n"
+                html += f"        <td>{item['category'].title()}</td>\n"
                 html += f'        <td class="number">{item["macro_f1"]:.4f}</td>\n'
                 html += f'        <td class="number">{item["samples"]}</td>\n'
-                html += '      </tr>\n'
+                html += "      </tr>\n"
 
-            html += '    </tbody>\n'
-            html += '  </table>\n'
+            html += "    </tbody>\n"
+            html += "  </table>\n"
 
-        html += '</div>\n'
+        html += "</div>\n"
         return html
 
-    def _generate_weaknesses_section(
-        self,
-        weaknesses: Dict[str, List[Dict[str, Any]]]
-    ) -> str:
+    def _generate_weaknesses_section(self, weaknesses: Dict[str, List[Dict[str, Any]]]) -> str:
         """Generate HTML section for identified weaknesses.
 
         Args:
@@ -848,27 +832,28 @@ class CategoryAccuracyEvaluator:
             return ""
 
         html = '<div class="section">\n'
-        html += '  <h2>Identified Weaknesses</h2>\n'
+        html += "  <h2>Identified Weaknesses</h2>\n"
 
         for category_name in sorted(weaknesses.keys()):
             cat_weaknesses = weaknesses[category_name]
             html += f'  <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">{category_name.title()}</h3>\n'
 
             for weakness in cat_weaknesses:
-                severity = weakness.get('severity', 'medium')
-                weakness_type = weakness.get('type', '').replace('_', ' ').title()
-                message = weakness.get('message', '')
+                severity = weakness.get("severity", "medium")
+                weakness_type = weakness.get("type", "").replace("_", " ").title()
+                message = weakness.get("message", "")
 
                 html += f'  <div class="weakness {severity}">\n'
                 html += f'    <div class="weakness-type">{weakness_type}</div>\n'
                 html += f'    <div class="weakness-message">{message}</div>\n'
-                html += '  </div>\n'
+                html += "  </div>\n"
 
-        html += '</div>\n'
+        html += "</div>\n"
         return html
 
 
 # Test functions
+
 
 def load_test_predictions(category: str) -> List[str]:
     """Load test predictions for a category.
@@ -886,7 +871,7 @@ def load_test_predictions(category: str) -> List[str]:
     evaluator = CategoryAccuracyEvaluator()
     claims = evaluator.load_category_claims(category)
     # Return expected verdicts as predictions (perfect baseline)
-    return [claim.get('expected_verdict', 'INSUFFICIENT') for claim in claims]
+    return [claim.get("expected_verdict", "INSUFFICIENT") for claim in claims]
 
 
 @pytest.fixture
@@ -899,14 +884,14 @@ def category_evaluator():
 @pytest.mark.category
 def test_category_evaluation_politics(category_evaluator):
     """Test accuracy evaluation for politics category."""
-    result = category_evaluator.evaluate_category('politics')
+    result = category_evaluator.evaluate_category("politics")
 
     assert result is not None
-    assert result['category'] == 'politics'
-    assert result['claim_count'] > 0
-    assert 'accuracy' in result
-    assert 'macro_f1' in result
-    assert 'claims' in result
+    assert result["category"] == "politics"
+    assert result["claim_count"] > 0
+    assert "accuracy" in result
+    assert "macro_f1" in result
+    assert "claims" in result
 
     print(f"Politics accuracy: {result['accuracy']:.1%}")
 
@@ -915,13 +900,13 @@ def test_category_evaluation_politics(category_evaluator):
 @pytest.mark.category
 def test_category_evaluation_science(category_evaluator):
     """Test accuracy evaluation for science category."""
-    result = category_evaluator.evaluate_category('science')
+    result = category_evaluator.evaluate_category("science")
 
     assert result is not None
-    assert result['category'] == 'science'
-    assert result['claim_count'] > 0
-    assert 'accuracy' in result
-    assert 'macro_f1' in result
+    assert result["category"] == "science"
+    assert result["claim_count"] > 0
+    assert "accuracy" in result
+    assert "macro_f1" in result
 
     print(f"Science accuracy: {result['accuracy']:.1%}")
 
@@ -930,13 +915,13 @@ def test_category_evaluation_science(category_evaluator):
 @pytest.mark.category
 def test_category_evaluation_health(category_evaluator):
     """Test accuracy evaluation for health category."""
-    result = category_evaluator.evaluate_category('health')
+    result = category_evaluator.evaluate_category("health")
 
     assert result is not None
-    assert result['category'] == 'health'
-    assert result['claim_count'] > 0
-    assert 'accuracy' in result
-    assert 'macro_f1' in result
+    assert result["category"] == "health"
+    assert result["claim_count"] > 0
+    assert "accuracy" in result
+    assert "macro_f1" in result
 
     print(f"Health accuracy: {result['accuracy']:.1%}")
 
@@ -945,13 +930,13 @@ def test_category_evaluation_health(category_evaluator):
 @pytest.mark.category
 def test_category_evaluation_current_events(category_evaluator):
     """Test accuracy evaluation for current events category."""
-    result = category_evaluator.evaluate_category('current_events')
+    result = category_evaluator.evaluate_category("current_events")
 
     assert result is not None
-    assert result['category'] == 'current_events'
-    assert result['claim_count'] > 0
-    assert 'accuracy' in result
-    assert 'macro_f1' in result
+    assert result["category"] == "current_events"
+    assert result["claim_count"] > 0
+    assert "accuracy" in result
+    assert "macro_f1" in result
 
     print(f"Current events accuracy: {result['accuracy']:.1%}")
 
@@ -960,13 +945,13 @@ def test_category_evaluation_current_events(category_evaluator):
 @pytest.mark.category
 def test_category_evaluation_historical(category_evaluator):
     """Test accuracy evaluation for historical category."""
-    result = category_evaluator.evaluate_category('historical')
+    result = category_evaluator.evaluate_category("historical")
 
     assert result is not None
-    assert result['category'] == 'historical'
-    assert result['claim_count'] > 0
-    assert 'accuracy' in result
-    assert 'macro_f1' in result
+    assert result["category"] == "historical"
+    assert result["claim_count"] > 0
+    assert "accuracy" in result
+    assert "macro_f1" in result
 
     print(f"Historical accuracy: {result['accuracy']:.1%}")
 
@@ -978,7 +963,7 @@ def test_all_categories_evaluation(category_evaluator):
     results = category_evaluator.evaluate_all_categories()
 
     assert len(results) > 0
-    assert all('accuracy' in result for result in results.values())
+    assert all("accuracy" in result for result in results.values())
 
     for category, result in results.items():
         print(f"{category}: {result['accuracy']:.1%} ({result['claim_count']} samples)")
@@ -991,19 +976,19 @@ def test_category_breakdown_generation(category_evaluator):
     category_evaluator.evaluate_all_categories()
     breakdown = category_evaluator.generate_category_breakdown()
 
-    assert 'categories' in breakdown
-    assert 'aggregate' in breakdown
-    assert 'rankings' in breakdown
-    assert 'weaknesses' in breakdown
+    assert "categories" in breakdown
+    assert "aggregate" in breakdown
+    assert "rankings" in breakdown
+    assert "weaknesses" in breakdown
 
     # Verify categories are in breakdown
-    assert len(breakdown['categories']) > 0
+    assert len(breakdown["categories"]) > 0
 
     # Verify aggregate metrics
-    agg = breakdown['aggregate']
-    assert 'total_samples' in agg
-    assert 'total_categories' in agg
-    assert 'weighted_accuracy' in agg
+    agg = breakdown["aggregate"]
+    assert "total_samples" in agg
+    assert "total_categories" in agg
+    assert "weighted_accuracy" in agg
 
 
 @pytest.mark.accuracy
@@ -1019,11 +1004,11 @@ def test_save_category_breakdown(category_evaluator, tmp_path):
     assert Path(saved_path).exists()
 
     # Verify saved content
-    with open(saved_path, 'r') as f:
+    with open(saved_path, "r") as f:
         saved_data = json.load(f)
 
-    assert 'categories' in saved_data
-    assert len(saved_data['categories']) > 0
+    assert "categories" in saved_data
+    assert len(saved_data["categories"]) > 0
 
 
 @pytest.mark.accuracy
@@ -1039,12 +1024,12 @@ def test_generate_category_html_report(category_evaluator, tmp_path):
     assert Path(saved_path).exists()
 
     # Verify HTML content
-    with open(saved_path, 'r') as f:
+    with open(saved_path, "r") as f:
         content = f.read()
 
-    assert '<html' in content
-    assert 'Category Accuracy Analysis Report' in content
-    assert 'Category Performance Overview' in content
+    assert "<html" in content
+    assert "Category Accuracy Analysis Report" in content
+    assert "Category Performance Overview" in content
 
 
 @pytest.mark.accuracy
@@ -1054,7 +1039,7 @@ def test_identify_category_weaknesses(category_evaluator):
     category_evaluator.evaluate_all_categories()
     breakdown = category_evaluator.generate_category_breakdown()
 
-    weaknesses = breakdown.get('weaknesses', {})
+    weaknesses = breakdown.get("weaknesses", {})
 
     # Weaknesses should be a dictionary
     assert isinstance(weaknesses, dict)
@@ -1074,16 +1059,16 @@ def test_category_rankings(category_evaluator):
     category_evaluator.evaluate_all_categories()
     breakdown = category_evaluator.generate_category_breakdown()
 
-    rankings = breakdown.get('rankings', {})
+    rankings = breakdown.get("rankings", {})
 
-    assert 'by_accuracy' in rankings
-    assert 'by_f1' in rankings
+    assert "by_accuracy" in rankings
+    assert "by_f1" in rankings
 
     # Verify rankings are sorted
-    by_accuracy = rankings['by_accuracy']
+    by_accuracy = rankings["by_accuracy"]
     if len(by_accuracy) > 1:
         for i in range(len(by_accuracy) - 1):
-            assert by_accuracy[i]['accuracy'] >= by_accuracy[i + 1]['accuracy']
+            assert by_accuracy[i]["accuracy"] >= by_accuracy[i + 1]["accuracy"]
 
     # Print rankings
     print("\nRankings by Accuracy:")

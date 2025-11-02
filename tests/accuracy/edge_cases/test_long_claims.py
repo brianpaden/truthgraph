@@ -13,9 +13,7 @@ Test Coverage:
 - Long narrative claims with temporal sequences
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -26,9 +24,7 @@ pytest_plugins = ["tests.fixtures.edge_cases.conftest"]
 class TestLongClaimsHandling:
     """Test suite for long claim edge cases."""
 
-    def test_load_long_claims_fixture(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_load_long_claims_fixture(self, edge_case_long_claims: Dict[str, Any]):
         """Verify the long claims fixture loads correctly.
 
         Args:
@@ -40,9 +36,7 @@ class TestLongClaimsHandling:
         assert "claims" in edge_case_long_claims
         assert len(edge_case_long_claims["claims"]) > 0
 
-    def test_all_claims_are_actually_long(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_all_claims_are_actually_long(self, edge_case_long_claims: Dict[str, Any]):
         """Verify all claims are actually long (>500 characters or >100 words).
 
         Args:
@@ -61,9 +55,7 @@ class TestLongClaimsHandling:
                 f"{word_count} words, {char_count} characters"
             )
 
-    def test_long_claims_structure(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_structure(self, edge_case_long_claims: Dict[str, Any]):
         """Verify long claims have proper structure.
 
         Args:
@@ -73,7 +65,7 @@ class TestLongClaimsHandling:
 
         for claim in claims:
             # Verify required fields
-            assert "id" in claim, f"Claim missing 'id' field"
+            assert "id" in claim, "Claim missing 'id' field"
             assert "text" in claim, f"Claim {claim.get('id')} missing 'text' field"
             assert "expected_verdict" in claim
             assert "edge_case_type" in claim
@@ -91,9 +83,7 @@ class TestLongClaimsHandling:
                 f"Claim {claim['id']} metadata should include length information"
             )
 
-    def test_long_claims_have_valid_verdicts(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_have_valid_verdicts(self, edge_case_long_claims: Dict[str, Any]):
         """Verify all long claims have valid expected verdicts.
 
         Args:
@@ -108,9 +98,7 @@ class TestLongClaimsHandling:
                 f"Claim {claim['id']} has invalid verdict: {expected_verdict}"
             )
 
-    def test_long_claims_metadata_quality(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_metadata_quality(self, edge_case_long_claims: Dict[str, Any]):
         """Verify metadata quality for long claims.
 
         Args:
@@ -129,9 +117,7 @@ class TestLongClaimsHandling:
             # Should describe what makes the claim challenging
             if "challenge" in metadata:
                 challenge = metadata["challenge"]
-                assert len(challenge) > 10, (
-                    f"Claim {claim['id']} challenge should be descriptive"
-                )
+                assert len(challenge) > 10, f"Claim {claim['id']} challenge should be descriptive"
 
     @pytest.mark.parametrize(
         "claim_type",
@@ -161,10 +147,7 @@ class TestLongClaimsHandling:
         for claim in claims:
             metadata = claim.get("metadata", {})
             reason = claim.get("reason", "")
-            if (
-                claim_type.lower() in str(metadata).lower()
-                or claim_type.lower() in reason.lower()
-            ):
+            if claim_type.lower() in str(metadata).lower() or claim_type.lower() in reason.lower():
                 found = True
                 break
 
@@ -172,9 +155,7 @@ class TestLongClaimsHandling:
         if not found:
             pytest.skip(f"No claims found covering type: {claim_type}")
 
-    def test_expected_behavior_addresses_length(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_expected_behavior_addresses_length(self, edge_case_long_claims: Dict[str, Any]):
         """Verify expected behavior addresses claim length.
 
         Args:
@@ -198,9 +179,7 @@ class TestLongClaimsHandling:
                 # At minimum should explain what verdict is expected
                 assert any(v in expected_behavior for v in ["SUPPORTED", "REFUTED", "INSUFFICIENT"])
 
-    def test_long_claims_have_evidence(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_have_evidence(self, edge_case_long_claims: Dict[str, Any]):
         """Verify long claims have associated evidence.
 
         Args:
@@ -216,20 +195,15 @@ class TestLongClaimsHandling:
             expected_verdict = claim.get("expected_verdict")
             if expected_verdict != "INSUFFICIENT":
                 assert len(evidence_ids) > 0, (
-                    f"Claim {claim['id']} with {expected_verdict} verdict "
-                    f"should have evidence"
+                    f"Claim {claim['id']} with {expected_verdict} verdict should have evidence"
                 )
 
                 # Verify evidence exists
                 for ev_id in evidence_ids:
                     found = any(ev["id"] == ev_id for ev in evidence_list)
-                    assert found, (
-                        f"Evidence {ev_id} referenced by claim {claim['id']} not found"
-                    )
+                    assert found, f"Evidence {ev_id} referenced by claim {claim['id']} not found"
 
-    def test_no_truncation_in_claim_text(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_no_truncation_in_claim_text(self, edge_case_long_claims: Dict[str, Any]):
         """Verify claims are not truncated in the fixture.
 
         Args:
@@ -285,9 +259,7 @@ class TestLongClaimsIntegration:
             word_count = len(claim["text"].split())
             assert word_count > 100 or len(claim["text"]) > 500
 
-    def test_edge_case_statistics_includes_long_claims(
-        self, edge_case_statistics: Dict[str, Any]
-    ):
+    def test_edge_case_statistics_includes_long_claims(self, edge_case_statistics: Dict[str, Any]):
         """Verify statistics include long claims category.
 
         Args:
@@ -318,9 +290,7 @@ class TestLongClaimsVerification:
     """
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_long_claims_no_truncation_errors(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_no_truncation_errors(self, edge_case_long_claims: Dict[str, Any]):
         """Test that verification system handles long claims without truncation.
 
         This test should be implemented once the verification pipeline is available.
@@ -341,9 +311,7 @@ class TestLongClaimsVerification:
         pass
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_long_claims_performance(
-        self, edge_case_long_claims: Dict[str, Any]
-    ):
+    def test_long_claims_performance(self, edge_case_long_claims: Dict[str, Any]):
         """Test that long claims are processed in reasonable time.
 
         Long claims should not cause excessive processing time or timeouts.

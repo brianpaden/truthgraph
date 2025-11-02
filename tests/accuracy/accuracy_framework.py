@@ -55,8 +55,7 @@ class AccuracyFramework:
         # Reset and add predictions
         self.metrics.reset()
         for pred, expected, cat in zip(
-            predictions, expected_verdicts,
-            categories or [None] * len(predictions)
+            predictions, expected_verdicts, categories or [None] * len(predictions)
         ):
             self.metrics.add_prediction(pred, expected, cat)
 
@@ -228,8 +227,7 @@ class AccuracyFramework:
         return trend
 
     def save_results_json(
-        self, results: Optional[Dict[str, Any]] = None,
-        output_file: Optional[str] = None
+        self, results: Optional[Dict[str, Any]] = None, output_file: Optional[str] = None
     ) -> str:
         """Save evaluation results to JSON.
 
@@ -260,10 +258,7 @@ class AccuracyFramework:
 
         return str(output_path)
 
-    def save_confusion_matrix_csv(
-        self,
-        output_file: Optional[str] = None
-    ) -> str:
+    def save_confusion_matrix_csv(self, output_file: Optional[str] = None) -> str:
         """Save confusion matrix to CSV.
 
         Args:

@@ -13,9 +13,7 @@ Test Coverage:
 - Evidence with missing context or caveats
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -26,9 +24,7 @@ pytest_plugins = ["tests.fixtures.edge_cases.conftest"]
 class TestAmbiguousEvidenceHandling:
     """Test suite for ambiguous evidence edge cases."""
 
-    def test_load_ambiguous_evidence_fixture(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_load_ambiguous_evidence_fixture(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify the ambiguous evidence fixture loads correctly.
 
         Args:
@@ -40,9 +36,7 @@ class TestAmbiguousEvidenceHandling:
         assert "claims" in edge_case_ambiguous
         assert len(edge_case_ambiguous["claims"]) > 0
 
-    def test_all_claims_expect_appropriate_verdict(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_all_claims_expect_appropriate_verdict(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify all ambiguous evidence claims expect appropriate verdicts.
 
         Args:
@@ -57,9 +51,7 @@ class TestAmbiguousEvidenceHandling:
                 f"Claim {claim['id']} should have valid verdict, got {expected_verdict}"
             )
 
-    def test_ambiguous_evidence_claim_structure(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_claim_structure(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify ambiguous evidence claims have proper structure.
 
         Args:
@@ -69,7 +61,7 @@ class TestAmbiguousEvidenceHandling:
 
         for claim in claims:
             # Verify required fields
-            assert "id" in claim, f"Claim missing 'id' field"
+            assert "id" in claim, "Claim missing 'id' field"
             assert "text" in claim, f"Claim {claim.get('id')} missing 'text' field"
             assert "expected_verdict" in claim
             assert "edge_case_type" in claim
@@ -84,13 +76,10 @@ class TestAmbiguousEvidenceHandling:
             # Verify has evidence IDs
             assert isinstance(claim["evidence_ids"], list)
             assert len(claim["evidence_ids"]) > 0, (
-                f"Claim {claim['id']} should have evidence IDs "
-                f"for ambiguous evidence case"
+                f"Claim {claim['id']} should have evidence IDs for ambiguous evidence case"
             )
 
-    def test_ambiguous_evidence_has_evidence(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_has_evidence(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify ambiguous evidence cases have evidence sources.
 
         Args:
@@ -100,22 +89,16 @@ class TestAmbiguousEvidenceHandling:
         evidence_list = edge_case_ambiguous.get("evidence", [])
 
         # Should have evidence items
-        assert len(evidence_list) > 0, (
-            "Ambiguous evidence cases should have evidence items"
-        )
+        assert len(evidence_list) > 0, "Ambiguous evidence cases should have evidence items"
 
         # Verify all referenced evidence exists
         for claim in claims:
             evidence_ids = claim.get("evidence_ids", [])
             for ev_id in evidence_ids:
                 found = any(ev["id"] == ev_id for ev in evidence_list)
-                assert found, (
-                    f"Evidence {ev_id} referenced by claim {claim['id']} not found"
-                )
+                assert found, f"Evidence {ev_id} referenced by claim {claim['id']} not found"
 
-    def test_ambiguous_evidence_metadata_quality(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_metadata_quality(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify metadata quality for ambiguous evidence claims.
 
         Args:
@@ -170,9 +153,7 @@ class TestAmbiguousEvidenceHandling:
 
         assert found, f"No claims found covering ambiguity type: {ambiguity_type}"
 
-    def test_expected_behavior_documentation(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_expected_behavior_documentation(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify all claims document expected behavior.
 
         Args:
@@ -192,13 +173,10 @@ class TestAmbiguousEvidenceHandling:
             keywords = ["ambiguous", "unclear", "weak", "tangential", "uncertain"]
             has_keyword = any(keyword in expected_behavior.lower() for keyword in keywords)
             assert has_keyword, (
-                f"Claim {claim['id']} expected_behavior should mention "
-                f"ambiguity or uncertainty"
+                f"Claim {claim['id']} expected_behavior should mention ambiguity or uncertainty"
             )
 
-    def test_ambiguous_evidence_reason_quality(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_reason_quality(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify reasons for ambiguous evidence are well-documented.
 
         Args:
@@ -210,23 +188,23 @@ class TestAmbiguousEvidenceHandling:
             reason = claim.get("reason", "")
 
             # Reason should be descriptive
-            assert len(reason) > 20, (
-                f"Claim {claim['id']} should have descriptive reason"
-            )
+            assert len(reason) > 20, f"Claim {claim['id']} should have descriptive reason"
 
             # Reason should explain the ambiguity
             keywords = [
-                "ambiguous", "vague", "unclear", "tangential",
-                "weak", "indirect", "interpretation", "context"
+                "ambiguous",
+                "vague",
+                "unclear",
+                "tangential",
+                "weak",
+                "indirect",
+                "interpretation",
+                "context",
             ]
             has_keyword = any(keyword in reason.lower() for keyword in keywords)
-            assert has_keyword, (
-                f"Claim {claim['id']} reason should explain the ambiguity"
-            )
+            assert has_keyword, f"Claim {claim['id']} reason should explain the ambiguity"
 
-    def test_evidence_quality_indicators(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_evidence_quality_indicators(self, edge_case_ambiguous: Dict[str, Any]):
         """Verify evidence items have quality indicators.
 
         Args:
@@ -242,9 +220,7 @@ class TestAmbiguousEvidenceHandling:
 
             # Evidence should have text
             assert "text" in evidence, f"Evidence {evidence['id']} missing text"
-            assert len(evidence["text"]) > 0, (
-                f"Evidence {evidence['id']} has empty text"
-            )
+            assert len(evidence["text"]) > 0, f"Evidence {evidence['id']} has empty text"
 
 
 class TestAmbiguousEvidenceIntegration:
@@ -282,9 +258,7 @@ class TestAmbiguousEvidenceIntegration:
             assert claim["edge_case_type"] == "ambiguous_evidence"
             assert len(claim["evidence_ids"]) > 0
 
-    def test_edge_case_statistics_includes_ambiguous(
-        self, edge_case_statistics: Dict[str, Any]
-    ):
+    def test_edge_case_statistics_includes_ambiguous(self, edge_case_statistics: Dict[str, Any]):
         """Verify statistics include ambiguous evidence category.
 
         Args:
@@ -333,9 +307,7 @@ class TestAmbiguousEvidenceVerification:
     """
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_ambiguous_evidence_lowers_confidence(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_lowers_confidence(self, edge_case_ambiguous: Dict[str, Any]):
         """Test that ambiguous evidence results in lower confidence scores.
 
         This test should be implemented once the verification pipeline is available.
@@ -355,9 +327,7 @@ class TestAmbiguousEvidenceVerification:
         pass
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_ambiguous_evidence_graceful_degradation(
-        self, edge_case_ambiguous: Dict[str, Any]
-    ):
+    def test_ambiguous_evidence_graceful_degradation(self, edge_case_ambiguous: Dict[str, Any]):
         """Test that system gracefully degrades with ambiguous evidence.
 
         System should still return results but with appropriate uncertainty

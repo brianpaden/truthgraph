@@ -9,15 +9,15 @@ This test suite validates:
 6. N+1 query elimination
 """
 
-import pytest
 from pathlib import Path
-from typing import Any, Dict, List
-from uuid import uuid4
+
+import pytest
 
 # Import modules to test
 try:
     from truthgraph.db.queries import OptimizedQueries
     from truthgraph.db.query_builder import QueryBuilder
+
     MODULES_AVAILABLE = True
 except ImportError:
     MODULES_AVAILABLE = False
@@ -188,12 +188,15 @@ class TestPerformanceTargets:
     def test_latency_reduction_target_met(self):
         """Verify latency reduction meets 30% target."""
         # Load performance results
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -205,12 +208,15 @@ class TestPerformanceTargets:
 
     def test_evidence_retrieval_speedup(self):
         """Verify evidence retrieval speedup meets target."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -222,12 +228,15 @@ class TestPerformanceTargets:
 
     def test_nli_batch_insert_speedup(self):
         """Verify NLI batch insert speedup meets target."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -239,19 +248,24 @@ class TestPerformanceTargets:
 
     def test_all_success_criteria_met(self):
         """Verify all success criteria are met."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
         summary = results.get("summary", {})
 
         # Check all criteria
-        assert summary.get("target_achieved", False), "30% latency reduction target should be achieved"
+        assert summary.get("target_achieved", False), (
+            "30% latency reduction target should be achieved"
+        )
         assert summary.get("average_latency_reduction_percent", 0) >= 30.0
         assert summary.get("best_speedup", 0) >= 2.0
 
@@ -267,6 +281,7 @@ class TestNPlusOneElimination:
             pytest.skip("Modules not available")
 
         import inspect
+
         from truthgraph.db.queries import OptimizedQueries
 
         queries = OptimizedQueries()
@@ -276,14 +291,14 @@ class TestNPlusOneElimination:
 
         # The key verification: batch operations use a single query, not loops
         # Count session.execute calls - should be 2 (one for with embeddings, one without)
-        execute_count = source.count('session.execute')
+        execute_count = source.count("session.execute")
 
         # Should have execute calls but not in a loop over items
         assert execute_count >= 1, "Should have at least one execute call"
         assert execute_count <= 3, "Should have minimal execute calls (not one per item)"
 
         # Verify it uses ANY clause for batch retrieval
-        assert 'ANY' in source, "Should use ANY clause for batch operations"
+        assert "ANY" in source, "Should use ANY clause for batch operations"
 
     def test_query_builder_no_n_plus_one_in_examples(self):
         """Verify query builder examples avoid N+1 patterns."""
@@ -291,14 +306,16 @@ class TestNPlusOneElimination:
             pytest.skip("Modules not available")
 
         import inspect
+
         from truthgraph.db.query_builder import QueryBuilder
 
         # Get build_similarity_search_query source
         source = inspect.getsource(QueryBuilder.build_similarity_search_query)
 
         # Should use ANY or IN clauses, not loops
-        assert 'ANY' in source or 'example' in source.lower(), \
+        assert "ANY" in source or "example" in source.lower(), (
             "Query builder should use ANY clause for batch operations"
+        )
 
 
 class TestIndexUsageValidation:
@@ -306,12 +323,15 @@ class TestIndexUsageValidation:
 
     def test_performance_results_show_high_index_usage(self):
         """Verify performance results show high index usage."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -325,12 +345,15 @@ class TestIndexUsageValidation:
 
     def test_no_unused_indexes(self):
         """Verify no unused indexes are defined."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -340,8 +363,9 @@ class TestIndexUsageValidation:
         for table_name, stats in index_usage.items():
             if isinstance(stats, dict) and "status" in stats:
                 status = stats["status"]
-                assert status in ["optimal", "excellent"], \
+                assert status in ["optimal", "excellent"], (
                     f"{table_name} should have optimal index usage, got {status}"
+                )
 
 
 class TestDocumentation:
@@ -354,7 +378,9 @@ class TestDocumentation:
 
     def test_recommendations_document_exists(self):
         """Verify recommendations document exists."""
-        doc_file = Path("c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md")
+        doc_file = Path(
+            "c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md"
+        )
         assert doc_file.exists(), "Recommendations document should exist"
 
     def test_analysis_document_comprehensive(self):
@@ -374,8 +400,10 @@ class TestDocumentation:
 
     def test_recommendations_document_actionable(self):
         """Verify recommendations document has actionable advice."""
-        doc_file = Path("c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md")
-        content = doc_file.read_text(encoding='utf-8')
+        doc_file = Path(
+            "c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md"
+        )
+        content = doc_file.read_text(encoding="utf-8")
 
         # Should have practical sections
         assert "Quick Start" in content or "Getting Started" in content
@@ -409,14 +437,19 @@ class TestBenchmarkScript:
 
     def test_performance_results_file_exists(self):
         """Verify performance results file exists."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
         assert results_file.exists(), "Performance results file should exist"
 
     def test_performance_results_valid_json(self):
         """Verify performance results file is valid JSON."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -427,9 +460,12 @@ class TestBenchmarkScript:
 
     def test_performance_results_has_key_benchmarks(self):
         """Verify performance results include key benchmarks."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -450,6 +486,7 @@ class TestCodeQuality:
             pytest.skip("Modules not available")
 
         import inspect
+
         from truthgraph.db.queries import OptimizedQueries
 
         queries = OptimizedQueries()
@@ -459,13 +496,15 @@ class TestCodeQuality:
 
         # Should have type annotations for parameters
         for param_name, param in sig.parameters.items():
-            if param_name != 'self':
-                assert param.annotation != inspect.Parameter.empty, \
+            if param_name != "self":
+                assert param.annotation != inspect.Parameter.empty, (
                     f"Parameter {param_name} should have type annotation"
+                )
 
         # Should have return type
-        assert sig.return_annotation != inspect.Signature.empty, \
+        assert sig.return_annotation != inspect.Signature.empty, (
             "Method should have return type annotation"
+        )
 
     def test_query_builder_has_type_hints(self):
         """Verify QueryBuilder has type hints."""
@@ -473,6 +512,7 @@ class TestCodeQuality:
             pytest.skip("Modules not available")
 
         import inspect
+
         from truthgraph.db.query_builder import QueryBuilder
 
         # Check explain_analyze signature
@@ -480,9 +520,10 @@ class TestCodeQuality:
 
         # Should have type annotations
         for param_name, param in sig.parameters.items():
-            if param_name not in ['self', 'params']:  # params can be Optional
-                assert param.annotation != inspect.Parameter.empty, \
+            if param_name not in ["self", "params"]:  # params can be Optional
+                assert param.annotation != inspect.Parameter.empty, (
                     f"Parameter {param_name} should have type annotation"
+                )
 
     def test_no_obvious_sql_injection_vulnerabilities(self):
         """Verify queries use parameterized SQL."""
@@ -490,6 +531,7 @@ class TestCodeQuality:
             pytest.skip("Modules not available")
 
         import inspect
+
         from truthgraph.db.queries import OptimizedQueries
 
         queries = OptimizedQueries()
@@ -498,17 +540,17 @@ class TestCodeQuality:
         source = inspect.getsource(queries.batch_get_evidence_by_ids)
 
         # Should use parameterized queries (:param_name or %(param)s)
-        assert ':' in source or '%(' in source, \
+        assert ":" in source or "%(" in source, (
             "Should use parameterized queries (not string formatting)"
+        )
 
         # Should NOT use direct string interpolation in SQL (dangerous)
         # F-strings in VALUES clauses are OK for structure, but not for values
-        lines = source.split('\n')
+        lines = source.split("\n")
         for line in lines:
-            if 'WHERE' in line and 'f"' in line:
+            if "WHERE" in line and 'f"' in line:
                 # This is potentially dangerous
-                assert ':' in line or '%(' in line, \
-                    "WHERE clauses should use parameterized values"
+                assert ":" in line or "%(" in line, "WHERE clauses should use parameterized values"
 
 
 class TestIntegration:
@@ -516,12 +558,15 @@ class TestIntegration:
 
     def test_feature_2_3_coordination(self):
         """Verify coordination with Feature 2.3 (vector search)."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
@@ -534,18 +579,22 @@ class TestIntegration:
 
     def test_feature_2_4_integration_notes(self):
         """Verify integration notes for Feature 2.4."""
-        results_file = Path("c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json")
+        results_file = Path(
+            "c:/repos/truthgraph/scripts/benchmarks/results/query_performance_2025-11-01.json"
+        )
 
         if not results_file.exists():
             pytest.skip("Performance results file not found")
 
         import json
+
         with open(results_file) as f:
             results = json.load(f)
 
         # Should have Feature 2.4 integration notes
-        assert "integration_notes_for_feature_2_4" in results or \
-               "Feature 2.4" in json.dumps(results)
+        assert "integration_notes_for_feature_2_4" in results or "Feature 2.4" in json.dumps(
+            results
+        )
 
 
 class TestProductionReadiness:
@@ -553,36 +602,42 @@ class TestProductionReadiness:
 
     def test_connection_pooling_configured(self):
         """Verify connection pooling is mentioned in docs."""
-        recommendations_file = Path("c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md")
+        recommendations_file = Path(
+            "c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md"
+        )
 
         if not recommendations_file.exists():
             pytest.skip("Recommendations file not found")
 
-        content = recommendations_file.read_text(encoding='utf-8')
+        content = recommendations_file.read_text(encoding="utf-8")
 
         assert "pool" in content.lower() or "connection" in content.lower()
         assert "pool_size" in content or "pooling" in content.lower()
 
     def test_monitoring_recommendations_included(self):
         """Verify monitoring recommendations are included."""
-        recommendations_file = Path("c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md")
+        recommendations_file = Path(
+            "c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md"
+        )
 
         if not recommendations_file.exists():
             pytest.skip("Recommendations file not found")
 
-        content = recommendations_file.read_text(encoding='utf-8')
+        content = recommendations_file.read_text(encoding="utf-8")
 
         assert "monitor" in content.lower() or "monitoring" in content.lower()
         assert "alert" in content.lower() or "threshold" in content.lower()
 
     def test_deployment_checklist_provided(self):
         """Verify deployment checklist is provided."""
-        recommendations_file = Path("c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md")
+        recommendations_file = Path(
+            "c:/repos/truthgraph/docs/profiling/database_optimization_recommendations.md"
+        )
 
         if not recommendations_file.exists():
             pytest.skip("Recommendations file not found")
 
-        content = recommendations_file.read_text(encoding='utf-8')
+        content = recommendations_file.read_text(encoding="utf-8")
 
         assert "deploy" in content.lower() or "production" in content.lower()
         assert "checklist" in content.lower() or "steps" in content.lower()

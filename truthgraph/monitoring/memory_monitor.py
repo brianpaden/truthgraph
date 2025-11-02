@@ -30,7 +30,7 @@ import sys
 import time
 import tracemalloc
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -56,6 +56,7 @@ class MemorySnapshot:
         num_fds: Number of open file descriptors (Unix only)
         cpu_percent: CPU usage percentage
     """
+
     timestamp: str
     process_id: int
     rss_mb: float
@@ -81,7 +82,7 @@ class MemorySnapshot:
             "python_allocated_mb": round(self.python_allocated_mb, 2),
             "num_threads": self.num_threads,
             "num_fds": self.num_fds,
-            "cpu_percent": round(self.cpu_percent, 2)
+            "cpu_percent": round(self.cpu_percent, 2),
         }
 
 
@@ -98,6 +99,7 @@ class MemoryStats:
         total_snapshots: Number of snapshots analyzed
         duration_seconds: Time period covered
     """
+
     mean_rss_mb: float
     max_rss_mb: float
     min_rss_mb: float
@@ -116,7 +118,7 @@ class MemoryStats:
             "growth_rate_mb_per_sec": round(self.growth_rate_mb_per_sec, 6),
             "growth_rate_mb_per_hour": round(self.growth_rate_mb_per_sec * 3600, 2),
             "total_snapshots": self.total_snapshots,
-            "duration_seconds": round(self.duration_seconds, 2)
+            "duration_seconds": round(self.duration_seconds, 2),
         }
 
 
@@ -213,7 +215,7 @@ class MemoryMonitor:
         num_threads = self.process.num_threads()
         num_fds = 0
         try:
-            if sys.platform != 'win32':
+            if sys.platform != "win32":
                 num_fds = self.process.num_fds()
         except (AttributeError, psutil.AccessDenied):
             pass
@@ -232,7 +234,7 @@ class MemoryMonitor:
             python_allocated_mb=python_allocated_mb,
             num_threads=num_threads,
             num_fds=num_fds,
-            cpu_percent=cpu_percent
+            cpu_percent=cpu_percent,
         )
 
         self.snapshots.append(snapshot)
@@ -270,7 +272,7 @@ class MemoryMonitor:
 
         # Calculate standard deviation
         variance = sum((x - mean_rss) ** 2 for x in rss_values) / n
-        std_dev = variance ** 0.5
+        std_dev = variance**0.5
 
         # Calculate growth rate using linear regression
         growth_rate = 0.0
@@ -295,7 +297,7 @@ class MemoryMonitor:
             std_dev_rss_mb=std_dev,
             growth_rate_mb_per_sec=growth_rate,
             total_snapshots=n,
-            duration_seconds=time.time() - self.start_time if self.start_time else 0
+            duration_seconds=time.time() - self.start_time if self.start_time else 0,
         )
 
     def mark_component(self, component_name: str) -> None:
@@ -332,7 +334,7 @@ class MemoryMonitor:
             "initial_mb": round(markers[0], 2),
             "current_mb": round(markers[-1], 2),
             "delta_mb": round(delta, 2),
-            "num_measurements": len(markers)
+            "num_measurements": len(markers),
         }
 
     def detect_memory_leak(self, threshold_mb_per_hour: float = 10.0) -> Dict[str, Any]:
@@ -354,9 +356,9 @@ class MemoryMonitor:
             "growth_rate_mb_per_hour": round(growth_per_hour, 2),
             "threshold_mb_per_hour": threshold_mb_per_hour,
             "duration_minutes": round(stats.duration_seconds / 60, 2),
-            "total_growth_mb": round(
-                stats.max_rss_mb - self.snapshots[0].rss_mb, 2
-            ) if self.snapshots else 0
+            "total_growth_mb": round(stats.max_rss_mb - self.snapshots[0].rss_mb, 2)
+            if self.snapshots
+            else 0,
         }
 
     def get_top_allocations(self, limit: int = 10) -> List[Dict[str, Any]]:
@@ -372,15 +374,17 @@ class MemoryMonitor:
             return []
 
         snapshot = tracemalloc.take_snapshot()
-        top_stats = snapshot.statistics('lineno')
+        top_stats = snapshot.statistics("lineno")
 
         allocations = []
         for stat in top_stats[:limit]:
-            allocations.append({
-                "file": stat.traceback.format()[0] if stat.traceback else "unknown",
-                "size_mb": round(stat.size / (1024 * 1024), 3),
-                "count": stat.count
-            })
+            allocations.append(
+                {
+                    "file": stat.traceback.format()[0] if stat.traceback else "unknown",
+                    "size_mb": round(stat.size / (1024 * 1024), 3),
+                    "count": stat.count,
+                }
+            )
 
         return allocations
 

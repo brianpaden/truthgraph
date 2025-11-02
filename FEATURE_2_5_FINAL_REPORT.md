@@ -369,17 +369,17 @@ Duration: 16.6 seconds
 4. ✅ `__init__.py` (55 lines)
 
 ### Profiling Scripts (scripts/profiling/)
-5. ✅ `analyze_memory_usage.py` (638 lines)
+1. ✅ `analyze_memory_usage.py` (638 lines)
 
 ### Results (scripts/profiling/results/)
-6. ✅ `memory_profile_2025-11-01.json` (complete profiling data)
+1. ✅ `memory_profile_2025-11-01.json` (complete profiling data)
 
 ### Documentation (docs/profiling/)
-7. ✅ `memory_analysis.md` (650+ lines)
-8. ✅ `memory_optimization_guide.md` (650+ lines)
+1. ✅ `memory_analysis.md` (650+ lines)
+2. ✅ `memory_optimization_guide.md` (650+ lines)
 
 ### Tests (tests/)
-9. ✅ `test_memory_monitoring.py` (645 lines, 37 tests)
+1. ✅ `test_memory_monitoring.py` (645 lines, 37 tests)
 
 **Total**: 9 files, 3,625+ lines of code and documentation
 

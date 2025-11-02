@@ -273,7 +273,8 @@ def main():
     # Get database URL from env var or use default
     # Default uses 'postgres' host for Docker container, change to 'localhost' for local dev
     database_url = args.database_url or os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
+        "DATABASE_URL",
+        "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph",
     )
 
     print("Vector Search Performance Benchmark")

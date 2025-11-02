@@ -7,7 +7,7 @@ This module provides comprehensive accuracy metrics calculation including:
 - Per-category accuracy analysis
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict
 
 import numpy as np
 from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
@@ -49,7 +49,7 @@ class AccuracyMetrics:
             Dictionary with precision scores for each verdict
         """
         if not self.predictions or not self.labels:
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
         try:
             # Create label arrays for multi-class precision
@@ -63,11 +63,14 @@ class AccuracyMetrics:
             y_pred = y_pred[valid_mask]
 
             if len(y_true) == 0:
-                return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+                return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
             precision_scores = precision_score(
-                y_true, y_pred, labels=list(range(len(self.VERDICT_TYPES))),
-                zero_division=0, average=None
+                y_true,
+                y_pred,
+                labels=list(range(len(self.VERDICT_TYPES))),
+                zero_division=0,
+                average=None,
             )
 
             return {
@@ -76,7 +79,7 @@ class AccuracyMetrics:
             }
         except Exception as e:
             print(f"Error calculating precision: {e}")
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
     def calculate_recall(self) -> Dict[str, float]:
         """Calculate recall for each verdict type.
@@ -85,7 +88,7 @@ class AccuracyMetrics:
             Dictionary with recall scores for each verdict
         """
         if not self.predictions or not self.labels:
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
         try:
             label_indices = {v: i for i, v in enumerate(self.VERDICT_TYPES)}
@@ -97,20 +100,22 @@ class AccuracyMetrics:
             y_pred = y_pred[valid_mask]
 
             if len(y_true) == 0:
-                return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+                return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
             recall_scores = recall_score(
-                y_true, y_pred, labels=list(range(len(self.VERDICT_TYPES))),
-                zero_division=0, average=None
+                y_true,
+                y_pred,
+                labels=list(range(len(self.VERDICT_TYPES))),
+                zero_division=0,
+                average=None,
             )
 
             return {
-                verdict: float(score)
-                for verdict, score in zip(self.VERDICT_TYPES, recall_scores)
+                verdict: float(score) for verdict, score in zip(self.VERDICT_TYPES, recall_scores)
             }
         except Exception as e:
             print(f"Error calculating recall: {e}")
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
     def calculate_f1(self) -> Dict[str, float]:
         """Calculate F1 score for each verdict type.
@@ -119,7 +124,7 @@ class AccuracyMetrics:
             Dictionary with F1 scores for each verdict
         """
         if not self.predictions or not self.labels:
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
         try:
             label_indices = {v: i for i, v in enumerate(self.VERDICT_TYPES)}
@@ -131,20 +136,20 @@ class AccuracyMetrics:
             y_pred = y_pred[valid_mask]
 
             if len(y_true) == 0:
-                return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+                return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
             f1_scores = f1_score(
-                y_true, y_pred, labels=list(range(len(self.VERDICT_TYPES))),
-                zero_division=0, average=None
+                y_true,
+                y_pred,
+                labels=list(range(len(self.VERDICT_TYPES))),
+                zero_division=0,
+                average=None,
             )
 
-            return {
-                verdict: float(score)
-                for verdict, score in zip(self.VERDICT_TYPES, f1_scores)
-            }
+            return {verdict: float(score) for verdict, score in zip(self.VERDICT_TYPES, f1_scores)}
         except Exception as e:
             print(f"Error calculating F1: {e}")
-            return {verdict: 0.0 for verdict in self.VERDICT_TYPES}
+            return dict.fromkeys(self.VERDICT_TYPES, 0.0)
 
     def calculate_accuracy(self) -> float:
         """Calculate overall accuracy.
@@ -158,10 +163,7 @@ class AccuracyMetrics:
         if len(self.predictions) != len(self.labels):
             return 0.0
 
-        correct = sum(
-            1 for pred, label in zip(self.predictions, self.labels)
-            if pred == label
-        )
+        correct = sum(1 for pred, label in zip(self.predictions, self.labels) if pred == label)
         return correct / len(self.predictions)
 
     def calculate_macro_f1(self) -> float:
@@ -196,7 +198,7 @@ class AccuracyMetrics:
             if len(y_true) == 0:
                 return 0.0
 
-            return float(f1_score(y_true, y_pred, average='weighted', zero_division=0))
+            return float(f1_score(y_true, y_pred, average="weighted", zero_division=0))
         except Exception as e:
             print(f"Error calculating weighted F1: {e}")
             return 0.0
@@ -207,10 +209,7 @@ class AccuracyMetrics:
         Returns:
             Nested dictionary representing the confusion matrix
         """
-        matrix = {
-            verdict: {v: 0 for v in self.VERDICT_TYPES}
-            for verdict in self.VERDICT_TYPES
-        }
+        matrix = {verdict: dict.fromkeys(self.VERDICT_TYPES, 0) for verdict in self.VERDICT_TYPES}
 
         for pred, label in zip(self.predictions, self.labels):
             if label in matrix and pred in matrix[label]:
@@ -235,10 +234,7 @@ class AccuracyMetrics:
         if len(y_true) == 0:
             return np.zeros((3, 3), dtype=int)
 
-        return confusion_matrix(
-            y_true, y_pred,
-            labels=list(range(len(self.VERDICT_TYPES)))
-        )
+        return confusion_matrix(y_true, y_pred, labels=list(range(len(self.VERDICT_TYPES))))
 
     def per_category_breakdown(self) -> Dict[str, Dict[str, float]]:
         """Calculate metrics per category.

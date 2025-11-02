@@ -78,20 +78,20 @@ Our optimization methodology followed a structured 8-hour implementation timelin
 
 #### Phase 2: Optimization (Hours 2-5)
 
-4. **Index Creation**
+1. **Index Creation**
    - Designed composite indexes for common query patterns
    - Created IVFFlat vector index with Feature 2.3 parameters
    - Added partial indexes for filtered queries
    - Documented all index definitions in indexes.sql
 
-5. **Batch Operation Implementation**
+2. **Batch Operation Implementation**
    - Implemented OptimizedQueries class
    - Created batch_get_evidence_by_ids()
    - Created batch_create_nli_results()
    - Created batch_create_embeddings()
    - Optimized with PostgreSQL-specific features (ANY, RETURNING)
 
-6. **Join Optimization**
+3. **Join Optimization**
    - Combined separate queries into single JOINs
    - Optimized evidence + embeddings retrieval
    - Optimized verification_results + claims + nli_results
@@ -99,13 +99,13 @@ Our optimization methodology followed a structured 8-hour implementation timelin
 
 #### Phase 3: Validation (Hours 5-8)
 
-7. **Performance Benchmarking**
+1. **Performance Benchmarking**
    - Created benchmark_queries.py script
    - Measured before/after performance
    - Tested multiple batch sizes (10, 20, 50, 100)
    - Generated comprehensive performance data
 
-8. **Documentation and Testing**
+2. **Documentation and Testing**
    - Wrote comprehensive analysis (this document)
    - Created production recommendations
    - Implemented test suite
@@ -1333,7 +1333,7 @@ Feature 2.6 builds on Feature 2.3's vector search optimization:
 
 #### Feature 2.6 Enhancements
 
-3. **Database Query Optimization**:
+1. **Database Query Optimization**:
    - Combined vector search + evidence retrieval: 11.2ms
    - Batch embedding insertion: 45.2ms for 100 items (63x faster)
    - JOIN optimization reduces separate queries

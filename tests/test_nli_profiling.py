@@ -9,19 +9,19 @@ This module tests the NLI profiling infrastructure including:
 """
 
 import json
-from pathlib import Path
-from unittest.mock import Mock, patch
-
-import pytest
 
 # Import profiling classes by adding scripts to path
 import sys
+from pathlib import Path
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "profiling"))
 
-from profile_nli import NLIProfiler  # type: ignore[import-not-found]
 from nli_batch_optimization import BatchOptimizer  # type: ignore[import-not-found]
+from profile_nli import NLIProfiler  # type: ignore[import-not-found]
 
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult, get_nli_service
+from truthgraph.services.ml.nli_service import NLILabel
 
 
 class TestNLIProfiler:
@@ -46,7 +46,9 @@ class TestNLIProfiler:
         assert len(profiler.test_pairs) == 50
         assert all(isinstance(pair, tuple) for pair in profiler.test_pairs)
         assert all(len(pair) == 2 for pair in profiler.test_pairs)
-        assert all(isinstance(pair[0], str) and isinstance(pair[1], str) for pair in profiler.test_pairs)
+        assert all(
+            isinstance(pair[0], str) and isinstance(pair[1], str) for pair in profiler.test_pairs
+        )
 
     def test_load_test_data_default_size(self) -> None:
         """Test default test data size."""
@@ -543,11 +545,7 @@ class TestIntegration:
 
         # Run optimization
         batch_sizes = [4, 8, 16]
-        optimizer.run_optimization(
-            batch_sizes,
-            num_pairs=40,
-            validate_accuracy=True
-        )
+        optimizer.run_optimization(batch_sizes, num_pairs=40, validate_accuracy=True)
 
         # Verify results
         assert len(optimizer.results["batch_analyses"]) == len(batch_sizes)

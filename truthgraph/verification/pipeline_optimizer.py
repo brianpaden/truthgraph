@@ -248,9 +248,7 @@ class ParallelExecutor:
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             # Submit all tasks
-            future_to_item = {
-                executor.submit(func, item): i for i, item in enumerate(items)
-            }
+            future_to_item = {executor.submit(func, item): i for i, item in enumerate(items)}
 
             # Collect results in order
             ordered_results: dict[int, Any] = {}
@@ -316,9 +314,7 @@ class TextPreprocessor:
 
         return truncated.strip()
 
-    def preprocess_batch(
-        self, texts: list[str], preserve_sentences: bool = True
-    ) -> list[str]:
+    def preprocess_batch(self, texts: list[str], preserve_sentences: bool = True) -> list[str]:
         """Preprocess batch of texts.
 
         Args:
@@ -328,9 +324,7 @@ class TextPreprocessor:
         Returns:
             List of preprocessed texts
         """
-        return [
-            self.truncate_text(text, preserve_sentences) for text in texts
-        ]
+        return [self.truncate_text(text, preserve_sentences) for text in texts]
 
 
 class PerformanceTracker:
@@ -416,9 +410,7 @@ class PerformanceTracker:
         return summary
 
 
-def configure_database_for_optimization(
-    db_session: Any, config: OptimizationConfig
-) -> None:
+def configure_database_for_optimization(db_session: Any, config: OptimizationConfig) -> None:
     """Configure database session for optimal performance.
 
     Args:
@@ -432,9 +424,7 @@ def configure_database_for_optimization(
 
     try:
         # Set IVFFlat probes for vector search
-        db_session.execute(
-            text(f"SET ivfflat.probes = {config.vector_search_probes}")
-        )
+        db_session.execute(text(f"SET ivfflat.probes = {config.vector_search_probes}"))
 
         logger.info(
             "database_configured",

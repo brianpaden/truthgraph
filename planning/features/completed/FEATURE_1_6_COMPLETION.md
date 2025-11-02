@@ -370,11 +370,11 @@ python validate_corpus.py
    - Usage examples and specifications
 
 ### Supporting Files
-6. **c:\repos\truthgraph\scripts\generate_sample_corpus.py** (48 KB)
+1. **c:\repos\truthgraph\scripts\generate_sample_corpus.py** (48 KB)
    - Corpus generation script
    - Reusable for future updates
 
-7. **c:\repos\truthgraph\FEATURE_1_6_COMPLETION.md** (this file)
+2. **c:\repos\truthgraph\FEATURE_1_6_COMPLETION.md** (this file)
    - Feature completion report
    - Implementation summary
 

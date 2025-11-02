@@ -155,9 +155,7 @@ def create_test_corpus(
     return ground_truth_embeddings
 
 
-def create_ivfflat_index(
-    session, lists: int, embedding_dim: int, tenant_id: str
-) -> dict[str, Any]:
+def create_ivfflat_index(session, lists: int, embedding_dim: int, tenant_id: str) -> dict[str, Any]:
     """Create IVFFlat index with specified parameters.
 
     Args:
@@ -173,9 +171,7 @@ def create_ivfflat_index(
 
     # Drop existing index if present
     try:
-        session.execute(
-            text("DROP INDEX IF EXISTS embeddings_ivfflat_idx")
-        )
+        session.execute(text("DROP INDEX IF EXISTS embeddings_ivfflat_idx"))
         session.commit()
     except Exception as e:
         print(f"  Warning: Could not drop index: {e}")
@@ -200,9 +196,7 @@ def create_ivfflat_index(
 
         # Get index size
         size_result = session.execute(
-            text(
-                "SELECT pg_size_pretty(pg_relation_size('embeddings_ivfflat_idx')) as size"
-            )
+            text("SELECT pg_size_pretty(pg_relation_size('embeddings_ivfflat_idx')) as size")
         )
         index_size = size_result.fetchone()[0]
 
@@ -370,13 +364,9 @@ def benchmark_index_configuration(
     }
 
     print(
-        f"  Latency: mean={result['mean_latency_ms']:.1f}ms, "
-        f"p95={result['p95_latency_ms']:.1f}ms"
+        f"  Latency: mean={result['mean_latency_ms']:.1f}ms, p95={result['p95_latency_ms']:.1f}ms"
     )
-    print(
-        f"  Accuracy: top1={result['top1_recall']:.3f}, "
-        f"top5={result['top5_recall']:.3f}"
-    )
+    print(f"  Accuracy: top1={result['top1_recall']:.3f}, top5={result['top5_recall']:.3f}")
 
     return result
 
@@ -438,7 +428,13 @@ def optimize_index_parameters(
                     continue
 
                 config_result = benchmark_index_configuration(
-                    session, service, lists, probes, ground_truth, num_queries=50, tenant_id=tenant_id
+                    session,
+                    service,
+                    lists,
+                    probes,
+                    ground_truth,
+                    num_queries=50,
+                    tenant_id=tenant_id,
                 )
 
                 config_result["index_build_time_sec"] = index_stats["build_time_sec"]
@@ -467,7 +463,9 @@ def optimize_index_parameters(
         else:
             # No config meets accuracy target, report best accuracy
             if results["configurations"]:
-                best_accuracy = max(results["configurations"], key=lambda c: c.get("top1_recall", 0))
+                best_accuracy = max(
+                    results["configurations"], key=lambda c: c.get("top1_recall", 0)
+                )
                 results["optimal_configuration"] = {
                     "lists": best_accuracy["lists"],
                     "probes": best_accuracy["probes"],
@@ -518,7 +516,9 @@ def main() -> int:
         "--database-url", type=str, help="Database URL (default: from DATABASE_URL env)"
     )
     parser.add_argument(
-        "--output", type=str, help="Output JSON file (default: results/index_params_YYYY-MM-DD.json)"
+        "--output",
+        type=str,
+        help="Output JSON file (default: results/index_params_YYYY-MM-DD.json)",
     )
 
     args = parser.parse_args()

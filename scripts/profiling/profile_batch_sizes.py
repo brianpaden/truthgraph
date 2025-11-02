@@ -119,9 +119,9 @@ class BatchSizeProfiler:
         Returns:
             Dictionary with profiling metrics including throughput, latency, memory
         """
-        logger.info(f"\n{'='*60}")
+        logger.info(f"\n{'=' * 60}")
         logger.info(f"Profiling batch_size={batch_size}")
-        logger.info(f"{'='*60}")
+        logger.info(f"{'=' * 60}")
 
         # Clean up memory before test
         gc.collect()
@@ -189,9 +189,9 @@ class BatchSizeProfiler:
         Returns:
             List of bottleneck findings with descriptions and recommendations
         """
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("ANALYZING BOTTLENECKS")
-        logger.info("="*60)
+        logger.info("=" * 60)
 
         bottlenecks = []
 
@@ -200,60 +200,71 @@ class BatchSizeProfiler:
         best_throughput_idx = throughputs.index(max(throughputs))
         best_batch = self.results["batch_results"][best_throughput_idx]
 
-        bottlenecks.append({
-            "type": "optimal_batch_size",
-            "finding": f"Best throughput at batch_size={best_batch['batch_size']}",
-            "metric": f"{best_batch['throughput_texts_per_sec']:.2f} texts/sec",
-            "recommendation": f"Use batch_size={best_batch['batch_size']} for optimal performance",
-            "priority": "high",
-        })
+        bottlenecks.append(
+            {
+                "type": "optimal_batch_size",
+                "finding": f"Best throughput at batch_size={best_batch['batch_size']}",
+                "metric": f"{best_batch['throughput_texts_per_sec']:.2f} texts/sec",
+                "recommendation": f"Use batch_size={best_batch['batch_size']} for optimal performance",
+                "priority": "high",
+            }
+        )
 
         # Analyze memory scaling
         memory_deltas = [r["memory_delta_mb"] for r in self.results["batch_results"]]
         max_memory_delta = max(memory_deltas)
 
         if max_memory_delta > 100:
-            bottlenecks.append({
-                "type": "memory_usage",
-                "finding": f"Memory increases up to {max_memory_delta:.1f}MB with large batches",
-                "metric": f"Max memory delta: {max_memory_delta:.1f}MB",
-                "recommendation": "Consider memory constraints when choosing batch size",
-                "priority": "medium",
-            })
+            bottlenecks.append(
+                {
+                    "type": "memory_usage",
+                    "finding": f"Memory increases up to {max_memory_delta:.1f}MB with large batches",
+                    "metric": f"Max memory delta: {max_memory_delta:.1f}MB",
+                    "recommendation": "Consider memory constraints when choosing batch size",
+                    "priority": "medium",
+                }
+            )
 
         # Compare with baseline
         baseline_throughput = 1184.92  # From Feature 1.7
         baseline_batch = 64
 
         current_result = next(
-            (r for r in self.results["batch_results"] if r["batch_size"] == baseline_batch),
-            None
+            (r for r in self.results["batch_results"] if r["batch_size"] == baseline_batch), None
         )
 
         if current_result:
             current_throughput = current_result["throughput_texts_per_sec"]
             variance_pct = ((current_throughput - baseline_throughput) / baseline_throughput) * 100
 
-            bottlenecks.append({
-                "type": "baseline_comparison",
-                "finding": f"Current performance vs Feature 1.7 baseline",
-                "metric": f"{variance_pct:+.2f}% variance at batch_size={baseline_batch}",
-                "recommendation": "Performance consistent with baseline" if abs(variance_pct) < 5 else "Investigate performance deviation",
-                "priority": "high" if abs(variance_pct) > 5 else "low",
-            })
+            bottlenecks.append(
+                {
+                    "type": "baseline_comparison",
+                    "finding": "Current performance vs Feature 1.7 baseline",
+                    "metric": f"{variance_pct:+.2f}% variance at batch_size={baseline_batch}",
+                    "recommendation": "Performance consistent with baseline"
+                    if abs(variance_pct) < 5
+                    else "Investigate performance deviation",
+                    "priority": "high" if abs(variance_pct) > 5 else "low",
+                }
+            )
 
         # Analyze small batch inefficiency
         small_batch = self.results["batch_results"][0]  # batch_size=8
-        efficiency = (small_batch["throughput_texts_per_sec"] / best_batch["throughput_texts_per_sec"]) * 100
+        efficiency = (
+            small_batch["throughput_texts_per_sec"] / best_batch["throughput_texts_per_sec"]
+        ) * 100
 
         if efficiency < 60:
-            bottlenecks.append({
-                "type": "small_batch_inefficiency",
-                "finding": f"Small batches (size={small_batch['batch_size']}) are {100-efficiency:.1f}% slower",
-                "metric": f"{efficiency:.1f}% efficiency vs optimal",
-                "recommendation": "Avoid small batch sizes in production",
-                "priority": "medium",
-            })
+            bottlenecks.append(
+                {
+                    "type": "small_batch_inefficiency",
+                    "finding": f"Small batches (size={small_batch['batch_size']}) are {100 - efficiency:.1f}% slower",
+                    "metric": f"{efficiency:.1f}% efficiency vs optimal",
+                    "recommendation": "Avoid small batch sizes in production",
+                    "priority": "medium",
+                }
+            )
 
         return bottlenecks
 
@@ -270,35 +281,41 @@ class BatchSizeProfiler:
         best_idx = throughputs.index(max(throughputs))
         best_batch = self.results["batch_results"][best_idx]
 
-        recommendations.append({
-            "optimization": "Batch Size Configuration",
-            "description": f"Set DEFAULT_BATCH_SIZE to {best_batch['batch_size']}",
-            "expected_improvement": "Baseline (already optimal)",
-            "effort": "low",
-            "priority": "high",
-            "implementation": f"Update EmbeddingService.DEFAULT_BATCH_SIZE = {best_batch['batch_size']}",
-        })
+        recommendations.append(
+            {
+                "optimization": "Batch Size Configuration",
+                "description": f"Set DEFAULT_BATCH_SIZE to {best_batch['batch_size']}",
+                "expected_improvement": "Baseline (already optimal)",
+                "effort": "low",
+                "priority": "high",
+                "implementation": f"Update EmbeddingService.DEFAULT_BATCH_SIZE = {best_batch['batch_size']}",
+            }
+        )
 
         # Check if GPU would help
         if self.service.get_device() == "cpu":
-            recommendations.append({
-                "optimization": "GPU Acceleration",
-                "description": "Test with CUDA GPU if available",
-                "expected_improvement": "2-5x throughput improvement",
-                "effort": "medium",
-                "priority": "medium",
-                "implementation": "Ensure torch with CUDA support is installed",
-            })
+            recommendations.append(
+                {
+                    "optimization": "GPU Acceleration",
+                    "description": "Test with CUDA GPU if available",
+                    "expected_improvement": "2-5x throughput improvement",
+                    "effort": "medium",
+                    "priority": "medium",
+                    "implementation": "Ensure torch with CUDA support is installed",
+                }
+            )
 
         # Batch processing strategy
-        recommendations.append({
-            "optimization": "Adaptive Batch Sizing",
-            "description": "Adjust batch size based on input text count",
-            "expected_improvement": "5-10% improvement for variable workloads",
-            "effort": "medium",
-            "priority": "low",
-            "implementation": "Add logic to select batch_size based on len(texts)",
-        })
+        recommendations.append(
+            {
+                "optimization": "Adaptive Batch Sizing",
+                "description": "Adjust batch size based on input text count",
+                "expected_improvement": "5-10% improvement for variable workloads",
+                "effort": "medium",
+                "priority": "low",
+                "implementation": "Add logic to select batch_size based on len(texts)",
+            }
+        )
 
         return recommendations
 
@@ -340,9 +357,9 @@ class BatchSizeProfiler:
             "cuda_available": torch.cuda.is_available(),
         }
 
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("PROFILING COMPLETE")
-        logger.info("="*60)
+        logger.info("=" * 60)
 
         return self.results
 
@@ -361,12 +378,12 @@ class BatchSizeProfiler:
 
     def print_summary(self) -> None:
         """Print a summary of profiling results to console."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("PROFILING SUMMARY")
-        print("="*60)
+        print("=" * 60)
         print(f"\nDevice: {self.results['metadata']['device']}")
         print(f"Test size: {self.results['metadata']['num_test_texts']} texts")
-        print(f"\nBatch Size Performance:")
+        print("\nBatch Size Performance:")
         print(f"{'Batch':>8} {'Throughput':>15} {'Latency':>12} {'Memory Δ':>12}")
         print(f"{'Size':>8} {'(texts/sec)':>15} {'(ms/text)':>12} {'(MB)':>12}")
         print("-" * 60)
@@ -379,14 +396,14 @@ class BatchSizeProfiler:
                 f"{result['memory_delta_mb']:>12.1f}"
             )
 
-        print(f"\n\nTop Bottlenecks:")
+        print("\n\nTop Bottlenecks:")
         for i, bottleneck in enumerate(self.results["bottlenecks"][:5], 1):
             print(f"\n{i}. {bottleneck['type'].upper()}")
             print(f"   Finding: {bottleneck['finding']}")
             print(f"   Metric: {bottleneck['metric']}")
             print(f"   Recommendation: {bottleneck['recommendation']}")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
 
 
 def load_test_data(num_texts: int = 1000) -> list[str]:
@@ -403,7 +420,9 @@ def load_test_data(num_texts: int = 1000) -> list[str]:
     if not test_claims_path.exists():
         logger.warning(f"Test claims file not found: {test_claims_path}")
         logger.info("Using synthetic test data")
-        return [f"Test claim number {i} for profiling the embedding service." for i in range(num_texts)]
+        return [
+            f"Test claim number {i} for profiling the embedding service." for i in range(num_texts)
+        ]
 
     with open(test_claims_path) as f:
         data = json.load(f)

@@ -305,7 +305,9 @@ class TestHybridSearchIntegration:
         service = HybridSearchService(embedding_dimension=DEFAULT_EMBEDDING_DIMENSION)
 
         # Use very different embedding and unrelated keywords
-        query_embedding = [0.99 if i % 100 == 0 else 0.001 for i in range(DEFAULT_EMBEDDING_DIMENSION)]
+        query_embedding = [
+            0.99 if i % 100 == 0 else 0.001 for i in range(DEFAULT_EMBEDDING_DIMENSION)
+        ]
 
         results, query_time = service.hybrid_search(
             db=db_session,

@@ -13,9 +13,7 @@ Test Coverage:
 - Short claims lacking necessary qualifications
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -26,9 +24,7 @@ pytest_plugins = ["tests.fixtures.edge_cases.conftest"]
 class TestShortClaimsHandling:
     """Test suite for short claim edge cases."""
 
-    def test_load_short_claims_fixture(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_load_short_claims_fixture(self, edge_case_short_claims: Dict[str, Any]):
         """Verify the short claims fixture loads correctly.
 
         Args:
@@ -40,9 +36,7 @@ class TestShortClaimsHandling:
         assert "claims" in edge_case_short_claims
         assert len(edge_case_short_claims["claims"]) > 0
 
-    def test_all_claims_are_actually_short(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_all_claims_are_actually_short(self, edge_case_short_claims: Dict[str, Any]):
         """Verify all claims are actually short (<10 words).
 
         Args:
@@ -55,13 +49,9 @@ class TestShortClaimsHandling:
             word_count = len(claim_text.split())
 
             # Short claims should have <=10 words
-            assert word_count <= 10, (
-                f"Claim {claim['id']} is not short enough: {word_count} words"
-            )
+            assert word_count <= 10, f"Claim {claim['id']} is not short enough: {word_count} words"
 
-    def test_short_claims_structure(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_structure(self, edge_case_short_claims: Dict[str, Any]):
         """Verify short claims have proper structure.
 
         Args:
@@ -71,7 +61,7 @@ class TestShortClaimsHandling:
 
         for claim in claims:
             # Verify required fields
-            assert "id" in claim, f"Claim missing 'id' field"
+            assert "id" in claim, "Claim missing 'id' field"
             assert "text" in claim, f"Claim {claim.get('id')} missing 'text' field"
             assert "expected_verdict" in claim
             assert "edge_case_type" in claim
@@ -89,9 +79,7 @@ class TestShortClaimsHandling:
                 f"Claim {claim['id']} metadata should include word_count"
             )
 
-    def test_short_claims_have_valid_verdicts(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_have_valid_verdicts(self, edge_case_short_claims: Dict[str, Any]):
         """Verify all short claims have valid expected verdicts.
 
         Args:
@@ -106,9 +94,7 @@ class TestShortClaimsHandling:
                 f"Claim {claim['id']} has invalid verdict: {expected_verdict}"
             )
 
-    def test_short_claims_metadata_quality(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_metadata_quality(self, edge_case_short_claims: Dict[str, Any]):
         """Verify metadata quality for short claims.
 
         Args:
@@ -176,9 +162,7 @@ class TestShortClaimsHandling:
         if not found:
             pytest.skip(f"No claims found covering challenge: {challenge_type}")
 
-    def test_expected_behavior_addresses_brevity(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_expected_behavior_addresses_brevity(self, edge_case_short_claims: Dict[str, Any]):
         """Verify expected behavior addresses claim brevity.
 
         Args:
@@ -194,9 +178,7 @@ class TestShortClaimsHandling:
                 f"Claim {claim['id']} expected_behavior should be descriptive"
             )
 
-    def test_short_claims_reason_quality(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_reason_quality(self, edge_case_short_claims: Dict[str, Any]):
         """Verify reasons for short claim challenges are documented.
 
         Args:
@@ -208,9 +190,7 @@ class TestShortClaimsHandling:
             reason = claim.get("reason", "")
 
             # Reason should explain the challenge
-            assert len(reason) > 20, (
-                f"Claim {claim['id']} should have descriptive reason"
-            )
+            assert len(reason) > 20, f"Claim {claim['id']} should have descriptive reason"
 
             # Should mention brevity or lack of context
             keywords = ["short", "brief", "minimal", "lacks", "terse", "context"]
@@ -220,9 +200,7 @@ class TestShortClaimsHandling:
                 # At minimum should be substantive
                 assert len(reason.split()) > 5
 
-    def test_short_claims_have_evidence_when_needed(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_have_evidence_when_needed(self, edge_case_short_claims: Dict[str, Any]):
         """Verify short claims have evidence when not INSUFFICIENT.
 
         Args:
@@ -238,20 +216,15 @@ class TestShortClaimsHandling:
             # If not INSUFFICIENT, should have evidence
             if expected_verdict != "INSUFFICIENT":
                 assert len(evidence_ids) > 0, (
-                    f"Claim {claim['id']} with {expected_verdict} verdict "
-                    f"should have evidence"
+                    f"Claim {claim['id']} with {expected_verdict} verdict should have evidence"
                 )
 
                 # Verify evidence exists
                 for ev_id in evidence_ids:
                     found = any(ev["id"] == ev_id for ev in evidence_list)
-                    assert found, (
-                        f"Evidence {ev_id} referenced by claim {claim['id']} not found"
-                    )
+                    assert found, f"Evidence {ev_id} referenced by claim {claim['id']} not found"
 
-    def test_word_count_statistics(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_word_count_statistics(self, edge_case_short_claims: Dict[str, Any]):
         """Generate statistics on word counts for short claims.
 
         Args:
@@ -306,9 +279,7 @@ class TestShortClaimsIntegration:
             word_count = len(claim["text"].split())
             assert word_count <= 10
 
-    def test_edge_case_statistics_includes_short_claims(
-        self, edge_case_statistics: Dict[str, Any]
-    ):
+    def test_edge_case_statistics_includes_short_claims(self, edge_case_statistics: Dict[str, Any]):
         """Verify statistics include short claims category.
 
         Args:
@@ -339,9 +310,7 @@ class TestShortClaimsVerification:
     """
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_short_claims_no_rejection_errors(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_no_rejection_errors(self, edge_case_short_claims: Dict[str, Any]):
         """Test that verification system handles short claims without rejection.
 
         This test should be implemented once the verification pipeline is available.
@@ -362,9 +331,7 @@ class TestShortClaimsVerification:
         pass
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_short_claims_handle_ambiguity(
-        self, edge_case_short_claims: Dict[str, Any]
-    ):
+    def test_short_claims_handle_ambiguity(self, edge_case_short_claims: Dict[str, Any]):
         """Test that system handles ambiguity in short claims appropriately.
 
         Short claims may be ambiguous due to lack of context. System should

@@ -13,9 +13,7 @@ Test Coverage:
 - Internal mental states and private thoughts
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -53,8 +51,7 @@ class TestInsufficientEvidenceHandling:
         for claim in claims:
             expected_verdict = claim.get("expected_verdict")
             assert expected_verdict == "INSUFFICIENT", (
-                f"Claim {claim['id']} should expect INSUFFICIENT verdict, "
-                f"got {expected_verdict}"
+                f"Claim {claim['id']} should expect INSUFFICIENT verdict, got {expected_verdict}"
             )
 
     def test_insufficient_evidence_claim_structure(
@@ -69,7 +66,7 @@ class TestInsufficientEvidenceHandling:
 
         for claim in claims:
             # Verify required fields
-            assert "id" in claim, f"Claim missing 'id' field"
+            assert "id" in claim, "Claim missing 'id' field"
             assert "text" in claim, f"Claim {claim.get('id')} missing 'text' field"
             assert "expected_verdict" in claim
             assert "edge_case_type" in claim
@@ -84,8 +81,7 @@ class TestInsufficientEvidenceHandling:
             # Verify evidence_ids is empty (no evidence available)
             assert isinstance(claim["evidence_ids"], list)
             assert len(claim["evidence_ids"]) == 0, (
-                f"Claim {claim['id']} should have no evidence IDs "
-                f"for insufficient evidence case"
+                f"Claim {claim['id']} should have no evidence IDs for insufficient evidence case"
             )
 
     def test_insufficient_evidence_has_no_evidence(
@@ -99,9 +95,7 @@ class TestInsufficientEvidenceHandling:
         evidence_list = edge_case_insufficient_evidence.get("evidence", [])
 
         # Should have no evidence items for insufficient evidence cases
-        assert len(evidence_list) == 0, (
-            "Insufficient evidence cases should have no evidence items"
-        )
+        assert len(evidence_list) == 0, "Insufficient evidence cases should have no evidence items"
 
     def test_insufficient_evidence_metadata_quality(
         self, edge_case_insufficient_evidence: Dict[str, Any]
@@ -167,9 +161,7 @@ class TestInsufficientEvidenceHandling:
 
         assert found, f"No claims found covering challenge type: {challenge_type}"
 
-    def test_expected_behavior_documentation(
-        self, edge_case_insufficient_evidence: Dict[str, Any]
-    ):
+    def test_expected_behavior_documentation(self, edge_case_insufficient_evidence: Dict[str, Any]):
         """Verify all claims document expected behavior.
 
         Args:
@@ -204,9 +196,7 @@ class TestInsufficientEvidenceHandling:
             reason = claim.get("reason", "")
 
             # Reason should be descriptive
-            assert len(reason) > 20, (
-                f"Claim {claim['id']} should have descriptive reason"
-            )
+            assert len(reason) > 20, f"Claim {claim['id']} should have descriptive reason"
 
             # Reason should explain WHY evidence is insufficient
             keywords = ["no", "not", "private", "unpublished", "future", "unknown"]
@@ -251,9 +241,7 @@ class TestInsufficientEvidenceIntegration:
             assert claim["edge_case_type"] == "insufficient_evidence"
             assert claim["expected_verdict"] == "INSUFFICIENT"
 
-    def test_edge_case_statistics_includes_insufficient(
-        self, edge_case_statistics: Dict[str, Any]
-    ):
+    def test_edge_case_statistics_includes_insufficient(self, edge_case_statistics: Dict[str, Any]):
         """Verify statistics include insufficient evidence category.
 
         Args:

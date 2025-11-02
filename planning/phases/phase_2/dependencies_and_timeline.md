@@ -85,12 +85,12 @@
 
 ### Must Complete Next (Current Highest Priority)
 
-2. **Feature 3.1: Accuracy Framework** (8h) - 🟢 READY TO START
+1. **Feature 3.1: Accuracy Framework** (8h) - 🟢 READY TO START
    - All dependencies complete (1.7, 1.1-1.4)
    - Blocks 4 other features (3.2-3.5)
    - Must complete before validation work
 
-3. **Features 2.1-2.3: Performance Profiling** (24h parallel) - 🟢 READY TO START
+2. **Features 2.1-2.3: Performance Profiling** (24h parallel) - 🟢 READY TO START
    - Dependency 1.7 complete
    - Block 2.4 (end-to-end optimization)
    - Can start immediately in parallel

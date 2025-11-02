@@ -44,24 +44,18 @@ def run_benchmark(script_name: str, args: list[str] = None) -> int:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Run all benchmarks")
-    parser.add_argument(
-        "--quick", action="store_true", help="Quick run with fewer iterations"
-    )
+    parser.add_argument("--quick", action="store_true", help="Quick run with fewer iterations")
     parser.add_argument(
         "--baseline",
         action="store_true",
         help="Generate baseline results (saves to baseline_DATE.json)",
     )
-    parser.add_argument(
-        "--skip-embeddings", action="store_true", help="Skip embeddings benchmark"
-    )
+    parser.add_argument("--skip-embeddings", action="store_true", help="Skip embeddings benchmark")
     parser.add_argument("--skip-nli", action="store_true", help="Skip NLI benchmark")
     parser.add_argument(
         "--skip-vector-search", action="store_true", help="Skip vector search benchmark"
     )
-    parser.add_argument(
-        "--skip-pipeline", action="store_true", help="Skip pipeline benchmark"
-    )
+    parser.add_argument("--skip-pipeline", action="store_true", help="Skip pipeline benchmark")
 
     args = parser.parse_args()
 

@@ -23,23 +23,24 @@ import argparse
 import json
 import logging
 import statistics
-import time
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
-from uuid import UUID, uuid4
-
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import Session, sessionmaker
 
 # Add parent directory to path to import truthgraph modules
 import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
+from uuid import UUID, uuid4
+
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from truthgraph.db.queries import OptimizedQueries
 from truthgraph.db.query_builder import QueryBuilder
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -137,7 +138,7 @@ class QueryBenchmark:
                 query = f"""
                     INSERT INTO evidence (
                         id, content, source_url, source_type, credibility_score, created_at
-                    ) VALUES {', '.join(values)}
+                    ) VALUES {", ".join(values)}
                 """
 
                 session.execute(text(query))
@@ -159,18 +160,18 @@ class QueryBenchmark:
         session = self.SessionLocal()
         try:
             # Get sample evidence IDs
-            result = session.execute(text(
-                f"SELECT id FROM evidence ORDER BY created_at DESC LIMIT {min(100, self.corpus_size)}"
-            ))
+            result = session.execute(
+                text(
+                    f"SELECT id FROM evidence ORDER BY created_at DESC LIMIT {min(100, self.corpus_size)}"
+                )
+            )
             evidence_ids = [UUID(row[0]) for row in result.fetchall()]
 
             # Benchmark 1: Batch retrieval (optimized)
             timings_batch = []
             for _ in range(self.iterations):
                 start = time.time()
-                results = self.queries.batch_get_evidence_by_ids(
-                    session, evidence_ids[:20]
-                )
+                results = self.queries.batch_get_evidence_by_ids(session, evidence_ids[:20])
                 duration = (time.time() - start) * 1000
                 timings_batch.append(duration)
 
@@ -180,8 +181,7 @@ class QueryBenchmark:
                 start = time.time()
                 for eid in evidence_ids[:20]:
                     result = session.execute(
-                        text("SELECT * FROM evidence WHERE id = :id"),
-                        {"id": str(eid)}
+                        text("SELECT * FROM evidence WHERE id = :id"), {"id": str(eid)}
                     )
                     _ = result.fetchone()
                 duration = (time.time() - start) * 1000
@@ -200,9 +200,12 @@ class QueryBenchmark:
                     "median_ms": statistics.median(timings_individual),
                     "min_ms": min(timings_individual),
                     "max_ms": max(timings_individual),
-                    "stdev_ms": statistics.stdev(timings_individual) if len(timings_individual) > 1 else 0,
+                    "stdev_ms": statistics.stdev(timings_individual)
+                    if len(timings_individual) > 1
+                    else 0,
                 },
-                "speedup_factor": statistics.mean(timings_individual) / statistics.mean(timings_batch),
+                "speedup_factor": statistics.mean(timings_individual)
+                / statistics.mean(timings_batch),
                 "items_retrieved": 20,
             }
 
@@ -231,19 +234,21 @@ class QueryBenchmark:
             # Benchmark: Batch NLI insert
             nli_results = []
             for i, eid in enumerate(evidence_ids[:20]):
-                nli_results.append({
-                    "claim_id": claim_id,
-                    "evidence_id": eid,
-                    "label": ["ENTAILMENT", "CONTRADICTION", "NEUTRAL"][i % 3],
-                    "confidence": 0.75 + (i % 25) / 100.0,
-                    "entailment_score": 0.7,
-                    "contradiction_score": 0.2,
-                    "neutral_score": 0.1,
-                    "model_name": "microsoft/deberta-v3-base",
-                    "model_version": "v1",
-                    "premise_text": f"Evidence {i}",
-                    "hypothesis_text": "Test claim",
-                })
+                nli_results.append(
+                    {
+                        "claim_id": claim_id,
+                        "evidence_id": eid,
+                        "label": ["ENTAILMENT", "CONTRADICTION", "NEUTRAL"][i % 3],
+                        "confidence": 0.75 + (i % 25) / 100.0,
+                        "entailment_score": 0.7,
+                        "contradiction_score": 0.2,
+                        "neutral_score": 0.1,
+                        "model_name": "microsoft/deberta-v3-base",
+                        "model_version": "v1",
+                        "premise_text": f"Evidence {i}",
+                        "hypothesis_text": "Test claim",
+                    }
+                )
 
             timings_batch = []
             for _ in range(min(10, self.iterations)):  # Fewer iterations for inserts
@@ -256,7 +261,7 @@ class QueryBenchmark:
                     # Clean up
                     session.execute(
                         text("DELETE FROM nli_results WHERE id = ANY(:ids)"),
-                        {"ids": [str(i) for i in ids]}
+                        {"ids": [str(i) for i in ids]},
                     )
                     session.commit()
                 except Exception as e:
@@ -275,7 +280,8 @@ class QueryBenchmark:
             logger.info(
                 f"NLI batch insert: {statistics.mean(timings_batch):.2f}ms "
                 f"for {len(nli_results)} items"
-                if timings_batch else "NLI batch insert: No successful iterations"
+                if timings_batch
+                else "NLI batch insert: No successful iterations"
             )
 
         finally:
@@ -323,7 +329,7 @@ class QueryBenchmark:
                     # Clean up
                     session.execute(
                         text("DELETE FROM verification_results WHERE id = :id"),
-                        {"id": str(result_id)}
+                        {"id": str(result_id)},
                     )
                     session.commit()
                 except Exception as e:
@@ -340,7 +346,8 @@ class QueryBenchmark:
 
             logger.info(
                 f"Verdict storage: {statistics.mean(timings):.2f}ms"
-                if timings else "Verdict storage: No successful iterations"
+                if timings
+                else "Verdict storage: No successful iterations"
             )
 
         finally:
@@ -374,9 +381,7 @@ class QueryBenchmark:
                 "items_retrieved": len(evidence_ids),
             }
 
-            logger.info(
-                f"JOIN query (evidence + embeddings): {statistics.mean(timings):.2f}ms"
-            )
+            logger.info(f"JOIN query (evidence + embeddings): {statistics.mean(timings):.2f}ms")
 
         finally:
             session.close()
@@ -398,9 +403,7 @@ class QueryBenchmark:
                     continue
 
                 # Get sample IDs
-                result = session.execute(
-                    text(f"SELECT id FROM evidence LIMIT {batch_size}")
-                )
+                result = session.execute(text(f"SELECT id FROM evidence LIMIT {batch_size}"))
                 evidence_ids = [UUID(row[0]) for row in result.fetchall()]
 
                 # Batch retrieval
@@ -417,8 +420,7 @@ class QueryBenchmark:
                     start = time.time()
                     for eid in evidence_ids:
                         result = session.execute(
-                            text("SELECT * FROM evidence WHERE id = :id"),
-                            {"id": str(eid)}
+                            text("SELECT * FROM evidence WHERE id = :id"), {"id": str(eid)}
                         )
                         _ = result.fetchone()
                     duration = (time.time() - start) * 1000
@@ -430,7 +432,8 @@ class QueryBenchmark:
                     "speedup": statistics.mean(timings_individual) / statistics.mean(timings_batch),
                     "latency_reduction_percent": (
                         (statistics.mean(timings_individual) - statistics.mean(timings_batch))
-                        / statistics.mean(timings_individual) * 100
+                        / statistics.mean(timings_individual)
+                        * 100
                     ),
                 }
 
@@ -482,9 +485,12 @@ class QueryBenchmark:
             "best_speedup": max(
                 evidence_retrieval.get("speedup_factor", 1),
                 max(
-                    (b.get("speedup", 1) for b in batch_vs_individual.values()
-                     if isinstance(b, dict)),
-                    default=1
+                    (
+                        b.get("speedup", 1)
+                        for b in batch_vs_individual.values()
+                        if isinstance(b, dict)
+                    ),
+                    default=1,
                 ),
             ),
             "recommendations": self._generate_recommendations(),
@@ -513,10 +519,13 @@ class QueryBenchmark:
         batch_vs_individual = benchmarks.get("batch_vs_individual", {})
         if batch_vs_individual:
             best_batch = max(
-                (k for k, v in batch_vs_individual.items()
-                 if isinstance(v, dict) and v.get("speedup", 0) > 2),
+                (
+                    k
+                    for k, v in batch_vs_individual.items()
+                    if isinstance(v, dict) and v.get("speedup", 0) > 2
+                ),
                 key=lambda k: batch_vs_individual[k].get("speedup", 0),
-                default=None
+                default=None,
             )
             if best_batch:
                 recommendations.append(
@@ -525,13 +534,15 @@ class QueryBenchmark:
                 )
 
         # General recommendations
-        recommendations.extend([
-            "Enable connection pooling (pool_size=10, max_overflow=20) for 2-3x improvement",
-            "Use batch_create_nli_results for bulk NLI result storage (20-50x faster)",
-            "Create indexes on frequently queried columns (see indexes.sql)",
-            "Run VACUUM ANALYZE after bulk operations to update statistics",
-            "Set ivfflat.probes=10 for balanced vector search performance",
-        ])
+        recommendations.extend(
+            [
+                "Enable connection pooling (pool_size=10, max_overflow=20) for 2-3x improvement",
+                "Use batch_create_nli_results for bulk NLI result storage (20-50x faster)",
+                "Create indexes on frequently queried columns (see indexes.sql)",
+                "Run VACUUM ANALYZE after bulk operations to update statistics",
+                "Set ivfflat.probes=10 for balanced vector search performance",
+            ]
+        )
 
         return recommendations
 
@@ -543,7 +554,7 @@ class QueryBenchmark:
         """
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             json.dump(self.results, f, indent=2, default=str)
 
         logger.info(f"Results saved to {output_file}")
@@ -551,9 +562,7 @@ class QueryBenchmark:
 
 def main() -> None:
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Benchmark database query performance"
-    )
+    parser = argparse.ArgumentParser(description="Benchmark database query performance")
     parser.add_argument(
         "--database-url",
         default="postgresql+psycopg://truthgraph:changeme@localhost:5432/truthgraph",
@@ -574,7 +583,9 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).parent / "results" / f"query_performance_{datetime.now().strftime('%Y-%m-%d')}.json",
+        default=Path(__file__).parent
+        / "results"
+        / f"query_performance_{datetime.now().strftime('%Y-%m-%d')}.json",
         help="Output JSON file path",
     )
 
@@ -591,16 +602,18 @@ def main() -> None:
     benchmark.save_results(args.output)
 
     # Print summary
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("BENCHMARK SUMMARY")
-    print("="*80)
-    print(f"Average latency reduction: {results['summary']['average_latency_reduction_percent']:.1f}%")
+    print("=" * 80)
+    print(
+        f"Average latency reduction: {results['summary']['average_latency_reduction_percent']:.1f}%"
+    )
     print(f"Target (30%) achieved: {results['summary']['target_achieved']}")
     print(f"Best speedup: {results['summary']['best_speedup']:.1f}x")
     print("\nTop recommendations:")
-    for i, rec in enumerate(results['summary']['recommendations'][:5], 1):
+    for i, rec in enumerate(results["summary"]["recommendations"][:5], 1):
         print(f"{i}. {rec}")
-    print("="*80)
+    print("=" * 80)
 
 
 if __name__ == "__main__":

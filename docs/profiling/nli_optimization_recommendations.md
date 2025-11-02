@@ -658,11 +658,11 @@ def _detect_device() -> str:
 python scripts/profiling/profile_nli.py --batch-sizes 8,16,32,64,128
 ```
 
-2. **Optimize Batch Size for GPU**:
+1. **Optimize Batch Size for GPU**:
 
 GPU typically benefits from larger batches (32-64).
 
-3. **Benchmark CPU vs GPU**:
+1. **Benchmark CPU vs GPU**:
 
 ```python
 def benchmark_device(device: str, batch_size: int):

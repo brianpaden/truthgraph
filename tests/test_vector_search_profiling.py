@@ -5,11 +5,9 @@ Tests the benchmarking infrastructure, index parameter optimization,
 and validation of performance targets.
 """
 
-import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -114,9 +112,9 @@ class TestIndexParameters:
     def test_probes_not_exceeding_lists(self):
         """Test probes does not exceed lists."""
         test_configs = [
-            (10, 5),   # Valid
+            (10, 5),  # Valid
             (50, 10),  # Valid
-            (100, 25), # Valid
+            (100, 25),  # Valid
         ]
 
         for lists, probes in test_configs:
@@ -131,8 +129,8 @@ class TestIndexParameters:
             return int(math.sqrt(corpus_size) * 5)
 
         test_cases = [
-            (1000, 150),    # sqrt(1000) * 5 ≈ 158
-            (10000, 500),   # sqrt(10000) * 5 = 500
+            (1000, 150),  # sqrt(1000) * 5 ≈ 158
+            (10000, 500),  # sqrt(10000) * 5 = 500
             (50000, 1118),  # sqrt(50000) * 5 ≈ 1118
         ]
 
@@ -445,7 +443,7 @@ class TestEdgeCases:
     def test_very_large_corpus(self):
         """Test very large corpus parameters."""
         corpus_size = 1000000
-        optimal_lists = int((corpus_size ** 0.5) * 5)
+        optimal_lists = int((corpus_size**0.5) * 5)
 
         # Should produce reasonable value
         assert optimal_lists > 0

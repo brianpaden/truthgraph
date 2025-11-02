@@ -347,24 +347,18 @@ class BatchOptimizer:
 
         # Best latency (lowest ms/pair)
         best_latency = min(a["latency_ms_per_pair"] for a in analyses)
-        best_latency_config = next(
-            a for a in analyses if a["latency_ms_per_pair"] == best_latency
-        )
+        best_latency_config = next(a for a in analyses if a["latency_ms_per_pair"] == best_latency)
 
         # Most memory efficient
         min_memory = min(a["memory_delta_mb"] for a in analyses)
-        memory_efficient_config = next(
-            a for a in analyses if a["memory_delta_mb"] == min_memory
-        )
+        memory_efficient_config = next(a for a in analyses if a["memory_delta_mb"] == min_memory)
 
         # Balanced config (good throughput, acceptable memory)
         balanced_scores = []
         for a in analyses:
             # Normalize metrics (0-1 scale)
             throughput_score = a["throughput_pairs_per_sec"] / best_throughput
-            memory_score = 1 - (a["memory_delta_mb"] / max(
-                x["memory_delta_mb"] for x in analyses
-            ))
+            memory_score = 1 - (a["memory_delta_mb"] / max(x["memory_delta_mb"] for x in analyses))
             # Weighted average: 70% throughput, 30% memory
             balanced_score = 0.7 * throughput_score + 0.3 * memory_score
             balanced_scores.append((balanced_score, a))
@@ -433,7 +427,9 @@ class BatchOptimizer:
 
         print("\nBatch Size Analysis:")
         print("-" * 80)
-        print(f"{'Batch':>6} | {'Pairs/Sec':>12} | {'Latency (ms)':>14} | {'Memory (MB)':>13} | {'Accuracy':>10}")
+        print(
+            f"{'Batch':>6} | {'Pairs/Sec':>12} | {'Latency (ms)':>14} | {'Memory (MB)':>13} | {'Accuracy':>10}"
+        )
         print("-" * 80)
 
         for analysis in self.results["batch_analyses"]:

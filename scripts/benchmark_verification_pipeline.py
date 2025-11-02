@@ -308,7 +308,7 @@ def main():
         "--db-url",
         default=os.getenv(
             "DATABASE_URL",
-            "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
+            "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph",
         ),
         help="Database URL (default: from DATABASE_URL env var or postgres:5432)",
     )

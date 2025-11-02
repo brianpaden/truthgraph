@@ -44,6 +44,7 @@ class MemoryProfile:
         snapshots: List of memory snapshots during operation
         metadata: Additional context (environment, config, etc.)
     """
+
     profile_id: str
     name: str
     timestamp: str
@@ -61,8 +62,10 @@ class MemoryProfile:
             "num_snapshots": len(self.snapshots),
             "first_snapshot": self.snapshots[0].to_dict() if self.snapshots else None,
             "last_snapshot": self.snapshots[-1].to_dict() if self.snapshots else None,
-            "peak_snapshot": max(self.snapshots, key=lambda s: s.rss_mb).to_dict() if self.snapshots else None,
-            "metadata": self.metadata
+            "peak_snapshot": max(self.snapshots, key=lambda s: s.rss_mb).to_dict()
+            if self.snapshots
+            else None,
+            "metadata": self.metadata,
         }
 
     def to_dict_full(self) -> Dict[str, Any]:
@@ -85,6 +88,7 @@ class MemoryTrend:
         regression_detected: Whether performance regression detected
         profiles: List of profiles in chronological order
     """
+
     name: str
     num_profiles: int
     time_range_days: float
@@ -106,8 +110,10 @@ class MemoryTrend:
             "last_profile_date": self.profiles[-1].timestamp if self.profiles else None,
             "mean_rss_mb": round(
                 sum(p.stats.mean_rss_mb for p in self.profiles) / len(self.profiles), 2
-            ) if self.profiles else 0,
-            "peak_rss_mb": max(p.stats.max_rss_mb for p in self.profiles) if self.profiles else 0
+            )
+            if self.profiles
+            else 0,
+            "peak_rss_mb": max(p.stats.max_rss_mb for p in self.profiles) if self.profiles else 0,
         }
 
 
@@ -146,12 +152,12 @@ class MemoryProfileStore:
 
     def _read_index(self) -> Dict[str, Any]:
         """Read the profile index."""
-        with open(self.index_file, 'r', encoding='utf-8') as f:
+        with open(self.index_file, "r", encoding="utf-8") as f:
             return json.load(f)
 
     def _write_index(self, index: Dict[str, Any]) -> None:
         """Write the profile index."""
-        with open(self.index_file, 'w', encoding='utf-8') as f:
+        with open(self.index_file, "w", encoding="utf-8") as f:
             json.dump(index, f, indent=2)
 
     def save_profile(
@@ -159,7 +165,7 @@ class MemoryProfileStore:
         name: str,
         monitor: MemoryMonitor,
         stats: Optional[MemoryStats] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> str:
         """Save a memory profile from a monitor.
 
@@ -184,22 +190,24 @@ class MemoryProfileStore:
             timestamp=timestamp,
             stats=stats,
             snapshots=monitor.snapshots.copy(),
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         # Save full profile to file
         profile_file = self.storage_dir / f"{profile_id}.json"
-        with open(profile_file, 'w', encoding='utf-8') as f:
+        with open(profile_file, "w", encoding="utf-8") as f:
             json.dump(profile.to_dict_full(), f, indent=2)
 
         # Update index
         index = self._read_index()
-        index["profiles"].append({
-            "profile_id": profile_id,
-            "name": name,
-            "timestamp": timestamp,
-            "file": str(profile_file.name)
-        })
+        index["profiles"].append(
+            {
+                "profile_id": profile_id,
+                "name": name,
+                "timestamp": timestamp,
+                "file": str(profile_file.name),
+            }
+        )
 
         if name not in index["by_name"]:
             index["by_name"][name] = []
@@ -225,15 +233,24 @@ class MemoryProfileStore:
             logger.warning(f"Profile not found: {profile_id}")
             return None
 
-        with open(profile_file, 'r', encoding='utf-8') as f:
+        with open(profile_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Reconstruct profile from JSON
         # Filter out fields added by to_dict() that aren't in the dataclass
         stats_data = {
-            k: v for k, v in data["stats"].items()
-            if k in ['mean_rss_mb', 'max_rss_mb', 'min_rss_mb', 'std_dev_rss_mb',
-                     'growth_rate_mb_per_sec', 'total_snapshots', 'duration_seconds']
+            k: v
+            for k, v in data["stats"].items()
+            if k
+            in [
+                "mean_rss_mb",
+                "max_rss_mb",
+                "min_rss_mb",
+                "std_dev_rss_mb",
+                "growth_rate_mb_per_sec",
+                "total_snapshots",
+                "duration_seconds",
+            ]
         }
         stats = MemoryStats(**stats_data)
         snapshots = [MemorySnapshot(**s) for s in data.get("snapshots", [])]
@@ -244,14 +261,10 @@ class MemoryProfileStore:
             timestamp=data["timestamp"],
             stats=stats,
             snapshots=snapshots,
-            metadata=data.get("metadata", {})
+            metadata=data.get("metadata", {}),
         )
 
-    def get_profiles_by_name(
-        self,
-        name: str,
-        limit: Optional[int] = None
-    ) -> List[MemoryProfile]:
+    def get_profiles_by_name(self, name: str, limit: Optional[int] = None) -> List[MemoryProfile]:
         """Get all profiles for a specific name.
 
         Args:
@@ -279,10 +292,7 @@ class MemoryProfileStore:
         return profiles
 
     def analyze_trend(
-        self,
-        name: str,
-        days: Optional[int] = None,
-        regression_threshold_mb: float = 50.0
+        self, name: str, days: Optional[int] = None, regression_threshold_mb: float = 50.0
     ) -> Optional[MemoryTrend]:
         """Analyze memory trends for a profile name.
 
@@ -303,10 +313,7 @@ class MemoryProfileStore:
         # Filter by date range if specified
         if days:
             cutoff = datetime.utcnow() - timedelta(days=days)
-            profiles = [
-                p for p in profiles
-                if datetime.fromisoformat(p.timestamp) >= cutoff
-            ]
+            profiles = [p for p in profiles if datetime.fromisoformat(p.timestamp) >= cutoff]
 
         if len(profiles) < 2:
             return None
@@ -327,10 +334,9 @@ class MemoryProfileStore:
         peak_rss_trend = self._calculate_trend(peak_rss_values, time_range)
 
         # Detect regression (memory increasing over time)
-        regression_detected = (
-            mean_rss_trend > regression_threshold_mb / max(time_range, 1) or
-            peak_rss_trend > regression_threshold_mb / max(time_range, 1)
-        )
+        regression_detected = mean_rss_trend > regression_threshold_mb / max(
+            time_range, 1
+        ) or peak_rss_trend > regression_threshold_mb / max(time_range, 1)
 
         return MemoryTrend(
             name=name,
@@ -339,7 +345,7 @@ class MemoryProfileStore:
             mean_rss_trend=mean_rss_trend,
             peak_rss_trend=peak_rss_trend,
             regression_detected=regression_detected,
-            profiles=profiles
+            profiles=profiles,
         )
 
     def _calculate_trend(self, values: List[float], time_range_days: float) -> float:
@@ -372,11 +378,7 @@ class MemoryProfileStore:
         slope = (n * sum_xy - sum_x * sum_y) / denominator
         return slope
 
-    def compare_profiles(
-        self,
-        profile_id1: str,
-        profile_id2: str
-    ) -> Dict[str, Any]:
+    def compare_profiles(self, profile_id1: str, profile_id2: str) -> Dict[str, Any]:
         """Compare two memory profiles.
 
         Args:
@@ -402,21 +404,21 @@ class MemoryProfileStore:
                 "id": p1.profile_id,
                 "timestamp": p1.timestamp,
                 "mean_rss_mb": round(p1.stats.mean_rss_mb, 2),
-                "peak_rss_mb": round(p1.stats.max_rss_mb, 2)
+                "peak_rss_mb": round(p1.stats.max_rss_mb, 2),
             },
             "profile_2": {
                 "id": p2.profile_id,
                 "timestamp": p2.timestamp,
                 "mean_rss_mb": round(p2.stats.mean_rss_mb, 2),
-                "peak_rss_mb": round(p2.stats.max_rss_mb, 2)
+                "peak_rss_mb": round(p2.stats.max_rss_mb, 2),
             },
             "comparison": {
                 "mean_rss_diff_mb": round(mean_diff, 2),
                 "peak_rss_diff_mb": round(peak_diff, 2),
                 "mean_rss_pct_change": round(mean_pct_change, 2),
                 "peak_rss_pct_change": round(peak_pct_change, 2),
-                "regression": mean_diff > 0 or peak_diff > 0
-            }
+                "regression": mean_diff > 0 or peak_diff > 0,
+            },
         }
 
     def list_profiles(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -467,8 +469,7 @@ class MemoryProfileStore:
             name = profile_info["name"]
             if name in index["by_name"]:
                 index["by_name"][name] = [
-                    pid for pid in index["by_name"][name]
-                    if pid != profile_info["profile_id"]
+                    pid for pid in index["by_name"][name] if pid != profile_info["profile_id"]
                 ]
 
         # Update main index

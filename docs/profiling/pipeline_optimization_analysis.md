@@ -657,20 +657,20 @@ From `baseline_2025-10-27.json`:
    - Expected: 2-4x throughput
 
 ### Medium-Term (1-2 months)
-3. **GPU Acceleration** (1 week)
+1. **GPU Acceleration** (1 week)
    - Deploy embeddings and NLI on GPU
    - Expected: 2-5x faster inference
 
-4. **Async Pipeline** (1 week)
+2. **Async Pipeline** (1 week)
    - Convert to fully async operations
    - Expected: Better resource utilization
 
 ### Long-Term (3-6 months)
-5. **Distributed Processing** (2-4 weeks)
+1. **Distributed Processing** (2-4 weeks)
    - Multi-worker pipeline deployment
    - Expected: Linear scalability
 
-6. **Model Optimization** (4-8 weeks)
+2. **Model Optimization** (4-8 weeks)
    - Model quantization and distillation
    - Expected: 50% memory reduction
 

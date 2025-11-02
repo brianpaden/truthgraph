@@ -309,7 +309,7 @@ RuntimeError: Model 'all-MiniLM-L6-v2' not found
    python -m truthgraph download-models
    ```
 
-2. **Specify model location:**
+1. **Specify model location:**
    ```python
    service = EmbeddingService(
        model_name="all-MiniLM-L6-v2",
@@ -317,7 +317,7 @@ RuntimeError: Model 'all-MiniLM-L6-v2' not found
    )
    ```
 
-3. **Check disk space:**
+2. **Check disk space:**
    ```bash
    df -h  # Should have >1GB free
    ```

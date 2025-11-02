@@ -86,23 +86,23 @@
 2. generate_category_analysis.py (370 lines)
 
 ### Test Data
-3. tests/accuracy/categories/politics.json
-4. tests/accuracy/categories/science.json
-5. tests/accuracy/categories/health.json
-6. tests/accuracy/categories/current_events.json
-7. tests/accuracy/categories/historical.json
+1. tests/accuracy/categories/politics.json
+2. tests/accuracy/categories/science.json
+3. tests/accuracy/categories/health.json
+4. tests/accuracy/categories/current_events.json
+5. tests/accuracy/categories/historical.json
 
 ### Generated Reports
-8. tests/accuracy/results/category_breakdown.json
-9. tests/accuracy/results/category_report.html
-10. tests/accuracy/results/category_statistics.json
-11. tests/accuracy/results/category_recommendations.json
-12. tests/accuracy/results/CATEGORY_ANALYSIS_SUMMARY.md
+1. tests/accuracy/results/category_breakdown.json
+2. tests/accuracy/results/category_report.html
+3. tests/accuracy/results/category_statistics.json
+4. tests/accuracy/results/category_recommendations.json
+5. tests/accuracy/results/CATEGORY_ANALYSIS_SUMMARY.md
 
 ### Documentation
-13. FEATURE_3_2_MULTI_CATEGORY_EVALUATION.md
-14. FEATURE_3_2_QUICK_START.md
-15. FEATURE_3_2_IMPLEMENTATION_SUMMARY.md
+1. FEATURE_3_2_MULTI_CATEGORY_EVALUATION.md
+2. FEATURE_3_2_QUICK_START.md
+3. FEATURE_3_2_IMPLEMENTATION_SUMMARY.md
 
 ## Quality Metrics
 

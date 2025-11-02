@@ -140,35 +140,24 @@ def main():
     html_path = reporter.generate_html_report(
         results,
         str(results_dir / "accuracy_report.html"),
-        title="TruthGraph Accuracy Testing Report"
+        title="TruthGraph Accuracy Testing Report",
     )
     print(f"  HTML Report: {html_path}")
 
     # Generate JSON report
-    json_path = reporter.generate_json_report(
-        results,
-        str(results_dir / "accuracy_results.json")
-    )
+    json_path = reporter.generate_json_report(results, str(results_dir / "accuracy_results.json"))
     print(f"  JSON Report: {json_path}")
 
     # Generate text summary
-    summary_path = reporter.save_summary(
-        results,
-        str(results_dir / "accuracy_summary.txt")
-    )
+    summary_path = reporter.save_summary(results, str(results_dir / "accuracy_summary.txt"))
     print(f"  Text Summary: {summary_path}")
 
     # Save confusion matrix CSV
-    csv_path = framework.save_confusion_matrix_csv(
-        str(results_dir / "confusion_matrix.csv")
-    )
+    csv_path = framework.save_confusion_matrix_csv(str(results_dir / "confusion_matrix.csv"))
     print(f"  Confusion Matrix CSV: {csv_path}")
 
     # Save results JSON
-    results_json_path = framework.save_results_json(
-        results,
-        str(results_dir / "full_results.json")
-    )
+    results_json_path = framework.save_results_json(results, str(results_dir / "full_results.json"))
     print(f"  Full Results JSON: {results_json_path}")
 
     # Display per-category breakdown
@@ -179,12 +168,14 @@ def main():
         cat_acc = metrics.get("accuracy", 0)
         cat_samples = metrics.get("samples", 0)
         cat_f1 = metrics.get("macro_f1", 0)
-        print(f"  {category:20} Accuracy: {cat_acc:6.1%}  Samples: {cat_samples:3d}  F1: {cat_f1:.4f}")
+        print(
+            f"  {category:20} Accuracy: {cat_acc:6.1%}  Samples: {cat_samples:3d}  F1: {cat_f1:.4f}"
+        )
 
     # Display verdict metrics table
     print("\nPer-Verdict Metrics:")
     print(f"  {'Verdict':<15} {'Precision':>10} {'Recall':>10} {'F1 Score':>10}")
-    print(f"  {'-'*45}")
+    print(f"  {'-' * 45}")
 
     precision = results.get("precision", {})
     recall = results.get("recall", {})
@@ -199,7 +190,7 @@ def main():
     # Display confusion matrix
     print("\nConfusion Matrix (Actual vs Predicted):")
     print(f"  {'':15} {'SUPPORTED':>12} {'REFUTED':>12} {'INSUFFICIENT':>15}")
-    print(f"  {'-'*56}")
+    print(f"  {'-' * 56}")
 
     cm = results.get("confusion_matrix", {})
     for actual in ["SUPPORTED", "REFUTED", "INSUFFICIENT"]:
@@ -214,9 +205,9 @@ def main():
     print(f"  Overall Accuracy: {accuracy:.1%}")
     print(f"  Requirement (>70%): {'PASSED' if accuracy > 0.70 else 'FAILED'}")
 
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("SAMPLE REPORTS GENERATED SUCCESSFULLY")
-    print("="*70)
+    print("=" * 70)
     print(f"\nReports are located in: {results_dir}")
     print("\nYou can view the HTML report in a web browser:")
     print(f"  {html_path}")
@@ -225,6 +216,7 @@ def main():
 if __name__ == "__main__":
     # This needs to be run from the project root
     import sys
+
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
     main()

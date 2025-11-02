@@ -419,13 +419,13 @@ Impact: 100-150 MB left in APT cache
 
 ### Medium Impact (300 MB - 1 GB)
 
-6. **Separate build and runtime stages more clearly** (300-500 MB)
+1. **Separate build and runtime stages more clearly** (300-500 MB)
    ```
    Effort: Medium - Refactor multi-stage
    Risk: Low - Standard Docker practice
    ```
 
-7. **Strip debug symbols from .so files** (300-500 MB)
+2. **Strip debug symbols from .so files** (300-500 MB)
    ```
    Effort: Medium - Add strip commands
    Risk: Medium - Might break some packages
@@ -433,13 +433,13 @@ Impact: 100-150 MB left in APT cache
 
 ### Low Impact (10-50 MB)
 
-8. **Remove pytest/mypy from ml dependencies** (80 MB)
+1. **Remove pytest/mypy from ml dependencies** (80 MB)
    ```
    Effort: Easy - Edit pyproject.toml
    Risk: None - These aren't needed
    ```
 
-9. **Use PYTHONOPTIMIZE=2** (10-20 MB)
+2. **Use PYTHONOPTIMIZE=2** (10-20 MB)
    ```
    Effort: Easy - One ENV line
    Risk: Low - Removes docstrings
@@ -447,10 +447,10 @@ Impact: 100-150 MB left in APT cache
 
 ### Architectural Changes (5+ GB potential)
 
-10. **Separate ML inference from API** (6+ GB reduction possible)
-    ```
-    Effort: Hard - Requires redesign
-    Risk: High - Major architectural change
+1. **Separate ML inference from API** (6+ GB reduction possible)
+   ```
+   Effort: Hard - Requires redesign
+   Risk: High - Major architectural change
     Impact: Can reduce core API to 1.5-2.0 GB
     ```
 

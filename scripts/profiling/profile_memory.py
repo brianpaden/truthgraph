@@ -177,13 +177,15 @@ class MemoryProfiler:
                 if mem_after[key] > peak_memory.get(key, 0):
                     peak_memory[key] = mem_after[key]
 
-            memory_samples.append({
-                "iteration": iteration + 1,
-                "before_rss_mb": mem_before["rss_mb"],
-                "after_rss_mb": mem_after["rss_mb"],
-                "delta_rss_mb": mem_after["rss_mb"] - mem_before["rss_mb"],
-                "elapsed_time_s": elapsed_time,
-            })
+            memory_samples.append(
+                {
+                    "iteration": iteration + 1,
+                    "before_rss_mb": mem_before["rss_mb"],
+                    "after_rss_mb": mem_after["rss_mb"],
+                    "delta_rss_mb": mem_after["rss_mb"] - mem_before["rss_mb"],
+                    "elapsed_time_s": elapsed_time,
+                }
+            )
 
             # Small delay between iterations
             time.sleep(0.1)
@@ -251,11 +253,13 @@ class MemoryProfiler:
 
             # Measure memory
             current_memory = self.get_detailed_memory_info()["rss_mb"]
-            memory_over_time.append({
-                "iteration": i + 1,
-                "memory_mb": current_memory,
-                "delta_from_initial_mb": current_memory - initial_memory,
-            })
+            memory_over_time.append(
+                {
+                    "iteration": i + 1,
+                    "memory_mb": current_memory,
+                    "delta_from_initial_mb": current_memory - initial_memory,
+                }
+            )
 
             time.sleep(0.05)
 
@@ -311,32 +315,42 @@ class MemoryProfiler:
             peak_memories = [r["peak_memory_mb"] for r in batch_results]
 
             # Calculate memory growth rate
-            memory_growth_rate = (peak_memories[-1] - peak_memories[0]) / (batch_sizes[-1] - batch_sizes[0])
+            memory_growth_rate = (peak_memories[-1] - peak_memories[0]) / (
+                batch_sizes[-1] - batch_sizes[0]
+            )
 
-            findings.append({
-                "type": "memory_scaling",
-                "finding": f"Memory grows at {memory_growth_rate:.2f} MB per batch size unit",
-                "severity": "low" if memory_growth_rate < 2 else "medium",
-                "recommendation": "Memory scaling is approximately linear" if memory_growth_rate < 2 else "Consider smaller batches for memory-constrained environments",
-            })
+            findings.append(
+                {
+                    "type": "memory_scaling",
+                    "finding": f"Memory grows at {memory_growth_rate:.2f} MB per batch size unit",
+                    "severity": "low" if memory_growth_rate < 2 else "medium",
+                    "recommendation": "Memory scaling is approximately linear"
+                    if memory_growth_rate < 2
+                    else "Consider smaller batches for memory-constrained environments",
+                }
+            )
 
         # Analyze leak detection results
         leak_check = self.results.get("memory_leak_check", {})
         if leak_check:
             if leak_check["leak_detected"]:
-                findings.append({
-                    "type": "memory_leak",
-                    "finding": f"Potential memory leak detected: {leak_check['growth_rate_mb_per_iteration']:.2f} MB/iteration",
-                    "severity": "high",
-                    "recommendation": "Investigate model caching and tensor lifecycle management",
-                })
+                findings.append(
+                    {
+                        "type": "memory_leak",
+                        "finding": f"Potential memory leak detected: {leak_check['growth_rate_mb_per_iteration']:.2f} MB/iteration",
+                        "severity": "high",
+                        "recommendation": "Investigate model caching and tensor lifecycle management",
+                    }
+                )
             else:
-                findings.append({
-                    "type": "memory_stability",
-                    "finding": "No memory leaks detected over multiple iterations",
-                    "severity": "none",
-                    "recommendation": "Memory management is working correctly",
-                })
+                findings.append(
+                    {
+                        "type": "memory_stability",
+                        "finding": "No memory leaks detected over multiple iterations",
+                        "severity": "none",
+                        "recommendation": "Memory management is working correctly",
+                    }
+                )
 
         # Find optimal batch size for memory
         if batch_results:
@@ -353,12 +367,14 @@ class MemoryProfiler:
                     best_efficiency = efficiency
                     best_batch = result["batch_size"]
 
-            findings.append({
-                "type": "memory_efficiency",
-                "finding": f"Batch size {best_batch} offers best memory efficiency",
-                "severity": "info",
-                "recommendation": f"Consider batch_size={best_batch} for memory-constrained deployments",
-            })
+            findings.append(
+                {
+                    "type": "memory_efficiency",
+                    "finding": f"Batch size {best_batch} offers best memory efficiency",
+                    "severity": "info",
+                    "recommendation": f"Consider batch_size={best_batch} for memory-constrained deployments",
+                }
+            )
 
         return findings
 
@@ -377,34 +393,40 @@ class MemoryProfiler:
             # Find lowest memory batch size
             min_memory_result = min(batch_results, key=lambda x: x["peak_memory_mb"])
 
-            recommendations.append({
-                "optimization": "Memory-Constrained Batch Size",
-                "description": f"Use batch_size={min_memory_result['batch_size']} for minimal memory footprint",
-                "expected_improvement": f"Reduces memory to {min_memory_result['peak_memory_mb']:.1f} MB",
-                "effort": "low",
-                "priority": "medium",
-            })
+            recommendations.append(
+                {
+                    "optimization": "Memory-Constrained Batch Size",
+                    "description": f"Use batch_size={min_memory_result['batch_size']} for minimal memory footprint",
+                    "expected_improvement": f"Reduces memory to {min_memory_result['peak_memory_mb']:.1f} MB",
+                    "effort": "low",
+                    "priority": "medium",
+                }
+            )
 
         # Check if GPU memory would help
         if self.service.get_device() == "cpu" and torch.cuda.is_available():
-            recommendations.append({
-                "optimization": "GPU Memory Utilization",
-                "description": "Move processing to GPU to free up system RAM",
-                "expected_improvement": "Significant system memory reduction",
-                "effort": "low",
-                "priority": "medium",
-            })
+            recommendations.append(
+                {
+                    "optimization": "GPU Memory Utilization",
+                    "description": "Move processing to GPU to free up system RAM",
+                    "expected_improvement": "Significant system memory reduction",
+                    "effort": "low",
+                    "priority": "medium",
+                }
+            )
 
         # Garbage collection recommendation
         leak_check = self.results.get("memory_leak_check", {})
         if leak_check and not leak_check["leak_detected"]:
-            recommendations.append({
-                "optimization": "Periodic Garbage Collection",
-                "description": "Current GC strategy is working well",
-                "expected_improvement": "No change needed",
-                "effort": "none",
-                "priority": "low",
-            })
+            recommendations.append(
+                {
+                    "optimization": "Periodic Garbage Collection",
+                    "description": "Current GC strategy is working well",
+                    "expected_improvement": "No change needed",
+                    "effort": "none",
+                    "priority": "low",
+                }
+            )
 
         return recommendations
 
@@ -478,14 +500,14 @@ class MemoryProfiler:
 
     def print_summary(self) -> None:
         """Print memory profiling summary to console."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("MEMORY PROFILING SUMMARY")
-        print("="*60)
+        print("=" * 60)
 
         baseline = self.results.get("baseline_memory", {})
         print(f"\nBaseline Memory: {baseline.get('rss_mb', 0):.2f} MB")
 
-        print(f"\nBatch Size Memory Usage:")
+        print("\nBatch Size Memory Usage:")
         print(f"{'Batch':>8} {'Baseline':>12} {'Peak':>12} {'Avg Δ':>12} {'Max Δ':>12}")
         print(f"{'Size':>8} {'(MB)':>12} {'(MB)':>12} {'(MB)':>12} {'(MB)':>12}")
         print("-" * 60)
@@ -502,14 +524,14 @@ class MemoryProfiler:
         # Memory leak check
         leak_check = self.results.get("memory_leak_check", {})
         if leak_check:
-            print(f"\nMemory Leak Check:")
+            print("\nMemory Leak Check:")
             print(f"  Iterations: {leak_check['num_iterations']}")
             print(f"  Initial: {leak_check['initial_memory_mb']:.1f} MB")
             print(f"  Final: {leak_check['final_memory_mb']:.1f} MB")
             print(f"  Growth: {leak_check['total_growth_mb']:+.1f} MB")
             print(f"  Leak detected: {leak_check['leak_detected']}")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
 
 
 def load_test_data(num_texts: int = 1000) -> list[str]:
@@ -542,9 +564,7 @@ def load_test_data(num_texts: int = 1000) -> list[str]:
 
 def main() -> None:
     """Main entry point for memory profiling."""
-    parser = argparse.ArgumentParser(
-        description="Profile memory usage of EmbeddingService"
-    )
+    parser = argparse.ArgumentParser(description="Profile memory usage of EmbeddingService")
     parser.add_argument(
         "--test-size",
         type=int,

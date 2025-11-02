@@ -6,7 +6,7 @@ supporting various edge case categories and graceful error handling.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, ValidationError, field_validator
 
@@ -141,9 +141,7 @@ class EdgeCaseDataLoader:
 
         # Load from file
         if not self.data_path.exists():
-            raise FileNotFoundError(
-                f"Edge case data file not found at: {self.data_path}"
-            )
+            raise FileNotFoundError(f"Edge case data file not found at: {self.data_path}")
 
         try:
             with open(self.data_path, "r", encoding="utf-8") as f:
@@ -153,9 +151,7 @@ class EdgeCaseDataLoader:
 
         # Validate structure
         if not self.validate_edge_case_data(raw_data):
-            raise ValueError(
-                f"Data validation failed: {', '.join(self._load_errors)}"
-            )
+            raise ValueError(f"Data validation failed: {', '.join(self._load_errors)}")
 
         # Parse with Pydantic for strict validation
         try:
@@ -233,11 +229,7 @@ class EdgeCaseDataLoader:
             List of claims with matching expected verdict
         """
         all_data = self.load_all_edge_cases()
-        return [
-            claim
-            for claim in all_data["claims"]
-            if claim.get("expected_verdict") == verdict
-        ]
+        return [claim for claim in all_data["claims"] if claim.get("expected_verdict") == verdict]
 
     def get_claims_by_complexity(
         self, min_score: float = 0.0, max_score: float = 1.0
@@ -298,9 +290,7 @@ class EdgeCaseDataLoader:
             verdict_counts[verdict] = verdict_counts.get(verdict, 0) + 1
 
         # Complexity statistics
-        complexity_scores = [
-            claim.get("complexity_score", 0) for claim in claims
-        ]
+        complexity_scores = [claim.get("complexity_score", 0) for claim in claims]
 
         return {
             "total_claims": len(claims),
@@ -309,9 +299,7 @@ class EdgeCaseDataLoader:
             "complexity_stats": {
                 "min": min(complexity_scores) if complexity_scores else 0,
                 "max": max(complexity_scores) if complexity_scores else 0,
-                "avg": sum(complexity_scores) / len(complexity_scores)
-                if complexity_scores
-                else 0,
+                "avg": sum(complexity_scores) / len(complexity_scores) if complexity_scores else 0,
             },
             "languages": list(self.get_multilingual_claims().keys()),
         }

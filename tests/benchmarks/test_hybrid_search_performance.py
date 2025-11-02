@@ -95,7 +95,10 @@ def create_test_dataset(db_session, size=100):
 
         # Create embedding (simple pattern based on document index)
         # Using DEFAULT_EMBEDDING_DIMENSION
-        embedding_pattern = [(i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01 for j in range(DEFAULT_EMBEDDING_DIMENSION)]
+        embedding_pattern = [
+            (i % 10) / 10.0 if j % (i % 5 + 1) == 0 else 0.01
+            for j in range(DEFAULT_EMBEDDING_DIMENSION)
+        ]
 
         embedding = Embedding(
             entity_type="evidence",

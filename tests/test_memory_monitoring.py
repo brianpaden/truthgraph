@@ -8,7 +8,6 @@ Run with:
     pytest tests/test_memory_monitoring.py -v --cov=truthgraph.monitoring
 """
 
-import gc
 import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -261,7 +260,7 @@ class TestAlertManager:
             message="Test alert",
             timestamp="2025-10-31T00:00:00",
             snapshot=snapshot,
-            metadata={"test": "data"}
+            metadata={"test": "data"},
         )
 
         alert_dict = alert.to_dict()
@@ -407,10 +406,7 @@ class TestMemoryProfileStore:
 
             # Save profile
             profile_id = store.save_profile(
-                name="test_profile",
-                monitor=monitor,
-                stats=stats,
-                metadata={"test": "data"}
+                name="test_profile", monitor=monitor, stats=stats, metadata={"test": "data"}
             )
 
             assert profile_id is not None
@@ -446,11 +442,7 @@ class TestMemoryProfileStore:
                 monitor.capture_snapshot()
                 stats = monitor.stop()
 
-                store.save_profile(
-                    name="test_run",
-                    monitor=monitor,
-                    stats=stats
-                )
+                store.save_profile(name="test_run", monitor=monitor, stats=stats)
                 time.sleep(0.1)  # Ensure different timestamps
 
             # Get profiles by name
@@ -558,7 +550,7 @@ class TestMemoryProfileStore:
             timestamp="2025-10-31T00:00:00",
             stats=stats,
             snapshots=monitor.snapshots,
-            metadata={"test": "data"}
+            metadata={"test": "data"},
         )
 
         profile_dict = profile.to_dict()

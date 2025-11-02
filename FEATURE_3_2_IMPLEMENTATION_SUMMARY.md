@@ -41,60 +41,61 @@ Feature 3.2 implements comprehensive multi-category evaluation for the TruthGrap
 
 ### Test Data
 
-3. **tests/accuracy/categories/politics.json** (132 lines, 3 claims)
-4. **tests/accuracy/categories/science.json** (439 lines, 15 claims)
-5. **tests/accuracy/categories/health.json** (341 lines, 10 claims)
-6. **tests/accuracy/categories/current_events.json** (79 lines, 2 claims)
-7. **tests/accuracy/categories/historical.json** (110 lines, 3 claims)
+1. **tests/accuracy/categories/politics.json** (132 lines, 3 claims)
+2. **tests/accuracy/categories/science.json** (439 lines, 15 claims)
+3. **tests/accuracy/categories/health.json** (341 lines, 10 claims)
+4. **tests/accuracy/categories/current_events.json** (79 lines, 2 claims)
+5. **tests/accuracy/categories/historical.json** (110 lines, 3 claims)
 
 ### Generated Reports
 
-8. **tests/accuracy/results/category_breakdown.json** (7.9 KB)
+1. **tests/accuracy/results/category_breakdown.json** (7.9 KB)
    - Complete metrics and confusion matrices
    - Machine-readable format
    - Precision/recall/F1 per verdict per category
 
-9. **tests/accuracy/results/category_report.html** (20 KB)
+2. **tests/accuracy/results/category_report.html** (20 KB)
    - Interactive visualization
    - Category performance cards
    - Rankings and weakness highlighting
    - Professional styling with gradients
 
-10. **tests/accuracy/results/category_statistics.json** (5.6 KB)
-    - Detailed error distribution analysis
-    - Per-verdict breakdown
-    - Confusion matrix details
+3. **tests/accuracy/results/category_statistics.json** (5.6 KB)
+   - Detailed error distribution analysis
+   - Per-verdict breakdown
+   - Confusion matrix details
 
-11. **tests/accuracy/results/category_recommendations.json** (3.0 KB)
-    - Structured improvement recommendations
-    - Priority-ordered actions
-    - Category-specific strategies
+4. **tests/accuracy/results/category_recommendations.json** (3.0 KB)
+   - Structured improvement recommendations
+   - Priority-ordered actions
+   - Category-specific strategies
 
-12. **tests/accuracy/results/CATEGORY_ANALYSIS_SUMMARY.md** (4.7 KB)
-    - Executive summary
-    - Category breakdown table
-    - Key findings and recommendations
-    - Next steps
+5. **tests/accuracy/results/CATEGORY_ANALYSIS_SUMMARY.md** (4.7 KB)
+   - Executive summary
+   - Category breakdown table
+   - Key findings and recommendations
+   - Next steps
 
 ### Documentation
 
-13. **FEATURE_3_2_MULTI_CATEGORY_EVALUATION.md**
-    - Complete technical documentation
-    - Architecture overview
-    - Integration guidelines
-    - Future enhancement roadmap
+1. **FEATURE_3_2_MULTI_CATEGORY_EVALUATION.md**
 
-14. **FEATURE_3_2_QUICK_START.md**
-    - Quick reference guide
-    - Command examples
-    - API usage patterns
-    - Troubleshooting guide
+   - Complete technical documentation
+   - Architecture overview
+   - Integration guidelines
+   - Future enhancement roadmap
 
-15. **FEATURE_3_2_IMPLEMENTATION_SUMMARY.md** (This document)
-    - High-level summary
-    - Implementation statistics
-    - Key findings
-    - Success criteria verification
+2. **FEATURE_3_2_QUICK_START.md**
+   - Quick reference guide
+   - Command examples
+   - API usage patterns
+   - Troubleshooting guide
+
+3. **FEATURE_3_2_IMPLEMENTATION_SUMMARY.md** (This document)
+   - High-level summary
+   - Implementation statistics
+   - Key findings
+   - Success criteria verification
 
 ## Category Evaluation Results
 

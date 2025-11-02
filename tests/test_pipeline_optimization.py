@@ -12,8 +12,6 @@ These tests verify the pipeline optimization infrastructure, including:
 import time
 from pathlib import Path
 
-import pytest
-
 from truthgraph.verification import (
     BatchSizeOptimizer,
     MemoryMonitor,
@@ -149,9 +147,7 @@ class TestBatchSizeOptimizer:
         monitor.set_baseline()
         optimizer = BatchSizeOptimizer(monitor)
 
-        optimal = optimizer.get_optimal_batch_size(
-            default_batch_size=64, item_memory_mb=1.0
-        )
+        optimal = optimizer.get_optimal_batch_size(default_batch_size=64, item_memory_mb=1.0)
 
         # Should return default since plenty of memory
         assert optimal == 64
@@ -465,9 +461,7 @@ class TestIntegration:
         assert batch_size > 0
 
         # 5. Initialize preprocessor
-        preprocessor = TextPreprocessor(
-            truncation_chars=config.text_truncation_chars
-        )
+        preprocessor = TextPreprocessor(truncation_chars=config.text_truncation_chars)
 
         # 6. Process test texts
         texts = ["Short text", "A" * 1000]  # One short, one long

@@ -4,12 +4,12 @@ This script demonstrates how to use the edge case data handlers
 for comprehensive validation testing.
 """
 
+# Set UTF-8 encoding for console output
+import io
 import sys
 from pathlib import Path
 
-# Set UTF-8 encoding for console output
-import io
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
@@ -35,20 +35,20 @@ def example_data_loading():
 
     # Get statistics
     stats = loader.get_statistics()
-    print(f"\nDataset Statistics:")
+    print("\nDataset Statistics:")
     print(f"  Total claims: {stats['total_claims']}")
     print(f"  Languages: {', '.join(stats['languages'])}")
 
-    print(f"\n  Edge case distribution:")
+    print("\n  Edge case distribution:")
     for category, count in sorted(stats["edge_case_counts"].items()):
         percentage = (count / stats["total_claims"]) * 100
         print(f"    {category}: {count} ({percentage:.1f}%)")
 
-    print(f"\n  Verdict distribution:")
+    print("\n  Verdict distribution:")
     for verdict, count in sorted(stats["verdict_counts"].items()):
         print(f"    {verdict}: {count}")
 
-    print(f"\n  Complexity:")
+    print("\n  Complexity:")
     complexity = stats["complexity_stats"]
     print(f"    Min: {complexity['min']:.2f}")
     print(f"    Avg: {complexity['avg']:.2f}")
@@ -69,7 +69,7 @@ def example_data_loading():
         print(f"    Examples: {[c['text'] for c in short_claims[:3]]}")
 
     multilingual = loader.get_multilingual_claims()
-    print(f"\n  Multilingual claims by language:")
+    print("\n  Multilingual claims by language:")
     for lang, claims in multilingual.items():
         print(f"    {lang}: {len(claims)} claims")
         if claims:
@@ -98,14 +98,14 @@ def example_classification():
 
     for i, claim in enumerate(test_claims, 1):
         display_claim = claim if len(claim) < 80 else claim[:77] + "..."
-        print(f"\n{i}. \"{display_claim}\"")
+        print(f'\n{i}. "{display_claim}"')
 
         categories = classifier.classify_claim(claim)
         analysis = classifier.analyze_claim(claim)
 
         print(f"   Categories: {', '.join(categories) if categories else 'None'}")
         print(f"   Word count: {analysis['word_count']}")
-        print(f"   Characteristics:")
+        print("   Characteristics:")
         print(f"     - Long: {analysis['is_long']}")
         print(f"     - Short: {analysis['is_short']}")
         print(f"     - Special chars: {analysis['has_special_chars']}")
@@ -121,9 +121,7 @@ def example_classification():
 
     stats = classifier.get_category_statistics(test_claims)
     print(f"\nTotal claims analyzed: {stats['_summary']['total_claims']}")
-    print(
-        f"Avg categories per claim: {stats['_summary']['avg_categories_per_claim']:.2f}"
-    )
+    print(f"Avg categories per claim: {stats['_summary']['avg_categories_per_claim']:.2f}")
     print(f"Avg word count: {stats['_summary']['avg_word_count']:.1f}")
 
     print("\nCategory distribution:")
@@ -199,28 +197,22 @@ def example_results_handling():
     print("\nAggregating results...")
     results = handler.aggregate_results()
 
-    print(f"\nOverall Statistics:")
+    print("\nOverall Statistics:")
     print(f"  Total tests: {results['total_tests']}")
     print(f"  Passed: {results['passed_tests']}")
     print(f"  Failed: {results['failed_tests']}")
     print(f"  Errors: {results['error_tests']}")
     print(f"  Pass rate: {results['pass_rate'] * 100:.2f}%")
 
-    print(f"\nResults by category:")
+    print("\nResults by category:")
     for category, stats in sorted(results["results_by_category"].items()):
-        print(
-            f"  {category}: {stats['passed']}/{stats['total']} "
-            f"({stats['pass_rate'] * 100:.1f}%)"
-        )
+        print(f"  {category}: {stats['passed']}/{stats['total']} ({stats['pass_rate'] * 100:.1f}%)")
 
-    print(f"\nResults by expected verdict:")
+    print("\nResults by expected verdict:")
     for verdict, stats in sorted(results["results_by_verdict"].items()):
-        print(
-            f"  {verdict}: {stats['passed']}/{stats['total']} "
-            f"({stats['pass_rate'] * 100:.1f}%)"
-        )
+        print(f"  {verdict}: {stats['passed']}/{stats['total']} ({stats['pass_rate'] * 100:.1f}%)")
 
-    print(f"\nEdge case handling metrics:")
+    print("\nEdge case handling metrics:")
     metrics = results["edge_case_handling_metrics"]
     print(f"  Avg confidence: {metrics['avg_confidence']:.4f}")
     print(f"  Avg execution time: {metrics['avg_execution_time_ms']:.2f} ms")
@@ -266,7 +258,7 @@ def example_complete_workflow():
         claim_id = claim_data["id"]
         claim_text = claim_data["text"]
 
-        print(f"\n   Processing {claim_id}: \"{claim_text[:60]}...\"")
+        print(f'\n   Processing {claim_id}: "{claim_text[:60]}..."')
 
         # Verify classifier detects edge cases
         detected_categories = classifier.classify_claim(claim_text)

@@ -593,24 +593,24 @@ finally:
 
 **Priority 2 (Medium Impact):**
 
-3. **Model Configuration**
+1. **Model Configuration**
    - CLI flag for model selection
    - Config file support
    - Dynamic dimension handling
 
-4. **Advanced Resume**
+2. **Advanced Resume**
    - Content-based checkpointing (not index-based)
    - Handle file modifications
    - Multi-file checkpoints
 
 **Priority 3 (Nice to Have):**
 
-5. **Data Validation**
+1. **Data Validation**
    - Schema validation (JSON Schema)
    - Content quality checks
    - Custom validation rules
 
-6. **Statistics Dashboard**
+2. **Statistics Dashboard**
    - Real-time stats display
    - Embedding quality metrics
    - Database utilization

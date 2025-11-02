@@ -19,21 +19,19 @@ Output:
 """
 
 import argparse
-import gc
 import json
 import logging
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from truthgraph.monitoring import (
-    AlertLevel,
     AlertManager,
     MemoryMonitor,
     MemoryProfileStore,
@@ -46,8 +44,7 @@ except ImportError:
     NLIService = None  # May not be implemented yet
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -72,9 +69,9 @@ class MemoryAnalyzer:
             "metadata": {
                 "timestamp": datetime.utcnow().isoformat(),
                 "script_version": "1.0.0",
-                "target_memory_gb": 4.0
+                "target_memory_gb": 4.0,
             },
-            "tests": {}
+            "tests": {},
         }
 
     def measure_baseline(self) -> Dict[str, Any]:
@@ -98,7 +95,7 @@ class MemoryAnalyzer:
             "available_system_mb": initial.available_system_mb,
             "total_system_mb": initial.total_system_mb,
             "python_allocated_mb": initial.python_allocated_mb,
-            "components": {}
+            "components": {},
         }
 
         logger.info(f"Initial memory: {initial.rss_mb:.1f} MB")
@@ -186,7 +183,7 @@ class MemoryAnalyzer:
         start_time = time.time()
 
         for i in range(0, len(test_texts), batch_size):
-            batch = test_texts[i:i + batch_size]
+            batch = test_texts[i : i + batch_size]
             _ = embedding_service.embed_batch(batch)
 
             # Capture periodic snapshots
@@ -206,10 +203,10 @@ class MemoryAnalyzer:
             "memory_before_mb": before.rss_mb,
             "memory_after_mb": after.rss_mb,
             "memory_delta_mb": after.rss_mb - before.rss_mb,
-            "peak_memory_mb": max(s.rss_mb for s in self.monitor.snapshots)
+            "peak_memory_mb": max(s.rss_mb for s in self.monitor.snapshots),
         }
 
-        logger.info(f"Batch processing complete:")
+        logger.info("Batch processing complete:")
         logger.info(f"  Throughput: {results['throughput_texts_per_sec']:.1f} texts/sec")
         logger.info(f"  Memory delta: {results['memory_delta_mb']:.1f} MB")
         logger.info(f"  Peak memory: {results['peak_memory_mb']:.1f} MB")
@@ -260,10 +257,10 @@ class MemoryAnalyzer:
             "peak_memory_mb": max(s.rss_mb for s in self.monitor.snapshots),
             "num_embeddings": len(embeddings),
             "alerts_triggered": len(alerts),
-            "alert_details": [a.to_dict() for a in alerts]
+            "alert_details": [a.to_dict() for a in alerts],
         }
 
-        logger.info(f"Load test complete:")
+        logger.info("Load test complete:")
         logger.info(f"  Items/sec: {results['items_per_second']:.1f}")
         logger.info(f"  Memory delta: {results['memory_delta_mb']:.1f} MB")
         logger.info(f"  Peak memory: {results['peak_memory_mb']:.1f} MB")
@@ -288,7 +285,9 @@ class MemoryAnalyzer:
         # In production, use the full duration
         duration_seconds = duration_minutes * 2  # Scaled down for testing
         if duration_minutes >= 10:
-            logger.warning(f"Running scaled-down leak test: {duration_seconds}s instead of {duration_minutes * 60}s")
+            logger.warning(
+                f"Running scaled-down leak test: {duration_seconds}s instead of {duration_minutes * 60}s"
+            )
 
         embedding_service = EmbeddingService.get_instance()
 
@@ -316,7 +315,9 @@ class MemoryAnalyzer:
             elapsed = time.time() - start_time
             if iteration % 10 == 0:
                 current = self.monitor.get_current_snapshot()
-                logger.info(f"  {elapsed:.0f}s elapsed, memory: {current.rss_mb:.1f} MB, iteration: {iteration}")
+                logger.info(
+                    f"  {elapsed:.0f}s elapsed, memory: {current.rss_mb:.1f} MB, iteration: {iteration}"
+                )
 
         stats = self.monitor.stop()
         leak_detection = self.monitor.detect_memory_leak(threshold_mb_per_hour=10.0)
@@ -336,10 +337,10 @@ class MemoryAnalyzer:
             "peak_memory_mb": stats.max_rss_mb,
             "mean_memory_mb": stats.mean_rss_mb,
             "std_dev_mb": stats.std_dev_rss_mb,
-            "leak_alert": leak_alert.to_dict() if leak_alert else None
+            "leak_alert": leak_alert.to_dict() if leak_alert else None,
         }
 
-        logger.info(f"Leak detection complete:")
+        logger.info("Leak detection complete:")
         logger.info(f"  Leak detected: {results['leak_detected']}")
         logger.info(f"  Growth rate: {results['growth_rate_mb_per_hour']:.2f} MB/hour")
         logger.info(f"  Total growth: {results['total_growth_mb']:.2f} MB")
@@ -364,7 +365,7 @@ class MemoryAnalyzer:
             logger.warning("Feature 2.1 memory analysis not found")
             return {"error": "Feature 2.1 data not available"}
 
-        with open(feature_2_1_file, 'r') as f:
+        with open(feature_2_1_file, "r") as f:
             feature_2_1_data = json.load(f)
 
         # Extract relevant metrics
@@ -375,14 +376,18 @@ class MemoryAnalyzer:
             "feature_2_1_baseline_mb": feature_2_1_baseline.get("rss_mb", 0),
             "feature_2_1_peak_mb": feature_2_1_leak.get("final_memory_mb", 0),
             "feature_2_1_leak_detected": feature_2_1_leak.get("leak_detected", False),
-            "feature_2_5_baseline_mb": self.results["tests"].get("baseline", {}).get("initial_memory_mb", 0),
+            "feature_2_5_baseline_mb": self.results["tests"]
+            .get("baseline", {})
+            .get("initial_memory_mb", 0),
             "feature_2_5_peak_mb": 0,  # Will be updated with actual peak
-            "comparison_notes": []
+            "comparison_notes": [],
         }
 
         # Update with current peak
         if "leak_detection" in self.results["tests"]:
-            comparison["feature_2_5_peak_mb"] = self.results["tests"]["leak_detection"]["peak_memory_mb"]
+            comparison["feature_2_5_peak_mb"] = self.results["tests"]["leak_detection"][
+                "peak_memory_mb"
+            ]
 
         logger.info(f"Feature 2.1 baseline: {comparison['feature_2_1_baseline_mb']:.1f} MB")
         logger.info(f"Feature 2.5 baseline: {comparison['feature_2_5_baseline_mb']:.1f} MB")
@@ -390,9 +395,7 @@ class MemoryAnalyzer:
         return comparison
 
     def run_full_analysis(
-        self,
-        include_leak_test: bool = True,
-        leak_duration_minutes: int = 5
+        self, include_leak_test: bool = True, leak_duration_minutes: int = 5
     ) -> Dict[str, Any]:
         """Run complete memory analysis suite.
 
@@ -414,14 +417,18 @@ class MemoryAnalyzer:
         self.results["tests"]["model_loading"] = self.measure_model_loading()
 
         # 3. Batch processing
-        self.results["tests"]["batch_processing"] = self.measure_embedding_batch_processing(batch_size=64)
+        self.results["tests"]["batch_processing"] = self.measure_embedding_batch_processing(
+            batch_size=64
+        )
 
         # 4. Concurrent load
         self.results["tests"]["concurrent_load"] = self.measure_concurrent_load(num_items=100)
 
         # 5. Memory leak detection
         if include_leak_test:
-            self.results["tests"]["leak_detection"] = self.detect_memory_leaks(duration_minutes=leak_duration_minutes)
+            self.results["tests"]["leak_detection"] = self.detect_memory_leaks(
+                duration_minutes=leak_duration_minutes
+            )
 
         # 6. Comparison with Feature 2.1
         self.results["tests"]["feature_2_1_comparison"] = self.compare_with_feature_2_1()
@@ -430,8 +437,10 @@ class MemoryAnalyzer:
         self.results["summary"] = self._generate_summary()
 
         # Save results
-        output_file = self.output_dir / f"memory_profile_{datetime.utcnow().strftime('%Y-%m-%d')}.json"
-        with open(output_file, 'w') as f:
+        output_file = (
+            self.output_dir / f"memory_profile_{datetime.utcnow().strftime('%Y-%m-%d')}.json"
+        )
+        with open(output_file, "w") as f:
             json.dump(self.results, f, indent=2)
 
         logger.info("=" * 60)
@@ -468,7 +477,8 @@ class MemoryAnalyzer:
             "margin_mb": round(target_mb - peak_memory, 2),
             "margin_percent": round((1 - peak_memory / target_mb) * 100, 2) if target_mb > 0 else 0,
             "leak_detected": tests.get("leak_detection", {}).get("leak_detected", False),
-            "all_tests_passed": peak_memory < target_mb and not tests.get("leak_detection", {}).get("leak_detected", False)
+            "all_tests_passed": peak_memory < target_mb
+            and not tests.get("leak_detection", {}).get("leak_detected", False),
         }
 
         logger.info("=" * 60)
@@ -492,7 +502,9 @@ def main() -> None:
     parser.add_argument("--baseline-only", action="store_true", help="Only measure baseline")
     parser.add_argument("--load-test", action="store_true", help="Run load test")
     parser.add_argument("--leak-test", action="store_true", help="Run leak detection")
-    parser.add_argument("--concurrent", type=int, default=100, help="Concurrent items for load test")
+    parser.add_argument(
+        "--concurrent", type=int, default=100, help="Concurrent items for load test"
+    )
     parser.add_argument("--duration", type=int, default=5, help="Duration in minutes for leak test")
 
     args = parser.parse_args()
@@ -510,18 +522,24 @@ def main() -> None:
         if args.load_test:
             analyzer.results["tests"]["baseline"] = analyzer.measure_baseline()
             analyzer.results["tests"]["model_loading"] = analyzer.measure_model_loading()
-            analyzer.results["tests"]["concurrent_load"] = analyzer.measure_concurrent_load(num_items=args.concurrent)
+            analyzer.results["tests"]["concurrent_load"] = analyzer.measure_concurrent_load(
+                num_items=args.concurrent
+            )
 
         if args.leak_test:
             analyzer.results["tests"]["baseline"] = analyzer.measure_baseline()
             analyzer.results["tests"]["model_loading"] = analyzer.measure_model_loading()
-            analyzer.results["tests"]["leak_detection"] = analyzer.detect_memory_leaks(duration_minutes=args.duration)
+            analyzer.results["tests"]["leak_detection"] = analyzer.detect_memory_leaks(
+                duration_minutes=args.duration
+            )
 
         analyzer.results["summary"] = analyzer._generate_summary()
 
         # Save partial results
-        output_file = analyzer.output_dir / f"memory_profile_{datetime.utcnow().strftime('%Y-%m-%d')}.json"
-        with open(output_file, 'w') as f:
+        output_file = (
+            analyzer.output_dir / f"memory_profile_{datetime.utcnow().strftime('%Y-%m-%d')}.json"
+        )
+        with open(output_file, "w") as f:
             json.dump(analyzer.results, f, indent=2)
 
         logger.info(f"Results saved to: {output_file}")

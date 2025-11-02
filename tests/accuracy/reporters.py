@@ -367,23 +367,23 @@ class Reporter:
         per_category = metrics.get("per_category", {})
 
         summary = f"""
-{'='*60}
+{"=" * 60}
 ACCURACY TESTING REPORT
-{'='*60}
+{"=" * 60}
 
 Generated: {timestamp}
 Total Samples: {samples}
 
 OVERALL METRICS
-{'='*60}
+{"=" * 60}
 Accuracy:           {accuracy:.1%}
 Macro F1 Score:     {macro_f1:.4f}
 Weighted F1 Score:  {weighted_f1:.4f}
 
 PER-VERDICT METRICS
-{'='*60}
+{"=" * 60}
 Verdict          Precision    Recall      F1 Score
-{'-'*60}
+{"-" * 60}
 """
         for verdict in ["SUPPORTED", "REFUTED", "INSUFFICIENT"]:
             p = precision.get(verdict, 0)
@@ -391,7 +391,7 @@ Verdict          Precision    Recall      F1 Score
             f = f1.get(verdict, 0)
             summary += f"{verdict:<16} {p:>10.4f}  {r:>10.4f}  {f:>10.4f}\n"
 
-        summary += f"\nCONFUSION MATRIX\n{'='*60}\n"
+        summary += f"\nCONFUSION MATRIX\n{'=' * 60}\n"
         summary += "Predicted >>\nActual v    SUPPORTED   REFUTED   INSUFFICIENT\n"
         summary += "-" * 60 + "\n"
 
@@ -403,7 +403,7 @@ Verdict          Precision    Recall      F1 Score
             summary += f"{actual:<11} {s:>10}  {r:>10}  {i:>10}\n"
 
         if per_category:
-            summary += f"\nPER-CATEGORY BREAKDOWN\n{'='*60}\n"
+            summary += f"\nPER-CATEGORY BREAKDOWN\n{'=' * 60}\n"
             for category, cat_metrics in per_category.items():
                 cat_acc = cat_metrics.get("accuracy", 0)
                 cat_samples = cat_metrics.get("samples", 0)
@@ -413,7 +413,7 @@ Verdict          Precision    Recall      F1 Score
                 summary += f"  Accuracy: {cat_acc:.1%}\n"
                 summary += f"  F1 Score: {cat_f1:.4f}\n"
 
-        summary += f"\n{'='*60}\n"
+        summary += f"\n{'=' * 60}\n"
 
         return summary
 
@@ -460,7 +460,7 @@ Verdict          Precision    Recall      F1 Score
         html += '    <div style="width: 100px;"></div>\n'
         for v in verdicts:
             html += f'    <div class="matrix-col-header">{v}</div>\n'
-        html += '  </div>\n'
+        html += "  </div>\n"
 
         for actual in verdicts:
             html += '  <div class="matrix-row">\n'
@@ -470,12 +470,12 @@ Verdict          Precision    Recall      F1 Score
             for predicted in verdicts:
                 count = row_data.get(predicted, 0)
                 color_intensity = min(100, (count / 10) * 100) if count > 0 else 0
-                bg_color = f'rgba(102, 126, 234, {color_intensity / 100})'
+                bg_color = f"rgba(102, 126, 234, {color_intensity / 100})"
                 html += f'    <div class="matrix-cell" style="background-color: {bg_color};">{count}</div>\n'
 
-            html += '  </div>\n'
+            html += "  </div>\n"
 
-        html += '</div>\n'
+        html += "</div>\n"
         return html
 
     @staticmethod
@@ -494,30 +494,30 @@ Verdict          Precision    Recall      F1 Score
         Returns:
             HTML string for table
         """
-        html = '<table>\n'
-        html += '  <thead>\n'
-        html += '    <tr>\n'
-        html += '      <th>Verdict</th>\n'
+        html = "<table>\n"
+        html += "  <thead>\n"
+        html += "    <tr>\n"
+        html += "      <th>Verdict</th>\n"
         html += '      <th class="number">Precision</th>\n'
         html += '      <th class="number">Recall</th>\n'
         html += '      <th class="number">F1 Score</th>\n'
-        html += '    </tr>\n'
-        html += '  </thead>\n'
-        html += '  <tbody>\n'
+        html += "    </tr>\n"
+        html += "  </thead>\n"
+        html += "  <tbody>\n"
 
         for verdict in ["SUPPORTED", "REFUTED", "INSUFFICIENT"]:
             p = precision.get(verdict, 0)
             r = recall.get(verdict, 0)
             f = f1.get(verdict, 0)
-            html += '    <tr>\n'
+            html += "    <tr>\n"
             html += f'      <td class="verdict-name">{verdict}</td>\n'
             html += f'      <td class="number">{p:.4f}</td>\n'
             html += f'      <td class="number">{r:.4f}</td>\n'
             html += f'      <td class="number">{f:.4f}</td>\n'
-            html += '    </tr>\n'
+            html += "    </tr>\n"
 
-        html += '  </tbody>\n'
-        html += '</table>\n'
+        html += "  </tbody>\n"
+        html += "</table>\n"
         return html
 
     @staticmethod
@@ -534,7 +534,7 @@ Verdict          Precision    Recall      F1 Score
             return ""
 
         html = '<div class="section">\n'
-        html += '  <h2>Per-Category Analysis</h2>\n'
+        html += "  <h2>Per-Category Analysis</h2>\n"
 
         for category, metrics in sorted(per_category.items()):
             accuracy = metrics.get("accuracy", 0)
@@ -543,10 +543,10 @@ Verdict          Precision    Recall      F1 Score
 
             html += '  <div class="category-subsection">\n'
             html += f'    <div class="category-name">{category.title()}</div>\n'
-            html += f'    <div>Samples: <strong>{samples}</strong></div>\n'
-            html += f'    <div>Accuracy: <strong>{accuracy:.1%}</strong></div>\n'
-            html += f'    <div>F1 Score: <strong>{f1:.4f}</strong></div>\n'
-            html += '  </div>\n'
+            html += f"    <div>Samples: <strong>{samples}</strong></div>\n"
+            html += f"    <div>Accuracy: <strong>{accuracy:.1%}</strong></div>\n"
+            html += f"    <div>F1 Score: <strong>{f1:.4f}</strong></div>\n"
+            html += "  </div>\n"
 
-        html += '</div>\n'
+        html += "</div>\n"
         return html

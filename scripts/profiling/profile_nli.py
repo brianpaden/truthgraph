@@ -25,7 +25,7 @@ from typing import Any
 import psutil
 import structlog
 
-from truthgraph.services.ml.nli_service import NLILabel, NLIResult, get_nli_service
+from truthgraph.services.ml.nli_service import NLILabel, get_nli_service
 
 logger = structlog.get_logger(__name__)
 
@@ -348,15 +348,11 @@ class NLIProfiler:
 
         # Find best throughput
         best_throughput = max(p["throughput_pairs_per_sec"] for p in profiles)
-        best_batch = next(
-            p for p in profiles if p["throughput_pairs_per_sec"] == best_throughput
-        )
+        best_batch = next(p for p in profiles if p["throughput_pairs_per_sec"] == best_throughput)
 
         # Find most memory efficient
         min_memory = min(p["memory_delta_mb"] for p in profiles)
-        memory_efficient = next(
-            p for p in profiles if p["memory_delta_mb"] == min_memory
-        )
+        memory_efficient = next(p for p in profiles if p["memory_delta_mb"] == min_memory)
 
         # Identify bottlenecks
         bottlenecks = []
@@ -370,44 +366,50 @@ class NLIProfiler:
                 * 100
             )
             if improvement > 50:
-                bottlenecks.append({
-                    "type": "small_batch_overhead",
-                    "severity": "high",
-                    "description": f"Single-pair processing is {improvement:.1f}% slower than optimal batch size",
-                    "evidence": {
-                        "batch_1_throughput": batch_1["throughput_pairs_per_sec"],
-                        "optimal_throughput": best_batch["throughput_pairs_per_sec"],
-                        "optimal_batch_size": best_batch["batch_size"],
-                    },
-                })
+                bottlenecks.append(
+                    {
+                        "type": "small_batch_overhead",
+                        "severity": "high",
+                        "description": f"Single-pair processing is {improvement:.1f}% slower than optimal batch size",
+                        "evidence": {
+                            "batch_1_throughput": batch_1["throughput_pairs_per_sec"],
+                            "optimal_throughput": best_batch["throughput_pairs_per_sec"],
+                            "optimal_batch_size": best_batch["batch_size"],
+                        },
+                    }
+                )
 
         # Check memory scaling
         max_memory = max(p["memory_delta_mb"] for p in profiles)
         if max_memory > 100:  # If memory delta exceeds 100MB
-            bottlenecks.append({
-                "type": "memory_scaling",
-                "severity": "medium",
-                "description": f"Memory usage increases to {max_memory:.1f} MB at large batch sizes",
-                "evidence": {
-                    "min_memory_mb": min_memory,
-                    "max_memory_mb": max_memory,
-                    "memory_scaling_factor": max_memory / min_memory if min_memory > 0 else 0,
-                },
-            })
+            bottlenecks.append(
+                {
+                    "type": "memory_scaling",
+                    "severity": "medium",
+                    "description": f"Memory usage increases to {max_memory:.1f} MB at large batch sizes",
+                    "evidence": {
+                        "min_memory_mb": min_memory,
+                        "max_memory_mb": max_memory,
+                        "memory_scaling_factor": max_memory / min_memory if min_memory > 0 else 0,
+                    },
+                }
+            )
 
         # Check if target met
         target_throughput = 2.0  # pairs/sec
         if best_throughput < target_throughput:
-            bottlenecks.append({
-                "type": "performance_target_miss",
-                "severity": "critical",
-                "description": f"Target throughput of {target_throughput} pairs/sec not met",
-                "evidence": {
-                    "target": target_throughput,
-                    "achieved": best_throughput,
-                    "shortfall": target_throughput - best_throughput,
-                },
-            })
+            bottlenecks.append(
+                {
+                    "type": "performance_target_miss",
+                    "severity": "critical",
+                    "description": f"Target throughput of {target_throughput} pairs/sec not met",
+                    "evidence": {
+                        "target": target_throughput,
+                        "achieved": best_throughput,
+                        "shortfall": target_throughput - best_throughput,
+                    },
+                }
+            )
 
         self.results["bottlenecks"] = bottlenecks
 
@@ -415,32 +417,38 @@ class NLIProfiler:
         recommendations = []
 
         # Recommend optimal batch size
-        recommendations.append({
-            "priority": "high",
-            "title": "Use Optimal Batch Size",
-            "description": f"Use batch_size={best_batch['batch_size']} for maximum throughput",
-            "expected_impact": f"{best_throughput:.2f} pairs/sec",
-            "implementation": f"Set batch_size={best_batch['batch_size']} in verify_batch() calls",
-        })
+        recommendations.append(
+            {
+                "priority": "high",
+                "title": "Use Optimal Batch Size",
+                "description": f"Use batch_size={best_batch['batch_size']} for maximum throughput",
+                "expected_impact": f"{best_throughput:.2f} pairs/sec",
+                "implementation": f"Set batch_size={best_batch['batch_size']} in verify_batch() calls",
+            }
+        )
 
         # Memory-aware recommendation
         if memory_efficient["batch_size"] != best_batch["batch_size"]:
-            recommendations.append({
-                "priority": "medium",
-                "title": "Memory-Efficient Batch Size",
-                "description": f"For memory-constrained environments, use batch_size={memory_efficient['batch_size']}",
-                "expected_impact": f"{memory_efficient['throughput_pairs_per_sec']:.2f} pairs/sec with {memory_efficient['memory_delta_mb']:.1f} MB memory",
-                "implementation": f"Set batch_size={memory_efficient['batch_size']} when memory is limited",
-            })
+            recommendations.append(
+                {
+                    "priority": "medium",
+                    "title": "Memory-Efficient Batch Size",
+                    "description": f"For memory-constrained environments, use batch_size={memory_efficient['batch_size']}",
+                    "expected_impact": f"{memory_efficient['throughput_pairs_per_sec']:.2f} pairs/sec with {memory_efficient['memory_delta_mb']:.1f} MB memory",
+                    "implementation": f"Set batch_size={memory_efficient['batch_size']} when memory is limited",
+                }
+            )
 
         # Input length optimization
-        recommendations.append({
-            "priority": "medium",
-            "title": "Truncate Long Inputs",
-            "description": "Truncate premises and hypotheses to 256 tokens to reduce processing time",
-            "expected_impact": "10-30% improvement for long texts",
-            "implementation": "Add max_length=256 to preprocessing step",
-        })
+        recommendations.append(
+            {
+                "priority": "medium",
+                "title": "Truncate Long Inputs",
+                "description": "Truncate premises and hypotheses to 256 tokens to reduce processing time",
+                "expected_impact": "10-30% improvement for long texts",
+                "implementation": "Add max_length=256 to preprocessing step",
+            }
+        )
 
         self.results["recommendations"] = recommendations
 
@@ -470,7 +478,9 @@ class NLIProfiler:
         print("NLI PROFILING SUMMARY")
         print("=" * 80)
 
-        print(f"\nSystem: {self.results['system']['device']} | Model: {self.results['system']['model']}")
+        print(
+            f"\nSystem: {self.results['system']['device']} | Model: {self.results['system']['model']}"
+        )
 
         print("\nBatch Size Performance:")
         print("-" * 80)

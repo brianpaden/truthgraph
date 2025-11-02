@@ -6,10 +6,8 @@ Tests cover:
 - Results handler aggregation and reporting
 """
 
-import json
 import tempfile
 from pathlib import Path
-from typing import Dict, List
 
 import pytest
 
@@ -387,9 +385,7 @@ class TestEdgeCaseResultsHandler:
             "SUPPORTED",
             0.95,
         )
-        handler.add_result(
-            "test_002", "Claim 2", ["long_claims"], "REFUTED", "SUPPORTED"
-        )
+        handler.add_result("test_002", "Claim 2", ["long_claims"], "REFUTED", "SUPPORTED")
         handler.add_result(
             "test_003",
             "Claim 3",

@@ -40,7 +40,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from truthgraph.db import Base
-from truthgraph.schemas import Claim, Embedding, Evidence
+from truthgraph.schemas import Embedding, Evidence
 from truthgraph.services.verification_pipeline_service import VerificationPipelineService
 
 
@@ -409,7 +409,8 @@ async def main_async() -> int:
     # Database URL from env var or use default
     # Default uses 'postgres' host for Docker container, change to 'localhost' for local dev
     database_url = args.database_url or os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph"
+        "DATABASE_URL",
+        "postgresql+psycopg://truthgraph:changeme_to_secure_password@postgres:5432/truthgraph",
     )
 
     print("=" * 80)
@@ -440,9 +441,7 @@ async def main_async() -> int:
         tenant_id = "benchmark_pipeline"
         session = SessionLocal()
         try:
-            create_test_evidence_corpus(
-                session, args.num_evidence, args.embedding_dim, tenant_id
-            )
+            create_test_evidence_corpus(session, args.num_evidence, args.embedding_dim, tenant_id)
         finally:
             session.close()
 
@@ -475,7 +474,11 @@ async def main_async() -> int:
 
         if not args.skip_latency:
             all_results["benchmarks"]["latency"] = await benchmark_pipeline_latency(
-                service, SessionLocal, test_claims[: min(5, len(test_claims))], args.iterations, tenant_id
+                service,
+                SessionLocal,
+                test_claims[: min(5, len(test_claims))],
+                args.iterations,
+                tenant_id,
             )
 
         if not args.skip_throughput:

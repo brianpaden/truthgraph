@@ -256,9 +256,7 @@ def benchmark_batch_sizes(
     return results
 
 
-def benchmark_text_lengths(
-    service: EmbeddingService, num_texts: int = 500
-) -> dict[str, Any]:
+def benchmark_text_lengths(service: EmbeddingService, num_texts: int = 500) -> dict[str, Any]:
     """Benchmark different text lengths.
 
     Args:
@@ -442,9 +440,7 @@ def main() -> int:
     }
 
     if not args.skip_single:
-        all_results["benchmarks"]["single_text"] = benchmark_single_text(
-            service, args.iterations
-        )
+        all_results["benchmarks"]["single_text"] = benchmark_single_text(service, args.iterations)
 
     if not args.skip_batch:
         all_results["benchmarks"]["batch_sizes"] = benchmark_batch_sizes(

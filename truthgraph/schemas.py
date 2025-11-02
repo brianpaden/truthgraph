@@ -5,7 +5,17 @@ import uuid
 from datetime import UTC, datetime
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String, Text, TypeDecorator
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    TypeDecorator,
+)
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import relationship
 
@@ -31,7 +41,7 @@ class UUIDArray(TypeDecorator):
     cache_ok = True
 
     def load_dialect_impl(self, dialect):
-        if dialect.name == 'postgresql':
+        if dialect.name == "postgresql":
             return dialect.type_descriptor(ARRAY(UUID(as_uuid=True)))
         else:
             return dialect.type_descriptor(Text())
@@ -39,7 +49,7 @@ class UUIDArray(TypeDecorator):
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
-        if dialect.name == 'postgresql':
+        if dialect.name == "postgresql":
             return value
         else:
             # Convert UUIDs to strings and store as JSON for SQLite
@@ -48,7 +58,7 @@ class UUIDArray(TypeDecorator):
     def process_result_value(self, value, dialect):
         if value is None:
             return value
-        if dialect.name == 'postgresql':
+        if dialect.name == "postgresql":
             return value
         else:
             # Deserialize JSON and convert back to UUIDs for SQLite

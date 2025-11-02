@@ -715,14 +715,14 @@ print(f"NLI: {nli_time:.1f}ms ({percentage:.1f}% of pipeline)")
 config = OptimizationConfig.get_conservative_config()
 ```
 
-2. **Disable specific optimizations**:
+1. **Disable specific optimizations**:
 ```python
 # Keep most optimizations, disable one
 config = OptimizationConfig.get_optimized_config()
 config.parallel_claim_processing = False  # Disable if causing issues
 ```
 
-3. **Check for regressions**:
+1. **Check for regressions**:
 ```python
 # Compare with baseline
 from scripts.profiling.pipeline_analysis import PipelineAnalyzer

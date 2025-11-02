@@ -46,9 +46,7 @@ def get_memory_usage() -> dict[str, Any]:
     return {"rss_mb": mem_info.rss / (1024 * 1024), "vms_mb": mem_info.vms / (1024 * 1024)}
 
 
-def generate_test_pairs(
-    num_pairs: int, length_category: str = "medium"
-) -> list[tuple[str, str]]:
+def generate_test_pairs(num_pairs: int, length_category: str = "medium") -> list[tuple[str, str]]:
     """Generate test claim-evidence pairs.
 
     Args:
@@ -224,7 +222,7 @@ def benchmark_batch_sizes(
         print(f"\nTesting batch_size={batch_size}...")
 
         # Warm up
-        warmup_pairs = test_pairs[:min(10, len(test_pairs))]
+        warmup_pairs = test_pairs[: min(10, len(test_pairs))]
         service.verify_batch(warmup_pairs, batch_size=batch_size)
         gc.collect()
 

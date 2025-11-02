@@ -69,9 +69,7 @@ class EdgeCaseClassifier:
 
     def __init__(self):
         """Initialize the edge case classifier."""
-        self._compiled_patterns = [
-            re.compile(pattern) for pattern in self.SPECIAL_CHAR_PATTERNS
-        ]
+        self._compiled_patterns = [re.compile(pattern) for pattern in self.SPECIAL_CHAR_PATTERNS]
 
     def classify_claim(self, claim: str) -> List[str]:
         """Classify claim into edge case categories.
@@ -270,9 +268,7 @@ class EdgeCaseClassifier:
         """
         return [self.analyze_claim(claim) for claim in claims]
 
-    def get_category_statistics(
-        self, claims: List[str]
-    ) -> Dict[str, Dict[str, any]]:
+    def get_category_statistics(self, claims: List[str]) -> Dict[str, Dict[str, any]]:
         """Get statistics about edge case categories in a set of claims.
 
         Args:
@@ -301,15 +297,11 @@ class EdgeCaseClassifier:
         # Add overall statistics
         stats["_summary"] = {
             "total_claims": total,
-            "avg_categories_per_claim": sum(
-                len(a["edge_case_categories"]) for a in analyses
-            )
+            "avg_categories_per_claim": sum(len(a["edge_case_categories"]) for a in analyses)
             / total
             if total > 0
             else 0,
-            "avg_word_count": sum(a["word_count"] for a in analyses) / total
-            if total > 0
-            else 0,
+            "avg_word_count": sum(a["word_count"] for a in analyses) / total if total > 0 else 0,
         }
 
         return stats

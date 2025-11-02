@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 class AlertLevel(Enum):
     """Alert severity levels."""
+
     INFO = "info"
     WARNING = "warning"
     CRITICAL = "critical"
@@ -51,6 +52,7 @@ class MemoryAlert:
         snapshot: Associated memory snapshot
         metadata: Additional context-specific data
     """
+
     level: AlertLevel
     alert_type: str
     message: str
@@ -71,7 +73,7 @@ class MemoryAlert:
             "message": self.message,
             "timestamp": self.timestamp,
             "snapshot": self.snapshot.to_dict() if self.snapshot else None,
-            "metadata": self.metadata
+            "metadata": self.metadata,
         }
 
 
@@ -93,12 +95,10 @@ class AlertManager:
         self.thresholds: Dict[AlertLevel, Dict[str, float]] = {
             AlertLevel.INFO: {},
             AlertLevel.WARNING: {},
-            AlertLevel.CRITICAL: {}
+            AlertLevel.CRITICAL: {},
         }
 
-        self.handlers: List[Callable[[MemoryAlert], None]] = [
-            self._default_log_handler
-        ]
+        self.handlers: List[Callable[[MemoryAlert], None]] = [self._default_log_handler]
 
         self.alerts_history: List[MemoryAlert] = []
 
@@ -151,8 +151,8 @@ class AlertManager:
                     metadata={
                         "threshold_mb": rss_threshold,
                         "current_mb": snapshot.rss_mb,
-                        "percent_of_system": snapshot.percent
-                    }
+                        "percent_of_system": snapshot.percent,
+                    },
                 )
                 alerts.append(alert)
                 break  # Only trigger highest severity alert
@@ -170,8 +170,8 @@ class AlertManager:
                     metadata={
                         "threshold_percent": percent_threshold,
                         "current_percent": snapshot.percent,
-                        "rss_mb": snapshot.rss_mb
-                    }
+                        "rss_mb": snapshot.rss_mb,
+                    },
                 )
                 alerts.append(alert)
                 break
@@ -206,8 +206,8 @@ class AlertManager:
                         "growth_mb_per_hour": growth_per_hour,
                         "threshold_mb_per_hour": threshold,
                         "duration_minutes": round(stats.duration_seconds / 60, 2),
-                        "total_growth_mb": round(stats.max_rss_mb - stats.min_rss_mb, 2)
-                    }
+                        "total_growth_mb": round(stats.max_rss_mb - stats.min_rss_mb, 2),
+                    },
                 )
                 self._trigger_alert(alert)
                 return alert
@@ -215,10 +215,7 @@ class AlertManager:
         return None
 
     def check_rapid_growth(
-        self,
-        current: MemorySnapshot,
-        previous: MemorySnapshot,
-        threshold_mb: float = 100
+        self, current: MemorySnapshot, previous: MemorySnapshot, threshold_mb: float = 100
     ) -> Optional[MemoryAlert]:
         """Check for rapid memory growth between snapshots.
 
@@ -243,8 +240,8 @@ class AlertManager:
                     "growth_mb": growth,
                     "threshold_mb": threshold_mb,
                     "previous_mb": previous.rss_mb,
-                    "current_mb": current.rss_mb
-                }
+                    "current_mb": current.rss_mb,
+                },
             )
             self._trigger_alert(alert)
             return alert
@@ -282,7 +279,7 @@ class AlertManager:
         self,
         level: Optional[AlertLevel] = None,
         alert_type: Optional[str] = None,
-        limit: Optional[int] = None
+        limit: Optional[int] = None,
     ) -> List[MemoryAlert]:
         """Get alerts from history with optional filtering.
 
@@ -332,5 +329,5 @@ class AlertManager:
             "total_alerts": len(self.alerts_history),
             "by_level": by_level,
             "by_type": by_type,
-            "most_recent": self.alerts_history[-1].to_dict() if self.alerts_history else None
+            "most_recent": self.alerts_history[-1].to_dict() if self.alerts_history else None,
         }

@@ -44,18 +44,20 @@ def main():
     print("\nCategory Performance Summary:")
     print("-" * 70)
 
-    categories = breakdown.get('categories', {})
+    categories = breakdown.get("categories", {})
     for category_name in sorted(categories.keys()):
         cat_data = categories[category_name]
-        accuracy = cat_data.get('accuracy', 0)
-        samples = cat_data.get('claims', 0)
-        f1 = cat_data.get('macro_f1', 0)
-        print(f"{category_name.upper():<20} | Accuracy: {accuracy:>6.1%} | F1: {f1:>7.4f} | Samples: {samples:>2}")
+        accuracy = cat_data.get("accuracy", 0)
+        samples = cat_data.get("claims", 0)
+        f1 = cat_data.get("macro_f1", 0)
+        print(
+            f"{category_name.upper():<20} | Accuracy: {accuracy:>6.1%} | F1: {f1:>7.4f} | Samples: {samples:>2}"
+        )
 
     # Display aggregate metrics
     print("\nAggregate Metrics:")
     print("-" * 70)
-    agg = breakdown.get('aggregate', {})
+    agg = breakdown.get("aggregate", {})
     print(f"Total Samples:       {agg.get('total_samples', 0)}")
     print(f"Total Categories:    {agg.get('total_categories', 0)}")
     print(f"Weighted Accuracy:   {agg.get('weighted_accuracy', 0):.1%}")
@@ -64,13 +66,13 @@ def main():
     # Display rankings
     print("\nCategory Rankings by Accuracy:")
     print("-" * 70)
-    rankings = breakdown.get('rankings', {})
-    by_accuracy = rankings.get('by_accuracy', [])
+    rankings = breakdown.get("rankings", {})
+    by_accuracy = rankings.get("by_accuracy", [])
     for rank, item in enumerate(by_accuracy, 1):
         print(f"{rank}. {item['category'].upper():<20} {item['accuracy']:>6.1%}")
 
     # Display weaknesses
-    weaknesses = breakdown.get('weaknesses', {})
+    weaknesses = breakdown.get("weaknesses", {})
     if weaknesses:
         print("\nIdentified Category Weaknesses:")
         print("-" * 70)
@@ -79,8 +81,8 @@ def main():
             if cat_weaknesses:
                 print(f"\n{category_name.upper()}:")
                 for weakness in cat_weaknesses:
-                    severity = weakness.get('severity', 'medium').upper()
-                    message = weakness.get('message', '')
+                    severity = weakness.get("severity", "medium").upper()
+                    message = weakness.get("message", "")
                     print(f"  [{severity}] {message}")
 
     # Save JSON report
@@ -98,7 +100,7 @@ def main():
     stats = generate_detailed_statistics(breakdown, results)
     stats_path = Path("tests/accuracy/results/category_statistics.json")
     stats_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(stats_path, 'w') as f:
+    with open(stats_path, "w") as f:
         json.dump(stats, f, indent=2)
     print(f"Statistics:   {stats_path}")
 
@@ -106,7 +108,7 @@ def main():
     recommendations = generate_recommendations(breakdown)
     rec_path = Path("tests/accuracy/results/category_recommendations.json")
     rec_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(rec_path, 'w') as f:
+    with open(rec_path, "w") as f:
         json.dump(recommendations, f, indent=2)
     print(f"Recommendations: {rec_path}")
 
@@ -114,7 +116,7 @@ def main():
     summary = generate_summary_report(breakdown, recommendations)
     summary_path = Path("tests/accuracy/results/CATEGORY_ANALYSIS_SUMMARY.md")
     summary_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(summary_path, 'w') as f:
+    with open(summary_path, "w") as f:
         f.write(summary)
     print(f"Summary:      {summary_path}")
 
@@ -123,10 +125,7 @@ def main():
     print("=" * 70)
 
 
-def generate_detailed_statistics(
-    breakdown: dict,
-    results: dict
-) -> dict:
+def generate_detailed_statistics(breakdown: dict, results: dict) -> dict:
     """Generate detailed statistics for all categories.
 
     Args:
@@ -141,13 +140,13 @@ def generate_detailed_statistics(
         "categories": {},
     }
 
-    categories = breakdown.get('categories', {})
+    categories = breakdown.get("categories", {})
     for category_name in sorted(categories.keys()):
         cat_data = categories[category_name]
         result = results.get(category_name, {})
 
         # Calculate error distribution
-        claims = result.get('claims', [])
+        claims = result.get("claims", [])
         error_distribution = {
             "SUPPORTED": {"correct": 0, "errors": {}},
             "REFUTED": {"correct": 0, "errors": {}},
@@ -155,9 +154,9 @@ def generate_detailed_statistics(
         }
 
         for claim in claims:
-            expected = claim.get('expected', 'INSUFFICIENT')
-            predicted = claim.get('predicted', 'INSUFFICIENT')
-            is_correct = claim.get('correct', False)
+            expected = claim.get("expected", "INSUFFICIENT")
+            predicted = claim.get("predicted", "INSUFFICIENT")
+            is_correct = claim.get("correct", False)
 
             if is_correct:
                 error_distribution[expected]["correct"] += 1
@@ -167,14 +166,14 @@ def generate_detailed_statistics(
                 error_distribution[expected]["errors"][predicted] += 1
 
         statistics["categories"][category_name] = {
-            "accuracy": cat_data.get('accuracy', 0),
-            "precision": cat_data.get('precision', {}),
-            "recall": cat_data.get('recall', {}),
-            "f1": cat_data.get('f1', {}),
-            "macro_f1": cat_data.get('macro_f1', 0),
-            "samples": cat_data.get('claims', 0),
+            "accuracy": cat_data.get("accuracy", 0),
+            "precision": cat_data.get("precision", {}),
+            "recall": cat_data.get("recall", {}),
+            "f1": cat_data.get("f1", {}),
+            "macro_f1": cat_data.get("macro_f1", 0),
+            "samples": cat_data.get("claims", 0),
             "error_distribution": error_distribution,
-            "confusion_matrix": cat_data.get('confusion_matrix', {}),
+            "confusion_matrix": cat_data.get("confusion_matrix", {}),
         }
 
     return statistics
@@ -195,33 +194,35 @@ def generate_recommendations(breakdown: dict) -> dict:
         "by_category": {},
     }
 
-    categories = breakdown.get('categories', {})
-    weaknesses = breakdown.get('weaknesses', {})
+    categories = breakdown.get("categories", {})
+    weaknesses = breakdown.get("weaknesses", {})
 
     # Generate priority actions
     all_issues = []
     for category, cat_weaknesses in weaknesses.items():
         for weakness in cat_weaknesses:
-            all_issues.append({
-                "category": category,
-                "severity": weakness.get('severity', 'medium'),
-                "type": weakness.get('type', 'unknown'),
-                "message": weakness.get('message', ''),
-            })
+            all_issues.append(
+                {
+                    "category": category,
+                    "severity": weakness.get("severity", "medium"),
+                    "type": weakness.get("type", "unknown"),
+                    "message": weakness.get("message", ""),
+                }
+            )
 
     # Sort by severity
     priority_map = {"high": 0, "medium": 1, "low": 2}
-    all_issues.sort(key=lambda x: priority_map.get(x['severity'], 3))
+    all_issues.sort(key=lambda x: priority_map.get(x["severity"], 3))
 
     recommendations["priority_actions"] = all_issues[:5]  # Top 5 issues
 
     # Generate per-category recommendations
     for category_name in sorted(categories.keys()):
         cat_data = categories[category_name]
-        accuracy = cat_data.get('accuracy', 0)
-        samples = cat_data.get('claims', 0)
-        precision = cat_data.get('precision', {})
-        recall = cat_data.get('recall', {})
+        accuracy = cat_data.get("accuracy", 0)
+        samples = cat_data.get("claims", 0)
+        precision = cat_data.get("precision", {})
+        recall = cat_data.get("recall", {})
 
         cat_recs = {
             "overall": [],
@@ -231,17 +232,27 @@ def generate_recommendations(breakdown: dict) -> dict:
 
         # Overall recommendations
         if accuracy < 0.65:
-            cat_recs["overall"].append("CRITICAL: Category accuracy is significantly below target. Consider architectural changes.")
+            cat_recs["overall"].append(
+                "CRITICAL: Category accuracy is significantly below target. Consider architectural changes."
+            )
         elif accuracy < 0.75:
-            cat_recs["overall"].append("Category accuracy is below target. Significant improvements needed.")
+            cat_recs["overall"].append(
+                "Category accuracy is below target. Significant improvements needed."
+            )
         elif accuracy < 0.85:
-            cat_recs["overall"].append("Category accuracy is adequate but improvement opportunities exist.")
+            cat_recs["overall"].append(
+                "Category accuracy is adequate but improvement opportunities exist."
+            )
         else:
-            cat_recs["overall"].append("Category performance is good. Continue monitoring for regressions.")
+            cat_recs["overall"].append(
+                "Category performance is good. Continue monitoring for regressions."
+            )
 
         # Data recommendations
         if samples < 10:
-            cat_recs["data"].append("Increase training data for this category - current sample size is limited.")
+            cat_recs["data"].append(
+                "Increase training data for this category - current sample size is limited."
+            )
         elif samples < 20:
             cat_recs["data"].append("Collect more training examples to improve model robustness.")
 
@@ -275,14 +286,14 @@ def generate_summary_report(breakdown: dict, recommendations: dict) -> str:
     Returns:
         Markdown formatted report
     """
-    categories = breakdown.get('categories', {})
-    agg = breakdown.get('aggregate', {})
+    categories = breakdown.get("categories", {})
+    agg = breakdown.get("aggregate", {})
 
     report = f"""# Category Accuracy Analysis Report
 
 **Feature 3.2: Multi-Category Evaluation**
 
-Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Executive Summary
 
@@ -290,10 +301,10 @@ This report presents a comprehensive analysis of the TruthGraph fact verificatio
 
 ### Key Metrics
 
-- **Total Samples Evaluated**: {agg.get('total_samples', 0)}
-- **Categories Analyzed**: {agg.get('total_categories', 0)}
-- **Overall Weighted Accuracy**: {agg.get('weighted_accuracy', 0):.1%}
-- **Average Macro F1 Score**: {agg.get('average_macro_f1', 0):.4f}
+- **Total Samples Evaluated**: {agg.get("total_samples", 0)}
+- **Categories Analyzed**: {agg.get("total_categories", 0)}
+- **Overall Weighted Accuracy**: {agg.get("weighted_accuracy", 0):.1%}
+- **Average Macro F1 Score**: {agg.get("average_macro_f1", 0):.4f}
 
 ## Category Performance Breakdown
 
@@ -303,9 +314,9 @@ This report presents a comprehensive analysis of the TruthGraph fact verificatio
 
     for category_name in sorted(categories.keys()):
         cat_data = categories[category_name]
-        accuracy = cat_data.get('accuracy', 0)
-        samples = cat_data.get('claims', 0)
-        f1 = cat_data.get('macro_f1', 0)
+        accuracy = cat_data.get("accuracy", 0)
+        samples = cat_data.get("claims", 0)
+        f1 = cat_data.get("macro_f1", 0)
 
         if accuracy >= 0.85:
             status = "Excellent"
@@ -316,12 +327,14 @@ This report presents a comprehensive analysis of the TruthGraph fact verificatio
         else:
             status = "Needs Improvement"
 
-        report += f"| {category_name.title()} | {accuracy:.1%} | {samples} | {f1:.4f} | {status} |\n"
+        report += (
+            f"| {category_name.title()} | {accuracy:.1%} | {samples} | {f1:.4f} | {status} |\n"
+        )
 
     report += "\n## Detailed Category Analysis\n\n"
 
-    rankings = breakdown.get('rankings', {})
-    by_accuracy = rankings.get('by_accuracy', [])
+    rankings = breakdown.get("rankings", {})
+    by_accuracy = rankings.get("by_accuracy", [])
 
     report += "### Rankings by Accuracy\n\n"
     for rank, item in enumerate(by_accuracy, 1):
@@ -329,15 +342,15 @@ This report presents a comprehensive analysis of the TruthGraph fact verificatio
 
     report += "\n## Identified Weaknesses\n\n"
 
-    weaknesses = breakdown.get('weaknesses', {})
+    weaknesses = breakdown.get("weaknesses", {})
     if weaknesses:
         for category_name in sorted(weaknesses.keys()):
             cat_weaknesses = weaknesses[category_name]
             if cat_weaknesses:
                 report += f"### {category_name.title()}\n\n"
                 for weakness in cat_weaknesses:
-                    severity = weakness.get('severity', 'medium').upper()
-                    message = weakness.get('message', '')
+                    severity = weakness.get("severity", "medium").upper()
+                    message = weakness.get("message", "")
                     report += f"- **[{severity}]** {message}\n"
                 report += "\n"
     else:
@@ -345,37 +358,37 @@ This report presents a comprehensive analysis of the TruthGraph fact verificatio
 
     report += "## Recommendations\n\n"
 
-    priority_actions = recommendations.get('priority_actions', [])
+    priority_actions = recommendations.get("priority_actions", [])
     if priority_actions:
         report += "### Priority Actions\n\n"
         for i, action in enumerate(priority_actions, 1):
-            severity = action.get('severity', 'medium').upper()
-            message = action.get('message', '')
+            severity = action.get("severity", "medium").upper()
+            message = action.get("message", "")
             report += f"{i}. **[{severity}]** {message}\n"
         report += "\n"
 
-    by_category_recs = recommendations.get('by_category', {})
+    by_category_recs = recommendations.get("by_category", {})
     if by_category_recs:
         report += "### Category-Specific Recommendations\n\n"
         for category_name in sorted(by_category_recs.keys()):
             cat_recs = by_category_recs[category_name]
             report += f"#### {category_name.title()}\n\n"
 
-            overall = cat_recs.get('overall', [])
+            overall = cat_recs.get("overall", [])
             if overall:
                 report += "**Overall**\n"
                 for rec in overall:
                     report += f"- {rec}\n"
                 report += "\n"
 
-            data = cat_recs.get('data', [])
+            data = cat_recs.get("data", [])
             if data:
                 report += "**Data Strategy**\n"
                 for rec in data:
                     report += f"- {rec}\n"
                 report += "\n"
 
-            modeling = cat_recs.get('modeling', [])
+            modeling = cat_recs.get("modeling", [])
             if modeling:
                 report += "**Modeling Improvements**\n"
                 for rec in modeling:

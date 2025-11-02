@@ -79,9 +79,7 @@ class PipelineAnalyzer:
 
         return profile
 
-    def analyze_bottlenecks(
-        self, profile: dict[str, Any]
-    ) -> list[BottleneckAnalysis]:
+    def analyze_bottlenecks(self, profile: dict[str, Any]) -> list[BottleneckAnalysis]:
         """Analyze bottlenecks in pipeline profile.
 
         Args:
@@ -98,9 +96,7 @@ class PipelineAnalyzer:
 
         for stage in stages:
             duration_ms = stage["duration_ms"]
-            percentage = (
-                (duration_ms / total_duration * 100) if total_duration > 0 else 0
-            )
+            percentage = (duration_ms / total_duration * 100) if total_duration > 0 else 0
 
             # Determine severity
             if percentage > 40:
@@ -116,14 +112,10 @@ class PipelineAnalyzer:
                 continue  # Skip minor stages
 
             # Identify root causes based on stage
-            root_causes = self._identify_root_causes(
-                stage["stage_name"], stage
-            )
+            root_causes = self._identify_root_causes(stage["stage_name"], stage)
 
             # Estimate optimization impact
-            impact = self._estimate_optimization_impact(
-                stage["stage_name"], percentage
-            )
+            impact = self._estimate_optimization_impact(stage["stage_name"], percentage)
 
             # Estimate implementation effort
             effort = self._estimate_implementation_effort(stage["stage_name"])
@@ -150,9 +142,7 @@ class PipelineAnalyzer:
 
         return bottlenecks
 
-    def _identify_root_causes(
-        self, stage_name: str, stage_data: dict
-    ) -> list[str]:
+    def _identify_root_causes(self, stage_name: str, stage_data: dict) -> list[str]:
         """Identify root causes of bottleneck for a stage.
 
         Args:
@@ -179,18 +169,12 @@ class PipelineAnalyzer:
                     "Low throughput - batch size may be too small (target: >60 pairs/sec)"
                 )
             causes.append("Feature 2.2: Optimal batch_size=16 for NLI")
-            causes.append(
-                "Consider parallel processing for multiple claims concurrently"
-            )
+            causes.append("Consider parallel processing for multiple claims concurrently")
 
         elif stage_name == "evidence_retrieval":
-            causes.append(
-                "Feature 2.3: Optimal vector search params - lists=50, probes=10"
-            )
+            causes.append("Feature 2.3: Optimal vector search params - lists=50, probes=10")
             if stage_data["duration_ms"] > 500:
-                causes.append(
-                    "High latency - ensure IVFFlat index is created and configured"
-                )
+                causes.append("High latency - ensure IVFFlat index is created and configured")
             causes.append("Enable connection pooling for database queries")
 
         elif stage_name == "result_storage":
@@ -200,15 +184,11 @@ class PipelineAnalyzer:
 
         elif stage_name == "verdict_aggregation":
             if stage_data["duration_ms"] > 100:
-                causes.append(
-                    "Aggregation logic may be inefficient - consider vectorization"
-                )
+                causes.append("Aggregation logic may be inefficient - consider vectorization")
 
         return causes
 
-    def _estimate_optimization_impact(
-        self, stage_name: str, percentage: float
-    ) -> str:
+    def _estimate_optimization_impact(self, stage_name: str, percentage: float) -> str:
         """Estimate the impact of optimizing a stage.
 
         Args:
@@ -249,9 +229,7 @@ class PipelineAnalyzer:
         else:
             return "Variable"
 
-    def compare_profiles(
-        self, baseline_path: Path, optimized_path: Path
-    ) -> ComparisonResult:
+    def compare_profiles(self, baseline_path: Path, optimized_path: Path) -> ComparisonResult:
         """Compare baseline and optimized profiles.
 
         Args:
@@ -273,20 +251,12 @@ class PipelineAnalyzer:
         baseline_duration = baseline["total_duration_ms"]
         optimized_duration = optimized["total_duration_ms"]
         improvement_ms = baseline_duration - optimized_duration
-        improvement_pct = (
-            (improvement_ms / baseline_duration * 100)
-            if baseline_duration > 0
-            else 0
-        )
+        improvement_pct = (improvement_ms / baseline_duration * 100) if baseline_duration > 0 else 0
 
         # Compare individual stages
         stage_improvements = {}
-        baseline_stages = {
-            s["stage_name"]: s["duration_ms"] for s in baseline.get("stages", [])
-        }
-        optimized_stages = {
-            s["stage_name"]: s["duration_ms"] for s in optimized.get("stages", [])
-        }
+        baseline_stages = {s["stage_name"]: s["duration_ms"] for s in baseline.get("stages", [])}
+        optimized_stages = {s["stage_name"]: s["duration_ms"] for s in optimized.get("stages", [])}
 
         for stage_name in baseline_stages:
             if stage_name in optimized_stages:
@@ -309,9 +279,7 @@ class PipelineAnalyzer:
             stage_improvements=stage_improvements,
         )
 
-        logger.info(
-            "comparison_complete", improvement_percentage=f"{improvement_pct:.1f}%"
-        )
+        logger.info("comparison_complete", improvement_percentage=f"{improvement_pct:.1f}%")
 
         return result
 
@@ -342,32 +310,22 @@ class PipelineAnalyzer:
         lines.append("")
         lines.append(f"**Generated**: {profile['timestamp']}")
         lines.append(f"**Claims Processed**: {profile['num_claims']}")
-        lines.append(
-            f"**Total Duration**: {profile['total_duration_ms']:.2f} ms"
-        )
-        lines.append(
-            f"**Avg Duration/Claim**: {profile['avg_duration_per_claim_ms']:.2f} ms"
-        )
-        lines.append(
-            f"**Target Met (<60s)**: {'✅ YES' if profile['target_met'] else '❌ NO'}"
-        )
+        lines.append(f"**Total Duration**: {profile['total_duration_ms']:.2f} ms")
+        lines.append(f"**Avg Duration/Claim**: {profile['avg_duration_per_claim_ms']:.2f} ms")
+        lines.append(f"**Target Met (<60s)**: {'✅ YES' if profile['target_met'] else '❌ NO'}")
         lines.append("")
 
         # Executive Summary
         lines.append("## Executive Summary")
         lines.append("")
         if profile["target_met"]:
-            lines.append(
-                "✅ The pipeline **meets** the <60 second target for end-to-end latency."
-            )
+            lines.append("✅ The pipeline **meets** the <60 second target for end-to-end latency.")
         else:
             lines.append(
                 "❌ The pipeline **does not meet** the <60 second target. Optimization required."
             )
         lines.append("")
-        lines.append(
-            f"Identified **{len(bottlenecks)} bottlenecks** for optimization:"
-        )
+        lines.append(f"Identified **{len(bottlenecks)} bottlenecks** for optimization:")
         high = sum(1 for b in bottlenecks if b.severity == "HIGH")
         medium = sum(1 for b in bottlenecks if b.severity == "MEDIUM")
         low = sum(1 for b in bottlenecks if b.severity == "LOW")
@@ -382,15 +340,9 @@ class PipelineAnalyzer:
         lines.append("| Stage | Duration (ms) | % of Total | Memory (MB) | Throughput |")
         lines.append("|-------|--------------|------------|-------------|------------|")
 
-        total_duration = sum(
-            stage["duration_ms"] for stage in profile.get("stages", [])
-        )
+        total_duration = sum(stage["duration_ms"] for stage in profile.get("stages", []))
         for stage in profile.get("stages", []):
-            pct = (
-                (stage["duration_ms"] / total_duration * 100)
-                if total_duration > 0
-                else 0
-            )
+            pct = (stage["duration_ms"] / total_duration * 100) if total_duration > 0 else 0
             lines.append(
                 f"| {stage['stage_name']} | "
                 f"{stage['duration_ms']:.2f} | "
@@ -405,35 +357,29 @@ class PipelineAnalyzer:
         lines.append("")
 
         for i, bottleneck in enumerate(bottlenecks, 1):
-            lines.append(
-                f"### {i}. {bottleneck.stage_name} [{bottleneck.severity}]"
-            )
+            lines.append(f"### {i}. {bottleneck.stage_name} [{bottleneck.severity}]")
             lines.append("")
-            lines.append(f"**Metrics**:")
+            lines.append("**Metrics**:")
             lines.append(f"- Duration: {bottleneck.duration_ms:.2f} ms")
-            lines.append(
-                f"- Percentage of Total: {bottleneck.percentage_of_total:.1f}%"
-            )
-            lines.append(
-                f"- Memory Delta: {bottleneck.memory_delta_mb:.2f} MB"
-            )
+            lines.append(f"- Percentage of Total: {bottleneck.percentage_of_total:.1f}%")
+            lines.append(f"- Memory Delta: {bottleneck.memory_delta_mb:.2f} MB")
             lines.append(f"- Throughput: {bottleneck.throughput:.2f} items/sec")
             lines.append("")
-            lines.append(f"**Root Causes**:")
+            lines.append("**Root Causes**:")
             for cause in bottleneck.root_causes:
                 lines.append(f"- {cause}")
             lines.append("")
             lines.append(f"**Optimization Impact**: {bottleneck.optimization_impact}")
-            lines.append(
-                f"**Implementation Effort**: {bottleneck.implementation_effort}"
-            )
+            lines.append(f"**Implementation Effort**: {bottleneck.implementation_effort}")
             lines.append(f"**Priority**: {bottleneck.priority} (1=highest)")
             lines.append("")
 
         # Recommendations
         lines.append("## Optimization Recommendations")
         lines.append("")
-        lines.append("Based on the bottleneck analysis, implement these optimizations in priority order:")
+        lines.append(
+            "Based on the bottleneck analysis, implement these optimizations in priority order:"
+        )
         lines.append("")
 
         for i, bottleneck in enumerate(bottlenecks, 1):
@@ -478,20 +424,14 @@ class PipelineAnalyzer:
         print("\n" + "=" * 80)
         print("BASELINE VS OPTIMIZED COMPARISON")
         print("=" * 80)
+        print(f"\nBaseline Duration: {comparison.baseline_duration_ms:.2f} ms")
+        print(f"Optimized Duration: {comparison.optimized_duration_ms:.2f} ms")
         print(
-            f"\nBaseline Duration: {comparison.baseline_duration_ms:.2f} ms"
+            f"Improvement: {comparison.improvement_ms:.2f} ms ({comparison.improvement_percentage:.1f}%)"
         )
-        print(
-            f"Optimized Duration: {comparison.optimized_duration_ms:.2f} ms"
-        )
-        print(f"Improvement: {comparison.improvement_ms:.2f} ms ({comparison.improvement_percentage:.1f}%)")
         print("")
-        print(
-            f"Baseline Met Target: {'✅ YES' if comparison.baseline_met_target else '❌ NO'}"
-        )
-        print(
-            f"Optimized Met Target: {'✅ YES' if comparison.optimized_met_target else '❌ NO'}"
-        )
+        print(f"Baseline Met Target: {'✅ YES' if comparison.baseline_met_target else '❌ NO'}")
+        print(f"Optimized Met Target: {'✅ YES' if comparison.optimized_met_target else '❌ NO'}")
 
         if comparison.stage_improvements:
             print("\n" + "-" * 80)
@@ -507,9 +447,7 @@ class PipelineAnalyzer:
 
 def main() -> None:
     """Main entry point for pipeline analysis."""
-    parser = argparse.ArgumentParser(
-        description="Analyze pipeline profiling results"
-    )
+    parser = argparse.ArgumentParser(description="Analyze pipeline profiling results")
     parser.add_argument(
         "--input",
         type=Path,

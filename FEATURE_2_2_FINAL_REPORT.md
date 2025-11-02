@@ -669,22 +669,22 @@ NLI_CONFIG = {
 2. ✅ `nli_batch_optimization.py` (250 lines)
 
 ### Results (scripts/profiling/results/)
-3. ✅ `nli_profile_2025-10-31.json`
-4. ✅ `nli_batch_analysis_2025-10-31.json`
+1. ✅ `nli_profile_2025-10-31.json`
+2. ✅ `nli_batch_analysis_2025-10-31.json`
 
 ### Documentation (docs/profiling/)
-5. ✅ `nli_optimization_analysis.md` (500+ lines)
-6. ✅ `nli_optimization_recommendations.md` (300+ lines)
-7. ✅ `nli_profiling_guide.md` (200+ lines)
+1. ✅ `nli_optimization_analysis.md` (500+ lines)
+2. ✅ `nli_optimization_recommendations.md` (300+ lines)
+3. ✅ `nli_profiling_guide.md` (200+ lines)
 
 ### Tests (tests/)
-8. ✅ `test_nli_profiling.py` (150 lines, 37 tests)
+1. ✅ `test_nli_profiling.py` (150 lines, 37 tests)
 
 ### Updated Files
-9. ✅ `scripts/profiling/README.md` (comprehensive update)
+1. ✅ `scripts/profiling/README.md` (comprehensive update)
 
 ### Reports (project root/)
-10. ✅ `FEATURE_2_2_FINAL_REPORT.md` (this document)
+1. ✅ `FEATURE_2_2_FINAL_REPORT.md` (this document)
 
 **Total**: 10 files, 2,000+ lines of code and documentation
 

@@ -175,9 +175,7 @@ class BenchmarkComparator:
 
         return comparison
 
-    def compare_pipeline(
-        self, baseline: dict[str, Any], current: dict[str, Any]
-    ) -> dict[str, Any]:
+    def compare_pipeline(self, baseline: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
         """Compare pipeline benchmark results."""
         comparison = {"component": "pipeline", "metrics": {}}
 
@@ -365,9 +363,7 @@ def list_results(results_dir: Path) -> None:
 
 def main() -> int:
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Compare benchmark results and detect regressions"
-    )
+    parser = argparse.ArgumentParser(description="Compare benchmark results and detect regressions")
     parser.add_argument("--baseline", type=str, help="Path to baseline results JSON")
     parser.add_argument("--current", type=str, help="Path to current results JSON")
     parser.add_argument(
@@ -377,9 +373,7 @@ def main() -> int:
         help="Regression threshold (0.1 = 10%% slower)",
     )
     parser.add_argument("--list", action="store_true", help="List all available results")
-    parser.add_argument(
-        "--output", type=str, help="Path to save comparison report JSON"
-    )
+    parser.add_argument("--output", type=str, help="Path to save comparison report JSON")
     parser.add_argument(
         "--results-dir",
         type=str,

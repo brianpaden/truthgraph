@@ -670,11 +670,11 @@ groups:
 
 ### Post-Deployment
 
-7. [ ] Monitor index usage for 24 hours
-8. [ ] Check query performance in pg_stat_statements
-9. [ ] Verify connection pool utilization
-10. [ ] Run benchmark_queries.py to validate improvements
-11. [ ] Update documentation with deployment date
+1. [ ] Monitor index usage for 24 hours
+2. [ ] Check query performance in pg_stat_statements
+3. [ ] Verify connection pool utilization
+4. [ ] Run benchmark_queries.py to validate improvements
+5. [ ] Update documentation with deployment date
 
 ---
 

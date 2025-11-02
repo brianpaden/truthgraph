@@ -361,20 +361,20 @@ Evidence:
 3. ✅ `profile_text_lengths.py` (510 lines)
 
 ### Results (scripts/profiling/results/)
-4. ✅ `batch_size_profile_2025-10-31.json`
-5. ✅ `memory_analysis_2025-10-31.json`
-6. ✅ `text_length_profile_2025-10-31.json`
+1. ✅ `batch_size_profile_2025-10-31.json`
+2. ✅ `memory_analysis_2025-10-31.json`
+3. ✅ `text_length_profile_2025-10-31.json`
 
 ### Documentation (docs/profiling/)
-7. ✅ `embedding_service_analysis.md` (800+ lines)
-8. ✅ `optimization_recommendations.md` (450+ lines)
-9. ✅ `profiling_guide.md` (350+ lines)
+1. ✅ `embedding_service_analysis.md` (800+ lines)
+2. ✅ `optimization_recommendations.md` (450+ lines)
+3. ✅ `profiling_guide.md` (350+ lines)
 
 ### Tests (tests/)
-10. ✅ `test_profiling.py` (350 lines, 26 tests)
+1. ✅ `test_profiling.py` (350 lines, 26 tests)
 
 ### Reports (project root/)
-11. ✅ `FEATURE_2_1_FINAL_REPORT.md` (this document)
+1. ✅ `FEATURE_2_1_FINAL_REPORT.md` (this document)
 
 **Total**: 11 files, 3,500+ lines of code and documentation
 

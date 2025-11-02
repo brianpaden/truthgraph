@@ -238,8 +238,9 @@ class PipelineProfiler:
         Returns:
             Tuple of (function result, stage metrics)
         """
-        import psutil
         import os
+
+        import psutil
 
         process = psutil.Process(os.getpid())
 
@@ -284,9 +285,7 @@ class PipelineProfiler:
             details={
                 "memory_before_mb": memory_before,
                 "memory_after_mb": memory_after,
-                "profile_output": (
-                    profile_output if self.profile_detail == "high" else None
-                ),
+                "profile_output": (profile_output if self.profile_detail == "high" else None),
             },
         )
 
@@ -334,13 +333,9 @@ class PipelineProfiler:
 
             # Apply text truncation if optimized
             if self.optimizations["text_truncation"]:
-                texts = [
-                    text[: self.optimizations["text_truncation"]] for text in texts
-                ]
+                texts = [text[: self.optimizations["text_truncation"]] for text in texts]
 
-            return service.embed_batch(
-                texts, batch_size=self.optimizations["embedding_batch_size"]
-            )
+            return service.embed_batch(texts, batch_size=self.optimizations["embedding_batch_size"])
 
         embeddings, emb_metrics = self.profile_stage(
             "claim_embedding_generation",
@@ -411,12 +406,8 @@ class PipelineProfiler:
             verdicts = []
             for claim, results in zip(test_claims, nli_results):
                 # Simple aggregation
-                entailment_count = sum(
-                    1 for r in results if r["label"] == "entailment"
-                )
-                contradiction_count = sum(
-                    1 for r in results if r["label"] == "contradiction"
-                )
+                entailment_count = sum(1 for r in results if r["label"] == "entailment")
+                contradiction_count = sum(1 for r in results if r["label"] == "contradiction")
 
                 if entailment_count > contradiction_count:
                     verdict = "SUPPORTED"
@@ -541,7 +532,7 @@ class PipelineProfiler:
                 "Run with --optimize flag to apply optimizations from Features 2.1-2.3"
             )
             recommendations.append(
-                f"Expected improvement: Embedding batch_size 64 (+13%), NLI batch_size 16 (+28%), Vector search optimized (+66x)"
+                "Expected improvement: Embedding batch_size 64 (+13%), NLI batch_size 16 (+28%), Vector search optimized (+66x)"
             )
 
         for bottleneck in bottlenecks:
@@ -559,21 +550,15 @@ class PipelineProfiler:
 
             elif stage == "nli_verification":
                 if self.optimizations["nli_batch_size"] < 16:
-                    recommendations.append(
-                        "Increase NLI batch_size to 16 (Feature 2.2 optimal)"
-                    )
-                recommendations.append(
-                    "Consider parallel NLI processing for multiple claims"
-                )
+                    recommendations.append("Increase NLI batch_size to 16 (Feature 2.2 optimal)")
+                recommendations.append("Consider parallel NLI processing for multiple claims")
 
             elif stage == "evidence_retrieval":
                 recommendations.append(
                     f"Optimize vector search: lists={self.optimizations['vector_search_lists']}, probes={self.optimizations['vector_search_probes']} (Feature 2.3)"
                 )
                 if not self.optimizations["parallel_evidence_retrieval"]:
-                    recommendations.append(
-                        "Enable parallel evidence retrieval for multiple claims"
-                    )
+                    recommendations.append("Enable parallel evidence retrieval for multiple claims")
 
             elif stage == "result_storage":
                 recommendations.append("Consider batch database writes")
@@ -581,9 +566,7 @@ class PipelineProfiler:
 
         return recommendations
 
-    def save_results(
-        self, profile: PipelineProfile, output_path: Path | None = None
-    ) -> Path:
+    def save_results(self, profile: PipelineProfile, output_path: Path | None = None) -> Path:
         """Save profiling results to JSON file.
 
         Args:
@@ -624,9 +607,7 @@ class PipelineProfiler:
         print(f"Optimizations: {'ENABLED' if self.optimize else 'DISABLED'}")
         print(f"\nTotal Duration: {profile.total_duration_ms:.2f} ms")
         print(f"Avg Duration/Claim: {profile.avg_duration_per_claim_ms:.2f} ms")
-        print(
-            f"Target Met (<60s): {'✅ YES' if profile.target_met else '❌ NO'}"
-        )
+        print(f"Target Met (<60s): {'✅ YES' if profile.target_met else '❌ NO'}")
 
         print("\n" + "-" * 80)
         print("STAGE BREAKDOWN")
@@ -648,9 +629,7 @@ class PipelineProfiler:
             for bottleneck in profile.bottlenecks:
                 print(f"\n[{bottleneck['severity']}] {bottleneck['stage']}")
                 print(f"  Duration: {bottleneck['duration_ms']:.2f} ms")
-                print(
-                    f"  Percentage: {bottleneck['percentage_of_total']:.1f}%"
-                )
+                print(f"  Percentage: {bottleneck['percentage_of_total']:.1f}%")
                 print(f"  Recommendation: {bottleneck['recommendation']}")
 
         if profile.recommendations:
@@ -666,9 +645,7 @@ class PipelineProfiler:
 
 def main() -> None:
     """Main entry point for pipeline profiling."""
-    parser = argparse.ArgumentParser(
-        description="Profile the verification pipeline end-to-end"
-    )
+    parser = argparse.ArgumentParser(description="Profile the verification pipeline end-to-end")
     parser.add_argument(
         "--num-claims",
         type=int,
@@ -695,14 +672,10 @@ def main() -> None:
     args = parser.parse_args()
 
     # Create profiler
-    profiler = PipelineProfiler(
-        optimize=args.optimize, profile_detail=args.profile_detail
-    )
+    profiler = PipelineProfiler(optimize=args.optimize, profile_detail=args.profile_detail)
 
     # Run profiling
-    print(
-        f"\nProfiling pipeline with {args.num_claims} claims (optimize={args.optimize})..."
-    )
+    print(f"\nProfiling pipeline with {args.num_claims} claims (optimize={args.optimize})...")
     profile = profiler.profile_complete_pipeline(num_claims=args.num_claims)
 
     # Save results

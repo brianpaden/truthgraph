@@ -228,7 +228,7 @@ class TestVectorSearchService:
         # Mock database responses for two queries
         mock_cursor.fetchall.side_effect = [
             [(uuid4(), "Evidence 1", None, 0.9)],
-            [(uuid4(), "Evidence 2", None, 0.85)]
+            [(uuid4(), "Evidence 2", None, 0.85)],
         ]
 
         mock_connection = MagicMock()

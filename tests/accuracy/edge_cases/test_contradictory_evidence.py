@@ -13,9 +13,7 @@ Test Coverage:
 - Conflicting measurements or data interpretations
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
@@ -26,9 +24,7 @@ pytest_plugins = ["tests.fixtures.edge_cases.conftest"]
 class TestContradictoryEvidenceHandling:
     """Test suite for contradictory evidence edge cases."""
 
-    def test_load_contradictory_evidence_fixture(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_load_contradictory_evidence_fixture(self, edge_case_contradictory: Dict[str, Any]):
         """Verify the contradictory evidence fixture loads correctly.
 
         Args:
@@ -40,9 +36,7 @@ class TestContradictoryEvidenceHandling:
         assert "claims" in edge_case_contradictory
         assert len(edge_case_contradictory["claims"]) > 0
 
-    def test_all_claims_expect_conflicting_verdict(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_all_claims_expect_conflicting_verdict(self, edge_case_contradictory: Dict[str, Any]):
         """Verify all contradictory evidence claims expect CONFLICTING verdict.
 
         Args:
@@ -59,9 +53,7 @@ class TestContradictoryEvidenceHandling:
                 f"verdict, got {expected_verdict}"
             )
 
-    def test_contradictory_evidence_claim_structure(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_contradictory_evidence_claim_structure(self, edge_case_contradictory: Dict[str, Any]):
         """Verify contradictory evidence claims have proper structure.
 
         Args:
@@ -71,7 +63,7 @@ class TestContradictoryEvidenceHandling:
 
         for claim in claims:
             # Verify required fields
-            assert "id" in claim, f"Claim missing 'id' field"
+            assert "id" in claim, "Claim missing 'id' field"
             assert "text" in claim, f"Claim {claim.get('id')} missing 'text' field"
             assert "expected_verdict" in claim
             assert "edge_case_type" in claim
@@ -102,9 +94,7 @@ class TestContradictoryEvidenceHandling:
         evidence_list = edge_case_contradictory.get("evidence", [])
 
         # Should have evidence items
-        assert len(evidence_list) > 0, (
-            "Contradictory evidence cases should have evidence items"
-        )
+        assert len(evidence_list) > 0, "Contradictory evidence cases should have evidence items"
 
         # Each claim should reference multiple evidence items
         for claim in claims:
@@ -116,13 +106,9 @@ class TestContradictoryEvidenceHandling:
             # Verify all referenced evidence exists
             for ev_id in evidence_ids:
                 found = any(ev["id"] == ev_id for ev in evidence_list)
-                assert found, (
-                    f"Evidence {ev_id} referenced by claim {claim['id']} not found"
-                )
+                assert found, f"Evidence {ev_id} referenced by claim {claim['id']} not found"
 
-    def test_contradictory_evidence_metadata_quality(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_contradictory_evidence_metadata_quality(self, edge_case_contradictory: Dict[str, Any]):
         """Verify metadata quality for contradictory evidence claims.
 
         Args:
@@ -189,9 +175,7 @@ class TestContradictoryEvidenceHandling:
 
         assert found, f"No claims found covering challenge type: {challenge_type}"
 
-    def test_expected_behavior_documentation(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_expected_behavior_documentation(self, edge_case_contradictory: Dict[str, Any]):
         """Verify all claims document expected behavior.
 
         Args:
@@ -215,9 +199,7 @@ class TestContradictoryEvidenceHandling:
                 f"Claim {claim['id']} expected_behavior should be descriptive"
             )
 
-    def test_contradictory_evidence_reason_quality(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_contradictory_evidence_reason_quality(self, edge_case_contradictory: Dict[str, Any]):
         """Verify reasons for contradictory evidence are well-documented.
 
         Args:
@@ -229,20 +211,14 @@ class TestContradictoryEvidenceHandling:
             reason = claim.get("reason", "")
 
             # Reason should be descriptive
-            assert len(reason) > 30, (
-                f"Claim {claim['id']} should have descriptive reason"
-            )
+            assert len(reason) > 30, f"Claim {claim['id']} should have descriptive reason"
 
             # Reason should explain the conflict
             keywords = ["conflict", "contradict", "both", "some", "others", "debate"]
             has_keyword = any(keyword in reason.lower() for keyword in keywords)
-            assert has_keyword, (
-                f"Claim {claim['id']} reason should explain the evidence conflict"
-            )
+            assert has_keyword, f"Claim {claim['id']} reason should explain the evidence conflict"
 
-    def test_evidence_pairs_have_opposing_stances(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_evidence_pairs_have_opposing_stances(self, edge_case_contradictory: Dict[str, Any]):
         """Verify evidence items have opposing stances.
 
         Args:
@@ -343,9 +319,7 @@ class TestContradictoryEvidenceVerification:
     """
 
     @pytest.mark.skip(reason="Pending verification pipeline integration")
-    def test_contradictory_evidence_handling(
-        self, edge_case_contradictory: Dict[str, Any]
-    ):
+    def test_contradictory_evidence_handling(self, edge_case_contradictory: Dict[str, Any]):
         """Test that verification system handles contradictory evidence correctly.
 
         This test should be implemented once the verification pipeline is available.

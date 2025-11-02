@@ -9,7 +9,6 @@ Tests all components of the accuracy framework including:
 
 import json
 from pathlib import Path
-from typing import Dict, List
 
 import pytest
 
@@ -597,44 +596,21 @@ class TestIntegration:
         reporter = Reporter(str(tmp_path))
 
         # Create test data
-        predictions = [
-            "SUPPORTED", "REFUTED", "INSUFFICIENT",
-            "SUPPORTED", "SUPPORTED", "REFUTED"
-        ]
-        verdicts = [
-            "SUPPORTED", "REFUTED", "INSUFFICIENT",
-            "REFUTED", "SUPPORTED", "REFUTED"
-        ]
-        categories = [
-            "science", "science", "science",
-            "history", "history", "history"
-        ]
+        predictions = ["SUPPORTED", "REFUTED", "INSUFFICIENT", "SUPPORTED", "SUPPORTED", "REFUTED"]
+        verdicts = ["SUPPORTED", "REFUTED", "INSUFFICIENT", "REFUTED", "SUPPORTED", "REFUTED"]
+        categories = ["science", "science", "science", "history", "history", "history"]
 
         # Evaluate
         results = framework.evaluate(predictions, verdicts, categories)
 
         # Generate reports
-        html_path = reporter.generate_html_report(
-            results,
-            str(tmp_path / "report.html")
-        )
-        json_path = reporter.generate_json_report(
-            results,
-            str(tmp_path / "report.json")
-        )
-        summary_path = reporter.save_summary(
-            results,
-            str(tmp_path / "summary.txt")
-        )
+        html_path = reporter.generate_html_report(results, str(tmp_path / "report.html"))
+        json_path = reporter.generate_json_report(results, str(tmp_path / "report.json"))
+        summary_path = reporter.save_summary(results, str(tmp_path / "summary.txt"))
 
         # Save framework outputs
-        results_path = framework.save_results_json(
-            results,
-            str(tmp_path / "results.json")
-        )
-        cm_path = framework.save_confusion_matrix_csv(
-            str(tmp_path / "confusion_matrix.csv")
-        )
+        results_path = framework.save_results_json(results, str(tmp_path / "results.json"))
+        cm_path = framework.save_confusion_matrix_csv(str(tmp_path / "confusion_matrix.csv"))
 
         # Verify all files exist
         assert Path(html_path).exists()
@@ -664,9 +640,7 @@ class TestIntegration:
 
         # Detect regression
         is_regression, details = framework.detect_regression(
-            current_results,
-            baseline_results,
-            threshold=0.05
+            current_results, baseline_results, threshold=0.05
         )
 
         # With 10% accuracy drop, should detect regression

@@ -6,9 +6,7 @@ against expected performance characteristics.
 
 import json
 import sys
-import time
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -334,7 +332,13 @@ class TestProfilingResults:
     def test_performance_vs_baseline(self) -> None:
         """Test that current performance meets or exceeds baseline."""
         # Load baseline
-        baseline_path = project_root / "scripts" / "benchmarks" / "results" / "baseline_embeddings_2025-10-27.json"
+        baseline_path = (
+            project_root
+            / "scripts"
+            / "benchmarks"
+            / "results"
+            / "baseline_embeddings_2025-10-27.json"
+        )
 
         if not baseline_path.exists():
             pytest.skip("Baseline file not found")
@@ -344,8 +348,12 @@ class TestProfilingResults:
 
         # Get baseline throughput at batch_size=64
         baseline_batch_64 = next(
-            (r for r in baseline["benchmarks"]["batch_sizes"]["batch_results"] if r["batch_size"] == 64),
-            None
+            (
+                r
+                for r in baseline["benchmarks"]["batch_sizes"]["batch_results"]
+                if r["batch_size"] == 64
+            ),
+            None,
         )
 
         if not baseline_batch_64:
@@ -367,8 +375,7 @@ class TestProfilingResults:
 
         # Get current throughput at batch_size=64
         current_batch_64 = next(
-            (r for r in current["batch_results"] if r["batch_size"] == 64),
-            None
+            (r for r in current["batch_results"] if r["batch_size"] == 64), None
         )
 
         if not current_batch_64:

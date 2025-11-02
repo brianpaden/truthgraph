@@ -3,8 +3,8 @@
 from .embedding_config import (
     DEFAULT_EMBEDDING_DIMENSION,
     DEFAULT_EMBEDDING_MODEL,
-    EmbeddingModel,
     MODEL_DIMENSIONS,
+    EmbeddingModel,
 )
 
 __all__ = [
