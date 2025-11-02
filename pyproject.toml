@@ -53,8 +53,6 @@ ml = [
     "torch>=2.1.0",
     "sentence-transformers>=2.2.2",
     "transformers>=4.35.0",
-    "pytest>=7.4.3",
-    "pytest-asyncio>=0.21.1",
 ]
 
 [build-system]

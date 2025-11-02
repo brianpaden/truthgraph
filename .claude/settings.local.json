@@ -62,7 +62,10 @@
       "Bash(wsl python3:*)",
       "Bash(wsl pytest tests/accuracy/test_category_accuracy.py -v -s)",
       "Bash(xargs ls:*)",
-      "Bash(task test:api:*)"
+      "Bash(task test:api:*)",
+      "Bash(uv lock:*)",
+      "Bash(__NEW_LINE__ echo \"\")",
+      "Bash(head -3 echo \"\" echo \"2. Phase1-v2 image tests:\" echo -n \"   Tests removed: \" docker run --rm truthgraph-api:phase1-v2 bash -c \"test -d /app/tests && echo FAIL || echo PASS\" echo -n \"   Scripts removed: \" docker run --rm truthgraph-api:phase1-v2 bash -c \"test -d /app/scripts && echo FAIL || echo PASS\" echo \"\" echo \"3. Files modified:\" cd /c/repos/truthgraph)"
     ],
     "deny": [],
     "ask": []

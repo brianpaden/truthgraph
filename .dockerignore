@@ -43,6 +43,13 @@ examples/
 *.md
 LICENSE
 
+# Development artifacts excluded from production image
+tests/
+scripts/
+testing/
+benchmark/
+performance/
+
 # Test outputs (not source files)
 .coverage
 coverage.xml

@@ -27,8 +27,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gcc \
     g++ \
+    && apt-get clean \
+    && apt-get autoclean \
+    && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && rm -rf /var/cache/apt/* \
+    && rm -rf /var/tmp/* \
+    && rm -rf /tmp/*
 
 # Install uv package manager (pinned to specific version for reproducibility)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -98,13 +103,9 @@ COPY truthgraph ./truthgraph
 COPY alembic.ini ./alembic.ini
 COPY alembic ./alembic
 
-# Copy tests for development/testing
-# Updated: 2025-10-30 - Fixed SQL assertion in test_top_k_parameter
-COPY tests ./tests
-
-# Copy performance scripts for benchmarking and optimization
-# Updated: 2025-10-30 - Fixed database connection issues
-COPY scripts ./scripts
+# Note: Tests and scripts are excluded from production image
+# Tests can be mounted at runtime if needed for testing
+# Scripts can be run from source repository outside container
 
 # Install the application package without touching dependencies
 RUN --mount=type=cache,target=/root/.cache/pip \

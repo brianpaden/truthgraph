@@ -107,6 +107,13 @@ tasks:
       - docker-compose build --build-arg INCLUDE_DEV=1
       - echo "✓ Setup complete! Run task dev to start services"
 
+  setup:clean:
+    desc: Clean Docker before setup (removes dangling images, build cache)
+    cmds:
+      - docker image prune -f
+      - docker builder prune -af
+      - echo "✓ Docker cleaned! Ready for fresh build"
+
   dev:
     desc: Start development environment (htmx frontend only)
     cmds:
@@ -145,7 +152,7 @@ tasks:
     desc: Reset everything (destructive - removes volumes)
     cmds:
       - docker-compose down -v
-      - docker system prune -a -f 
+      - docker system prune -a -f
       - cmd: powershell -Command "if (Test-Path .volumes) { Remove-Item -Recurse -Force .volumes }"
         platforms: [windows]
         ignore_error: true
@@ -412,6 +419,13 @@ tasks:
     desc: Clean generated docker images
     cmds:
       - docker image prune -f
+      - echo "✓ Dangling Docker images removed"
+
+  clean:docker:full:
+    desc: Full Docker cleanup (removes all unused images, containers, volumes, networks)
+    cmds:
+      - docker system prune -a -f
+      - echo "✓ Full Docker system cleaned"
 
   help:
     desc: Show available tasks
