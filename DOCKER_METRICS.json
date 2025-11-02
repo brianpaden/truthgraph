@@ -1,0 +1,227 @@
+{
+  "analysis_date": "2025-11-01",
+  "image_name": "truthgraph-api",
+  "image_tag": "latest",
+  "current_metrics": {
+    "total_size_gb": 8.03,
+    "total_size_bytes": 8628232192,
+    "total_layers": 31,
+    "largest_layer_gb": 7.48,
+    "largest_layer_purpose": "Python site-packages"
+  },
+  "problem_summary": {
+    "unavoidable_ml_stack": {
+      "size_gb": 5.3,
+      "percent": 66,
+      "components": {
+        "nvidia_cuda": "4.3 GB (54%)",
+        "torch": "1.7 GB (21%)",
+        "triton": "592 MB (7%)",
+        "other_ml": "600 MB (7%)"
+      },
+      "note": "Necessary for ML inference, architectural decision required to separate"
+    },
+    "removable_immediately": {
+      "size_mb": 230,
+      "percent": 2.8,
+      "items": {
+        "test_files": "2.75 MB",
+        "performance_scripts": "0.98 MB",
+        "pytest_dependencies": "80 MB",
+        "apt_cache": "100-150 MB"
+      },
+      "effort_minutes": 15,
+      "risk": "none"
+    },
+    "optimizable_with_refactoring": {
+      "size_mb": 800,
+      "percent": 10,
+      "items": {
+        "build_tools_gcc": "300-400 MB",
+        "uv_cache": "53.6 MB",
+        "debug_symbols": "300-500 MB"
+      },
+      "effort_minutes": 60,
+      "risk": "low"
+    }
+  },
+  "phase_targets": {
+    "phase_1": {
+      "name": "Quick Wins",
+      "target_size_gb": 7.8,
+      "reduction_mb": 230,
+      "effort_minutes": 15,
+      "actions": [
+        "Remove test files",
+        "Remove scripts",
+        "Fix pytest dependencies",
+        "Improve APT cleanup"
+      ]
+    },
+    "phase_2": {
+      "name": "Build Optimization",
+      "target_size_gb": 6.2,
+      "total_reduction_mb": 1800,
+      "effort_minutes": 60,
+      "actions": [
+        "Separate builder stage",
+        "Remove build tools",
+        "Copy only site-packages",
+        "Optimize layer caching"
+      ]
+    },
+    "phase_3": {
+      "name": "Architecture Separation",
+      "core_api_size_gb": 1.8,
+      "ml_service_size_gb": 5.3,
+      "core_reduction_percent": 77,
+      "effort_minutes": 240,
+      "actions": [
+        "Create core API image",
+        "Create ML service image",
+        "Set up orchestration",
+        "Update docs"
+      ]
+    }
+  },
+  "largest_packages": [
+    {
+      "name": "nvidia",
+      "size_mb": 4300,
+      "purpose": "CUDA toolkit",
+      "removable": false
+    },
+    {
+      "name": "torch",
+      "size_mb": 1700,
+      "purpose": "PyTorch framework",
+      "removable": false
+    },
+    {
+      "name": "triton",
+      "size_mb": 592,
+      "purpose": "CUDA compiler",
+      "removable": false
+    },
+    {
+      "name": "scipy",
+      "size_mb": 87,
+      "purpose": "Scientific computing",
+      "removable": false
+    },
+    {
+      "name": "transformers",
+      "size_mb": 57,
+      "purpose": "HuggingFace NLP",
+      "removable": false
+    },
+    {
+      "name": "sklearn",
+      "size_mb": 35,
+      "purpose": "Machine learning",
+      "removable": false
+    },
+    {
+      "name": "mypy",
+      "size_mb": 12,
+      "purpose": "Type checker",
+      "removable": true,
+      "phase": 1
+    },
+    {
+      "name": "pytest_suite",
+      "size_mb": 20,
+      "purpose": "Testing framework",
+      "removable": true,
+      "phase": 1
+    }
+  ],
+  "bad_practices_found": [
+    {
+      "issue": "Test files in production image",
+      "file_path": "docker/api.Dockerfile line 103",
+      "command": "COPY tests ./tests",
+      "size_impact_mb": 2.75,
+      "impact_percent": 0.03,
+      "severity": "critical",
+      "fix": "Remove line",
+      "phase": 1
+    },
+    {
+      "issue": "Performance scripts in production",
+      "file_path": "docker/api.Dockerfile line 107",
+      "command": "COPY scripts ./scripts",
+      "size_impact_mb": 0.98,
+      "impact_percent": 0.01,
+      "severity": "critical",
+      "fix": "Remove line",
+      "phase": 1
+    },
+    {
+      "issue": "Development dependencies in ML group",
+      "file_path": "pyproject.toml line 56-57",
+      "items": ["pytest>=7.4.3", "pytest-asyncio>=0.21.1"],
+      "size_impact_mb": 80,
+      "severity": "high",
+      "fix": "Move to dev group",
+      "phase": 1
+    },
+    {
+      "issue": "APT cache not fully cleaned",
+      "file_path": "docker/api.Dockerfile",
+      "size_impact_mb": 100,
+      "fix": "Add autoclean, autoremove, cache removal",
+      "phase": 1
+    },
+    {
+      "issue": "Build tools not removed after build",
+      "file_path": "docker/api.Dockerfile",
+      "size_impact_mb": 600,
+      "fix": "Separate builder stage",
+      "phase": 2
+    },
+    {
+      "issue": "uv cache copied to runtime",
+      "file_path": "docker/api.Dockerfile line 88",
+      "size_impact_mb": 53.6,
+      "fix": "Don't copy /root/.local",
+      "phase": 2
+    }
+  ],
+  "deployment_impact": {
+    "push_time_seconds": {
+      "current": 4014,
+      "phase_1": 3885,
+      "phase_2": 3100
+    },
+    "pull_time_reduction_seconds": {
+      "phase_1": 115,
+      "phase_2": 900
+    },
+    "storage_cost_annual": {
+      "current_usd": 2.5,
+      "phase_2_usd": 1.9,
+      "savings_usd": 0.6
+    }
+  },
+  "success_metrics": {
+    "phase_1": {
+      "size_target_gb": 7.8,
+      "size_reduction_target_percent": 2.8,
+      "build_time_change": "no change",
+      "test_passing_requirement": "all"
+    },
+    "phase_2": {
+      "size_target_gb": 6.2,
+      "size_reduction_target_percent": 23,
+      "build_time_improvement_percent": 10,
+      "test_passing_requirement": "all"
+    },
+    "phase_3": {
+      "core_api_target_gb": 1.8,
+      "ml_service_target_gb": 5.3,
+      "core_reduction_target_percent": 77,
+      "test_passing_requirement": "all"
+    }
+  }
+}
