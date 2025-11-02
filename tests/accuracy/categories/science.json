@@ -1,0 +1,254 @@
+{
+  "category": "science",
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-01",
+    "total_claims": 15,
+    "verdict_distribution": {
+      "REFUTED": 9,
+      "SUPPORTED": 6
+    }
+  },
+  "claims": [
+    {
+      "id": "rw_002",
+      "text": "The Amazon rainforest produces 20% of the world's oxygen",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.92,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "While the Amazon is important, it produces approximately 6-9% of global oxygen. Much oxygen production comes from ocean phytoplankton. The myth conflates oxygen production with carbon storage.",
+      "date_checked": "2024-09-20",
+      "evidence_ids": [
+        "rw_ev_003",
+        "rw_ev_004"
+      ]
+    },
+    {
+      "id": "rw_005",
+      "text": "The Great Wall of China is visible from space with the naked eye",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.96,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Astronauts from multiple space programs have confirmed the Great Wall is not visible from orbit without magnification. NASA astronauts specifically debunked this urban myth.",
+      "date_checked": "2024-06-10",
+      "evidence_ids": [
+        "rw_ev_009",
+        "rw_ev_010"
+      ]
+    },
+    {
+      "id": "rw_006",
+      "text": "Goldfish have a three-second memory",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.91,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Research shows goldfish can remember for months and can be trained to recognize shapes, colors, and sounds. Some studies suggest memory capabilities lasting up to 5 months.",
+      "date_checked": "2024-05-22",
+      "evidence_ids": [
+        "rw_ev_011",
+        "rw_ev_012"
+      ]
+    },
+    {
+      "id": "rw_008",
+      "text": "Antarctica is completely covered by ice",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.97,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Antarctica is covered by the Antarctic Ice Sheet, which covers approximately 98% of the continent. The remaining 2% consists of exposed rock outcrops, with some ice-free areas around the coast.",
+      "date_checked": "2024-03-20",
+      "evidence_ids": [
+        "rw_ev_015",
+        "rw_ev_016"
+      ]
+    },
+    {
+      "id": "rw_010",
+      "text": "Lightning never strikes the same place twice",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.95,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Lightning frequently strikes the same location multiple times. The Empire State Building is struck approximately 20-25 times per year. Tall structures and geographical features are repeat targets.",
+      "date_checked": "2024-01-25",
+      "evidence_ids": [
+        "rw_ev_019",
+        "rw_ev_020"
+      ]
+    },
+    {
+      "id": "rw_011",
+      "text": "We use only 10% of our brains",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.97,
+      "source": "Full Fact",
+      "source_url": "https://fullfact.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Neuroscience confirms we use virtually all of our brain. Brain imaging shows all regions are active constantly, even during sleep. Damage to any region causes functional loss.",
+      "date_checked": "2023-12-15",
+      "evidence_ids": [
+        "rw_ev_021",
+        "rw_ev_022"
+      ]
+    },
+    {
+      "id": "rw_012",
+      "text": "The human body contains approximately 37 trillion cells",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.93,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/factcheck",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "A widely cited 2013 study estimated the human body contains approximately 37.2 trillion cells. This figure has become the standard reference in medical and biological literature.",
+      "date_checked": "2023-11-18",
+      "evidence_ids": [
+        "rw_ev_023",
+        "rw_ev_024"
+      ]
+    },
+    {
+      "id": "rw_014",
+      "text": "Honey never spoils and can last indefinitely",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.94,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Honey's low moisture content and high acidity create an environment where bacteria cannot survive. Archaeologists have found 3,000-year-old honey that remains edible. Properly stored honey does not expire.",
+      "date_checked": "2023-09-08",
+      "evidence_ids": [
+        "rw_ev_027",
+        "rw_ev_028"
+      ]
+    },
+    {
+      "id": "rw_017",
+      "text": "The Dead Sea is the lowest point on Earth's surface",
+      "category": "geography",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.96,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/factcheck",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "The Dead Sea surface is approximately 1,410 feet (430 meters) below sea level, making it the lowest point on Earth's land surface. The Mariana Trench is deeper but underwater.",
+      "date_checked": "2023-06-22",
+      "evidence_ids": [
+        "rw_ev_033",
+        "rw_ev_034"
+      ]
+    },
+    {
+      "id": "rw_018",
+      "text": "Glass is actually a very slow-flowing liquid",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.94,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Glass is an amorphous solid, not a liquid. The myth originated from misunderstanding old window glass thickness variations, which resulted from manufacturing processes, not flowing.",
+      "date_checked": "2023-05-16",
+      "evidence_ids": [
+        "rw_ev_035",
+        "rw_ev_036"
+      ]
+    },
+    {
+      "id": "rw_022",
+      "text": "Microwaves make food radioactive",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.95,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/factcheck",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Microwaves use non-ionizing radiation. They heat food by exciting water molecules but do not produce radioactivity. The food remains non-radioactive after microwaving.",
+      "date_checked": "2023-01-20",
+      "evidence_ids": [
+        "rw_ev_043",
+        "rw_ev_044"
+      ]
+    },
+    {
+      "id": "rw_023",
+      "text": "Humans can see ultraviolet light",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.96,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Human eyes are sensitive to visible light wavelengths (380-700 nm). Ultraviolet light (10-380 nm) cannot be seen by humans. The human eye is designed to filter out UV radiation.",
+      "date_checked": "2022-12-15",
+      "evidence_ids": [
+        "rw_ev_045",
+        "rw_ev_046"
+      ]
+    },
+    {
+      "id": "rw_024",
+      "text": "The first transatlantic telegraph cable was successfully laid in 1858",
+      "category": "technology",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.95,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "The first successful transatlantic telegraph cable connected Ireland and Newfoundland in 1858. It revolutionized international communication and operated for about 18 months before failure.",
+      "date_checked": "2022-11-10",
+      "evidence_ids": [
+        "rw_ev_047",
+        "rw_ev_048"
+      ]
+    },
+    {
+      "id": "rw_027",
+      "text": "The earth is flat",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.99,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/factcheck",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Overwhelming scientific evidence confirms Earth is an oblate spheroid. Satellite imagery, gravity measurements, circumnavigation, and basic physics all confirm Earth's spherical shape.",
+      "date_checked": "2022-08-18",
+      "evidence_ids": [
+        "rw_ev_053",
+        "rw_ev_054"
+      ]
+    },
+    {
+      "id": "rw_028",
+      "text": "Humans share 99% of their DNA with chimpanzees",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.94,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Genetic studies show humans and chimpanzees share approximately 98-99% of their DNA sequences. The remaining 1-2% accounts for significant physiological and behavioral differences through evolutionary divergence.",
+      "date_checked": "2022-07-22",
+      "evidence_ids": [
+        "rw_ev_055",
+        "rw_ev_056"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "generated": "2025-11-01T15:19:28.392479",
+  "priority_actions": [
+    {
+      "category": "politics",
+      "severity": "high",
+      "type": "low_precision",
+      "message": "Low precision for INSUFFICIENT: 0.0%"
+    },
+    {
+      "category": "politics",
+      "severity": "high",
+      "type": "low_recall",
+      "message": "Low recall for INSUFFICIENT: 0.0%"
+    },
+    {
+      "category": "science",
+      "severity": "high",
+      "type": "low_precision",
+      "message": "Low precision for INSUFFICIENT: 0.0%"
+    },
+    {
+      "category": "science",
+      "severity": "high",
+      "type": "low_recall",
+      "message": "Low recall for INSUFFICIENT: 0.0%"
+    },
+    {
+      "category": "current_events",
+      "severity": "high",
+      "type": "low_precision",
+      "message": "Low precision for REFUTED: 0.0%"
+    }
+  ],
+  "by_category": {
+    "current_events": {
+      "overall": [
+        "Category performance is good. Continue monitoring for regressions."
+      ],
+      "data": [
+        "Increase training data for this category - current sample size is limited."
+      ],
+      "modeling": [
+        "Improve precision for REFUTED, INSUFFICIENT verdict(s). Focus on reducing false positives.",
+        "Improve recall for REFUTED, INSUFFICIENT verdict(s). Focus on capturing more true instances."
+      ]
+    },
+    "health": {
+      "overall": [
+        "Category performance is good. Continue monitoring for regressions."
+      ],
+      "data": [
+        "Collect more training examples to improve model robustness."
+      ],
+      "modeling": []
+    },
+    "historical": {
+      "overall": [
+        "Category performance is good. Continue monitoring for regressions."
+      ],
+      "data": [
+        "Increase training data for this category - current sample size is limited."
+      ],
+      "modeling": [
+        "Improve precision for INSUFFICIENT verdict(s). Focus on reducing false positives.",
+        "Improve recall for INSUFFICIENT verdict(s). Focus on capturing more true instances."
+      ]
+    },
+    "politics": {
+      "overall": [
+        "Category performance is good. Continue monitoring for regressions."
+      ],
+      "data": [
+        "Increase training data for this category - current sample size is limited."
+      ],
+      "modeling": [
+        "Improve precision for INSUFFICIENT verdict(s). Focus on reducing false positives.",
+        "Improve recall for INSUFFICIENT verdict(s). Focus on capturing more true instances."
+      ]
+    },
+    "science": {
+      "overall": [
+        "Category performance is good. Continue monitoring for regressions."
+      ],
+      "data": [
+        "Collect more training examples to improve model robustness."
+      ],
+      "modeling": [
+        "Improve precision for INSUFFICIENT verdict(s). Focus on reducing false positives.",
+        "Improve recall for INSUFFICIENT verdict(s). Focus on capturing more true instances."
+      ]
+    }
+  }
+}

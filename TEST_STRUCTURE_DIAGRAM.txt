@@ -1,0 +1,343 @@
+================================================================================
+API TEST SUITE STRUCTURE & FLOW
+================================================================================
+
+Command Execution Flow:
+┌─────────────────┐
+│  task test:api  │
+└────────┬────────┘
+         │
+         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  docker-compose exec api pytest tests/test_api_ml_endpoints.py -v  │
+└────────┬─────────────────────────────────────────────────────┘
+         │
+         ▼
+┌──────────────────────────────────────────┐
+│  Load test_api_ml_endpoints.py           │
+│  ├─ 8 Test Classes                       │
+│  ├─ 29 Test Methods                      │
+│  └─ 3 Pytest Fixtures                    │
+└────────┬─────────────────────────────────┘
+         │
+         ▼
+    ┌────────┴────────┬────────┬────────┬────────┬────────┬─────────┐
+    │                 │        │        │        │        │         │
+    ▼                 ▼        ▼        ▼        ▼        ▼         ▼
+TestEmbed         TestSearch  TestNLI  TestNLI  TestVerify TestVerdict TestHealth
+Endpoint          Endpoint    Endpoint Batch    Endpoint  Endpoint   Endpoint
+(5 tests)         (5 tests)   (4 tests)(2 tests)(5 tests) (3 tests)  (1 test)
+                                                                  +
+                                           TestRoot        TestMiddleware
+                                           Endpoint        (3 tests)
+                                           (1 test)
+
+================================================================================
+FIXTURE DEPENDENCY TREE
+================================================================================
+
+@pytest.fixture(scope="module")  <-- PROBLEM: Should be function
+def client():
+    return TestClient(app)
+    │
+    └─ Used by: ALL 29 tests
+
+@pytest.fixture(scope="function")
+def db_session():
+    Base.metadata.create_all(bind=engine)
+    session = SessionLocal()
+    yield session
+    session.close()
+    Base.metadata.drop_all(bind=engine)  <-- PROBLEM: Destroys all tables
+    │
+    ├─ Used by: 12 tests directly
+    │
+    └─ Depended by: sample_evidence fixture
+
+@pytest.fixture(scope="function")
+def sample_evidence(db_session):
+    # Creates 5 Evidence items with embeddings
+    embedding_service.embed_text()  <-- Real model (SLOW)
+    │
+    ├─ Used by: 5 tests
+    │   ├─ test_search_vector_mode
+    │   ├─ test_search_with_similarity_threshold
+    │   ├─ test_search_with_limit
+    │   ├─ test_verify_claim_with_evidence
+    │   └─ test_verify_with_custom_threshold
+    │
+    └─ MISSING in: 3 search tests + 2 other tests that need data
+
+
+================================================================================
+TEST CLASS ORGANIZATION
+================================================================================
+
+tests/test_api_ml_endpoints.py
+│
+├─ TestEmbedEndpoint                  (Lines 90-147)
+│  ├─ test_embed_single_text          ✓ PASS
+│  ├─ test_embed_multiple_texts       ✓ PASS
+│  ├─ test_embed_empty_text_error     ✓ PASS
+│  ├─ test_embed_too_many_texts_error ✓ PASS
+│  └─ test_embed_invalid_batch_size   ✓ PASS
+│
+├─ TestSearchEndpoint                 (Lines 152-229)
+│  ├─ test_search_vector_mode         ⚠️ FIXTURE ISSUE
+│  ├─ test_search_with_similarity... ⚠️ FIXTURE ISSUE
+│  ├─ test_search_with_limit          ⚠️ FIXTURE ISSUE
+│  ├─ test_search_keyword_not_impl    ✓ PASS
+│  ├─ test_search_empty_query_error   ✓ PASS
+│  └─ test_search_invalid_limit       ✓ PASS
+│
+├─ TestNLIEndpoint                    (Lines 234-285)
+│  ├─ test_nli_entailment             ✓ PASS
+│  ├─ test_nli_contradiction          ✓ PASS
+│  ├─ test_nli_empty_premise_error    ✓ PASS
+│  └─ test_nli_empty_hypothesis_error ✓ PASS
+│
+├─ TestNLIBatchEndpoint               (Lines 287-320)
+│  ├─ test_nli_batch_processing       ✓ PASS
+│  └─ test_nli_batch_too_many_pairs   ✓ PASS
+│
+├─ TestVerifyEndpoint                 (Lines 325-403)
+│  ├─ test_verify_claim_with_evidence ⚠️ FIXTURE ISSUE
+│  ├─ test_verify_claim_no_evidence   ✓ PASS
+│  ├─ test_verify_with_custom_thresh  ⚠️ WEAK ASSERTION
+│  ├─ test_verify_empty_claim_error   ✓ PASS
+│  └─ test_verify_invalid_max_evidence✓ PASS
+│
+├─ TestVerdictEndpoint                (Lines 408-466)
+│  ├─ test_get_verdict_existing       ⚠️ LOGIC ISSUE
+│  ├─ test_get_verdict_claim_not_found✓ PASS
+│  └─ test_get_verdict_no_verification✓ PASS
+│
+├─ TestHealthEndpoint                 (Lines 471-490)
+│  └─ test_health_check               ✓ PASS
+│
+├─ TestRootEndpoint                   (Lines 495-508)
+│  └─ test_root                       ✓ PASS
+│
+└─ TestMiddleware                     (Lines 513-539)
+   ├─ test_request_id_header          ✓ PASS
+   ├─ test_process_time_header        ✓ PASS
+   └─ test_rate_limit_headers         ⚠️ INCOMPLETE TEST
+
+
+================================================================================
+DATA FLOW FOR SEARCH ENDPOINT TESTS
+================================================================================
+
+Scenario 1: test_search_vector_mode (Lines 155-179)
+┌─────────────────────────────────────┐
+│ def test_search_vector_mode(        │
+│     self, client, db_session,       │ ◄──── Requests sample_evidence
+│     sample_evidence)                │
+└────────┬────────────────────────────┘
+         │
+         ▼
+    ┌────────────────────┐
+    │ sample_evidence    │
+    │ fixture runs       │
+    │                    │
+    │ Creates:           │
+    │ - 5 Evidence items │ ◄────── Database populated
+    │ - 5 Embeddings     │
+    │ - Indices on DB    │
+    └────────┬───────────┘
+             │
+             ▼
+    ┌──────────────────────┐
+    │ POST /api/v1/search  │
+    │ query: "Earth..."    │
+    │ mode: "vector"       │
+    └────────┬─────────────┘
+             │
+             ▼
+    ┌──────────────────────┐
+    │ Results found!       │
+    │ count: 1-5           │
+    │ Test PASSES ✓        │
+    └──────────────────────┘
+
+
+Scenario 2: test_search_keyword_mode_not_implemented (Lines 209-213)
+┌───────────────────────────────────────────┐
+│ def test_search_keyword_mode_not_impl(    │
+│     self, client):                        │ ◄──── NO sample_evidence!
+└────────┬──────────────────────────────────┘
+         │
+         ▼
+    ┌──────────────────────┐
+    │ NO sample_evidence   │
+    │ fixture runs         │
+    │                      │
+    │ DB is empty          │
+    │ OR has leftover data │
+    │ from previous tests   │
+    └────────┬─────────────┘
+             │
+             ▼
+    ┌──────────────────────────┐
+    │ POST /api/v1/search      │
+    │ query: "test"            │
+    │ mode: "keyword"          │
+    └────────┬─────────────────┘
+             │
+             ▼
+    ┌──────────────────────────────┐
+    │ Returns: 501 Not Implemented │
+    │ Test PASSES ✓               │
+    │                             │
+    │ BUT: Doesn't validate search│
+    │ functionality!              │
+    └──────────────────────────────┘
+
+
+================================================================================
+DATABASE CLEANUP LIFECYCLE (PROBLEM!)
+================================================================================
+
+Test Execution Sequence:
+
+Test #1: test_embed_single_text
+├─ Setup: db_session fixture
+│  ├─ Base.metadata.create_all()     ◄── Create all tables
+│  └─ SessionLocal()                 ◄── Create session
+├─ Execute: POST /api/v1/embed
+├─ Teardown: db_session fixture
+│  ├─ session.close()
+│  └─ Base.metadata.drop_all()       ◄── DROP ALL TABLES! (~2 seconds)
+└─ Duration: ~2 seconds (mostly cleanup)
+
+Test #2: test_embed_multiple_texts
+├─ Setup: db_session fixture
+│  ├─ Base.metadata.create_all()     ◄── Recreate all tables
+│  └─ SessionLocal()                 ◄── Create session
+├─ Execute: POST /api/v1/embed
+├─ Teardown: db_session fixture
+│  ├─ session.close()
+│  └─ Base.metadata.drop_all()       ◄── DROP ALL TABLES AGAIN! (~2 seconds)
+└─ Duration: ~2 seconds (mostly cleanup)
+
+... repeat 29 times ...
+
+Total Duration: 29 tests × 2 seconds per drop = ~58+ seconds
+                                                (mostly database operations!)
+
+
+BETTER APPROACH (Transaction Rollback):
+
+Test #1:
+├─ Setup: Start transaction
+│  ├─ connection.begin()             ◄── Start transaction
+│  └─ SessionLocal()                 ◄── Create session
+├─ Execute: Test
+├─ Teardown:
+│  ├─ transaction.rollback()         ◄── Rollback (very fast!)
+│  └─ connection.close()
+└─ Duration: ~0.2 seconds (no cleanup overhead!)
+
+Test #2:
+├─ Setup: Start fresh transaction   ◄── Clean state, no data from Test #1
+├─ Execute: Test
+├─ Teardown: transaction.rollback() ◄── Fast cleanup
+└─ Duration: ~0.2 seconds
+
+Total Duration: 29 tests × 0.2 seconds = ~6 seconds
+                                        (29x FASTER!)
+
+
+================================================================================
+ASSERTION STRENGTH COMPARISON
+================================================================================
+
+WEAK Assertion (Current):
+┌─────────────────────────────────────────┐
+│ assert data["count"] >= 0               │
+│                                         │
+│ What it validates:                      │
+│ ✗ Endpoint returned a response          │
+│ ✓ Response has "count" field            │
+│                                         │
+│ What it DOESN'T validate:               │
+│ ✗ Count is > 0                          │
+│ ✗ Results were actually returned        │
+│ ✗ Search functionality worked           │
+│ ✗ Similarity threshold was applied      │
+│                                         │
+│ Test Result:                            │
+│ PASSES if count = 0, 1, 100, or -5!    │ ◄── WRONG!
+└─────────────────────────────────────────┘
+
+
+STRONG Assertion (Recommended):
+┌─────────────────────────────────────────┐
+│ assert data["count"] > 0                │
+│ assert len(data["results"]) == ...      │
+│ assert all(                             │
+│     r["similarity"] >= min_similarity   │
+│     for r in data["results"]            │
+│ )                                       │
+│                                         │
+│ What it validates:                      │
+│ ✓ Endpoint returned results             │
+│ ✓ Response has results field            │
+│ ✓ Results count is accurate             │
+│ ✓ Similarity threshold was applied      │
+│ ✓ Search functionality worked           │
+│                                         │
+│ Test Result:                            │
+│ ONLY passes if search actually works!  │ ◄── CORRECT!
+└─────────────────────────────────────────┘
+
+
+================================================================================
+ISSUE SEVERITY MATRIX
+================================================================================
+
+                    SCOPE          IMPACT    FIXING
+Issue               (# Tests)      (Severity) TIME
+────────────────────────────────────────────────────
+Fixture scope       29/29          CRITICAL  5 min
+Database cleanup    29/29          CRITICAL  15 min
+Fixture usage       6/29           HIGH      20 min
+DB state pollution  5/29           HIGH      25 min
+Weak assertions     5/29           MEDIUM    15 min
+No mocking          ALL            MEDIUM    45 min
+Rate limit testing  1/29           LOW       10 min
+                                            ──────
+                                Total:      ~135 min
+
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+Total Tests:                    29
+├─ Passing (no issues):        19
+├─ Needs fixture fix:          5
+├─ Needs assertion fix:        3
+├─ Needs logic fix:            2
+└─ Needs test behavior fix:    1
+
+Critical Issues:                2
+├─ Fixture scope:              affects 29/29 tests
+└─ Database cleanup:           affects 29/29 tests
+
+Test Classes:                   8
+Test Methods:                   29
+Test Fixtures:                  3
+Test Parameters in Signatures:  68+
+
+Code Lines Examined:            543
+Lines with Issues:              ~45
+Percentage with Issues:         ~8%
+
+Estimated Fix Time:             1.5 - 2 hours
+Estimated Test Time Savings:    ~50 seconds per run
+Expected Final Duration:        5-10 seconds (vs current 45-90)
+
+================================================================================
+END OF DIAGRAM
+================================================================================

@@ -1,0 +1,347 @@
+{
+  "timestamp": "2025-11-01T15:19:28.389593",
+  "categories": {
+    "politics": {
+      "claims": 3,
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "weighted_f1": 1.0,
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 1,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "science": {
+      "claims": 15,
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "weighted_f1": 1.0,
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 6,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 9,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "health": {
+      "claims": 10,
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 6,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 2
+        }
+      }
+    },
+    "current_events": {
+      "claims": 2,
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.3333333333333333,
+      "weighted_f1": 1.0,
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "historical": {
+      "claims": 3,
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "weighted_f1": 1.0,
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 1,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 2,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "total_samples": 33,
+    "total_categories": 5,
+    "weighted_accuracy": 1.0,
+    "average_macro_f1": 0.6666666666666666
+  },
+  "rankings": {
+    "by_accuracy": [
+      {
+        "category": "politics",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 3
+      },
+      {
+        "category": "science",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 15
+      },
+      {
+        "category": "health",
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "samples": 10
+      },
+      {
+        "category": "current_events",
+        "accuracy": 1.0,
+        "macro_f1": 0.3333333333333333,
+        "samples": 2
+      },
+      {
+        "category": "historical",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 3
+      }
+    ],
+    "by_f1": [
+      {
+        "category": "health",
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "samples": 10
+      },
+      {
+        "category": "politics",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 3
+      },
+      {
+        "category": "science",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 15
+      },
+      {
+        "category": "historical",
+        "accuracy": 1.0,
+        "macro_f1": 0.6666666666666666,
+        "samples": 3
+      },
+      {
+        "category": "current_events",
+        "accuracy": 1.0,
+        "macro_f1": 0.3333333333333333,
+        "samples": 2
+      }
+    ]
+  },
+  "weaknesses": {
+    "politics": [
+      {
+        "type": "low_precision",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low precision for INSUFFICIENT: 0.0%"
+      },
+      {
+        "type": "low_recall",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low recall for INSUFFICIENT: 0.0%"
+      }
+    ],
+    "science": [
+      {
+        "type": "low_precision",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low precision for INSUFFICIENT: 0.0%"
+      },
+      {
+        "type": "low_recall",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low recall for INSUFFICIENT: 0.0%"
+      }
+    ],
+    "current_events": [
+      {
+        "type": "low_precision",
+        "verdict": "REFUTED",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low precision for REFUTED: 0.0%"
+      },
+      {
+        "type": "low_precision",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low precision for INSUFFICIENT: 0.0%"
+      },
+      {
+        "type": "low_recall",
+        "verdict": "REFUTED",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low recall for REFUTED: 0.0%"
+      },
+      {
+        "type": "low_recall",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low recall for INSUFFICIENT: 0.0%"
+      }
+    ],
+    "historical": [
+      {
+        "type": "low_precision",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low precision for INSUFFICIENT: 0.0%"
+      },
+      {
+        "type": "low_recall",
+        "verdict": "INSUFFICIENT",
+        "severity": "high",
+        "value": 0.0,
+        "message": "Low recall for INSUFFICIENT: 0.0%"
+      }
+    ]
+  }
+}

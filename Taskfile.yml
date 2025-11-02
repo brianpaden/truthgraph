@@ -103,6 +103,7 @@ tasks:
         platforms: [windows]
       - cmd: test -f .env || cp .env.example .env
         platforms: [linux, darwin]
+      - docker image prune -f
       - docker-compose build --build-arg INCLUDE_DEV=1
       - echo "✓ Setup complete! Run task dev to start services"
 
@@ -144,6 +145,7 @@ tasks:
     desc: Reset everything (destructive - removes volumes)
     cmds:
       - docker-compose down -v
+      - docker system prune -a -f 
       - cmd: powershell -Command "if (Test-Path .volumes) { Remove-Item -Recurse -Force .volumes }"
         platforms: [windows]
         ignore_error: true
@@ -232,6 +234,8 @@ tasks:
 
   test:ml:
     desc: Run ML service tests (embedding, NLI, vector search)
+    deps:
+      - task: ml:warmup
     cmds:
       - docker-compose exec api pytest tests/services/ml tests/integration/test_*_integration.py -v
 
@@ -280,10 +284,10 @@ tasks:
     cmds:
       - task: ml:benchmark:embedding
       - task: ml:benchmark:nli
-      - task: ml:benchmark:vector  # TODO: forced to 384
-      - task: ml:benchmark:hybrid  # TODO: failing looking for 1536
+      - task: ml:benchmark:vector
+      - task: ml:benchmark:hybrid
       - task: ml:benchmark:verdict
-      - task: ml:benchmark:pipeline  # TODO: failing
+      - task: ml:benchmark:pipeline
 
   ml:benchmark:embedding:
     desc: Benchmark embedding service
@@ -401,7 +405,13 @@ tasks:
       - rm -rf dist
       - rm -rf build
       - rm -rf *.egg-info
+      - task: clean:docker
       - echo "✓ Cleaned up caches and build artifacts"
+
+  clean:docker:
+    desc: Clean generated docker images
+    cmds:
+      - docker image prune -f
 
   help:
     desc: Show available tasks

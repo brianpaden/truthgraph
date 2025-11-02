@@ -10,37 +10,104 @@ Tests cover:
 Includes unit tests, integration tests, and error handling tests.
 """
 
+from contextlib import asynccontextmanager
 from uuid import uuid4
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from truthgraph.api.middleware import ErrorHandlingMiddleware, RequestIDMiddleware
+from truthgraph.api.ml_routes import router as ml_router
+from truthgraph.api.routes import router
 from truthgraph.db import Base, SessionLocal, engine
-from truthgraph.main import app
 from truthgraph.schemas import Claim, Embedding, Evidence, VerificationResult
 from truthgraph.services.ml.embedding_service import get_embedding_service
 
 
-@pytest.fixture(scope="module")
+@asynccontextmanager
+async def test_lifespan(app: FastAPI):
+    """Test application lifespan - no ML model preloading."""
+    # Create database tables
+    Base.metadata.create_all(bind=engine)
+    yield
+    # Cleanup happens per-test
+
+
+@pytest.fixture(scope="function")
 def client():
-    """Create test client."""
-    return TestClient(app)
+    """Create test client with high rate limits.
+
+    Function scope ensures proper test isolation.
+    Rate limits are set very high to avoid 429 errors during testing.
+    """
+    # Import RateLimitMiddleware
+    from truthgraph.api.middleware import RateLimitMiddleware
+
+    # Create test app with very high rate limits
+    test_app = FastAPI(
+        title="TruthGraph Test API",
+        version="2.0.0",
+        lifespan=test_lifespan,
+    )
+
+    # Add middleware with very high limits (essentially unlimited for tests)
+    test_app.add_middleware(ErrorHandlingMiddleware)
+    test_app.add_middleware(RequestIDMiddleware)
+    test_app.add_middleware(
+        RateLimitMiddleware,
+        requests_per_minute=10000,  # Very high limit for tests
+        ml_requests_per_minute=10000,  # Very high limit for tests
+    )
+
+    # Include API routes
+    test_app.include_router(router, prefix="/api/v1", tags=["Claims"])
+    test_app.include_router(ml_router, tags=["ML Services"])
+
+    # Add health endpoint
+    @test_app.get("/health")
+    async def health_check():
+        return {"status": "healthy", "services": {}}
+
+    # Add root endpoint
+    @test_app.get("/")
+    def root():
+        return {
+            "service": "TruthGraph Test API",
+            "version": "2.0.0",
+            "endpoints": {
+                "verify": "/api/v1/verify",
+                "embed": "/api/v1/embed",
+                "search": "/api/v1/search",
+                "nli": "/api/v1/nli",
+            },
+        }
+
+    return TestClient(test_app)
 
 
 @pytest.fixture(scope="function")
 def db_session():
-    """Create fresh database session for each test."""
-    # Create tables
+    """Create fresh database session for each test.
+
+    Uses transaction rollback for fast cleanup instead of drop_all().
+    """
+    # Create tables if they don't exist
     Base.metadata.create_all(bind=engine)
 
-    # Create session
-    session = SessionLocal()
+    # Create a connection and begin a transaction
+    connection = engine.connect()
+    transaction = connection.begin()
+
+    # Create session bound to this connection
+    session = SessionLocal(bind=connection)
 
     yield session
 
-    # Cleanup
+    # Cleanup: rollback transaction and close connection
     session.close()
-    Base.metadata.drop_all(bind=engine)
+    transaction.rollback()
+    connection.close()
 
 
 @pytest.fixture(scope="function")

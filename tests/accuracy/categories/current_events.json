@@ -1,0 +1,45 @@
+{
+  "category": "current_events",
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-01",
+    "total_claims": 2,
+    "verdict_distribution": {
+      "SUPPORTED": 2
+    }
+  },
+  "claims": [
+    {
+      "id": "synthetic_ce_001",
+      "text": "A major hurricane struck the Gulf Coast in 2024",
+      "category": "current_events",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.95,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Multiple major hurricanes affected the US coast during the 2024 hurricane season with significant impacts.",
+      "date_checked": "2024-10-01",
+      "evidence_ids": [
+        "syn_ce_001",
+        "syn_ce_002"
+      ]
+    },
+    {
+      "id": "synthetic_ce_002",
+      "text": "A major political election occurred in a European country in 2024",
+      "category": "current_events",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.93,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/fact-check",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Several European countries held significant elections in 2024 including major EU member states.",
+      "date_checked": "2024-09-15",
+      "evidence_ids": [
+        "syn_ce_003",
+        "syn_ce_004"
+      ]
+    }
+  ]
+}

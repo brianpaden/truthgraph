@@ -1,0 +1,260 @@
+{
+  "generated": "2025-11-01T15:19:28.391664",
+  "categories": {
+    "current_events": {
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 0.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.3333333333333333,
+      "samples": 2,
+      "error_distribution": {
+        "SUPPORTED": {
+          "correct": 2,
+          "errors": {}
+        },
+        "REFUTED": {
+          "correct": 0,
+          "errors": {}
+        },
+        "INSUFFICIENT": {
+          "correct": 0,
+          "errors": {}
+        }
+      },
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "health": {
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 1.0
+      },
+      "macro_f1": 1.0,
+      "samples": 10,
+      "error_distribution": {
+        "SUPPORTED": {
+          "correct": 2,
+          "errors": {}
+        },
+        "REFUTED": {
+          "correct": 6,
+          "errors": {}
+        },
+        "INSUFFICIENT": {
+          "correct": 2,
+          "errors": {}
+        }
+      },
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 6,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 2
+        }
+      }
+    },
+    "historical": {
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "samples": 3,
+      "error_distribution": {
+        "SUPPORTED": {
+          "correct": 1,
+          "errors": {}
+        },
+        "REFUTED": {
+          "correct": 2,
+          "errors": {}
+        },
+        "INSUFFICIENT": {
+          "correct": 0,
+          "errors": {}
+        }
+      },
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 1,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 2,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "politics": {
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "samples": 3,
+      "error_distribution": {
+        "SUPPORTED": {
+          "correct": 2,
+          "errors": {}
+        },
+        "REFUTED": {
+          "correct": 1,
+          "errors": {}
+        },
+        "INSUFFICIENT": {
+          "correct": 0,
+          "errors": {}
+        }
+      },
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 2,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 1,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    },
+    "science": {
+      "accuracy": 1.0,
+      "precision": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "recall": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "f1": {
+        "SUPPORTED": 1.0,
+        "REFUTED": 1.0,
+        "INSUFFICIENT": 0.0
+      },
+      "macro_f1": 0.6666666666666666,
+      "samples": 15,
+      "error_distribution": {
+        "SUPPORTED": {
+          "correct": 6,
+          "errors": {}
+        },
+        "REFUTED": {
+          "correct": 9,
+          "errors": {}
+        },
+        "INSUFFICIENT": {
+          "correct": 0,
+          "errors": {}
+        }
+      },
+      "confusion_matrix": {
+        "SUPPORTED": {
+          "SUPPORTED": 6,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        },
+        "REFUTED": {
+          "SUPPORTED": 0,
+          "REFUTED": 9,
+          "INSUFFICIENT": 0
+        },
+        "INSUFFICIENT": {
+          "SUPPORTED": 0,
+          "REFUTED": 0,
+          "INSUFFICIENT": 0
+        }
+      }
+    }
+  }
+}

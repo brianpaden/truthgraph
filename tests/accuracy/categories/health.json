@@ -1,0 +1,175 @@
+{
+  "category": "health",
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-01",
+    "total_claims": 10,
+    "verdict_distribution": {
+      "SUPPORTED": 2,
+      "REFUTED": 6,
+      "INSUFFICIENT": 2
+    }
+  },
+  "claims": [
+    {
+      "id": "rw_001",
+      "text": "The United States has the highest per capita healthcare spending in the world",
+      "category": "health",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.95,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "OECD health data confirms the US spends significantly more per person on healthcare than any other developed nation, approximately $11,000 per capita annually.",
+      "date_checked": "2024-10-15",
+      "evidence_ids": [
+        "rw_ev_001",
+        "rw_ev_002"
+      ]
+    },
+    {
+      "id": "rw_003",
+      "text": "Fluoride in drinking water prevents tooth decay",
+      "category": "health",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.94,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Extensive research by CDC, WHO, and dental organizations confirms water fluoridation reduces tooth decay by approximately 25% in children and 15% in adults.",
+      "date_checked": "2024-08-12",
+      "evidence_ids": [
+        "rw_ev_005",
+        "rw_ev_006"
+      ]
+    },
+    {
+      "id": "rw_004",
+      "text": "Mobile phones cause brain cancer",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.93,
+      "source": "Full Fact",
+      "source_url": "https://fullfact.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Multiple large-scale studies including the INTERPHONE study found no conclusive evidence that mobile phone use causes brain cancer. WHO classifies RF as 'possibly carcinogenic' but evidence is weak.",
+      "date_checked": "2024-07-18",
+      "evidence_ids": [
+        "rw_ev_007",
+        "rw_ev_008"
+      ]
+    },
+    {
+      "id": "rw_007",
+      "text": "COVID-19 vaccines were developed using fetal tissue",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.94,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/factcheck",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "While some vaccine development used fetal cell lines for research, the vaccines do not contain fetal cells. Fetal cell lines are widely used in medical research, including vaccines not politically sensitive.",
+      "date_checked": "2024-04-15",
+      "evidence_ids": [
+        "rw_ev_013",
+        "rw_ev_014"
+      ]
+    },
+    {
+      "id": "rw_015",
+      "text": "All types of alcohol have the same number of calories per unit volume",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "confidence": 0.6,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "MIXTURE",
+      "fact_checker_reasoning": "Pure ethanol contains approximately 7 calories per gram regardless of source. However, different alcoholic beverages vary in calorie content due to sugars, ingredients, and alcohol concentration.",
+      "date_checked": "2023-08-20",
+      "evidence_ids": [
+        "rw_ev_029",
+        "rw_ev_030"
+      ]
+    },
+    {
+      "id": "rw_016",
+      "text": "Sugar makes children hyperactive",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.92,
+      "source": "Full Fact",
+      "source_url": "https://fullfact.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Multiple controlled studies found no direct link between sugar consumption and hyperactivity in children. The belief persists due to expectancy bias and context of sugar consumption at parties.",
+      "date_checked": "2023-07-14",
+      "evidence_ids": [
+        "rw_ev_031",
+        "rw_ev_032"
+      ]
+    },
+    {
+      "id": "rw_019",
+      "text": "Cracking knuckles causes arthritis",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.93,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "A longitudinal study following people who cracked their knuckles found no increased risk of arthritis. The popping sound comes from gas bubbles in synovial fluid, not joint damage.",
+      "date_checked": "2023-04-10",
+      "evidence_ids": [
+        "rw_ev_037",
+        "rw_ev_038"
+      ]
+    },
+    {
+      "id": "rw_020",
+      "text": "Reading in dim light damages your eyesight",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.91,
+      "source": "Full Fact",
+      "source_url": "https://fullfact.org",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Ophthalmologists confirm that reading in dim light does not cause permanent damage. While it may cause temporary eye strain, the eyes are not permanently harmed.",
+      "date_checked": "2023-03-28",
+      "evidence_ids": [
+        "rw_ev_039",
+        "rw_ev_040"
+      ]
+    },
+    {
+      "id": "rw_021",
+      "text": "Shaving causes hair to grow back thicker",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.94,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Dermatologists explain that hair appears thicker when shaved because the blunt edge feels coarser. The growth rate and thickness are unaffected by shaving.",
+      "date_checked": "2023-02-14",
+      "evidence_ids": [
+        "rw_ev_041",
+        "rw_ev_042"
+      ]
+    },
+    {
+      "id": "rw_025",
+      "text": "Alcohol kills brain cells",
+      "category": "health",
+      "expected_verdict": "INSUFFICIENT",
+      "confidence": 0.65,
+      "source": "Full Fact",
+      "source_url": "https://fullfact.org",
+      "fact_checker_verdict": "MIXTURE",
+      "fact_checker_reasoning": "Moderate alcohol consumption does not directly kill brain cells in healthy adults. However, excessive drinking and alcohol abuse can damage brain tissue and neurons through various mechanisms.",
+      "date_checked": "2022-10-05",
+      "evidence_ids": [
+        "rw_ev_049",
+        "rw_ev_050"
+      ]
+    }
+  ]
+}

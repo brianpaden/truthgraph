@@ -1,0 +1,62 @@
+{
+  "category": "historical",
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-01",
+    "total_claims": 3,
+    "verdict_distribution": {
+      "SUPPORTED": 1,
+      "REFUTED": 2
+    }
+  },
+  "claims": [
+    {
+      "id": "rw_009",
+      "text": "The Titanic wreck lies at a depth of approximately 12,500 feet",
+      "category": "history",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.96,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "The wreck is located at approximately 12,500 feet (3,800 meters) in the North Atlantic. This depth and location have been repeatedly verified through sonar mapping and submersible dives.",
+      "date_checked": "2024-02-10",
+      "evidence_ids": [
+        "rw_ev_017",
+        "rw_ev_018"
+      ]
+    },
+    {
+      "id": "rw_013",
+      "text": "The Great Wall of China is the only human-made structure visible from the Moon",
+      "category": "history",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.96,
+      "source": "Snopes",
+      "source_url": "https://www.snopes.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Multiple human-made structures are visible from the Moon if you know where to look, and the Great Wall is not one of them. Astronauts report the wall is difficult to distinguish even from orbit.",
+      "date_checked": "2023-10-12",
+      "evidence_ids": [
+        "rw_ev_025",
+        "rw_ev_026"
+      ]
+    },
+    {
+      "id": "rw_026",
+      "text": "The Bermuda Triangle has an unusually high number of disappearances",
+      "category": "history",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.92,
+      "source": "AP Fact Check",
+      "source_url": "https://apnews.com/APFactCheck",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Analysis of maritime and aviation data shows the Bermuda Triangle region has no more disappearances than any other ocean area of similar size. The myth was popularized by a sensationalized 1974 book.",
+      "date_checked": "2022-09-12",
+      "evidence_ids": [
+        "rw_ev_051",
+        "rw_ev_052"
+      ]
+    }
+  ]
+}

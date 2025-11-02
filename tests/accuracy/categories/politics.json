@@ -1,0 +1,62 @@
+{
+  "category": "politics",
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-01",
+    "total_claims": 3,
+    "verdict_distribution": {
+      "SUPPORTED": 2,
+      "REFUTED": 1
+    }
+  },
+  "claims": [
+    {
+      "id": "synthetic_001",
+      "text": "The 2020 US presidential election was conducted fairly and securely",
+      "category": "politics",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.9,
+      "source": "Reuters Fact Check",
+      "source_url": "https://www.reuters.com/fact-check",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Multiple audits, recounts, and court cases found no evidence of widespread fraud in the 2020 election. Election security experts confirm the election was conducted with appropriate safeguards.",
+      "date_checked": "2024-11-01",
+      "evidence_ids": [
+        "syn_001",
+        "syn_002"
+      ]
+    },
+    {
+      "id": "synthetic_002",
+      "text": "The unemployment rate has decreased significantly in the past year",
+      "category": "politics",
+      "expected_verdict": "SUPPORTED",
+      "confidence": 0.88,
+      "source": "FactCheck.org",
+      "source_url": "https://www.factcheck.org",
+      "fact_checker_verdict": "TRUE",
+      "fact_checker_reasoning": "Bureau of Labor Statistics data confirms unemployment rates have decreased from previous years.",
+      "date_checked": "2024-10-15",
+      "evidence_ids": [
+        "syn_003",
+        "syn_004"
+      ]
+    },
+    {
+      "id": "synthetic_003",
+      "text": "Tax cuts in the current administration will pay for themselves",
+      "category": "politics",
+      "expected_verdict": "REFUTED",
+      "confidence": 0.82,
+      "source": "PolitiFact",
+      "source_url": "https://www.politifact.com",
+      "fact_checker_verdict": "FALSE",
+      "fact_checker_reasoning": "Economic analysis shows tax cuts typically increase deficits in the short and medium term rather than paying for themselves through growth.",
+      "date_checked": "2024-09-20",
+      "evidence_ids": [
+        "syn_005",
+        "syn_006"
+      ]
+    }
+  ]
+}

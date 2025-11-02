@@ -57,7 +57,12 @@
       "Bash(move v0_phase2_completion_handoff.md v0_phase2_completion_handoff_ORIGINAL_2290_LINES.md)",
       "Bash(powershell -Command:*)",
       "Bash(psql:*)",
-      "Bash(task test:accuracy:*)"
+      "Bash(task test:accuracy:*)",
+      "Bash(python3:*)",
+      "Bash(wsl python3:*)",
+      "Bash(wsl pytest tests/accuracy/test_category_accuracy.py -v -s)",
+      "Bash(xargs ls:*)",
+      "Bash(task test:api:*)"
     ],
     "deny": [],
     "ask": []
