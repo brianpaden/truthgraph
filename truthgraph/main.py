@@ -17,6 +17,7 @@ from .api.middleware import (
 from .api.ml_routes import router as ml_router
 from .api.models import HealthResponse, ServiceStatus
 from .api.routes import router
+from .api.route_modules.verification import router as verification_router
 from .db import Base, engine
 from .logger import setup_logging
 
@@ -102,6 +103,7 @@ app.add_middleware(
 # Include API routes
 app.include_router(router, prefix="/api/v1", tags=["Claims"])
 app.include_router(ml_router, tags=["ML Services"])
+app.include_router(verification_router, tags=["Verification"])
 
 
 @app.middleware("http")
