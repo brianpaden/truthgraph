@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-02",
+    "total_claims": 10,
+    "dimension": "adversarial_robustness",
+    "description": "Adversarial examples designed to fool or challenge the verification system",
+    "attack_types": ["negation", "contradiction_injection", "confidence_confusion", "scope_shift"]
+  },
+  "test_cases": [
+    {
+      "id": "adv_001",
+      "base_claim": "Vaccines are effective at preventing disease",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "adversarial_variations": [
+        {
+          "text": "Vaccines are not ineffective at preventing disease",
+          "attack_type": "double_negation",
+          "challenge": "Double negation may confuse semantic understanding"
+        },
+        {
+          "text": "While some claim vaccines prevent disease, they actually cause autism",
+          "attack_type": "contradiction_injection",
+          "challenge": "Conflicting information in single statement"
+        },
+        {
+          "text": "Vaccines prevent disease in only a few people",
+          "attack_type": "scope_shift",
+          "challenge": "Subtle scope narrowing that inverts meaning"
+        }
+      ]
+    },
+    {
+      "id": "adv_002",
+      "base_claim": "Climate change is real",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "It's not the case that climate is not changing",
+          "attack_type": "double_negation",
+          "challenge": "Complex negation structure"
+        },
+        {
+          "text": "Climate scientists say climate change is real, but it's actually a hoax",
+          "attack_type": "contradiction_injection",
+          "challenge": "Authority citation with direct contradiction"
+        },
+        {
+          "text": "In some regions, climate is changing",
+          "attack_type": "scope_shift",
+          "challenge": "Localizes global phenomenon"
+        }
+      ]
+    },
+    {
+      "id": "adv_003",
+      "base_claim": "The Earth orbits the Sun",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "It is not true that the Earth does not orbit the Sun",
+          "attack_type": "double_negation",
+          "challenge": "Nested negations"
+        },
+        {
+          "text": "NASA confirms Earth orbits the Sun, but the Earth is actually flat",
+          "attack_type": "contradiction_injection",
+          "challenge": "Authoritative claim followed by conspiracy"
+        },
+        {
+          "text": "In the geocentric model, the Earth orbits the Sun",
+          "attack_type": "scope_shift",
+          "challenge": "Contextual scope shift"
+        }
+      ]
+    },
+    {
+      "id": "adv_004",
+      "base_claim": "Water boils at 100 degrees Celsius at sea level",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "Water does not fail to boil at 100 degrees Celsius",
+          "attack_type": "double_negation",
+          "challenge": "Negation of negation"
+        },
+        {
+          "text": "Water boils at 100 degrees Celsius, which is why cooking at altitude is impossible",
+          "attack_type": "contradiction_injection",
+          "challenge": "Contradictory consequence"
+        },
+        {
+          "text": "In theory, water boils at 100 degrees Celsius",
+          "attack_type": "scope_shift",
+          "challenge": "Shifts to theoretical rather than actual"
+        }
+      ]
+    },
+    {
+      "id": "adv_005",
+      "base_claim": "Gravity exists",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "It is not accurate to say gravity does not exist",
+          "attack_type": "double_negation",
+          "challenge": "Complex negative assertion"
+        },
+        {
+          "text": "Gravity pulls objects down, but in space there is no gravity",
+          "attack_type": "contradiction_injection",
+          "challenge": "Self-contradictory statement"
+        },
+        {
+          "text": "Objects fall due to gravity on Earth",
+          "attack_type": "scope_shift",
+          "challenge": "Implicit narrowing of scope"
+        }
+      ]
+    },
+    {
+      "id": "adv_006",
+      "base_claim": "Smoking causes lung cancer",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "adversarial_variations": [
+        {
+          "text": "It is not the case that smoking does not cause lung cancer",
+          "attack_type": "double_negation",
+          "challenge": "Convoluted double negative"
+        },
+        {
+          "text": "Research shows smoking causes lung cancer, but smoking is actually harmless",
+          "attack_type": "contradiction_injection",
+          "challenge": "Direct contradiction with authority citation"
+        },
+        {
+          "text": "Heavy smoking causes lung cancer in some individuals",
+          "attack_type": "scope_shift",
+          "challenge": "Qualifies with 'some' reducing scope"
+        }
+      ]
+    },
+    {
+      "id": "adv_007",
+      "base_claim": "The Sun is hot",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "The Sun is not cold",
+          "attack_type": "double_negation",
+          "challenge": "Negative formulation"
+        },
+        {
+          "text": "The Sun produces heat energy, but it is actually cold",
+          "attack_type": "contradiction_injection",
+          "challenge": "Physical contradiction"
+        },
+        {
+          "text": "The outer layers of the Sun are hot",
+          "attack_type": "scope_shift",
+          "challenge": "Scope to specific layers"
+        }
+      ]
+    },
+    {
+      "id": "adv_008",
+      "base_claim": "Antibiotics kill bacteria",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "adversarial_variations": [
+        {
+          "text": "Antibiotics do not fail to kill bacteria",
+          "attack_type": "double_negation",
+          "challenge": "Negation structure"
+        },
+        {
+          "text": "Antibiotics kill bacteria but cause allergic reactions in everyone",
+          "attack_type": "contradiction_injection",
+          "challenge": "Overstatement to contradiction"
+        },
+        {
+          "text": "Some antibiotics kill certain bacteria",
+          "attack_type": "scope_shift",
+          "challenge": "Extreme narrowing of scope"
+        }
+      ]
+    },
+    {
+      "id": "adv_009",
+      "base_claim": "Photosynthesis produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "It is not untrue that photosynthesis produces oxygen",
+          "attack_type": "double_negation",
+          "challenge": "Triple negation structure"
+        },
+        {
+          "text": "During photosynthesis oxygen is produced, but plants actually consume all oxygen",
+          "attack_type": "contradiction_injection",
+          "challenge": "Logical contradiction"
+        },
+        {
+          "text": "In the light reactions, photosynthesis produces oxygen",
+          "attack_type": "scope_shift",
+          "challenge": "Scope to specific phase"
+        }
+      ]
+    },
+    {
+      "id": "adv_010",
+      "base_claim": "DNA carries genetic information",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "adversarial_variations": [
+        {
+          "text": "DNA does not lack genetic information storage capacity",
+          "attack_type": "double_negation",
+          "challenge": "Complex negation"
+        },
+        {
+          "text": "DNA stores genetic information, but genes are not hereditary",
+          "attack_type": "contradiction_injection",
+          "challenge": "Fundamental contradiction"
+        },
+        {
+          "text": "In eukaryotes, DNA carries genetic information",
+          "attack_type": "scope_shift",
+          "challenge": "Scope limited to one domain"
+        }
+      ]
+    }
+  ]
+}

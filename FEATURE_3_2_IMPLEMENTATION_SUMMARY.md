@@ -101,7 +101,7 @@ Feature 3.2 implements comprehensive multi-category evaluation for the TruthGrap
 
 ### Overall Performance
 
-```
+```text
 Total Samples:          33
 Categories:             5
 Weighted Accuracy:      100.0%
@@ -111,7 +111,7 @@ Status:                 EXCELLENT
 
 ### Per-Category Breakdown
 
-```
+```text
 Category         Samples  Accuracy  Macro F1  Status
 Politics         3        100.0%    0.6667    Excellent
 Science          15       100.0%    0.6667    Excellent

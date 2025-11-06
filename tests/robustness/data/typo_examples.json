@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-02",
+    "total_claims": 10,
+    "dimension": "typo_robustness",
+    "description": "Claims with various typo and misspelling variations to test robustness",
+    "typo_types": ["single_typo", "multiple_typos", "phonetic_misspelling", "repeated_characters"]
+  },
+  "test_cases": [
+    {
+      "id": "typo_001",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "The Amazno rainforest produces oxigen",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "The Aamazon rainfroest producse oxigen",
+          "typo_count": 3,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "The Amazno rainforest produce's oxygen",
+          "typo_count": 1,
+          "typo_type": "punctuation"
+        }
+      ]
+    },
+    {
+      "id": "typo_002",
+      "base_claim": "Fluoride prevents tooth decay",
+      "category": "health",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "Fluride prevennts tooth decay",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Flouride prevennts toooth decay",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        },
+        {
+          "text": "Fluride pervents toth decay",
+          "typo_count": 2,
+          "typo_type": "multiple_typos"
+        }
+      ]
+    },
+    {
+      "id": "typo_003",
+      "base_claim": "Mobile phones cause health problems",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "variations": [
+        {
+          "text": "Mobile phons cause helth problems",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Mobil phonnes cuse helth prblems",
+          "typo_count": 4,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Mobile phones causse healthh problems",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_004",
+      "base_claim": "Climate change is caused by human activities",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "Cliate change is cused by human activities",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Climate chagne is cauesd by humann activitees",
+          "typo_count": 3,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Climatte change is caused bby human activitiess",
+          "typo_count": 3,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_005",
+      "base_claim": "The Great Wall is visible from space",
+      "category": "science",
+      "expected_verdict": "REFUTED",
+      "variations": [
+        {
+          "text": "The Gret Wall is visble from space",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "The Grate Waal is visibl from spase",
+          "typo_count": 3,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "The Greaatt Walll is visible from spacee",
+          "typo_count": 3,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_006",
+      "base_claim": "Vaccines contain mercury",
+      "category": "health",
+      "expected_verdict": "REFUTED",
+      "variations": [
+        {
+          "text": "Vacines contian mercry",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Vaccnes contane mercurey",
+          "typo_count": 2,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Vaccccines contaaain mercury",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_007",
+      "base_claim": "Evolution is a scientifically proven theory",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "Evoltion is a scientificaly proven teory",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Evoluion is a scienifically provven theroy",
+          "typo_count": 3,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Evoluttion is a scccientifically proven theory",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_008",
+      "base_claim": "Regular exercise improves health",
+      "category": "health",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "Regualar excercise improves helth",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Reguler exersice improves heath",
+          "typo_count": 2,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Regular exercisee improves healllth",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_009",
+      "base_claim": "The Earth is spherical",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "The Eart is sphrical",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Teh Erth is sphericl",
+          "typo_count": 2,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "The Earrth is sphhherical",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    },
+    {
+      "id": "typo_010",
+      "base_claim": "Water freezes at zero degrees Celsius",
+      "category": "science",
+      "expected_verdict": "SUPPORTED",
+      "variations": [
+        {
+          "text": "Water frezes at zero degres Celcius",
+          "typo_count": 2,
+          "typo_type": "single_typo"
+        },
+        {
+          "text": "Watter freezes at zro degress Celisus",
+          "typo_count": 2,
+          "typo_type": "multiple_typos"
+        },
+        {
+          "text": "Water freezzes at zero degreees Celesius",
+          "typo_count": 2,
+          "typo_type": "repeated_characters"
+        }
+      ]
+    }
+  ]
+}

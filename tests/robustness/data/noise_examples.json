@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-02",
+    "total_claims": 10,
+    "dimension": "noise_robustness",
+    "description": "Test cases with noisy, degraded, or low-quality evidence and claims",
+    "noise_types": ["OCR_errors", "audio_transcription_errors", "incomplete_text", "mixed_languages"]
+  },
+  "test_cases": [
+    {
+      "id": "noise_001",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "Th3 4m4z0n r41nf0r3st pr0duc3s oxyg3n",
+          "noise_type": "character_corruption",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "The Amazon rainforest produces oxygen and also carbon dioxide and is very big",
+          "noise_type": "irrelevant_information",
+          "corruption_level": "low"
+        },
+        {
+          "text": "The Amazon rainfor... produces oxyg...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "medium"
+        }
+      ]
+    },
+    {
+      "id": "noise_002",
+      "base_claim": "Fluoride prevents tooth decay",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "noisy_variations": [
+        {
+          "text": "Fl00r1d3 pr3v3nts t00th d3c4y",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "Fluoride prevents tooth decay in children and also in adults",
+          "noise_type": "redundant_information",
+          "corruption_level": "low"
+        },
+        {
+          "text": "Flur... prevts tth deca...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_003",
+      "base_claim": "Mobile phones cause health problems",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "noisy_variations": [
+        {
+          "text": "M0b1l3 ph0n3s c4us3 h34lth pr0bl3ms",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "Mobile phones are devices that may possibly cause some health issues",
+          "noise_type": "hedging_language",
+          "corruption_level": "low"
+        },
+        {
+          "text": "Mobile phones c... ... health problems",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_004",
+      "base_claim": "Climate change is caused by human activities",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "Cl1m4t3 ch4ng3 1s c4us3d by hum4n 4ct1v1t13s",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "Climate change is caused by human activities, according to many scientists, or maybe natural processes",
+          "noise_type": "contradictory_information",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "Climate change is... by human...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_005",
+      "base_claim": "The Great Wall is visible from space",
+      "expected_verdict": "REFUTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "Th3 Gr34t W4ll 1s v1s1bl3 fr0m sp4c3",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "The Great Wall is visible from space, or at least from very high up",
+          "noise_type": "hedging_language",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "The Great Wall... visible from... maybe...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_006",
+      "base_claim": "Vaccines contain mercury",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "noisy_variations": [
+        {
+          "text": "V4cc1n3s c0nt41n m3rcury",
+          "noise_type": "character_corruption",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "Some vaccines may contain trace amounts of mercury which is very bad",
+          "noise_type": "hedging_with_false_conclusion",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "Vaccines cont... mercury or... something...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_007",
+      "base_claim": "Evolution is a scientifically proven theory",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "3v0lut10n 1s 4 sc13nt1f1c4lly pr0v3n th30ry",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "Evolution is a scientifically proven theory according to most scientists",
+          "noise_type": "hedging_qualifier",
+          "corruption_level": "low"
+        },
+        {
+          "text": "Evolution is a sc... proven theor...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "medium"
+        }
+      ]
+    },
+    {
+      "id": "noise_008",
+      "base_claim": "Regular exercise improves health",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "noisy_variations": [
+        {
+          "text": "R3gul4r 3x3rc1s3 1mpr0v3s h34lth",
+          "noise_type": "character_corruption",
+          "corruption_level": "medium"
+        },
+        {
+          "text": "Regular exercise generally improves health in most people",
+          "noise_type": "hedging_language",
+          "corruption_level": "low"
+        },
+        {
+          "text": "Regular exer... improves he...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "medium"
+        }
+      ]
+    },
+    {
+      "id": "noise_009",
+      "base_claim": "The Earth is spherical",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "Th3 34rth 1s sph3r1c4l",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "The Earth is mostly spherical with some bulging",
+          "noise_type": "hedging_language",
+          "corruption_level": "low"
+        },
+        {
+          "text": "The Earth is... or oval shaped...",
+          "noise_type": "incomplete_text",
+          "corruption_level": "high"
+        }
+      ]
+    },
+    {
+      "id": "noise_010",
+      "base_claim": "Water freezes at zero degrees Celsius",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "noisy_variations": [
+        {
+          "text": "W4t3r fr33z3s 4t z3r0 d3gr33s C3lsius",
+          "noise_type": "character_corruption",
+          "corruption_level": "high"
+        },
+        {
+          "text": "Water typically freezes at around zero degrees Celsius give or take",
+          "noise_type": "hedging_language",
+          "corruption_level": "low"
+        },
+        {
+          "text": "Water freezes at... degrees... Celsius",
+          "noise_type": "incomplete_text",
+          "corruption_level": "medium"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-02",
+    "total_claims": 10,
+    "dimension": "multilingual_robustness",
+    "description": "Claims in multiple languages to test multilingual robustness",
+    "languages": ["Spanish", "French", "German", "Chinese", "Mixed"]
+  },
+  "test_cases": [
+    {
+      "id": "ml_001",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "La selva amazónica produce oxígeno",
+          "language": "Spanish",
+          "translation": "The Amazon rainforest produces oxygen"
+        },
+        {
+          "text": "La forêt amazonienne produit de l'oxygène",
+          "language": "French",
+          "translation": "The Amazon rainforest produces oxygen"
+        },
+        {
+          "text": "Der Amazonas-Regenwald produziert Sauerstoff",
+          "language": "German",
+          "translation": "The Amazon rainforest produces oxygen"
+        }
+      ]
+    },
+    {
+      "id": "ml_002",
+      "base_claim": "Fluoride prevents tooth decay",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "language_variations": [
+        {
+          "text": "El fluoruro previene la caries dental",
+          "language": "Spanish",
+          "translation": "Fluoride prevents tooth decay"
+        },
+        {
+          "text": "Le fluor prévient la carie dentaire",
+          "language": "French",
+          "translation": "Fluoride prevents tooth decay"
+        },
+        {
+          "text": "Fluorid verhindert Karies",
+          "language": "German",
+          "translation": "Fluoride prevents tooth decay"
+        }
+      ]
+    },
+    {
+      "id": "ml_003",
+      "base_claim": "Mobile phones cause health problems",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "language_variations": [
+        {
+          "text": "Los teléfonos móviles causan problemas de salud",
+          "language": "Spanish",
+          "translation": "Mobile phones cause health problems"
+        },
+        {
+          "text": "Les téléphones mobiles causent des problèmes de santé",
+          "language": "French",
+          "translation": "Mobile phones cause health problems"
+        },
+        {
+          "text": "Mobiltelefone verursachen Gesundheitsprobleme",
+          "language": "German",
+          "translation": "Mobile phones cause health problems"
+        }
+      ]
+    },
+    {
+      "id": "ml_004",
+      "base_claim": "Climate change is caused by human activities",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "El cambio climático es causado por actividades humanas",
+          "language": "Spanish",
+          "translation": "Climate change is caused by human activities"
+        },
+        {
+          "text": "Le changement climatique est causé par les activités humaines",
+          "language": "French",
+          "translation": "Climate change is caused by human activities"
+        },
+        {
+          "text": "Der Klimawandel wird durch menschliche Aktivitäten verursacht",
+          "language": "German",
+          "translation": "Climate change is caused by human activities"
+        }
+      ]
+    },
+    {
+      "id": "ml_005",
+      "base_claim": "The Great Wall is visible from space",
+      "expected_verdict": "REFUTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "La Gran Muralla es visible desde el espacio",
+          "language": "Spanish",
+          "translation": "The Great Wall is visible from space"
+        },
+        {
+          "text": "La Grande Muraille est visible depuis l'espace",
+          "language": "French",
+          "translation": "The Great Wall is visible from space"
+        },
+        {
+          "text": "Die Chinesische Mauer ist vom Weltall aus sichtbar",
+          "language": "German",
+          "translation": "The Great Wall is visible from space"
+        }
+      ]
+    },
+    {
+      "id": "ml_006",
+      "base_claim": "Vaccines contain mercury",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "language_variations": [
+        {
+          "text": "Las vacunas contienen mercurio",
+          "language": "Spanish",
+          "translation": "Vaccines contain mercury"
+        },
+        {
+          "text": "Les vaccins contiennent du mercure",
+          "language": "French",
+          "translation": "Vaccines contain mercury"
+        },
+        {
+          "text": "Impfstoffe enthalten Quecksilber",
+          "language": "German",
+          "translation": "Vaccines contain mercury"
+        }
+      ]
+    },
+    {
+      "id": "ml_007",
+      "base_claim": "Evolution is a scientifically proven theory",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "La evolución es una teoría científicamente comprobada",
+          "language": "Spanish",
+          "translation": "Evolution is a scientifically proven theory"
+        },
+        {
+          "text": "L'évolution est une théorie scientifiquement prouvée",
+          "language": "French",
+          "translation": "Evolution is a scientifically proven theory"
+        },
+        {
+          "text": "Die Evolution ist eine wissenschaftlich bewiesene Theorie",
+          "language": "German",
+          "translation": "Evolution is a scientifically proven theory"
+        }
+      ]
+    },
+    {
+      "id": "ml_008",
+      "base_claim": "Regular exercise improves health",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "language_variations": [
+        {
+          "text": "El ejercicio regular mejora la salud",
+          "language": "Spanish",
+          "translation": "Regular exercise improves health"
+        },
+        {
+          "text": "L'exercice régulier améliore la santé",
+          "language": "French",
+          "translation": "Regular exercise improves health"
+        },
+        {
+          "text": "Regelmäßige Bewegung verbessert die Gesundheit",
+          "language": "German",
+          "translation": "Regular exercise improves health"
+        }
+      ]
+    },
+    {
+      "id": "ml_009",
+      "base_claim": "The Earth is spherical",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "La Tierra es esférica",
+          "language": "Spanish",
+          "translation": "The Earth is spherical"
+        },
+        {
+          "text": "La Terre est sphérique",
+          "language": "French",
+          "translation": "The Earth is spherical"
+        },
+        {
+          "text": "Die Erde ist kugelförmig",
+          "language": "German",
+          "translation": "The Earth is spherical"
+        }
+      ]
+    },
+    {
+      "id": "ml_010",
+      "base_claim": "Water freezes at zero degrees Celsius",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "language_variations": [
+        {
+          "text": "El agua se congela a cero grados Celsius",
+          "language": "Spanish",
+          "translation": "Water freezes at zero degrees Celsius"
+        },
+        {
+          "text": "L'eau gèle à zéro degré Celsius",
+          "language": "French",
+          "translation": "Water freezes at zero degrees Celsius"
+        },
+        {
+          "text": "Wasser gefriert bei null Grad Celsius",
+          "language": "German",
+          "translation": "Water freezes at zero degrees Celsius"
+        }
+      ]
+    }
+  ]
+}

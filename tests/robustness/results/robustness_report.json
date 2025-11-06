@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "created_at": "2025-11-02T22:10:39.487581",
+    "total_tests": 150,
+    "correct_tests": 150,
+    "overall_accuracy": 1.0
+  },
+  "metrics_by_dimension": {
+    "typo_robustness": {
+      "dimension": "typo_robustness",
+      "base_accuracy": 0.95,
+      "variant_accuracy": 1.0,
+      "accuracy_degradation": -0.050000000000000044,
+      "confidence_variance": 0.0,
+      "test_count": 30,
+      "correct_count": 30,
+      "failed_variants": []
+    },
+    "paraphrase_robustness": {
+      "dimension": "paraphrase_robustness",
+      "base_accuracy": 0.95,
+      "variant_accuracy": 1.0,
+      "accuracy_degradation": -0.050000000000000044,
+      "confidence_variance": 0.0,
+      "test_count": 30,
+      "correct_count": 30,
+      "failed_variants": []
+    },
+    "adversarial_robustness": {
+      "dimension": "adversarial_robustness",
+      "base_accuracy": 0.95,
+      "variant_accuracy": 1.0,
+      "accuracy_degradation": -0.050000000000000044,
+      "confidence_variance": 0.005780555555555555,
+      "test_count": 30,
+      "correct_count": 30,
+      "failed_variants": []
+    },
+    "noise_robustness": {
+      "dimension": "noise_robustness",
+      "base_accuracy": 0.95,
+      "variant_accuracy": 1.0,
+      "accuracy_degradation": -0.050000000000000044,
+      "confidence_variance": 0.010555555555555556,
+      "test_count": 30,
+      "correct_count": 30,
+      "failed_variants": []
+    },
+    "multilingual_robustness": {
+      "dimension": "multilingual_robustness",
+      "base_accuracy": 0.95,
+      "variant_accuracy": 1.0,
+      "accuracy_degradation": -0.050000000000000044,
+      "confidence_variance": 0.0,
+      "test_count": 30,
+      "correct_count": 30,
+      "failed_variants": []
+    }
+  },
+  "results_sample": [
+    {
+      "test_id": "typo_001_v0",
+      "dimension": "typo_robustness",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "variant_claim": "The Amazno rainforest produces oxigen",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "single_typo",
+      "timestamp": "2025-11-02T22:10:39.483633"
+    },
+    {
+      "test_id": "typo_001_v1",
+      "dimension": "typo_robustness",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "variant_claim": "The Aamazon rainfroest producse oxigen",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "multiple_typos",
+      "timestamp": "2025-11-02T22:10:39.483812"
+    },
+    {
+      "test_id": "typo_001_v2",
+      "dimension": "typo_robustness",
+      "base_claim": "The Amazon rainforest produces oxygen",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "variant_claim": "The Amazno rainforest produce's oxygen",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "punctuation",
+      "timestamp": "2025-11-02T22:10:39.483864"
+    },
+    {
+      "test_id": "typo_002_v0",
+      "dimension": "typo_robustness",
+      "base_claim": "Fluoride prevents tooth decay",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "variant_claim": "Fluride prevennts tooth decay",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "single_typo",
+      "timestamp": "2025-11-02T22:10:39.483905"
+    },
+    {
+      "test_id": "typo_002_v1",
+      "dimension": "typo_robustness",
+      "base_claim": "Fluoride prevents tooth decay",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "variant_claim": "Flouride prevennts toooth decay",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "repeated_characters",
+      "timestamp": "2025-11-02T22:10:39.483932"
+    },
+    {
+      "test_id": "typo_002_v2",
+      "dimension": "typo_robustness",
+      "base_claim": "Fluoride prevents tooth decay",
+      "expected_verdict": "SUPPORTED",
+      "category": "health",
+      "variant_claim": "Fluride pervents toth decay",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "multiple_typos",
+      "timestamp": "2025-11-02T22:10:39.483958"
+    },
+    {
+      "test_id": "typo_003_v0",
+      "dimension": "typo_robustness",
+      "base_claim": "Mobile phones cause health problems",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "variant_claim": "Mobile phons cause helth problems",
+      "predicted_verdict": "REFUTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "single_typo",
+      "timestamp": "2025-11-02T22:10:39.483981"
+    },
+    {
+      "test_id": "typo_003_v1",
+      "dimension": "typo_robustness",
+      "base_claim": "Mobile phones cause health problems",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "variant_claim": "Mobil phonnes cuse helth prblems",
+      "predicted_verdict": "REFUTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "multiple_typos",
+      "timestamp": "2025-11-02T22:10:39.484005"
+    },
+    {
+      "test_id": "typo_003_v2",
+      "dimension": "typo_robustness",
+      "base_claim": "Mobile phones cause health problems",
+      "expected_verdict": "REFUTED",
+      "category": "health",
+      "variant_claim": "Mobile phones causse healthh problems",
+      "predicted_verdict": "REFUTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "repeated_characters",
+      "timestamp": "2025-11-02T22:10:39.484026"
+    },
+    {
+      "test_id": "typo_004_v0",
+      "dimension": "typo_robustness",
+      "base_claim": "Climate change is caused by human activities",
+      "expected_verdict": "SUPPORTED",
+      "category": "science",
+      "variant_claim": "Cliate change is cused by human activities",
+      "predicted_verdict": "SUPPORTED",
+      "confidence": 0.85,
+      "is_correct": true,
+      "variant_type": "single_typo",
+      "timestamp": "2025-11-02T22:10:39.484052"
+    }
+  ]
+}
