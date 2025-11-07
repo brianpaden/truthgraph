@@ -766,7 +766,7 @@ async def health_check():
 
 ### Rate Limit Headers
 
-```
+```text
 RateLimit-Limit: 10
 RateLimit-Remaining: 8
 RateLimit-Reset: 1635695400

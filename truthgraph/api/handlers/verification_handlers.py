@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from typing import Dict, Optional
 
 import structlog
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from truthgraph.api.schemas.evidence import EvidenceItem
@@ -28,6 +29,7 @@ from truthgraph.services.verification_pipeline_service import (
     VerdictLabel,
     get_verification_pipeline_service,
 )
+from truthgraph.validation import ValidationStatus, get_claim_validator
 
 logger = structlog.get_logger(__name__)
 
@@ -62,6 +64,7 @@ class VerificationHandler:
                 If None, creates a new instance.
         """
         self.pipeline_service = pipeline_service or get_verification_pipeline_service()
+        self.claim_validator = get_claim_validator()
 
     async def trigger_verification(
         self,
@@ -86,6 +89,7 @@ class VerificationHandler:
             TaskStatus with task_id and initial status
 
         Raises:
+            HTTPException: If input validation fails (400 Bad Request)
             ValueError: If request validation fails
         """
         logger.info(
@@ -93,6 +97,40 @@ class VerificationHandler:
             claim_id=claim_id,
             claim_text_length=len(request.claim_text),
         )
+
+        # Validate claim text with comprehensive input validation
+        validation_result = self.claim_validator.validate(request.claim_text)
+
+        # Reject INVALID claims with 400 Bad Request
+        if validation_result.status == ValidationStatus.INVALID:
+            logger.warning(
+                "claim_validation_failed",
+                claim_id=claim_id,
+                error_code=validation_result.error_code,
+                error_type=validation_result.error_type,
+                message=validation_result.message,
+            )
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "Invalid claim text",
+                    "error_code": validation_result.error_code,
+                    "error_type": validation_result.error_type,
+                    "message": validation_result.message,
+                    "suggestion": validation_result.suggestion,
+                },
+            )
+
+        # Log warnings but continue processing
+        if validation_result.has_warnings():
+            logger.info(
+                "claim_validation_warnings",
+                claim_id=claim_id,
+                warnings=validation_result.warnings,
+            )
+
+        # Use normalized text for verification
+        normalized_claim_text = validation_result.normalized_text or request.claim_text
 
         # Check if claim already exists
         existing_claim = db.query(Claim).filter(Claim.text == request.claim_text).first()
@@ -147,9 +185,10 @@ class VerificationHandler:
                 task_id=task_id,
                 claim_id=claim_id,
                 claim_uuid=claim_uuid,
-                claim_text=request.claim_text,
+                claim_text=normalized_claim_text,
                 options=request.options or VerificationOptions(),
                 corpus_ids=request.corpus_ids,
+                validation_warnings=validation_result.warnings if validation_result.has_warnings() else None,
             )
         )
 
@@ -170,6 +209,7 @@ class VerificationHandler:
         claim_text: str,
         options: VerificationOptions,
         corpus_ids: Optional[list[str]],
+        validation_warnings: Optional[list[str]] = None,
     ) -> None:
         """Run verification task in background.
 
@@ -181,9 +221,10 @@ class VerificationHandler:
             task_id: Unique task identifier
             claim_id: Original claim identifier from request
             claim_uuid: Database UUID for the claim
-            claim_text: Claim text to verify
+            claim_text: Claim text to verify (normalized)
             options: Verification options
             corpus_ids: Optional corpus filter
+            validation_warnings: Optional validation warnings from input validation
         """
         try:
             # Update status to processing
@@ -250,6 +291,7 @@ class VerificationHandler:
                 verified_at=datetime.now(UTC),
                 processing_time_ms=processing_time_ms,
                 corpus_ids_searched=corpus_ids,
+                validation_warnings=validation_warnings,
             )
 
             # Store result

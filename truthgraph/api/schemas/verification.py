@@ -157,6 +157,13 @@ class VerificationResult(BaseModel):
         Optional[list[str]],
         Field(default=None, description="Corpus IDs that were searched (if filtered)"),
     ] = None
+    validation_warnings: Annotated[
+        Optional[list[str]],
+        Field(
+            default=None,
+            description="Validation warnings from input validation (if any)",
+        ),
+    ] = None
 
     @field_validator("evidence")
     @classmethod
