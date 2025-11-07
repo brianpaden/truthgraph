@@ -3,8 +3,9 @@
 This module implements the REST endpoints for the verification workflow:
 - POST /api/v1/claims/{claim_id}/verify - Trigger async verification
 - GET /api/v1/verdicts/{claim_id} - Get verification result
+- GET /api/v1/tasks/{task_id} - Get task status (Feature 4.3)
 
-These endpoints follow the specification in Feature 4.1 of the Phase 2 handoff.
+These endpoints follow the specification in Features 4.1 and 4.3 of the Phase 2 handoff.
 """
 
 import structlog
@@ -359,4 +360,151 @@ async def get_verdict(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve verdict",
+        ) from e
+
+
+@router.get(
+    "/tasks/{task_id}",
+    response_model=TaskStatus,
+    status_code=status.HTTP_200_OK,
+    summary="Get task status",
+    description="""
+    Get the current status of a background verification task by its task ID.
+
+    This endpoint allows polling for task completion and checking progress
+    of long-running verification operations.
+
+    ## Path Parameters
+
+    - **task_id**: Unique task identifier returned from the verify endpoint
+
+    ## Response
+
+    Returns a TaskStatus object with:
+    - **task_id**: Original task identifier
+    - **status**: Current task status (pending, processing, completed, failed)
+    - **created_at**: When the task was created
+    - **started_at**: When processing started (if started)
+    - **completed_at**: When the task finished (if done)
+    - **progress_percentage**: Progress indicator (0-100)
+    - **result**: Verification result (if completed)
+    - **error**: Error message (if failed)
+
+    ## Status Codes
+
+    - **200 OK**: Task found, status returned
+    - **404 Not Found**: Task not found
+    - **500 Internal Server Error**: Server error retrieving task
+
+    ## Example
+
+    ```bash
+    # Get task status
+    curl "http://localhost:8000/api/v1/tasks/task_abc123xyz"
+    ```
+
+    ## Polling Pattern
+
+    For async verification, poll this endpoint until:
+    - status becomes "completed" (retrieve result from /verdicts endpoint)
+    - status becomes "failed" (check error field)
+
+    Recommended polling:
+    - First 10s: Poll every 1s
+    - After 10s: Poll every 2-3s
+    - Timeout after 60s
+    """,
+    responses={
+        200: {
+            "description": "Task status retrieved successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "task_id": "task_abc123xyz",
+                        "status": "processing",
+                        "created_at": "2025-11-06T10:30:00Z",
+                        "completed_at": None,
+                        "result": None,
+                        "error": None,
+                        "progress_percentage": 45,
+                    }
+                }
+            },
+        },
+        404: {
+            "description": "Task not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Task 'task_xyz' not found"
+                    }
+                }
+            },
+        },
+    },
+)
+async def get_task_status(
+    task_id: str,
+) -> TaskStatus:
+    """Get status of background verification task.
+
+    Args:
+        task_id: Unique task identifier
+
+    Returns:
+        TaskStatus with current state and progress
+
+    Raises:
+        HTTPException: 404 if task not found, 500 for errors
+    """
+    try:
+        from truthgraph.workers.task_queue import get_task_queue
+
+        # Get task queue
+        task_queue = get_task_queue()
+
+        # Get task status
+        task_metadata = await task_queue.get_task_status(task_id)
+
+        if task_metadata is None:
+            logger.warning(
+                "task_status_not_found",
+                task_id=task_id,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Task '{task_id}' not found",
+            )
+
+        # Convert TaskMetadata to TaskStatus API model
+        task_status = TaskStatus(
+            task_id=task_metadata.task_id,
+            status=task_metadata.state.value,
+            created_at=task_metadata.created_at,
+            completed_at=task_metadata.completed_at,
+            result=task_metadata.result,
+            error=task_metadata.error,
+            progress_percentage=task_metadata.progress,
+        )
+
+        logger.info(
+            "task_status_endpoint_success",
+            task_id=task_id,
+            status=task_status.status,
+        )
+
+        return task_status
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            "task_status_endpoint_error",
+            task_id=task_id,
+            error=str(e),
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve task status",
         ) from e

@@ -40,10 +40,30 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"ML services initialization warning: {e}")
 
+    # Start background workers for async task processing (Feature 4.3)
+    try:
+        from truthgraph.workers.task_queue import get_task_queue
+
+        task_queue = get_task_queue(max_workers=5, result_ttl_seconds=3600)
+        await task_queue.start_workers()
+        logger.info("Background task workers started (5 workers)")
+    except Exception as e:
+        logger.error(f"Failed to start background workers: {e}", exc_info=True)
+
     yield
 
     # Shutdown
     logger.info("Shutting down TruthGraph Phase 2 API")
+
+    # Stop background workers gracefully
+    try:
+        from truthgraph.workers.task_queue import get_task_queue
+
+        task_queue = get_task_queue()
+        await task_queue.stop_workers(timeout=30.0)
+        logger.info("Background task workers stopped")
+    except Exception as e:
+        logger.error(f"Error stopping background workers: {e}", exc_info=True)
 
 
 # Create FastAPI app
