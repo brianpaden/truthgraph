@@ -22,7 +22,7 @@
 
 ## Category Overview
 
-API completion implements the HTTP endpoints for the verification pipeline. Features 4.1-4.5 focus on API implementation, while Feature 4.6 adds comprehensive input validation.
+API completion implements the HTTP endpoints for the verification pipeline. Features 4.1-4.5 focus on API implementation, while Feature 4.6 adds comprehensive input validation. Feature 4.7 (Health Monitoring) provides operational visibility into all systems. See [6_health_monitoring_handoff.md](./6_health_monitoring_handoff.md) for monitoring and dashboard details.
 
 ### Execution Order
 

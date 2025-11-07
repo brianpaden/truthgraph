@@ -67,10 +67,12 @@
 | 4.4 | 4.1, 4.6 | - | No | API documentation (documents validation) |
 | 4.5 | 4.1 | - | Yes | Rate limiting |
 | 4.6 | None | 4.1, 4.3, 4.4, 3.3 | Yes | 🟢 READY - Input validation layer |
+| 4.7 | 4.1, 4.3 | - | No | **NEW** - Health monitoring & endpoints |
 | 5.1 | All code | - | No | Code docstrings |
 | 5.2 | Testing | - | No | Troubleshooting |
 | 5.3 | All code | - | No | Usage examples |
 | 5.4 | 1.7, 2.x | - | No | Performance guide |
+| 5.5 | All code | - | No | **NEW** - Monitoring tools & dashboard |
 
 ---
 
@@ -146,26 +148,27 @@ Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ──────
 - Feature 2.4 (10h) - E2E optimization
 - Feature 2.6 (8h) - Database optimization
 - Features 3.2-3.5 (34h parallel) - Validation
-- Features 4.3, 4.4 (20h parallel) - Async & docs
+- Features 4.3, 4.4, 4.7 (28h parallel) - Async, docs, monitoring
+- Feature 5.5 (10h) - Monitoring dashboard & tools
 
 **Week 1 Totals**:
-- 256 hours of work (+14h for Feature 4.6)
-- ~43 hours per agent per week (6 agents)
+- 266 hours of work (+14h for Feature 4.6, +40h for Features 4.7 & 5.5)
+- ~44 hours per agent per week (6 agents)
 - All core work complete by Friday EOD
 
 ### Week 2: Buffer & Hardening
 
 **Days 6-7 (Monday-Tuesday)**
 - Feature 5.4 (6h) - Performance guide
-- Integration testing
+- Integration testing (includes health monitoring)
 - Cross-feature validation
 - Bug fixes and refinements
 
 **Days 8-10 (Wednesday-Friday)**
-- Final testing
+- Final testing (includes monitoring & dashboard tests)
 - Performance validation against targets
-- Documentation final review
-- Deployment preparation
+- Documentation final review (includes operational guides)
+- Deployment preparation (with monitoring setup)
 
 **Week 2 Totals**:
 - ~40 hours of buffer and validation
@@ -173,11 +176,11 @@ Days 1-2: Features 5.1-5.3 (28h parallel, mostly independent) ──────
 
 ### Wall-Clock Timeline
 
-- **Total Hours**: 256h of work + 40h buffer = 296h
+- **Total Hours**: 266h of work + 40h buffer = 306h
 - **Team Capacity**: 6 agents × 40h/week = 240h/week
 - **Duration**: ~1.3 weeks optimal, 2 weeks comfortable
 - **Recommended**: Use 2-week timeline with buffer for unknowns
-- **Change**: +14h for Feature 4.6 (Input Validation Layer)
+- **Changes**: +14h for Feature 4.6 (Input Validation Layer), +40h for Features 4.7 & 5.5 (Health Monitoring)
 
 ---
 
@@ -217,11 +220,12 @@ test-automator: 3.1 (8h), 3.2 (10h), 3.3 (8h), 3.4 (10h), 3.5 (6h)
 
 ```
 python-pro: 4.6 (14h) - Input validation (Day 1-2, no dependencies)
-fastapi-pro: 4.2 (6h) → 4.1 (10h, after 4.6) → 4.3 (12h), 4.4 (8h), 4.5 (8h)
-dx-optimizer: 5.1 (10h), 5.2 (8h), 5.3 (10h)
+            4.7 (20h) - Health monitoring core (Day 4-5, after 4.1, 4.3)
+fastapi-pro: 4.2 (6h) → 4.1 (10h, after 4.6) → 4.3 (12h), 4.4 (8h), 4.5 (8h), 4.7 (10h)
+dx-optimizer: 5.1 (10h), 5.2 (8h), 5.3 (10h), 5.5 (20h) - Dashboard & tools
 ```
 
-**Note**: Feature 4.6 should complete before 4.1 for full integration
+**Note**: Feature 4.6 should complete before 4.1 for full integration. Features 4.7 & 5.5 can run in parallel with other API work but need 4.1 and 4.3 endpoints to monitor.
 
 ---
 
