@@ -6,6 +6,8 @@ This module implements REST endpoints for ML functionality:
 - /search: Hybrid/vector/keyword search
 - /nli: Natural Language Inference
 - /verdict: Retrieve existing verdicts
+
+All endpoints have rate limiting applied based on computational cost.
 """
 
 import asyncio
@@ -14,7 +16,7 @@ import time
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 
 from ..db import get_db
@@ -39,9 +41,13 @@ from .models import (
     VerifyRequest,
     VerifyResponse,
 )
+from .rate_limit import get_rate_limit_config, limiter
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1", tags=["ML Services"])
+
+# Load rate limit configuration
+rate_config = get_rate_limit_config()
 
 
 # ===== Dependency Injection =====
@@ -71,6 +77,7 @@ def get_vector_search_service():
     status_code=status.HTTP_200_OK,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid request"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Generate text embeddings",
@@ -79,23 +86,29 @@ def get_vector_search_service():
 
     Returns 384-dimensional embeddings suitable for semantic similarity and search.
     Maximum 100 texts per request.
+
+    **Rate Limit:** 10 requests/minute
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/embed"))
 async def embed_texts(
-    request: EmbedRequest,
+    request: Request,
+    response: Response,
+    embed_request: EmbedRequest,
     embedding_service=Depends(get_embedding_service_dep),
 ) -> EmbedResponse:
     """Generate embeddings for provided texts.
 
     Args:
-        request: Embedding request with texts and batch_size
+        request: FastAPI request (for rate limiting)
+        embed_request: Embedding request with texts and batch_size
         embedding_service: Injected embedding service
 
     Returns:
         EmbedResponse with embeddings and metadata
 
     Raises:
-        HTTPException: 400 for invalid input, 500 for processing errors
+        HTTPException: 400 for invalid input, 429 for rate limit, 500 for processing errors
     """
     start_time = time.time()
 
@@ -105,7 +118,7 @@ async def embed_texts(
         embeddings = await loop.run_in_executor(
             None,
             lambda: embedding_service.embed_batch(
-                texts=request.texts, batch_size=request.batch_size, show_progress=False
+                texts=embed_request.texts, batch_size=embed_request.batch_size, show_progress=False
             ),
         )
 
@@ -140,6 +153,7 @@ async def embed_texts(
     status_code=status.HTTP_200_OK,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid request"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Search for relevant evidence",
@@ -151,10 +165,15 @@ async def embed_texts(
     - **keyword**: Traditional text-based search
 
     Returns up to 100 results ordered by relevance.
+
+    **Rate Limit:** 20 requests/minute
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/search"))
 async def search_evidence(
-    request: SearchRequest,
+    request: Request,
+    response: Response,
+    search_request: SearchRequest,
     db: Annotated[Session, Depends(get_db)],
     embedding_service=Depends(get_embedding_service_dep),
     vector_search_service=Depends(get_vector_search_service),
@@ -162,7 +181,8 @@ async def search_evidence(
     """Search for evidence using specified mode.
 
     Args:
-        request: Search request with query and parameters
+        request: FastAPI request (for rate limiting)
+        search_request: Search request with query and parameters
         db: Database session
         embedding_service: Injected embedding service
         vector_search_service: Injected vector search service
@@ -171,26 +191,26 @@ async def search_evidence(
         SearchResponse with results and metadata
 
     Raises:
-        HTTPException: 400 for invalid input, 500 for search errors
+        HTTPException: 400 for invalid input, 429 for rate limit, 500 for search errors
     """
     start_time = time.time()
 
     try:
         # Generate query embedding for vector/hybrid modes
-        if request.mode in ["vector", "hybrid"]:
+        if search_request.mode in ["vector", "hybrid"]:
             loop = asyncio.get_event_loop()
             query_embedding = await loop.run_in_executor(
-                None, embedding_service.embed_text, request.query
+                None, embedding_service.embed_text, search_request.query
             )
 
             # Perform vector search
             search_results = vector_search_service.search_similar_evidence(
                 db=db,
                 query_embedding=query_embedding,
-                top_k=request.limit,
-                min_similarity=request.min_similarity,
-                tenant_id=request.tenant_id,
-                source_filter=request.source_filter,
+                top_k=search_request.limit,
+                min_similarity=search_request.min_similarity,
+                tenant_id=search_request.tenant_id,
+                source_filter=search_request.source_filter,
             )
         else:
             # Keyword search not implemented yet
@@ -216,14 +236,14 @@ async def search_evidence(
 
         logger.info(
             f"Search returned {len(result_items)} results in {query_time:.2f}ms "
-            f"(mode={request.mode}, tenant={request.tenant_id})"
+            f"(mode={search_request.mode}, tenant={search_request.tenant_id})"
         )
 
         return SearchResponse(
             results=result_items,
             count=len(result_items),
-            query=request.query,
-            mode=request.mode,
+            query=search_request.query,
+            mode=search_request.mode,
             query_time_ms=query_time,
         )
 
@@ -245,6 +265,7 @@ async def search_evidence(
     status_code=status.HTTP_200_OK,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid request"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Run Natural Language Inference",
@@ -257,23 +278,29 @@ async def search_evidence(
     - **neutral**: No clear relationship
 
     Uses microsoft/deberta-v3-base fine-tuned on MNLI.
+
+    **Rate Limit:** 10 requests/minute
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/nli"))
 async def run_nli(
-    request: NLIRequest,
+    request: Request,
+    response: Response,
+    nli_request: NLIRequest,
     nli_service=Depends(get_nli_service_dep),
 ) -> NLIResponse:
     """Run NLI inference on premise-hypothesis pair.
 
     Args:
-        request: NLI request with premise and hypothesis
+        request: FastAPI request (for rate limiting)
+        nli_request: NLI request with premise and hypothesis
         nli_service: Injected NLI service
 
     Returns:
         NLIResponse with label, confidence, and scores
 
     Raises:
-        HTTPException: 400 for invalid input, 500 for inference errors
+        HTTPException: 400 for invalid input, 429 for rate limit, 500 for inference errors
     """
     start_time = time.time()
 
@@ -281,7 +308,7 @@ async def run_nli(
         # Run NLI inference in executor to avoid blocking
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
-            None, nli_service.verify_single, request.premise, request.hypothesis
+            None, nli_service.verify_single, nli_request.premise, nli_request.hypothesis
         )
 
         processing_time = (time.time() - start_time) * 1000
@@ -318,6 +345,7 @@ async def run_nli(
     status_code=status.HTTP_200_OK,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid request"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Run batch NLI inference",
@@ -325,23 +353,29 @@ async def run_nli(
     Verify multiple premise-hypothesis pairs efficiently in batches.
 
     Maximum 50 pairs per request for optimal performance.
+
+    **Rate Limit:** 5 requests/minute
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/nli/batch"))
 async def run_nli_batch(
-    request: NLIBatchRequest,
+    request: Request,
+    response: Response,
+    nli_batch_request: NLIBatchRequest,
     nli_service=Depends(get_nli_service_dep),
 ) -> NLIBatchResponse:
     """Run NLI inference on multiple pairs.
 
     Args:
-        request: Batch NLI request with pairs
+        request: FastAPI request (for rate limiting)
+        nli_batch_request: Batch NLI request with pairs
         nli_service: Injected NLI service
 
     Returns:
         NLIBatchResponse with results for all pairs
 
     Raises:
-        HTTPException: 400 for invalid input, 500 for inference errors
+        HTTPException: 400 for invalid input, 429 for rate limit, 500 for inference errors
     """
     start_time = time.time()
 
@@ -350,7 +384,7 @@ async def run_nli_batch(
         loop = asyncio.get_event_loop()
         results = await loop.run_in_executor(
             None,
-            lambda: nli_service.verify_batch(pairs=request.pairs, batch_size=request.batch_size),
+            lambda: nli_service.verify_batch(pairs=nli_batch_request.pairs, batch_size=nli_batch_request.batch_size),
         )
 
         processing_time = (time.time() - start_time) * 1000
@@ -396,6 +430,7 @@ async def run_nli_batch(
     status_code=status.HTTP_200_OK,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid request"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Verify a claim (full pipeline)",
@@ -408,10 +443,15 @@ async def run_nli_batch(
     4. **Persist**: Save results to database
 
     Returns verdict (SUPPORTED/REFUTED/INSUFFICIENT) with evidence and explanation.
+
+    **Rate Limit:** 5 requests/minute (most expensive operation)
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/verify"))
 async def verify_claim(
-    request: VerifyRequest,
+    request: Request,
+    response: Response,
+    verify_request: VerifyRequest,
     db: Annotated[Session, Depends(get_db)],
     embedding_service=Depends(get_embedding_service_dep),
     nli_service=Depends(get_nli_service_dep),
@@ -420,7 +460,8 @@ async def verify_claim(
     """Execute full verification pipeline for a claim.
 
     Args:
-        request: Verification request with claim and parameters
+        request: FastAPI request (for rate limiting)
+        verify_request: Verification request with claim and parameters
         db: Database session
         embedding_service: Injected embedding service
         nli_service: Injected NLI service
@@ -430,13 +471,13 @@ async def verify_claim(
         VerifyResponse with verdict, evidence, and explanation
 
     Raises:
-        HTTPException: 400 for invalid input, 500 for pipeline errors
+        HTTPException: 400 for invalid input, 429 for rate limit, 500 for pipeline errors
     """
     start_time = time.time()
 
     try:
         # Step 1: Create claim record
-        claim = Claim(text=request.claim)
+        claim = Claim(text=verify_request.claim)
         db.add(claim)
         db.commit()
         db.refresh(claim)
@@ -446,15 +487,15 @@ async def verify_claim(
         # Step 2: Generate claim embedding and search for evidence
         loop = asyncio.get_event_loop()
         claim_embedding = await loop.run_in_executor(
-            None, embedding_service.embed_text, request.claim
+            None, embedding_service.embed_text, verify_request.claim
         )
 
         search_results = vector_search_service.search_similar_evidence(
             db=db,
             query_embedding=claim_embedding,
-            top_k=request.max_evidence,
+            top_k=verify_request.max_evidence,
             min_similarity=0.3,  # Lower threshold to find diverse evidence
-            tenant_id=request.tenant_id,
+            tenant_id=verify_request.tenant_id,
         )
 
         if not search_results:
@@ -473,7 +514,7 @@ async def verify_claim(
                 refuting_evidence_count=0,
                 neutral_evidence_count=0,
                 reasoning="No relevant evidence found in database",
-                retrieval_method=request.search_mode,
+                retrieval_method=verify_request.search_mode,
             )
             db.add(verification)
             db.commit()
@@ -492,7 +533,7 @@ async def verify_claim(
             )
 
         # Step 3: Run NLI on claim-evidence pairs
-        nli_pairs = [(result.content, request.claim) for result in search_results]
+        nli_pairs = [(result.content, verify_request.claim) for result in search_results]
 
         nli_results = await loop.run_in_executor(
             None, lambda: nli_service.verify_batch(pairs=nli_pairs, batch_size=8)
@@ -517,11 +558,11 @@ async def verify_claim(
         )
 
         # Determine verdict
-        if support_score > refute_score and support_score >= request.confidence_threshold:
+        if support_score > refute_score and support_score >= verify_request.confidence_threshold:
             verdict = "SUPPORTED"
             confidence = support_score
             explanation = f"The claim is supported by {entailment_count} evidence items with {confidence:.1%} confidence."
-        elif refute_score > support_score and refute_score >= request.confidence_threshold:
+        elif refute_score > support_score and refute_score >= verify_request.confidence_threshold:
             verdict = "REFUTED"
             confidence = refute_score
             explanation = f"The claim is refuted by {contradiction_count} evidence items with {confidence:.1%} confidence."
@@ -543,7 +584,7 @@ async def verify_claim(
             refuting_evidence_count=contradiction_count,
             neutral_evidence_count=neutral_count,
             reasoning=explanation,
-            retrieval_method=request.search_mode,
+            retrieval_method=verify_request.search_mode,
         )
         db.add(verification)
         db.commit()
@@ -598,6 +639,7 @@ async def verify_claim(
     status_code=status.HTTP_200_OK,
     responses={
         404: {"model": ErrorResponse, "description": "Claim or verdict not found"},
+        429: {"description": "Rate limit exceeded"},
         500: {"model": ErrorResponse, "description": "Server error"},
     },
     summary="Get verdict for a claim",
@@ -605,15 +647,21 @@ async def verify_claim(
     Retrieve the most recent verification verdict for a claim by its ID.
 
     Returns verdict details including confidence, evidence counts, and reasoning.
+
+    **Rate Limit:** 20 requests/minute
     """,
 )
+@limiter.limit(rate_config.get_limit("/api/v1/verdict/{claim_id}"))
 async def get_verdict(
+    request: Request,
+    response: Response,
     claim_id: UUID,
     db: Annotated[Session, Depends(get_db)],
 ) -> VerdictResponse:
     """Retrieve verdict for existing claim.
 
     Args:
+        request: FastAPI request (for rate limiting)
         claim_id: UUID of the claim
         db: Database session
 
@@ -621,7 +669,7 @@ async def get_verdict(
         VerdictResponse with verdict details
 
     Raises:
-        HTTPException: 404 if claim/verdict not found, 500 for errors
+        HTTPException: 404 if claim/verdict not found, 429 for rate limit, 500 for errors
     """
     try:
         # Get claim

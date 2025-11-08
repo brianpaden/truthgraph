@@ -1,9 +1,10 @@
 """Middleware for FastAPI application.
 
 This module provides middleware components including:
-- Rate limiting for ML endpoints
+- Rate limiting for ML endpoints (using slowapi)
 - Request ID tracking
 - Error handling
+- Rate limit monitoring
 """
 
 import logging
@@ -14,7 +15,10 @@ from typing import Callable, Dict
 
 from fastapi import HTTPException, Request, Response, status
 from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from .rate_limit import get_rate_limit_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -238,6 +242,46 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
         return response
 
 
+class RateLimitMonitoringMiddleware(BaseHTTPMiddleware):
+    """Middleware to monitor rate limit violations and track usage.
+
+    This middleware works alongside slowapi to record rate limit events.
+    """
+
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        """Monitor rate limit violations and track requests.
+
+        Args:
+            request: Incoming request
+            call_next: Next middleware/endpoint
+
+        Returns:
+            Response from endpoint or rate limit error
+        """
+        monitor = get_rate_limit_monitor()
+
+        # Get identifier (IP or user ID)
+        from .rate_limit import get_identifier
+        identifier = get_identifier(request)
+        endpoint = request.url.path
+
+        try:
+            response = await call_next(request)
+
+            # Record successful request
+            if response.status_code != status.HTTP_429_TOO_MANY_REQUESTS:
+                monitor.record_request(identifier, endpoint)
+
+            return response
+
+        except RateLimitExceeded as e:
+            # Record rate limit violation
+            monitor.record_violation(identifier, endpoint)
+
+            # Re-raise to let slowapi handle the response
+            raise e
+
+
 class ErrorHandlingMiddleware(BaseHTTPMiddleware):
     """Global error handling middleware."""
 
@@ -253,6 +297,9 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
         """
         try:
             return await call_next(request)
+        except RateLimitExceeded:
+            # Let slowapi handle rate limit errors
+            raise
         except HTTPException:
             # Let FastAPI handle HTTPExceptions
             raise

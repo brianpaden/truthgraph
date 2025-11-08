@@ -5,17 +5,21 @@ import time
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from .api.middleware import (
     ErrorHandlingMiddleware,
     RateLimitMiddleware,
+    RateLimitMonitoringMiddleware,
     RequestIDMiddleware,
 )
 from .api.ml_routes import router as ml_router
 from .api.models import HealthResponse, ServiceStatus
+from .api.rate_limit import create_limiter, get_rate_limit_config
 from .api.routes import router
 from .api.route_modules.verification import router as verification_router
 from .db import Base, engine
@@ -88,8 +92,20 @@ app = FastAPI(
 
     ## Rate Limits
 
-    - General endpoints: 60 requests/minute per IP
-    - ML endpoints: 10 requests/minute per IP
+    Rate limits are enforced per IP address with standard headers:
+    - `RateLimit-Limit`: Maximum requests allowed
+    - `RateLimit-Remaining`: Requests remaining in window
+    - `RateLimit-Reset`: Unix timestamp when limit resets
+    - `Retry-After`: Seconds to wait before retrying (on 429 error)
+
+    **Endpoint Limits:**
+    - `/api/v1/verify`: 5 requests/minute (full verification pipeline)
+    - `/api/v1/embed`: 10 requests/minute (embedding generation)
+    - `/api/v1/search`: 20 requests/minute (search operations)
+    - `/api/v1/nli`: 10 requests/minute (NLI inference)
+    - `/api/v1/verdict/{claim_id}`: 20 requests/minute (verdict retrieval)
+    - `/health`: 100 requests/minute (health checks)
+    - Default: 60 requests/minute (all other endpoints)
 
     ## API Documentation
 
@@ -102,9 +118,28 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
+# Initialize rate limiter with slowapi
+import os
+from pathlib import Path
+
+config_path = os.getenv(
+    "RATE_LIMIT_CONFIG",
+    str(Path(__file__).parent / "api" / "rate_limits.yaml")
+)
+limiter = create_limiter(
+    storage_uri=os.getenv("RATE_LIMIT_STORAGE", "memory://"),
+)
+app.state.limiter = limiter
+
+# Add slowapi exception handler for 429 errors
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # Add middleware (order matters - first added is outermost)
 app.add_middleware(ErrorHandlingMiddleware)
 app.add_middleware(RequestIDMiddleware)
+app.add_middleware(RateLimitMonitoringMiddleware)
+# Note: Keep legacy RateLimitMiddleware for backwards compatibility
+# but slowapi decorators on endpoints will take precedence
 app.add_middleware(
     RateLimitMiddleware,
     requests_per_minute=60,
@@ -143,7 +178,8 @@ async def add_process_time_header(request: Request, call_next):
     summary="Health check endpoint",
     description="Check health status of API and all services",
 )
-async def health_check():
+@limiter.limit("100/minute")
+async def health_check(request: Request, response: Response):
     """Comprehensive health check endpoint.
 
     Checks:
@@ -221,6 +257,25 @@ async def health_check():
 
 
 @app.get(
+    "/rate-limit-stats",
+    tags=["System"],
+    summary="Get rate limit statistics",
+    description="View rate limit monitoring statistics including violations and usage patterns",
+)
+def get_rate_limit_stats():
+    """Get rate limit statistics and monitoring data."""
+    from .api.rate_limit import get_rate_limit_monitor
+
+    monitor = get_rate_limit_monitor()
+    stats = monitor.get_stats()
+
+    return {
+        "rate_limit_statistics": stats,
+        "message": "Rate limit monitoring data",
+    }
+
+
+@app.get(
     "/",
     tags=["System"],
     summary="API root endpoint",
@@ -234,6 +289,7 @@ def root():
         "description": "AI-powered fact-checking system with ML integration",
         "docs": "/docs",
         "health": "/health",
+        "rate_limits": "/rate-limit-stats",
         "endpoints": {
             "verify": "/api/v1/verify",
             "embed": "/api/v1/embed",

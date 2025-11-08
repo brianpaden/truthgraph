@@ -1,0 +1,43 @@
+# Rate Limiting Configuration for TruthGraph API
+#
+# This file defines rate limits for all API endpoints.
+# Limits are specified as "number/period" where period can be:
+# - second, minute, hour, day
+#
+# Examples: "10/minute", "100/hour", "1000/day"
+
+rate_limits:
+  # Default rate limit applied to all endpoints unless overridden
+  default: "60/minute"
+
+  # Endpoint-specific rate limits
+  # Format: endpoint_path: "limit/period"
+  endpoints:
+    # ML Endpoints (expensive operations)
+    /api/v1/verify: "5/minute"           # Full verification pipeline
+    /api/v1/embed: "10/minute"           # Embedding generation
+    /api/v1/search: "20/minute"          # Vector/hybrid search
+    /api/v1/nli: "10/minute"             # Single NLI inference
+    /api/v1/nli/batch: "5/minute"        # Batch NLI inference
+
+    # Data Retrieval Endpoints (lighter operations)
+    /api/v1/verdict/{claim_id}: "20/minute"  # Get verdict by claim ID
+    /api/v1/claims: "30/minute"              # List claims
+    /api/v1/claims/{claim_id}: "30/minute"   # Get specific claim
+
+    # System Endpoints (very light)
+    /health: "100/minute"                # Health check
+    /: "100/minute"                      # Root endpoint
+
+  # Burst multiplier allows temporary bursts above the limit
+  # 1.5 means users can burst to 150% of their limit momentarily
+  burst_multiplier: 1.5
+
+  # User tier-based limits (future feature)
+  # tiers:
+  #   free:
+  #     default: "60/minute"
+  #   pro:
+  #     default: "300/minute"
+  #   enterprise:
+  #     default: "1000/minute"
