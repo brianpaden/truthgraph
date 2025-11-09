@@ -72,7 +72,7 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI app
 app = FastAPI(
-    title="TruthGraph Phase 2",
+    title="TruthGraph Verification API",
     description="""
     **TruthGraph Phase 2** - AI-powered fact-checking system with ML integration
 
@@ -107,15 +107,39 @@ app = FastAPI(
     - `/health`: 100 requests/minute (health checks)
     - Default: 60 requests/minute (all other endpoints)
 
-    ## API Documentation
+    ## Documentation
 
-    See the interactive documentation below for detailed endpoint information and examples.
+    - **Complete API Docs**: See `/docs/api/README.md` for comprehensive documentation
+    - **Examples**: cURL, Python, and JavaScript examples in `/docs/api/examples/`
+    - **Schemas**: Detailed schema documentation in `/docs/api/schemas/`
+    - **Error Codes**: Complete error reference in `/docs/api/errors/error_codes.md`
+
+    ## Quick Start
+
+    ```bash
+    # Health check
+    curl http://localhost:8000/health
+
+    # Simple verification
+    curl -X POST http://localhost:8000/api/v1/verify \\
+      -H "Content-Type: application/json" \\
+      -d '{"claim": "The Earth orbits the Sun"}'
+    ```
     """,
     version="2.0.0",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+    contact={
+        "name": "TruthGraph API Support",
+        "url": "https://github.com/truthgraph/truthgraph",
+        "email": "support@truthgraph.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    },
 )
 
 # Initialize rate limiter with slowapi
