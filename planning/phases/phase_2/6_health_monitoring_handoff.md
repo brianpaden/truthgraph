@@ -1768,6 +1768,30 @@ ALERT_QUEUE_DEPTH=50                  # Queue depth alert threshold
 4. **Easier testing** - Each subfeature can be tested independently
 5. **Flexibility** - Dashboard (5.5a) and CLI tools (5.5b) can be deprioritized if needed
 
+### Current Status
+
+| Subfeature | Status | Effort | Priority | Assigned To | Notes |
+|------------|--------|--------|----------|-------------|-------|
+| 4.7a: Core Infrastructure | ✅ Complete | 14h | P0 | python-pro | 94% test coverage, 1.94MB memory footprint |
+| 4.7b: Service Monitors | 📋 Ready | 12h | P0 | fastapi-pro, python-pro | Ready to start - core infrastructure complete |
+| 5.5a: Dashboard UI | ⏳ Blocked | 12h | P1 | frontend-developer | Blocked by 4.7b |
+| 5.5b: CLI Tools | ⏳ Blocked | 10h | P2 | dx-optimizer, python-pro | Blocked by 4.7b |
+
+**Legend**: 📋 Planned | 🔄 In Progress | ✅ Complete | ⏸️ Paused | ⏳ Blocked
+
+**Feature 4.7a Deliverables** ✅:
+- ✅ `truthgraph/monitoring/storage/models.py` - Pydantic models (159 lines)
+- ✅ `truthgraph/monitoring/storage/metric_store.py` - Thread-safe storage (167 lines)
+- ✅ `truthgraph/monitoring/metrics_collector.py` - Metrics service (295 lines)
+- ✅ `truthgraph/monitoring/health.py` - Health checker with circuit breaker (376 lines)
+- ✅ 82 unit tests, 94% coverage
+- ✅ Memory footprint: 1.94 MB (under 2 MB target)
+- ✅ Concurrent write support verified (10 async workers)
+
+**Next**: Feature 4.7b can now be started
+
+---
+
 ### Proposed Subfeature Breakdown
 
 #### Feature 4.7a: Core Monitoring Infrastructure ⭐ CRITICAL

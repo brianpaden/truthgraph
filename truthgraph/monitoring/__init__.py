@@ -1,36 +1,34 @@
-"""Memory monitoring and alerting system for TruthGraph.
+"""Comprehensive monitoring and alerting system for TruthGraph.
 
-This module provides comprehensive memory monitoring capabilities including:
+This module provides monitoring capabilities including:
 - Real-time memory usage tracking
 - Memory leak detection
 - Configurable alerting system
 - Historical profile storage and analysis
+- Metrics collection and time-series storage
+- Health checking with circuit breaker pattern
 
 Example:
-    Basic monitoring:
+    Memory monitoring:
     >>> from truthgraph.monitoring import MemoryMonitor
     >>> monitor = MemoryMonitor()
     >>> monitor.start()
     >>> # ... perform operations ...
     >>> stats = monitor.stop()
 
-    With alerting:
-    >>> from truthgraph.monitoring import MemoryMonitor, AlertManager, AlertLevel
-    >>> monitor = MemoryMonitor()
-    >>> alerts = AlertManager()
-    >>> alerts.set_threshold(AlertLevel.WARNING, rss_mb=2048)
-    >>> monitor.start()
-    >>> # ... perform operations ...
-    >>> snapshot = monitor.get_current_snapshot()
-    >>> triggered = alerts.check_thresholds(snapshot)
+    Metrics collection:
+    >>> from truthgraph.monitoring import get_metrics_collector
+    >>> collector = get_metrics_collector()
+    >>> await collector.increment_counter("api.requests")
+    >>> await collector.set_gauge("cpu.percent", 45.2)
 
-    Historical analysis:
-    >>> from truthgraph.monitoring import MemoryProfileStore
-    >>> store = MemoryProfileStore()
-    >>> profile_id = store.save_profile("test_run", monitor)
-    >>> trend = store.analyze_trend("test_run", days=7)
+    Health checking:
+    >>> from truthgraph.monitoring import get_health_checker
+    >>> checker = get_health_checker()
+    >>> health = await checker.check_overall_health()
 """
 
+from truthgraph.monitoring.health import HealthChecker, get_health_checker
 from truthgraph.monitoring.memory_alerts import (
     AlertLevel,
     AlertManager,
@@ -46,18 +44,44 @@ from truthgraph.monitoring.memory_profiles import (
     MemoryProfileStore,
     MemoryTrend,
 )
+from truthgraph.monitoring.metrics_collector import (
+    MetricsCollector,
+    get_metrics_collector,
+)
+from truthgraph.monitoring.storage import (
+    DetailedHealthResponse,
+    HealthResponse,
+    HealthStatus,
+    MetricStore,
+    MetricType,
+    MetricValue,
+    ServiceHealth,
+)
 
 __all__ = [
     # Memory monitoring
     "MemoryMonitor",
     "MemorySnapshot",
     "MemoryStats",
-    # Alerting
+    # Memory alerting
     "AlertLevel",
     "AlertManager",
     "MemoryAlert",
-    # Profiling
+    # Memory profiling
     "MemoryProfile",
     "MemoryProfileStore",
     "MemoryTrend",
+    # Metrics collection
+    "MetricsCollector",
+    "get_metrics_collector",
+    "MetricStore",
+    "MetricType",
+    "MetricValue",
+    # Health checking
+    "HealthChecker",
+    "get_health_checker",
+    "HealthStatus",
+    "HealthResponse",
+    "ServiceHealth",
+    "DetailedHealthResponse",
 ]
