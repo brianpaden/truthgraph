@@ -689,7 +689,8 @@ api_request_duration_ms_bucket{le="500"} 890
 **Purpose**: Central service for collecting and aggregating metrics
 
 **Components**:
-```
+
+```text
 truthgraph/monitoring/
 ├── __init__.py (existing)
 ├── memory_alerts.py (existing)
@@ -818,7 +819,8 @@ class MetricStore:
 - Alert notifications
 
 **Access Point**:
-```
+
+```text
 http://localhost:5000/dashboard/health
 (served from frontend, proxies to API for data)
 ```
@@ -835,7 +837,8 @@ task health:check
 ```
 
 **Output**:
-```
+
+```text
 TruthGraph System Health Check
 ==============================
 
@@ -894,7 +897,8 @@ task health:workers [--watch]
 ```
 
 **Output**:
-```
+
+```text
 Worker Pool Status
 ==================
 
@@ -1157,7 +1161,7 @@ Watch mode: Updates every 2 seconds (--watch flag)
 
 ### New Files Created
 
-```
+```text
 truthgraph/monitoring/
 ├── metrics_collector.py      # Core metrics collection
 ├── container_monitor.py       # Docker container monitoring
@@ -1189,7 +1193,7 @@ tests/
 
 ### Modified Files
 
-```
+```text
 truthgraph/main.py
 - Extend /health endpoints with detailed checks
 - Integrate metrics collection startup

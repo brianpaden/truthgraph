@@ -272,7 +272,7 @@ docs/guides/
 
 ## Decision Tree
 
-```
+```text
 Error in TruthGraph?
 ├─ During startup?
 │  ├─ Can't load models? → See [Model Issues](./troubleshooting/models.md)
@@ -283,7 +283,6 @@ Error in TruthGraph?
 └─ During integration?
    └─ Can't call API? → See [Integration Issues](./troubleshooting/integration.md)
 ```
-```
 
 **Model Loading Issues** (50 lines)
 
@@ -293,7 +292,8 @@ Error in TruthGraph?
 ## Problem: "Model not found"
 
 **Error Message:**
-```
+
+```text
 RuntimeError: Model 'all-MiniLM-L6-v2' not found
 ```
 
@@ -317,11 +317,11 @@ RuntimeError: Model 'all-MiniLM-L6-v2' not found
    )
    ```
 
-2. **Check disk space:**
+1. **Check disk space:**
+
    ```bash
    df -h  # Should have >1GB free
    ```
-```
 
 ### FAQ Content
 
@@ -465,7 +465,6 @@ result = tg.verify(
         "return_reasoning": True
     }
 )
-```
 ```
 
 ### Example: Integration
@@ -632,7 +631,6 @@ embeddings = service.embed(texts, batch_size=64)
 3. Increase batch size while monitoring memory
 4. Stop when memory approaches limit
 5. Use optimal batch size
-```
 
 ### Content: Model Selection
 
@@ -676,7 +674,6 @@ Use this decision tree:
 - Need >90% accuracy? → XLNET-base
 - Need 500+ texts/sec? → ELECTRA-base
 - Balanced? → XLNET-base (recommended)
-```
 
 ### Content: Monitoring
 
@@ -723,7 +720,6 @@ print(f"Memory: {metrics['memory_mb']}MB")
 ## Automated Alerts
 
 Set up prometheus/grafana for continuous monitoring.
-```
 
 ### Success Criteria
 
