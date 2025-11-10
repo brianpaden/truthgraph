@@ -222,25 +222,49 @@ tasks:
   # ============================================================================
 
   test:
-    desc: Run all tests
+    desc: Run all tests (requires Docker containers running)
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first, or use 'task test:local' to run without Docker."
     cmds:
       - docker-compose exec api pytest tests -n auto --timeout 60 -s --tb=no --disable-warnings
       # - task: test:unit
       # - task: test:integration
       # - task: test:accuracy
 
+  test:local:
+    desc: Run all tests locally with uv (no Docker required)
+    cmds:
+      - '{{.PYTEST}} tests -n auto --timeout 60 -s --tb=no --disable-warnings'
+
   test:unit:
-    desc: Run unit tests only
+    desc: Run unit tests only (requires Docker)
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first, or use 'task test:unit:local' for local tests."
     cmds:
       - docker-compose exec api pytest tests/unit tests/services -v -m "not integration"
 
+  test:unit:local:
+    desc: Run unit tests locally with uv (no Docker required)
+    cmds:
+      - '{{.PYTEST}} tests/unit tests/services -v -m "not integration"'
+
   test:integration:
-    desc: Run integration tests only
+    desc: Run integration tests only (requires Docker and database)
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
+      - sh: docker-compose ps | grep -q "postgres.*Up"
+        msg: "PostgreSQL container not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/integration -v
 
   test:ml:
     desc: Run ML service tests (embedding, NLI, vector search)
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     deps:
       - task: ml:warmup
     cmds:
@@ -248,33 +272,61 @@ tasks:
 
   test:api:
     desc: Run API endpoint tests
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/test_api_ml_endpoints.py -v
 
   test:hybrid:
     desc: Run hybrid search tests
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/unit/services/test_hybrid_search_service.py tests/integration/test_hybrid_search_integration.py -v
 
   test:verdict:
     desc: Run verdict aggregation tests
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/services/ml/test_verdict_aggregation_service.py tests/services/ml/test_verdict_aggregation_integration.py -v
 
   test:pipeline:
     desc: Run verification pipeline tests
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/unit/services/test_verification_pipeline_service.py tests/integration/test_verification_pipeline_integration.py -v
 
   test:accuracy:
     desc: Run accuracy framework tests (Feature 3.1)
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest tests/accuracy/test_accuracy.py tests/accuracy/test_validation_with_data.py -v
 
   test:coverage:
     desc: Run tests with coverage report
+    preconditions:
+      - sh: docker-compose ps | grep -q "api.*Up"
+        msg: "Docker containers not running. Run 'task dev' first."
     cmds:
       - docker-compose exec api pytest --cov=truthgraph --cov-report=html --cov-report=term
+
+  test:monitoring:
+    desc: Run health monitoring tests (Feature 4.7a)
+    cmds:
+      - '{{.PYTEST}} tests/unit/test_monitoring/ -v'
+
+  test:monitoring:coverage:
+    desc: Run monitoring tests with coverage report
+    cmds:
+      - '{{.PYTEST}} tests/unit/test_monitoring/ -v --cov=truthgraph.monitoring --cov-report=term --cov-report=html:htmlcov/monitoring'
 
   # ============================================================================
   # ML Service Tasks
