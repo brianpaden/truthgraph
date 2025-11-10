@@ -56,16 +56,16 @@ These can be implemented together as a unified feature, or separately:
 
 ### Estimated Effort
 
-- **Total**: 40 hours
-- **Core Infrastructure** (4.7): 20 hours
-- **Tools & Documentation** (5.5): 20 hours
+- **Total**: 48 hours (revised after architecture review)
+- **Core Infrastructure** (4.7): 24 hours (+4h for async patterns)
+- **Tools & Documentation** (5.5): 24 hours (+4h for concurrency testing)
 
 **Breakdown**:
-- Health check endpoints: 6 hours
-- Metrics collection & storage: 8 hours
+- Health check endpoints: 8 hours (added Pydantic models, async patterns)
+- Metrics collection & storage: 10 hours (added thread safety, proper async)
 - Dashboard UI: 10 hours
 - CLI tools: 6 hours
-- Testing & documentation: 10 hours
+- Testing & documentation: 14 hours (added concurrency & memory leak tests)
 
 ### Dependencies
 
@@ -95,6 +95,291 @@ These can be implemented together as a unified feature, or separately:
 - CLI tools work reliably
 - Comprehensive test coverage
 - Documentation complete
+
+---
+
+## Critical Implementation Findings
+
+**Status**: Architecture review completed by backend-architect, fastapi-pro, and python-pro agents
+
+### ⚠️ High Priority Issues (Must Fix Before Implementation)
+
+#### 1. Async/Await Pattern Issues
+
+**Problem**: Document doesn't specify how blocking I/O will integrate with FastAPI's async event loop.
+
+**Impact**: Docker stats API, psutil calls, and database queries are synchronous and will block the event loop, degrading API performance.
+
+**Solution**:
+```python
+# Use asyncio.to_thread() for blocking operations
+async def collect_docker_stats(self):
+    """Non-blocking Docker stats collection."""
+    return await asyncio.to_thread(self._collect_docker_stats_sync)
+```
+
+**Files Affected**: `metrics_collector.py`, `container_monitor.py`, `worker_monitor.py`
+
+#### 2. Missing Pydantic Response Models
+
+**Problem**: JSON response structures shown but no Pydantic models defined.
+
+**Impact**: No type safety, validation, or automatic OpenAPI documentation.
+
+**Solution**:
+```python
+from pydantic import BaseModel, Field
+from typing import Literal
+
+class HealthResponse(BaseModel):
+    status: Literal["healthy", "degraded", "unhealthy"]
+    timestamp: datetime
+    uptime_seconds: int
+
+class ServiceHealth(BaseModel):
+    status: Literal["healthy", "degraded", "unhealthy"]
+    message: str
+    response_time_ms: int | None = None
+```
+
+**Files Affected**: `api/metrics_routes.py`, `monitoring/health_checker.py`
+
+#### 3. Thread Safety for Concurrent Workers
+
+**Problem**: 5 async workers will concurrently access metrics without proper locking.
+
+**Impact**: Race conditions, data corruption, incorrect metric values.
+
+**Solution**:
+```python
+import asyncio
+
+class ThreadSafeMetricStore:
+    def __init__(self):
+        self._metrics = {}
+        self._lock = asyncio.Lock()
+
+    async def record_metric(self, name: str, value: float):
+        async with self._lock:
+            # Safe concurrent access
+            ...
+```
+
+**Files Affected**: `metrics_collector.py`, all monitor files
+
+#### 4. HTTP Status Code Strategy Missing
+
+**Problem**: No specification of when to return 200 vs 503 for health checks.
+
+**Impact**: Load balancers and monitoring tools can't properly detect unhealthy state.
+
+**Solution**:
+- `/health`: Return 200 if API responsive (no dependency checks)
+- `/health/detailed`: Return 503 if any critical service unhealthy, 200 otherwise
+- Define critical services: Database (critical), ML services (degraded)
+
+**Files Affected**: `api/metrics_routes.py`
+
+#### 5. No Circuit Breaker Pattern
+
+**Problem**: Repeated health checks to failed services waste resources and compound latency.
+
+**Impact**: Health check endpoint can exceed 500ms target and waste CPU.
+
+**Solution**:
+```python
+class CircuitBreaker:
+    """Prevent hammering failed services."""
+    def __init__(self, failure_threshold=3, timeout=30):
+        self.failures = 0
+        self.threshold = failure_threshold
+        self.timeout = timeout
+        self.last_failure_time = None
+
+    def is_open(self) -> bool:
+        """Check if circuit is open (service marked as failed)."""
+        if self.failures >= self.threshold:
+            if time.time() - self.last_failure_time < self.timeout:
+                return True
+        return False
+```
+
+**Files Affected**: `monitoring/health_checker.py`
+
+### 📊 Important Enhancements (Strongly Recommended)
+
+#### 6. Missing Event Loop Health Metrics
+
+**Problem**: No monitoring of asyncio event loop performance (critical for async apps).
+
+**Impact**: Can't detect event loop blocking, callback queue buildup, or async performance issues.
+
+**Add These Metrics**:
+```python
+CRITICAL_ASYNC_METRICS = {
+    "asyncio.event_loop.lag_ms": "Event loop responsiveness",
+    "asyncio.event_loop.pending_callbacks": "Callback queue depth",
+    "asyncio.event_loop.tasks.count": "Active async tasks",
+}
+```
+
+#### 7. No Metric Labels/Tags
+
+**Problem**: Current design uses metric names like `container.{service}.cpu.percent` (inline).
+
+**Impact**: Makes Prometheus migration difficult, reduces query flexibility.
+
+**Solution**: Use labels from the start:
+```python
+# Instead of: container.api.cpu.percent
+# Use: container.cpu.percent{service="api"}
+
+class Metric:
+    name: str
+    value: float
+    labels: Dict[str, str]  # {"service": "api", "endpoint": "/verify"}
+    timestamp: float
+```
+
+#### 8. Concurrent Health Check Execution
+
+**Problem**: Document doesn't specify running checks in parallel.
+
+**Impact**: Serial checks take 200-400ms, parallel checks take 50-150ms.
+
+**Solution**:
+```python
+# Run all checks concurrently with timeout
+service_checks = await asyncio.wait_for(
+    asyncio.gather(
+        health_checker.check_database(),
+        health_checker.check_embedding_service(),
+        health_checker.check_nli_service(),
+        health_checker.check_workers(),
+        return_exceptions=True
+    ),
+    timeout=5.0
+)
+```
+
+#### 9. Memory Optimization with `__slots__`
+
+**Problem**: 70 metrics × 360 entries = 25,200 objects in memory without optimization.
+
+**Impact**: ~1.5 MB without slots, ~900 KB with slots (40% savings).
+
+**Solution**:
+```python
+@dataclass(slots=True)  # Python 3.10+
+class MetricValue:
+    """Memory-optimized metric value."""
+    timestamp: float
+    value: float
+```
+
+#### 10. Docker Client Platform Handling
+
+**Problem**: Windows (npipe) vs Linux (unix socket) Docker connections differ.
+
+**Impact**: Docker monitoring fails on Windows development machines.
+
+**Solution**:
+```python
+import platform
+
+def create_docker_client():
+    if platform.system() == 'Windows':
+        return docker.DockerClient(base_url='npipe:////./pipe/docker_engine')
+    else:
+        return docker.DockerClient(base_url='unix:///var/run/docker.sock')
+```
+
+### 🔄 Architecture Improvements
+
+#### 11. Use FastAPI Lifespan Events
+
+**Current**: Background tasks not specified.
+
+**Better**: Use lifespan context manager for proper startup/shutdown:
+```python
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    collector = get_metrics_collector()
+    collection_task = asyncio.create_task(collector.collect_loop())
+
+    yield
+
+    # Shutdown
+    collection_task.cancel()
+    await collection_task
+```
+
+#### 12. Use `collections.deque` for Circular Buffer
+
+**Current**: Circular buffer implementation not specified.
+
+**Better**: Python's built-in deque with maxlen:
+```python
+from collections import deque
+
+class MetricStore:
+    def __init__(self, retention_seconds: int = 3600):
+        self._max_size = retention_seconds // 10  # 360 entries
+        self._metrics = {}
+
+    def record_metric(self, name: str, value: float):
+        if name not in self._metrics:
+            self._metrics[name] = deque(maxlen=self._max_size)
+        self._metrics[name].append((time.time(), value))
+```
+
+#### 13. Add Security Metrics
+
+**Missing**: Authentication failures, rate limit hits, invalid requests.
+
+**Add**:
+```python
+SECURITY_METRICS = {
+    "api.auth.failures": "Authentication failures",
+    "api.ratelimit.hits": "Rate limit violations",
+    "api.validation.errors_by_type": "Validation errors by type",
+}
+```
+
+#### 14. Enhanced Testing Strategy
+
+**Current**: Basic unit/integration tests.
+
+**Add**:
+- Concurrency tests (10 workers writing simultaneously)
+- Memory leak tests (tracemalloc over 1000 iterations)
+- Property-based tests (hypothesis for random inputs)
+- Docker failure handling tests
+
+### 📈 Revised Effort Estimate
+
+**Original**: 40 hours
+**Revised**: 48 hours (+8 hours)
+
+**Additional Effort**:
+- Async patterns implementation: +4 hours
+- Thread safety and locking: +2 hours
+- Pydantic models and validation: +1 hour
+- Enhanced testing (concurrency, memory): +3 hours
+- Circuit breaker pattern: +1 hour
+
+**Breakdown by Priority**:
+- High Priority Fixes (1-5): +6 hours
+- Important Enhancements (6-10): +2 hours
+- Architecture Improvements (11-14): +3 hours
+
+### ✅ Validation
+
+**Architecture**: Sound for Phase 2 with improvements
+**Scalability**: 70 metrics × 360 entries = ~1.5 MB (acceptable)
+**Performance**: 10s collection interval = 0.8-1.5% overhead (acceptable)
+**Migration Path**: Good with metric labels added
 
 ---
 
@@ -506,6 +791,30 @@ These can be implemented together as a unified feature, or separately:
   - **Normal Range**: 5-20
   - **Alert Threshold**: > 100 (task explosion)
 
+- **Metric**: `asyncio.event_loop.lag_ms` ⭐ NEW - CRITICAL
+  - **Description**: Event loop responsiveness (time between expected and actual callback execution)
+  - **Collection**: Custom event loop monitoring
+  - **Type**: Gauge
+  - **Unit**: milliseconds
+  - **Normal Range**: 0-10 ms
+  - **Alert Threshold**: > 50 ms (event loop blocking detected)
+
+- **Metric**: `asyncio.event_loop.pending_callbacks` ⭐ NEW - CRITICAL
+  - **Description**: Callback queue depth
+  - **Collection**: Event loop inspection
+  - **Type**: Gauge
+  - **Unit**: callbacks
+  - **Normal Range**: 0-10
+  - **Alert Threshold**: > 50 (callback queue buildup)
+
+- **Metric**: `asyncio.event_loop.slow_callbacks` ⭐ NEW
+  - **Description**: Count of callbacks taking > 100ms
+  - **Collection**: Event loop slow callback tracking
+  - **Type**: Counter
+  - **Unit**: callbacks
+  - **Normal Range**: 0
+  - **Alert Threshold**: > 0 (indicates blocking operations)
+
 ### 6. ML Pipeline Metrics
 
 #### Cache Performance
@@ -558,7 +867,77 @@ These can be implemented together as a unified feature, or separately:
   - **Normal Range**: 5-20
   - **Alert Threshold**: None
 
-### 7. System-Level Metrics
+### 7. Security & Validation Metrics ⭐ NEW
+
+#### Authentication & Authorization
+- **Metric**: `api.auth.failures`
+  - **Description**: Failed authentication attempts
+  - **Collection**: Auth middleware tracking
+  - **Type**: Counter
+  - **Unit**: failures
+  - **Normal Range**: 0-5 per hour
+  - **Alert Threshold**: > 10 per minute (potential attack)
+
+- **Metric**: `api.auth.token.invalid`
+  - **Description**: Invalid or expired token attempts
+  - **Collection**: Token validation middleware
+  - **Type**: Counter
+  - **Unit**: attempts
+  - **Normal Range**: < 1% of requests
+  - **Alert Threshold**: > 5% of requests
+
+#### Rate Limiting
+- **Metric**: `api.ratelimit.hits`
+  - **Description**: Rate limit violations
+  - **Collection**: Rate limit middleware
+  - **Type**: Counter
+  - **Unit**: violations
+  - **Normal Range**: 0-2 per hour
+  - **Alert Threshold**: > 10 per minute (abuse detection)
+
+- **Metric**: `api.ratelimit.hits_by_ip`
+  - **Description**: Rate limit hits grouped by IP address
+  - **Collection**: Rate limit middleware with labels
+  - **Type**: Counter
+  - **Unit**: violations
+  - **Normal Range**: Varies by client
+  - **Alert Threshold**: > 50 from single IP (ban candidate)
+
+#### Input Validation
+- **Metric**: `api.validation.errors`
+  - **Description**: Total validation errors
+  - **Collection**: Pydantic validation exception handler
+  - **Type**: Counter
+  - **Unit**: errors
+  - **Normal Range**: < 5% of requests
+  - **Alert Threshold**: > 10% of requests (bad client)
+
+- **Metric**: `api.validation.errors_by_type`
+  - **Description**: Validation errors by error type
+  - **Collection**: Pydantic error categorization
+  - **Type**: Counter with labels
+  - **Unit**: errors
+  - **Normal Range**: Varies by error type
+  - **Alert Threshold**: None (informational)
+
+- **Metric**: `api.validation.errors_by_field`
+  - **Description**: Validation errors by field name
+  - **Collection**: Pydantic error field tracking
+  - **Type**: Counter with labels
+  - **Unit**: errors
+  - **Normal Range**: Varies by field
+  - **Alert Threshold**: None (identifies problematic fields)
+
+#### CORS & Security Headers
+- **Metric**: `api.cors.violations`
+  - **Description**: CORS policy violations
+  - **Collection**: CORS middleware
+  - **Type**: Counter
+  - **Unit**: violations
+  - **Normal Range**: 0
+  - **Alert Threshold**: > 0 (misconfigured client or attack)
+
+### 8. System-Level Metrics
 
 #### Docker Compose Status
 - **Metric**: `docker.containers.running`
@@ -1354,7 +1733,222 @@ ALERT_QUEUE_DEPTH=50                  # Queue depth alert threshold
 
 ---
 
-**Document Version**: 1.0
+---
+
+## Subfeature Breakdown Analysis
+
+### Should Health Monitoring Be Split Into Subfeatures?
+
+**Analysis**: Compared to Feature 4 (API Completion) which split 4.1-4.6 into separate subfeatures, health monitoring has different characteristics:
+
+#### Comparison with Feature 4 (API Completion)
+
+**Feature 4 Characteristics**:
+- 6 distinct subfeatures (4.1-4.6)
+- Each subfeature is independently testable
+- Different agents assigned (fastapi-pro, python-pro)
+- Clear functional boundaries (endpoints, models, validation, etc.)
+- Can be implemented in any order with minimal dependencies
+- Total: 58 hours across 6 features
+
+**Health Monitoring Characteristics**:
+- Originally 2 subfeatures (4.7 + 5.5)
+- Highly interdependent components (metrics collection → storage → display)
+- Single functional domain (observability)
+- Same agents throughout (fastapi-pro, python-pro)
+- Implementation order matters (core → monitors → dashboard → CLI)
+- Total: 48 hours across 2 features
+
+### Recommendation: YES - Split Into 4 Subfeatures
+
+**Rationale**: While health monitoring is a single functional domain, splitting it into phases provides:
+1. **Better parallelization** - Dashboard can be built while core infrastructure stabilizes
+2. **Risk management** - Critical infrastructure (4.7a, 4.7b) can be completed first
+3. **Incremental value** - Health checks are useful before dashboard is ready
+4. **Easier testing** - Each subfeature can be tested independently
+5. **Flexibility** - Dashboard (5.5a) and CLI tools (5.5b) can be deprioritized if needed
+
+### Proposed Subfeature Breakdown
+
+#### Feature 4.7a: Core Monitoring Infrastructure ⭐ CRITICAL
+**Assigned To**: python-pro
+**Estimated Effort**: 14 hours
+**Dependencies**: None
+**Priority**: P0 (Must have)
+
+**Scope**:
+- Metrics collection framework (`metrics_collector.py`)
+- Time-series storage (in-memory circular buffer)
+- Thread-safe metric recording
+- Basic health check logic (`health_checker.py`)
+- Async patterns for blocking I/O
+- Pydantic models for metrics
+
+**Deliverables**:
+- `truthgraph/monitoring/metrics_collector.py`
+- `truthgraph/monitoring/storage/metric_store.py`
+- `truthgraph/monitoring/storage/models.py`
+- `truthgraph/monitoring/health.py`
+- Unit tests for core components
+- 80%+ test coverage
+
+**Success Criteria**:
+- Metrics can be recorded from async workers
+- No race conditions with 10 concurrent writers
+- Memory footprint < 2 MB for 70 metrics × 360 entries
+- Collection overhead < 2% CPU
+
+---
+
+#### Feature 4.7b: Service Monitors & Health Endpoints ⭐ CRITICAL
+**Assigned To**: fastapi-pro, python-pro
+**Estimated Effort**: 12 hours
+**Dependencies**: 4.7a (Core Infrastructure)
+**Priority**: P0 (Must have)
+
+**Scope**:
+- Docker container monitoring (`container_monitor.py`)
+- Worker pool monitoring (`worker_monitor.py`)
+- Database connection monitoring
+- ML service health checks
+- Health endpoints: `/health`, `/health/detailed`, `/metrics`
+- Prometheus text format export
+- Circuit breaker implementation
+- Event loop health metrics
+
+**Deliverables**:
+- `truthgraph/monitoring/collectors/docker_stats.py`
+- `truthgraph/monitoring/collectors/worker_stats.py`
+- `truthgraph/monitoring/collectors/process_stats.py`
+- `truthgraph/api/metrics_routes.py`
+- Integration tests for health endpoints
+- Prometheus format validation
+
+**Success Criteria**:
+- All 80+ metrics collecting successfully
+- `/health` responds in < 10ms
+- `/health/detailed` responds in < 200ms (with concurrent checks)
+- Prometheus format valid
+- Docker monitoring works on Windows and Linux
+- Circuit breaker prevents cascade failures
+
+---
+
+#### Feature 5.5a: Monitoring Dashboard UI
+**Assigned To**: frontend-developer (with fastapi-pro for API support)
+**Estimated Effort**: 12 hours
+**Dependencies**: 4.7b (Health Endpoints)
+**Priority**: P1 (Should have)
+
+**Scope**:
+- HTML/JavaScript dashboard UI
+- Real-time metric visualization
+- Dashboard API endpoints (`/api/v1/metrics/overview`, etc.)
+- Auto-refresh mechanism (10s polling or SSE)
+- System overview, API metrics, container resources
+- Worker pool dashboard, database dashboard
+- ML pipeline dashboard
+- Alert indicators (red/yellow/green)
+
+**Deliverables**:
+- `frontend/templates/dashboard/health.html`
+- Dashboard JavaScript for charts/gauges
+- Dashboard API routes in `api/metrics_routes.py`
+- CSS/styling for dashboard
+- Dashboard user documentation
+
+**Success Criteria**:
+- Dashboard accessible at `http://localhost:5000/dashboard/health`
+- All 6 dashboard views functional (overview, API, containers, workers, DB, ML)
+- Real-time updates every 10 seconds
+- Charts render correctly (line charts, gauges, histograms)
+- Responsive design works on different screen sizes
+
+---
+
+#### Feature 5.5b: CLI Monitoring Tools & Documentation
+**Assigned To**: dx-optimizer, python-pro
+**Estimated Effort**: 10 hours
+**Dependencies**: 4.7b (Health Endpoints)
+**Priority**: P2 (Nice to have)
+
+**Scope**:
+- CLI health check tool (`task health:check`)
+- CLI metrics export (`task health:metrics`)
+- CLI worker status (`task health:workers`)
+- Taskfile integration
+- Comprehensive monitoring documentation
+- Operational runbooks
+- Troubleshooting guides
+- Metric reference documentation
+
+**Deliverables**:
+- `cli/health_check.py`
+- `cli/metrics_export.py`
+- `cli/worker_status.py`
+- Taskfile tasks: `health:check`, `health:metrics`, `health:workers`
+- Monitoring documentation in `docs/monitoring/`
+- Operational runbooks
+- CLI tool tests
+
+**Success Criteria**:
+- `task health:check` shows system status in < 2 seconds
+- `task health:metrics` exports in JSON/Prometheus/CSV formats
+- `task health:workers` shows real-time worker status
+- `task health:workers --watch` provides live updates
+- Documentation covers all metrics and thresholds
+- Troubleshooting guides for common issues
+
+---
+
+### Revised Timeline with Subfeatures
+
+**Phase 2E: Monitoring & Completion (Week 5-6)**
+
+**Week 5 - Days 1-2** (Critical Path):
+- Feature 4.7a: Core Infrastructure (14h)
+- Feature 4.7b: Service Monitors (12h)
+- **Deliverable**: Health endpoints operational
+
+**Week 5 - Days 3-5** (Parallel Work):
+- Feature 5.5a: Dashboard UI (12h)
+- Feature 5.5b: CLI Tools (10h)
+- Can run in parallel since both depend on 4.7b
+
+**Total**: 48 hours (unchanged)
+
+### Benefits of Subfeature Breakdown
+
+1. **Parallel Execution**: Dashboard (5.5a) and CLI tools (5.5b) can be built simultaneously by different agents
+2. **Early Value**: Critical monitoring (4.7a + 4.7b) can be completed and deployed before dashboard
+3. **Risk Isolation**: If dashboard development hits issues, core monitoring is unaffected
+4. **Better Testing**: Each subfeature has clear test boundaries
+5. **Flexibility**: CLI tools (5.5b) can be deferred if timeline pressure exists
+6. **Agent Specialization**: frontend-developer for dashboard, dx-optimizer for CLI/docs
+
+### Dependency Graph
+
+```mermaid
+graph TD
+    A[4.7a: Core Infrastructure] --> B[4.7b: Service Monitors]
+    B --> C[5.5a: Dashboard UI]
+    B --> D[5.5b: CLI Tools]
+
+    style A fill:#ff6b6b
+    style B fill:#ff6b6b
+    style C fill:#4ecdc4
+    style D fill:#95e1d3
+```
+
+**Legend**:
+- Red (P0): Critical path - must complete
+- Teal (P1): High value - should complete
+- Light Green (P2): Nice to have - can defer
+
+---
+
+**Document Version**: 2.0
 **Created**: 2025-11-06
-**Last Updated**: 2025-11-06
-**Status**: Ready for Implementation
+**Last Updated**: 2025-11-09
+**Architecture Review**: Completed (backend-architect, fastapi-pro, python-pro)
+**Status**: Ready for Implementation (with subfeature breakdown)
