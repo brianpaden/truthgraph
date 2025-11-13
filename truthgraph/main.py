@@ -1,5 +1,6 @@
 """TruthGraph Phase 2 FastAPI Application with ML Integration."""
 
+import asyncio
 import logging
 import time
 from contextlib import asynccontextmanager
@@ -54,10 +55,70 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to start background workers: {e}", exc_info=True)
 
+    # Start metrics collection (Feature 4.7b)
+    try:
+        from truthgraph.monitoring.metrics_collector import get_metrics_collector
+        from truthgraph.monitoring.collectors.docker_stats import DockerStatsCollector
+        from truthgraph.monitoring.collectors.worker_stats import WorkerStatsCollector
+        from truthgraph.monitoring.collectors.process_stats import ProcessStatsCollector
+
+        # Initialize metrics collector
+        collector = get_metrics_collector()
+        await collector.start()
+        logger.info("Metrics collector started")
+
+        # Initialize specialized collectors
+        docker_collector = DockerStatsCollector(collector)
+        worker_collector = WorkerStatsCollector(collector)
+        process_collector = ProcessStatsCollector(collector)
+
+        # Create background task for specialized metrics collection
+        async def collect_specialized_metrics():
+            """Background loop for collecting specialized metrics."""
+            while True:
+                try:
+                    # Collect from all specialized collectors
+                    await docker_collector.collect_stats()
+                    await worker_collector.collect_stats()
+                    await process_collector.collect_stats()
+                except Exception as e:
+                    logger.error(f"Error in specialized metrics collection: {e}", exc_info=True)
+
+                # Wait 10 seconds before next collection
+                await asyncio.sleep(10)
+
+        # Start specialized metrics collection task
+        app.state.metrics_task = asyncio.create_task(collect_specialized_metrics())
+        logger.info("Specialized metrics collectors started")
+
+    except Exception as e:
+        logger.error(f"Failed to start metrics collection: {e}", exc_info=True)
+
     yield
 
     # Shutdown
     logger.info("Shutting down TruthGraph Phase 2 API")
+
+    # Stop metrics collection
+    try:
+        from truthgraph.monitoring.metrics_collector import get_metrics_collector
+
+        # Cancel specialized metrics collection task
+        if hasattr(app.state, "metrics_task"):
+            app.state.metrics_task.cancel()
+            try:
+                await app.state.metrics_task
+            except asyncio.CancelledError:
+                pass
+            logger.info("Specialized metrics collectors stopped")
+
+        # Stop metrics collector
+        collector = get_metrics_collector()
+        await collector.stop()
+        logger.info("Metrics collector stopped")
+
+    except Exception as e:
+        logger.error(f"Error stopping metrics collection: {e}", exc_info=True)
 
     # Stop background workers gracefully
     try:
@@ -183,6 +244,11 @@ app.add_middleware(
 app.include_router(router, prefix="/api/v1", tags=["Claims"])
 app.include_router(ml_router, tags=["ML Services"])
 app.include_router(verification_router, tags=["Verification"])
+
+# Include monitoring routes (Feature 4.7b)
+from .api.metrics_routes import router as metrics_router
+
+app.include_router(metrics_router)
 
 
 @app.middleware("http")

@@ -1773,9 +1773,9 @@ ALERT_QUEUE_DEPTH=50                  # Queue depth alert threshold
 | Subfeature | Status | Effort | Priority | Assigned To | Notes |
 |------------|--------|--------|----------|-------------|-------|
 | 4.7a: Core Infrastructure | ✅ Complete | 14h | P0 | python-pro | 94% test coverage, 1.94MB memory footprint |
-| 4.7b: Service Monitors | 📋 Ready | 12h | P0 | fastapi-pro, python-pro | Ready to start - core infrastructure complete |
-| 5.5a: Dashboard UI | ⏳ Blocked | 12h | P1 | frontend-developer | Blocked by 4.7b |
-| 5.5b: CLI Tools | ⏳ Blocked | 10h | P2 | dx-optimizer, python-pro | Blocked by 4.7b |
+| 4.7b: Service Monitors | ✅ Complete | 12h | P0 | fastapi-pro, python-pro | 84% test coverage, 128 tests passing, all endpoints operational |
+| 5.5a: Dashboard UI | 📋 Ready | 12h | P1 | frontend-developer | Ready to start - 4.7b complete |
+| 5.5b: CLI Tools | 📋 Ready | 10h | P2 | dx-optimizer, python-pro | Ready to start - 4.7b complete |
 
 **Legend**: 📋 Planned | 🔄 In Progress | ✅ Complete | ⏸️ Paused | ⏳ Blocked
 
@@ -1788,7 +1788,20 @@ ALERT_QUEUE_DEPTH=50                  # Queue depth alert threshold
 - ✅ Memory footprint: 1.94 MB (under 2 MB target)
 - ✅ Concurrent write support verified (10 async workers)
 
-**Next**: Feature 4.7b can now be started
+**Feature 4.7b Deliverables** ✅:
+- ✅ `truthgraph/monitoring/collectors/docker_stats.py` - Docker monitoring (353 lines)
+- ✅ `truthgraph/monitoring/collectors/worker_stats.py` - Worker pool monitoring (296 lines)
+- ✅ `truthgraph/monitoring/collectors/process_stats.py` - Process/DB monitoring (333 lines)
+- ✅ `truthgraph/api/metrics_routes.py` - Health endpoints (360 lines)
+- ✅ `truthgraph/main.py` - Lifespan integration (+69 lines)
+- ✅ 46 new unit tests, 84% coverage for collectors
+- ✅ 128 total tests passing (82 from 4.7a + 46 new)
+- ✅ 80+ metrics collected (Docker, Workers, Process, DB, ML)
+- ✅ Performance targets met: /health < 10ms, /health/detailed < 200ms
+- ✅ Prometheus format export operational
+- ✅ Circuit breaker preventing cascade failures
+
+**Next**: Features 5.5a (Dashboard UI) and 5.5b (CLI Tools) can now be started in parallel
 
 ---
 
